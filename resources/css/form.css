@@ -1,0 +1,542 @@
+/* ------------ Form & main form layouts ------------ */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Used to hold appended inputs before submiting form by JS */
+.form__hidden-appended-inputs-container {
+    display: none;
+}
+
+.form__block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    border-radius: var(--theme-border-radius);
+    background-color: var(--theme-box-background-color);
+    box-shadow: var(--theme-box-shadow);
+}
+
+.form__row {
+    display: flex;
+    gap: 20px;
+}
+
+.form__buttons-wrapper {
+    display: flex;
+    gap: 20px;
+}
+
+/* Form group */
+.form__row .form-group {
+    flex-basis: 100%;
+}
+
+.form-group__input-container {
+    position: relative;
+}
+
+.form-group__error-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 8px;
+    display: none;
+    font-size: 20px;
+    color: var(--theme-danger-color);
+}
+
+.form-group--error .form-group__error-icon {
+    display: inline-block;
+}
+
+.form-group__error-message:empty {
+    display: none;
+}
+
+.form-group__error-message {
+    margin: 8px 0 0;
+    font-size: 12px;
+    color: var(--theme-danger-color);
+}
+
+/* Radio form group */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Margin-top replaced by .radio-group:gap */
+.radio-group .form-group__error-message {
+    margin-top: 0;
+}
+
+.radio-group__options-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.radio-group__option-label {
+    display: flex;
+    gap: 12px;
+}
+
+.radio-group__option-caption {
+    line-height: 1;
+}
+
+/* Horizontal radio form group */
+.radio-group--horizontal {
+    flex-direction: row;
+    gap: 24px;
+}
+
+.radio-group--horizontal .radio-group__options-container {
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+}
+
+/* Image input group with preview */
+.image-input-group-with-preview .form-group__input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.image-input-group-with-preview__image {
+    max-width: 420px;
+    display: flex;
+    border: 8px solid var(--theme-body-background-color);
+}
+/* ------------ /end Form ------------ */
+
+
+/* ------------ Label ------------ */
+.label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label__text {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.label__required {
+    color: var(--theme-danger-color);
+}
+
+/* ------------ /end Label ------------ */
+
+
+/* ------------ Input, Textarea & Select ------------ */
+.input,
+.textarea,
+.select {
+    width: 100%;
+    display: block;
+    padding: var(--form-input-padding);
+    font-size: var(--form-input-font-size);
+    line-height: var(--form-input-line-height);
+    color: var(--form-input-text-color);
+    background-color: var(--form-input-background-color);
+    border: var(--form-input-border);
+    border-radius: var(--theme-border-radius);
+    transition: var(--theme-transition);
+    outline: none;
+}
+
+.input:read-only,
+.textarea:read-only {
+    background-color: var(--theme-body-background-color);
+}
+
+.input--highlight,
+.textarea--highlight,
+.select--highlight {
+    border-color: var(--theme-main-color);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+    opacity: 0.7;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+    border-color: var(--theme-main-color);
+}
+
+.form-group--error .input:focus,
+.form-group--error .textarea:focus,
+.form-group--error .select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(230, 55, 87, .25);
+}
+
+.form-group--error .input {
+    padding-right: 40px;
+}
+
+.form-group--error .input,
+.form-group--error .textarea,
+.form-group--error .select {
+    border-color: var(--theme-danger-color);
+}
+
+/* File input */
+.input[type="file"]::-webkit-file-upload-button,
+.input[type="file"]::file-selector-button {
+    display: none;
+}
+
+/* ------------ /end Input, Textarea & Select ------------ */
+
+
+/* ------------ Checkbox ------------ */
+.checkbox {
+    width: 1em;
+    height: 1em;
+    margin-top: 0.25em;
+    font-size: 16px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: var(--form-input-border);
+    border-radius: 4px;
+    appearance: none;
+    print-color-adjust: exact;
+    cursor: pointer;
+}
+
+.checkbox:checked {
+    background-color: var(--theme-main-color);
+    border-color: var(--theme-main-color);
+    background-image: url(/img/form/checkbox-checked.svg);
+}
+
+.checkbox:focus {
+    box-shadow: 0 0 0 0.25rem rgba(44, 123, 229, .25);
+}
+
+/* ------------ /end Checkbox ------------ */
+
+
+/* ------------ Radiobutton ------------ */
+.radio {
+    width: 1em;
+    height: 1em;
+    vertical-align: top;
+    background-color: rgba(0, 0, 0, 0);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: var(--form-input-border);
+    border-radius: 50%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    print-color-adjust: exact;
+}
+
+.radio:checked {
+    background-image: url(/img/form/radio-checked.svg);
+    background-color: var(--theme-main-color);
+    border-color: var(--theme-main-color);
+}
+/* ------------ /end Radiobutton ------------ */
+
+
+/* ------------ Selectize ------------ */
+/* Selectize */
+/* Single/multiple selectizes input & dropdown container */
+.selectize-control {
+    display: flex;
+}
+
+/* Single/multiple selectizes input */
+.selectize-input {
+    padding: var(--form-input-padding);
+    font-size: var(--form-input-font-size);
+    line-height: var(--form-input-line-height);
+    color: var(--form-input-text-color);
+    background-color: var(--form-input-background-color);
+    border: var(--theme-border);
+    border-radius: var(--theme-border-radius);
+    transition: var(--theme-transition);
+}
+
+/* Single/multiple selectizes input text color while typing/searching */
+.selectize-input>input {
+    color: var(--theme-text-color);
+}
+
+/* Single selectize input on focus */
+.single-selectize.selectize-control .selectize-input.input-active {
+    color: var(--form-input-text-color);
+    background-color: var(--form-input-background-color);
+}
+
+/* Single/multiple selectizes input on dropdown show & on input active (focus) */
+.selectize-input.dropdown-active,
+.selectize-input.input-active {
+    border-radius: var(--theme-border-radius);
+    border-color: var(--theme-main-color);
+}
+
+/* Single/multiple selectizes 1px height divider (between input & dropdown) on dropdown show */
+.selectize-input.dropdown-active::before {
+    background-color: var(--theme-lightest-text-color);
+}
+
+/* Single selectize selected input value (not dropdown item) */
+.single-selectize .selectize-input .item {
+    font-size: var(--form-input-font-size);
+    line-height: var(--form-input-line-height);
+    color: var(--form-input-text-color);
+}
+
+/* Single/multiple selectizes input select limit reached (1 item on single and max-limit items on multi) */
+.selectize-input.full {
+    background-color: var(--form-input-background-color);
+}
+
+/* Single/multiple selectizes dropdown */
+.selectize-dropdown {
+    font-size: 14px;
+    line-height: 1.3;
+    color: var(--theme-lighter-text-color);
+    background-color: var(--theme-box-background-color);
+    border: var(--theme-border);
+    border-radius: var(--theme-border-radius);
+    box-shadow: var(--theme-box-shadow);
+}
+
+/* Single/multiple selectizes dropdown options wrapper */
+.selectize-dropdown-content::-webkit-scrollbar {
+    width: 5px;
+}
+
+.selectize-dropdown-content::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, .2);
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, .2)
+}
+
+.selectize-dropdown-content::-webkit-scrollbar-thumb {
+    background-color: var(--theme-scrollbar-color);
+    outline: 1px solid var(--theme-scrollbar-color);
+}
+
+/* Single/multiple selectizes selected & hovered dropdown options */
+.selectize-dropdown-content .option.selected,
+.selectize-dropdown-content .option.active {
+    color: var(--theme-text-color);
+    background-color: var(--theme-body-background-color);
+}
+
+/* Single/multiple higlighted keyword of dropdown option */
+.selectize-dropdown-content .option .highlight {
+    color: var(--theme-button-text-color);
+    background-color: var(--theme-main-color);
+}
+
+/* Multiple selectize selected options on input */
+.multiple-selectize.selectize-control .selectize-input>.item {
+    color: var(--theme-lighter-text-color);
+    background: var(--theme-body-background-color);
+}
+
+/* Multiple selectize selected options focus on input */
+.multiple-selectize.selectize-control .selectize-input>.item.active {
+    font-weight: 500;
+    color: var(--theme-text-color);
+    background: var(--theme-body-background-color);
+}
+
+/* Multiple taggable selectize create option styles */
+.multiple-selectize .selectize-dropdown-content div.create.active {
+    color: var(--theme-lighter-text-color);
+    background-color: transparent;
+}
+
+/* Highlight selectize inputs (used on request based selects while filtering etc) */
+.single-selectize--highlight .selectize-input,
+.multiple-selectize--highlight .selectize-input {
+    border-color: var(--theme-main-color);
+}
+
+/* ------------ /end Selectize ------------ */
+
+
+/* ------------ Date range picker ------------ */
+/* Dropdown */
+.daterangepicker {
+    background-color: var(--theme-box-background-color);
+    border: var(--theme-border);
+    box-shadow: var(--theme-box-shadow);
+}
+
+/* Dropdown arrow */
+.daterangepicker:before {
+    border-bottom-color: var(--form-input-border-color);
+}
+
+/* Leftside & Rightside month tables */
+.daterangepicker .calendar-table {
+    background-color: transparent;
+    border: var(--form-input-border);
+    border-radius: var(--form-input-border-radius);
+}
+
+/* Leftside & Rightside days non-current month days */
+.daterangepicker td.off,
+.daterangepicker td.off.in-range,
+.daterangepicker td.off.start-date,
+.daterangepicker td.off.end-date {
+    color: var(--theme-lightest-text-color);
+    background-color: transparent;
+}
+
+/* Selected days */
+.daterangepicker td.in-range {
+    color: var(--theme-text-color);
+    background-color: var(--theme-body-background-color);
+}
+
+/* Active days hover  */
+.daterangepicker td.available:hover,
+.daterangepicker th.available:hover {
+    color: var(--theme-text-color);
+    background-color: var(--theme-body-background-color);
+}
+
+/* Start and end days of selected range */
+.daterangepicker td.active,
+.daterangepicker td.active:hover {
+    color: var(--theme-button-text-color);
+    background-color: var(--theme-secondary-color);
+}
+
+/* Buttons container */
+.daterangepicker .drp-buttons {
+    border-color: var(--form-input-border-color);
+}
+
+/* Selected range label */
+.daterangepicker .drp-buttons .drp-selected {
+    font-size: 14px;
+}
+
+/* Buttons */
+.daterangepicker .drp-buttons .btn {
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--theme-button-text-color);
+    border-radius: var(--form-input-border-radius);
+}
+
+/* Apply button */
+.daterangepicker .drp-buttons .btn-primary {
+    background-color: var(--theme-main-color);
+    border-color: var(--theme-main-color);
+}
+
+/* Cancel button */
+.daterangepicker .drp-buttons .btn-default {
+    background-color: var(--theme-cancel-color);
+    border-color: var(--theme-cancel-color);
+}
+
+/* ------------ /end Date range picker ------------ */
+
+
+/* ------------ Simditor ------------ */
+.simditor {
+    border: var(--form-input-border);
+}
+
+.simditor.focus {
+    border-color: var(--theme-main-color);
+}
+
+.simditor .simditor-wrapper {
+    background-color: var(--form-input-background-color);
+}
+
+.simditor .simditor-toolbar {
+    border-bottom: var(--form-input-border);
+    background-color: var(--form-input-background-color);
+}
+
+.simditor .simditor-body {
+    padding: 16px;
+    min-height: 200px;
+    font-size: var(--form-input-font-size);
+    line-height: var(--form-input-line-height);
+    color: var(--form-input-text-color);
+    font-family: inherit;
+}
+
+/* Toolbar icons */
+.simditor .simditor-toolbar>ul>li>.toolbar-item {
+    width: 44px;
+    color: var(--theme-text-color);
+}
+
+/* Toolbar active icon */
+.simditor .simditor-toolbar>ul>li>.toolbar-item.active {
+    background-color: var(--theme-main-color);
+    color: var(--theme-button-text-color);
+}
+
+/* Text color */
+.simditor .simditor-body p,
+.simditor .simditor-body div,
+.editor-style p,
+.editor-style div {
+    color: var(--form-input-text-color);
+}
+
+/* Link color */
+.simditor .simditor-body a,
+.editor-style a {
+    color: var(--theme-main-color);
+}
+
+/* Link popover  */
+.simditor .simditor-popover {
+    padding: 6px 12px;
+    background-color: var(--theme-box-background-color);
+    box-shadow: var(--theme-box-shadow);
+}
+
+/* Link popover fields container */
+.simditor .simditor-popover .settings-field {
+    height: auto;
+}
+
+/* Link popover fieldss */
+.simditor .simditor-popover .link-text,
+.simditor .simditor-popover .link-url,
+.simditor .simditor-popover .link-target {
+    padding: 6px;
+    color: var(--form-input-text-color);
+    border: var(--form-input-border);
+    background-color: var(--form-input-background-color);
+}
+
+/* ------------ /end Simditor ------------ */

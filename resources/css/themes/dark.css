@@ -1,0 +1,64 @@
+:root {
+    /* Theme name */
+    --theme-name: dark;
+
+    /* Theme different attributes */
+    --theme-scrollbar-color: #383f48;
+    --theme-transition: 0.3s ease;
+    --theme-box-shadow: 0 7px 14px 0 rgba(3, 12, 51, 0.15), 0 3px 6px 0 rgba(0, 0, 0, 0.2);;
+
+    /* Theme Colors */
+    --theme-main-color: #2C7BE5;
+    --theme-secondary-color: #F5803E;
+    --theme-danger-color: #E63757;
+    --theme-success-color: #00D27A;
+    --theme-cancel-color: #748194;
+
+    /* Theme Background colors */
+    --theme-body-background-color: #0B1727;
+    --theme-box-background-color: #121E2D;
+    --theme-icon-background-color: #344050;
+    --theme-icon-background-color-on-hover: #4d5969;
+
+    /* Theme Text colors */
+    --theme-text-color: #d8e2ef;
+    --theme-lighter-text-color: #b6c0cd;
+    --theme-lightest-text-color: #5e6e82;
+    --theme-text-color-on-hover: #edf2f9;
+    --theme-button-text-color: white;
+
+    /* Theme Borders */
+    --theme-border: 1px solid var(--theme-border-color);
+    --theme-border-color: #2e3a48;
+    --theme-border-radius: 6px;
+
+    /* Theme Form components */
+    --theme-checkbox-border-color: #3c4d62;
+    --theme-radio-border-color: #3c4d62;
+
+    /* Theme table  */
+    --theme-table-text-color: #9da9bb;
+    --theme-table-tr-hover-background-color: #0D2545;
+
+    /* Theme Badges */
+    --theme-yellow-badge-text-color: #d7e522;
+    --theme-yellow-badge-background: #333332;
+
+    --theme-pink-badge-text-color: #ed3aa4;
+    --theme-pink-badge-background: #330d34;
+
+    --theme-orange-badge-text-color: #f9ae83;
+    --theme-orange-badge-background: #311a0c;
+
+    --theme-blue-badge-text-color: #75d4fe;
+    --theme-blue-badge-background: #082633;
+
+    --theme-red-badge-text-color: #ef7f93;
+    --theme-red-badge-background: #2e0b11;
+
+    --theme-grey-badge-text-color: #6d798b;
+    --theme-grey-badge-background: #171a1e;
+
+    --theme-green-badge-text-color: #5ce2aa;
+    --theme-green-badge-background: #002a18;
+}

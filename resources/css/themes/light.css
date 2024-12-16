@@ -1,0 +1,64 @@
+:root {
+    /* Theme name */
+    --theme-name: light;
+
+    /* Theme different attributes */
+    --theme-scrollbar-color: #c5c5c5;
+    --theme-transition: 0.3s ease;
+    --theme-box-shadow: 0 7px 14px 0 rgba(65, 69, 88, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.07);
+
+    /* Theme Colors */
+    --theme-main-color: #2C7BE5;
+    --theme-secondary-color: #F5803E;
+    --theme-danger-color: #E63757;
+    --theme-success-color: #00D27A;
+    --theme-cancel-color: #748194;
+
+    /* Theme Background colors */
+    --theme-body-background-color: #EDF2F9;
+    --theme-box-background-color: white;
+    --theme-icon-background-color: #d8e2ef;
+    --theme-icon-background-color-on-hover: #b6c1d2;
+
+    /* Theme Text colors */
+    --theme-text-color: #344050;
+    --theme-text-color-on-hover: #232e3c;
+    --theme-lighter-text-color: #5e6e82;
+    --theme-lightest-text-color: #9da9bb;
+    --theme-button-text-color: white;
+
+    /* Theme Borders */
+    --theme-border: 1px solid var(--theme-border-color);
+    --theme-border-color: #d8e2ef;
+    --theme-border-radius: 6px;
+
+    /* Theme Form components */
+    --theme-checkbox-border-color: #b6c1d2;
+    --theme-radio-border-color: #b6c1d2;
+
+    /* Theme table  */
+    --theme-table-text-color: #475360;
+    --theme-table-tr-hover-background-color: #f9fafd;
+
+    /* Theme Badges */
+    --theme-yellow-badge-text-color: #66662c;
+    --theme-yellow-badge-background: #FFFFCC;
+
+    --theme-pink-badge-text-color: rgb(147, 35, 56);
+    --theme-pink-badge-background: rgb(250, 215, 221);
+
+    --theme-orange-badge-text-color: rgb(157, 82, 40);
+    --theme-orange-badge-background: rgb(253, 230, 216);
+
+    --theme-blue-badge-text-color: rgb(25, 120, 162);
+    --theme-blue-badge-background: rgb(212, 242, 255);
+
+    --theme-red-badge-text-color: rgb(255, 212, 220);
+    --theme-red-badge-background: rgb(230, 55, 87);
+
+    --theme-grey-badge-text-color: rgb(125, 137, 155);
+    --theme-grey-badge-background: rgb(227, 230, 234);
+
+    --theme-green-badge-text-color: rgb(0, 134, 78);
+    --theme-green-badge-background: rgb(204, 246, 228);
+}
