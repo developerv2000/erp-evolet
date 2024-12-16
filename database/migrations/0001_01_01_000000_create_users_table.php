@@ -15,8 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('photo')->nullable();
+
+            $table->unsignedSmallInteger('department_id') // Department admins can edit only department users.
+                ->foreign()
+                ->references('id')
+                ->on('departments');
+
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->json('settings')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
