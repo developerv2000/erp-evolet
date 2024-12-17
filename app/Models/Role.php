@@ -27,7 +27,6 @@ class Role extends Model
     // BDM department roles
     const BDM_NAME = 'BDM';                              // User is assosiated as 'BDM'. Doesn`t attach any role related permissions.
 
-
     /*
     |--------------------------------------------------------------------------
     | Properties
@@ -35,4 +34,25 @@ class Role extends Model
     */
 
     public $timestamps = false;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relations
+    |--------------------------------------------------------------------------
+    */
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class);
+    }
 }

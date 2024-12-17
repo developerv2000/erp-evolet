@@ -39,19 +39,7 @@ return new class extends Migration
             $table->primary(['role_id', 'user_id']);
         });
 
-        Schema::create('role_permission', function (Blueprint $table) {
-            $table->unsignedSmallInteger('role_id')
-                ->foreign()
-                ->references('id')
-                ->on('roles');
 
-            $table->unsignedSmallInteger('permission_id')
-                ->foreign()
-                ->references('id')
-                ->on('permissions');
-
-            $table->primary(['role_id', 'permission_id']);
-        });
     }
 
     /**
@@ -61,6 +49,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('roles');
         Schema::dropIfExists('role_user');
-        Schema::dropIfExists('role_permission');
     }
 };

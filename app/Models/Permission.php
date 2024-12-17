@@ -104,6 +104,27 @@ class Permission extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | Relations
+    |--------------------------------------------------------------------------
+    */
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Miscellaneous
     |--------------------------------------------------------------------------
     */
