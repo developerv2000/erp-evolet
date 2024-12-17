@@ -15,10 +15,14 @@ return new class extends Migration
             $table->unsignedSmallInteger('id')->autoIncrement();
             $table->string('name')->unique();
 
-            $table->unsignedSmallInteger('department_id') // Department admins can attach only department roles to users.
+            $table->unsignedSmallInteger('department_id') // Department admins can attach only global and department roles to users.
                 ->foreign()
                 ->references('id')
-                ->on('departments');
+                ->on('departments')
+                ->nullable();
+
+            $table->boolean('global')->default(false); // Global roles can be attached to any department users.
+            $table->string('description')->nullable();
         });
 
         Schema::create('role_user', function (Blueprint $table) {

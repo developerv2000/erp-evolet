@@ -15,10 +15,11 @@ return new class extends Migration
             $table->unsignedSmallInteger('id')->autoIncrement();
             $table->string('name')->unique();
 
-            $table->unsignedSmallInteger('department_id') // Department admins can attach global or only department permissions to users.
+            $table->unsignedSmallInteger('department_id') // Department admins can attach only global and department permissions to users.
                 ->foreign()
                 ->references('id')
-                ->on('departments');
+                ->on('departments')
+                ->nullable();
 
             $table->boolean('global')->default(false); // Global permissions can be attached to any department users.
         });

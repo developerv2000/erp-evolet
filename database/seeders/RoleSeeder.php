@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Department;
+use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,114 +17,67 @@ class RoleSeeder extends Seeder
     {
         /*
         |--------------------------------------------------------------------------
-        | Administrator
+        | Global roles
         |--------------------------------------------------------------------------
         */
 
+        // Global administrator
         $role = new Role();
-        $role->name = Role::ADMINISTRATOR_NAME;
+        $role->name = Role::GLOBAL_ADMINISTRATOR_NAME;
+        $role->description = 'Full access. Doesn`t attach any role related permissions.';
+        $role->department_id = Department::findByName(Department::MANAGMENT_NAME)->id;
         $role->save();
 
-        /*
-        |--------------------------------------------------------------------------
-        | Moderator
-        |--------------------------------------------------------------------------
-        */
-
-        $role = new Role();
-        $role->name = Role::MODERATOR_NAME;
-        $role->save();
-
-        $role->permissions()->attach([
-            // View
-            Permission::findByName(Permission::CAN_VIEW_EPP_NAME)->id,
-            Permission::findByName(Permission::CAN_VIEW_KVPP_NAME)->id,
-            Permission::findByName(Permission::CAN_VIEW_IVP_NAME)->id,
-            Permission::findByName(Permission::CAN_VIEW_VPS_NAME)->id,
-            Permission::findByName(Permission::CAN_VIEW_MEETINGS_NAME)->id,
-            Permission::findByName(Permission::CAN_VIEW_KPE_NAME)->id,
-            Permission::findByName(Permission::CAN_VIEW_SPG_NAME)->id,
-
-            // Edit
-            Permission::findByName(Permission::CAN_EDIT_EPP_NAME)->id,
-            Permission::findByName(Permission::CAN_EDIT_KVPP_NAME)->id,
-            Permission::findByName(Permission::CAN_EDIT_IVP_NAME)->id,
-            Permission::findByName(Permission::CAN_EDIT_VPS_NAME)->id,
-            Permission::findByName(Permission::CAN_EDIT_MEETINGS_NAME)->id,
-            Permission::findByName(Permission::CAN_EDIT_SPG_NAME)->id,
-
-            // Other
-            Permission::findByName(Permission::CAN_EXPORT_AS_EXCEL_NAME)->id,
-            Permission::findByName(Permission::CAN_EDIT_COMMENTS_NAME)->id,
-        ]);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Analyst
-        |--------------------------------------------------------------------------
-        */
-
-        $role = new Role();
-        $role->name = Role::ANALYST_NAME;
-        $role->save();
-
-        /*
-        |--------------------------------------------------------------------------
-        | BDM
-        |--------------------------------------------------------------------------
-        */
-
-        $role = new Role();
-        $role->name = Role::BDM_NAME;
-        $role->save();
-
-        /*
-        |--------------------------------------------------------------------------
-        | Inactive
-        |--------------------------------------------------------------------------
-        */
-
+        // Inactive
         $role = new Role();
         $role->name = Role::INACTIVE_NAME;
+        $role->description = 'No access, can`t login. Doesn`t attach any role related permissions.';
+        $role->global = true;
         $role->save();
 
         /*
         |--------------------------------------------------------------------------
-        | Guest
+        | MAD roles
         |--------------------------------------------------------------------------
         */
 
+        // MAD Administrator
         $role = new Role();
-        $role->name = Role::GUEST_NAME;
+        $role->name = Role::MAD_ADMINISTRATOR_NAME;
+        $role->description = 'Full access to MAD part. Attaches role related permissions.';
+        $role->department_id = Department::findByName(Department::MAD_NAME)->id;
         $role->save();
 
-        $role->permissions()->attach([
-            Permission::findByName(Permission::CAN_VIEW_EPP_NAME)->id,
-            Permission::findByName(Permission::CAN_VIEW_KVPP_NAME)->id,
-            Permission::findByName(Permission::CAN_VIEW_IVP_NAME)->id,
-            // Permission::findByName(Permission::CAN_VIEW_VPS_NAME)->id,
-            Permission::findByName(Permission::CAN_VIEW_MEETINGS_NAME)->id,
-            Permission::findByName(Permission::CAN_VIEW_KPE_NAME)->id,
-            Permission::findByName(Permission::CAN_VIEW_SPG_NAME)->id,
-        ]);
+        $permissionNames = Permission::getMADAdministratorPermissionNames();
 
-        /*
-        |--------------------------------------------------------------------------
-        | Logistician
-        |--------------------------------------------------------------------------
-        */
+        foreach ($permissionNames as $permissionName) {
+            $role->permissions()->attach(Permission::findByName($permissionName)->id);
+        }
 
+        // MAD Moderator
         $role = new Role();
-        $role->name = Role::LOGISTICIAN_NAME;
+        $role->name = Role::MAD_MODERATOR_NAME;
+        $role->description = 'Can view/create/edit/update/delete and export "MAD part" and comments. Attaches role related permissions.';
+        $role->department_id = Department::findByName(Department::MAD_NAME)->id;
         $role->save();
 
-        $role->permissions()->attach([
-            Permission::findByName(Permission::CAN_VIEW_PROCESSES_FOR_ORDER_NAME)->id,
-            Permission::findByName(Permission::CAN_VIEW_ORDERS_NAME)->id,
-            Permission::findByName(Permission::CAN_EDIT_PROCESSES_FOR_ORDER_NAME)->id,
-            Permission::findByName(Permission::CAN_EDIT_ORDERS_NAME)->id,
-            Permission::findByName(Permission::CAN_EXPORT_AS_EXCEL_NAME)->id,
-            Permission::findByName(Permission::CAN_EDIT_COMMENTS_NAME)->id,
-        ]);
+        $permissionNames = Permission::getMADModeratorPermissionNames();
+
+        foreach ($permissionNames as $permissionName) {
+            $role->permissions()->attach(Permission::findByName($permissionName)->id);
+        }
+
+        // MAD Guest
+        $role = new Role();
+        $role->name = Role::MAD_GUEST_NAME;
+        $role->description = 'Can only view "MAD part". Can`t create/edit/update/delete and export. Attaches role related permissions.';
+        $role->department_id = Department::findByName(Department::MAD_NAME)->id;
+        $role->save();
+
+        $permissionNames = Permission::getMADGuestPermissionNames();
+
+        foreach ($permissionNames as $permissionName) {
+            $role->permissions()->attach(Permission::findByName($permissionName)->id);
+        }
     }
 }
