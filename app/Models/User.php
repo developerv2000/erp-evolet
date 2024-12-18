@@ -14,6 +14,16 @@ class User extends Authenticatable
 
     /*
     |--------------------------------------------------------------------------
+    | Constants
+    |--------------------------------------------------------------------------
+    */
+
+    const DEFAULT_PREFERRED_THEME = 'dark';
+    const DEFAULT_COLLAPSED_LEFTBAR = false;
+    const DEFAULT_LOCALE = 'ru';
+
+    /*
+    |--------------------------------------------------------------------------
     | Properties
     |--------------------------------------------------------------------------
     */
@@ -49,6 +59,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'settings' => 'array',
         ];
     }
 
@@ -75,9 +86,14 @@ class User extends Authenticatable
 
     /*
     |--------------------------------------------------------------------------
-    | Role checks
+    | Roles
     |--------------------------------------------------------------------------
     */
+
+    public function hasRole($role)
+    {
+        return $this->roles->contains('name', $role);
+    }
 
     public function isGlobalAdministrator()
     {
@@ -91,7 +107,7 @@ class User extends Authenticatable
 
     /*
     |--------------------------------------------------------------------------
-    | Misc
+    | Permissions
     |--------------------------------------------------------------------------
     */
 
@@ -137,5 +153,86 @@ class User extends Authenticatable
         }
 
         return false; // Default deny if no permission is found
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Settings
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Reset users appearance & table column settings to default
+     * Used after creating & updating users by admin
+     *
+     * Empty settings is used for Inactive users
+     */
+    public function resetAllSettingsToDefault(): void
+    {
+        // Refresh user because roles may have been updated
+        $this->refresh();
+
+        // Empty settings for Inactive users
+        if ($this->isInactive()) {
+            $this->update(['settings' => null]);
+            return;
+        }
+
+        // Appearance settings
+        $settings = [
+            'preferred_theme' => User::DEFAULT_PREFERRED_THEME,
+            'collapsed_dashboard_leftbar' => User::DEFAULT_COLLAPSED_LEFTBAR,
+            'locale' => User::DEFAULT_LOCALE,
+        ];
+
+        $this->update(['settings' => $settings]);
+
+        // Table settings
+        // $this->resetMADTablesColumnSettings($settings);
+    }
+
+    /**
+     * Reset users MAD tables column settings
+     */
+    public function resetMADTablesColumnSettings($settings)
+    {
+        // $this->refresh();
+        // $settings = $this->settings;
+
+        // $settings['manufacturers_table_columns'] = Manufacturer::getDefaultTableColumnsForUser($this);
+    }
+
+    /**
+     * Reset all settings to default for all users
+     *
+     * Used via artisan command line
+     */
+    public static function resetAllSettingsToDefaultForAll()
+    {
+        self::all()->each(function ($user) {
+            $user->resetDefaultSettings();
+        });
+    }
+
+    /**
+     * Reset only specific table column settings
+     *
+     * Used via artisan command line
+     */
+    public function resetSpecificTableColumnSettings($table) {}
+
+    /**
+     * Update the specified setting for the user.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return void
+     */
+    public function updateSetting($key, $value): void
+    {
+        $settings = $this->settings;
+        $settings[$key] = $value;
+
+        $this->update(['settings' => $settings]);
     }
 }

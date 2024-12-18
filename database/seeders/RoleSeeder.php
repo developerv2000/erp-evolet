@@ -79,5 +79,24 @@ class RoleSeeder extends Seeder
         foreach ($permissionNames as $permissionName) {
             $role->permissions()->attach(Permission::findByName($permissionName)->id);
         }
+
+        // MAD Analyst
+        $role = new Role();
+        $role->name = Role::MAD_ANALYST_NAME;
+        $role->description = 'User is assosiated as "Analyst". Doesn`t attach any role related permissions.';
+        $role->department_id = Department::findByName(Department::MAD_NAME)->id;
+        $role->save();
+
+        /*
+        |--------------------------------------------------------------------------
+        | BDM roles
+        |--------------------------------------------------------------------------
+        */
+
+        $role = new Role();
+        $role->name = Role::BDM_NAME;
+        $role->description = 'User is assosiated as "BDM". Doesn`t attach any role related permissions.';
+        $role->department_id = Department::findByName(Department::BDM_NAME)->id;
+        $role->save();
     }
 }

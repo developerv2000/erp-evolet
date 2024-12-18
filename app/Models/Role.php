@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Support\Traits\Model\FindsRecordByName;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
+    use FindsRecordByName;
+
     /*
     |--------------------------------------------------------------------------
     | Constants
