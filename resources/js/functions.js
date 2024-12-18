@@ -4,7 +4,7 @@
 |--------------------------------------------------------------------------
 */
 
-import { hideSpinner, showModal, showSpinner } from "../../custom-components/script";
+import { hideSpinner, showModal, showSpinner } from "../custom-components/script";
 
 /*
 |--------------------------------------------------------------------------
@@ -12,7 +12,7 @@ import { hideSpinner, showModal, showSpinner } from "../../custom-components/scr
 |--------------------------------------------------------------------------
 */
 
-const TOGGLE_LEFTBAR_URL = '/dashboard/settings/collapsed-leftbar';
+const TOGGLE_LEFTBAR_URL = '/settings/collapsed-leftbar';
 
 /*
 |--------------------------------------------------------------------------

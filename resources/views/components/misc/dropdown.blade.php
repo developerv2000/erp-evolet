@@ -1,6 +1,6 @@
 @props(['id', 'buttonStyle' => 'main', 'includeArrow' => false])
 
-<div {{ $attributes->merge(['class' => 'dropdown' . $includeArrow ? ' dropdown--arrowed' : '']) }}>
+<div {{ $attributes->merge(['class' => 'dropdown' . ($includeArrow ? ' dropdown--arrowed' : '')]) }}>
     <button class="button button--{{ $buttonStyle }} dropdown__button" aria-expanded="false" aria-controls="{{ $id }}">
         {{ $button }}
 

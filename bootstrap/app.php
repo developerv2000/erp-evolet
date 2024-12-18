@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\EnsureUserHasRole;
+use App\Http\Middleware\EnsureUserRelationsAreLoaded;
+use App\Http\Middleware\ValidateLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -11,13 +14,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // $middleware->alias([
-        //     'role' => EnsureUserHasRole::class
-        // ]);
+        $middleware->alias([
+            'role' => EnsureUserHasRole::class
+        ]);
 
-        // $middleware->web(append: [
-        //     ValidateLocale::class
-        // ]);
+        $middleware->web(append: [
+            ValidateLocale::class,
+            EnsureUserRelationsAreLoaded::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

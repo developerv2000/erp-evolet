@@ -18,9 +18,13 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    const DEFAULT_PREFERRED_THEME = 'dark';
+    const DEFAULT_PREFERRED_THEME = 'light';
     const DEFAULT_COLLAPSED_LEFTBAR = false;
     const DEFAULT_LOCALE = 'ru';
+
+    const PHOTO_PATH = 'img/users';
+    const PHOTO_WIDTH = 400;
+    const PHOTO_HEIGHT = 400;
 
     /*
     |--------------------------------------------------------------------------
@@ -82,6 +86,22 @@ class User extends Authenticatable
     public function permissions()
     {
         return $this->belongsToMany(Permission::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
+
+    public function getPhotoAssetUrlAttribute(): string
+    {
+        return asset(self::PHOTO_PATH . '/' . $this->photo);
+    }
+
+    public function getPhotoFilePathAttribute()
+    {
+        return public_path(self::PHOTO_PATH . '/' . $this->photo);
     }
 
     /*
@@ -233,6 +253,7 @@ class User extends Authenticatable
         $settings = $this->settings;
         $settings[$key] = $value;
 
-        $this->update(['settings' => $settings]);
+        $this->settings = $settings;
+        $this->save();
     }
 }

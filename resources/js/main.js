@@ -6,7 +6,7 @@
 
 import './bootstrap';
 import * as functions from './functions';
-import { showSpinner } from '../../custom-components/script';
+import { showSpinner } from '../custom-components/script';
 
 /*
 |--------------------------------------------------------------------------
