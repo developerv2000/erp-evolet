@@ -5,7 +5,7 @@
         {{ $button }}
 
         @if ($includeArrow)
-            <x-misc.material-symbol-outlined class="dropdown__icon" icon="arrow_drop_down" />
+            <x-misc.material-symbol class="dropdown__icon" icon="arrow_drop_down" />
         @endif
     </button>
 

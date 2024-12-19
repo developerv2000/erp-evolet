@@ -24,3 +24,6 @@
 
 /* Base styles */
 @import 'styles.css';
+
+/* Pages */
+@import 'pages.css';

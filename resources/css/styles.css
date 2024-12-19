@@ -368,6 +368,7 @@ a {
     display: flex;
     gap: 12px;
     align-items: center;
+    justify-content: flex-start;
     padding: 4px 8px;
     font-size: 14px;
     font-weight: 500;
@@ -467,6 +468,7 @@ a {
     }
 }
 
+/* Logo */
 .header__logo-text {
     margin-bottom: 0;
     font-size: 22px;
@@ -480,6 +482,7 @@ a {
     font-weight: 900;
 }
 
+/* Menu */
 .header__menu {
     display: flex;
     flex-grow: 1;
@@ -488,12 +491,36 @@ a {
     gap: 16px;
 }
 
-/* Profile dropdown */
-.profile-dropdown__ava {
-    width: 32px;
-    height: 32px;
-    object-fit: cover;
+/* Notifications */
+.header__notifications {
+    display: flex;
+    padding: 6px;
+    color: var(--theme-main-color);
+    background-color: var(--theme-icon-background-color);
     border-radius: 50%;
+    transition: var(--theme-transition);
+
+    &:hover {
+        background-color: var(--theme-icon-background-color-on-hover);
+    }
+}
+
+.header__notifications-icon {
+    font-size: 22px;
+}
+
+.header__notifications-icon--unread {
+    color: var(--theme-secondary-color);
+}
+
+/* Locale dropdown */
+.locale-dropdown .dropdown__content {
+    min-width: 130px;
+}
+
+.locale-dropdown .dropdown__content-button {
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
 /* Theme toggler */
@@ -506,6 +533,18 @@ a {
     &:hover {
         background-color: var(--theme-icon-background-color-on-hover);
     }
+}
+
+/* Profile dropdown */
+.profile-dropdown .dropdown__content {
+    min-width: 160px;
+}
+
+.profile-dropdown__ava {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 /* ------------ /end Header ------------ */
@@ -798,7 +837,7 @@ a {
 /* ------------ Titles ------------ */
 .main-title {
     margin-bottom: 20px;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--theme-secondary-color);
 }

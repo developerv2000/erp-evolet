@@ -3,6 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Support\Helpers\FileHelper;
+use App\Support\Traits\Model\UploadsFile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,6 +14,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    use UploadsFile;
 
     /*
     |--------------------------------------------------------------------------
@@ -255,5 +259,52 @@ class User extends Authenticatable
 
         $this->settings = $settings;
         $this->save();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Profile
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Update the user's profile based on the request data.
+     *
+     * This method is used by users to update their own profile via the profile edit page.
+     *
+     * @param \Illuminate\Http\Request $request The request object containing the profile data.
+     * @return void
+     */
+    public function updateProfile($request): void
+    {
+        $validatedData = $request->validated();
+
+        // Update all fields except 'photo'
+        $this->update(collect($validatedData)->except('photo')->toArray());
+
+        // Upload user's photo if provided and resize it
+        if ($request->hasFile('photo')) {
+            $this->uploadFile('photo', public_path(self::PHOTO_PATH), $this->name);
+            FileHelper::resizeImage($this->photo_file_path, self::PHOTO_WIDTH, self::PHOTO_HEIGHT);
+        }
+    }
+
+    /**
+     * Update the user's password from the profile edit page.
+     *
+     * This method is used by users to update their own password via the profile edit page.
+     *
+     * @param \Illuminate\Http\Request $request The request object containing the new password.
+     * @return void
+     */
+    public function updateProfilePassword($request): void
+    {
+        // Update the user's password with the new hashed password
+        $this->update([
+            'password' => bcrypt($request->new_password),
+        ]);
+
+        // Logout other devices using the new password
+        Auth::logoutOtherDevices($request->new_password);
     }
 }

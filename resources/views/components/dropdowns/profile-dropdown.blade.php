@@ -5,7 +5,7 @@
 
     <x-slot:content>
         <a class="dropdown__content-link" href="{{ route('profile.edit') }}">
-            <x-misc.material-symbol-outlined icon="account_circle" filled="true" />
+            <x-misc.material-symbol icon="account_circle" filled="true" />
             {{ __('My profile') }}
         </a>
 
@@ -13,7 +13,7 @@
             @csrf
 
             <button class="dropdown__content-button">
-                <x-misc.material-symbol-outlined icon="logout" filled="true" />
+                <x-misc.material-symbol icon="logout" filled="true" />
                 {{ __('Logout') }}
             </button>
         </form>
