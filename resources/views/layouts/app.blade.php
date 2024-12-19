@@ -10,7 +10,7 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('img/main/favicon.png') }}">
 
     {{-- blade-formatter-disable-next-line --}}
-    <title>@isset($title){{ $title . ' — ERP' }}@else{{ 'ERP — EVOLET' }}@endisset</title>
+    <title>@isset($pageTitle){{ $pageTitle . ' — ERP' }}@else{{ 'ERP — EVOLET' }}@endisset</title>
 
     {{-- Noindex tags --}}
     <x-misc.noindex-tags />

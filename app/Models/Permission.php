@@ -78,7 +78,7 @@ class Permission extends Model
     // Other permissions
 
     // KVPP
-    const CAN_VIEW_MAD_KVPP_COINCIDENT_PROCESSES_NAME = 'can view MAD KVPP coincident processes';
+    const CAN_VIEW_MAD_KVPP_MATCHING_PROCESSES_NAME = 'can view MAD KVPP matching processes';
 
     // KPI
     const CAN_VIEW_KPI_EXTENDED_VERSION_NAME = 'can view MAD extended KPI version';
@@ -183,7 +183,7 @@ class Permission extends Model
             self::CAN_EXPORT_UNLIMITED_RECORDS_AS_EXCEL_NAME,
 
             // Additional other MAD permissions
-            self::CAN_VIEW_MAD_KVPP_COINCIDENT_PROCESSES_NAME,
+            self::CAN_VIEW_MAD_KVPP_MATCHING_PROCESSES_NAME,
             self::CAN_VIEW_KPI_EXTENDED_VERSION_NAME,
             self::CAN_VIEW_KPI_OF_ALL_ANALYSTS,
             self::CAN_CONTROL_ASP_PROCESSES,

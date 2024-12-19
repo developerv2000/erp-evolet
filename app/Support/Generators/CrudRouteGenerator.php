@@ -9,13 +9,12 @@ namespace App\Support\Generators;
 use Illuminate\Support\Facades\Route;
 
 /**
- * Class CrudRouteGenerator
+ * Class CRUDRouteGenerator
  *
- * This class provides helper methods for generating default CRUD routes
- * inside grouped routes with a defined controller, prefix, and name.
- * It also supports adding a custom method prefix for specialized routes (e.g., dashboard routes).
+ * This class provides helper methods for defining CRUD-related routes with customizable middleware
+ * for viewing and editing functionalities.
  */
-class CrudRouteGenerator
+class CRUDRouteGenerator
 {
     /**
      * Get all default route names.
@@ -42,42 +41,40 @@ class CrudRouteGenerator
      *
      * @param string $name The name of the route to define.
      * @param string $identifierAttribute The attribute used for identifying records in the 'show' route (e.g., 'id' or 'slug').
-     * @param string|null $methodPrefix Optional controller method prefix for specialized routes (e.g., 'dashboard').
+     * @param string|null $viewMiddleware Middleware for viewing actions.
+     * @param string|null $editMiddleware Middleware for editing actions.
      * @return void
      */
-    public static function defineRouteByName($name, $identifierAttribute = 'id', $methodPrefix = null)
+    public static function defineRouteByName($name, $identifierAttribute = 'id', $viewMiddleware = null, $editMiddleware = null)
     {
-        // Add the method prefix to the controller action if provided.
-        $controllerAction = $methodPrefix ? $methodPrefix . ucfirst($name) : $name;
-
         // Define routes based on the provided name and identifier attribute.
         switch ($name) {
             case 'index':
-                Route::get('/', $controllerAction)->name('index');
+                Route::get('/', 'index')->name('index')->middleware($viewMiddleware);
                 break;
             case 'trash':
-                Route::get('/trash', $controllerAction)->name('trash');
+                Route::get('/trash', 'trash')->name('trash')->middleware($viewMiddleware);
                 break;
             case 'create':
-                Route::get('/create', $controllerAction)->name('create');
+                Route::get('/create', 'create')->name('create')->middleware($editMiddleware);
                 break;
             case 'show':
-                Route::get('/{record:' . $identifierAttribute . '}', $controllerAction)->name('show');
+                Route::get('/{record:' . $identifierAttribute . '}', 'show')->name('show')->middleware($viewMiddleware);
                 break;
             case 'edit':
-                Route::get('/edit/{record:' . $identifierAttribute . '}', $controllerAction)->name('edit');
+                Route::get('/edit/{record:' . $identifierAttribute . '}', 'edit')->name('edit')->middleware($editMiddleware);
                 break;
             case 'store':
-                Route::post('/store', $controllerAction)->name('store');
+                Route::post('/store', 'store')->name('store')->middleware($editMiddleware);
                 break;
             case 'update':
-                Route::patch('/update/{record}', $controllerAction)->name('update');
+                Route::patch('/update/{record}', 'update')->name('update')->middleware($editMiddleware);
                 break;
             case 'destroy':
-                Route::delete('/destroy', $controllerAction)->name('destroy');
+                Route::delete('/destroy', 'destroy')->name('destroy')->middleware($editMiddleware);
                 break;
             case 'restore':
-                Route::patch('/restore', $controllerAction)->name('restore');
+                Route::patch('/restore', 'restore')->name('restore')->middleware($editMiddleware);
                 break;
         }
     }
@@ -86,15 +83,16 @@ class CrudRouteGenerator
      * Define all default CRUD routes.
      *
      * @param string $identifierAttribute The attribute used for identifying records in the 'show' route (e.g., 'id' or 'slug').
-     * @param string|null $methodPrefix Optional controller method prefix for specialized routes (e.g., 'dashboard').
+     * @param string|null $viewMiddleware Middleware for viewing actions.
+     * @param string|null $editMiddleware Middleware for editing actions.
      * @return void
      */
-    public static function defineAllDefaultRoutes($identifierAttribute = 'id', $methodPrefix = null)
+    public static function defineAllDefaultRoutes($identifierAttribute = 'id', $viewMiddleware = null, $editMiddleware = null)
     {
         $defaultRoutes = self::getDefaultRouteNames();
 
         foreach ($defaultRoutes as $route) {
-            self::defineRouteByName($route, $identifierAttribute, $methodPrefix);
+            self::defineRouteByName($route, $identifierAttribute, $viewMiddleware, $editMiddleware);
         }
     }
 
@@ -103,10 +101,11 @@ class CrudRouteGenerator
      *
      * @param array $excepts The routes to exclude from the definition.
      * @param string $identifierAttribute The attribute used for identifying records in the 'show' route (e.g., 'id' or 'slug').
-     * @param string|null $methodPrefix Optional controller method prefix for specialized routes (e.g., 'dashboard').
+     * @param string|null $viewMiddleware Middleware for viewing actions.
+     * @param string|null $editMiddleware Middleware for editing actions.
      * @return void
      */
-    public static function defineDefaultRoutesExcept($excepts = [], $identifierAttribute = 'id', $methodPrefix = null)
+    public static function defineDefaultRoutesExcept($excepts = [], $identifierAttribute = 'id', $viewMiddleware = null, $editMiddleware = null)
     {
         $defaultRoutes = self::getDefaultRouteNames();
 
@@ -114,7 +113,7 @@ class CrudRouteGenerator
         $routes = array_diff($defaultRoutes, $excepts);
 
         foreach ($routes as $route) {
-            self::defineRouteByName($route, $identifierAttribute, $methodPrefix);
+            self::defineRouteByName($route, $identifierAttribute, $viewMiddleware, $editMiddleware);
         }
     }
 
@@ -123,16 +122,17 @@ class CrudRouteGenerator
      *
      * @param array $only The routes to include in the definition.
      * @param string $identifierAttribute The attribute used for identifying records in the 'show' route (e.g., 'id' or 'slug').
-     * @param string|null $methodPrefix Optional controller method prefix for specialized routes (e.g., 'dashboard').
+     * @param string|null $viewMiddleware Middleware for viewing actions.
+     * @param string|null $editMiddleware Middleware for editing actions.
      * @return void
      */
-    public static function defineDefaultRoutesOnly($only = [], $identifierAttribute = 'id', $methodPrefix = null)
+    public static function defineDefaultRoutesOnly($only = [], $identifierAttribute = 'id', $viewMiddleware = null, $editMiddleware = null)
     {
         $defaultRoutes = self::getDefaultRouteNames();
 
         foreach ($only as $name) {
             if (in_array($name, $defaultRoutes)) {
-                self::defineRouteByName($name, $identifierAttribute, $methodPrefix);
+                self::defineRouteByName($name, $identifierAttribute, $viewMiddleware, $editMiddleware);
             }
         }
     }

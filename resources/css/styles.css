@@ -618,11 +618,10 @@ a {
 .leftbar__nav-link,
 .leftbar__nav-form-button {
     width: 100%;
-    min-height: 30px;
+    min-height: 24px;
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 4px 0;
     font-weight: 500;
     line-height: 1.5;
     color: var(--theme-lighter-text-color);
@@ -837,7 +836,7 @@ a {
 /* ------------ Titles ------------ */
 .main-title {
     margin-bottom: 20px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: var(--theme-secondary-color);
 }

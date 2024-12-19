@@ -81,7 +81,7 @@ class PermissionSeeder extends Seeder
             Permission::CAN_NOT_EDIT_MAD_USERS_NAME,
             Permission::CAN_NOT_EDIT_MAD_MISC_NAME,
 
-            Permission::CAN_VIEW_MAD_KVPP_COINCIDENT_PROCESSES_NAME,
+            Permission::CAN_VIEW_MAD_KVPP_MATCHING_PROCESSES_NAME,
 
             Permission::CAN_VIEW_KPI_EXTENDED_VERSION_NAME,
             Permission::CAN_VIEW_KPI_OF_ALL_ANALYSTS,

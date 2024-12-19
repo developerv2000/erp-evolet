@@ -31,3 +31,5 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::patch('password', 'updatePassword')->name('update-password');
     });
 });
+
+require __DIR__ . '/MAD.php';
