@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ManufacturerController;
 use App\Support\Generators\CRUDRouteGenerator;
 use Illuminate\Support\Facades\Route;
 

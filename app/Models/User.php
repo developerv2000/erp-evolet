@@ -110,6 +110,22 @@ class User extends Authenticatable
 
     /*
     |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
+
+    public function scopeOnlyBdms()
+    {
+        return $this->whereRelation('roles', 'name', Role::BDM_NAME);
+    }
+
+    public function scopeOnlyMADAnalysts()
+    {
+        return $this->whereRelation('roles', 'name', Role::MAD_ANALYST_NAME);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Roles
     |--------------------------------------------------------------------------
     */

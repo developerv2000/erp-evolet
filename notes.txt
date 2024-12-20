@@ -1,0 +1,8 @@
+Global:
+    Country and CountryCodes united in Country
+
+MAD:
+    Tables:
+        manufacturers:
+            is_active => active
+            is_important => important
