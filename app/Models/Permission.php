@@ -125,9 +125,20 @@ class Permission extends Model
 
     /*
     |--------------------------------------------------------------------------
-    | Miscellaneous
+    | Misc
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Helper function to get the denying permission name.
+     *
+     * If the requested permission is 'CAN_EXPORT', this function returns 'CAN_NOT_EXPORT'.
+     */
+    public static function getDenyingPermission($permissionName)
+    {
+        // Swap 'can' with 'can`t' to get the denying permission name
+        return 'can`t ' . substr($permissionName, 4);
+    }
 
     public static function getMADGuestPermissionNames()
     {

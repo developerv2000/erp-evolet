@@ -9,6 +9,7 @@ use App\Support\Traits\Model\UploadsFile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 
 class User extends Authenticatable
 {
@@ -71,6 +72,11 @@ class User extends Authenticatable
         ];
     }
 
+    protected $with = [
+        'roles',
+        'permissions',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | Relations
@@ -114,14 +120,14 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    public function scopeOnlyBdms()
+    public function scopeOnlyBdms($query)
     {
-        return $this->whereRelation('roles', 'name', Role::BDM_NAME);
+        return $query->whereRelation('roles', 'name', Role::BDM_NAME);
     }
 
-    public function scopeOnlyMADAnalysts()
+    public function scopeOnlyMADAnalysts($query)
     {
-        return $this->whereRelation('roles', 'name', Role::MAD_ANALYST_NAME);
+        return $query->whereRelation('roles', 'name', Role::MAD_ANALYST_NAME);
     }
 
     /*
@@ -202,6 +208,22 @@ class User extends Authenticatable
     */
 
     /**
+     * Update the specified setting for the user.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return void
+     */
+    public function updateSetting($key, $value): void
+    {
+        $settings = $this->settings;
+        $settings[$key] = $value;
+
+        $this->settings = $settings;
+        $this->save();
+    }
+
+    /**
      * Reset users appearance & table column settings to default
      * Used after creating & updating users by admin
      *
@@ -228,7 +250,7 @@ class User extends Authenticatable
         $this->update(['settings' => $settings]);
 
         // Table settings
-        // $this->resetMADTablesColumnSettings($settings);
+        $this->resetMADTablesColumnSettings($settings);
     }
 
     /**
@@ -236,10 +258,12 @@ class User extends Authenticatable
      */
     public function resetMADTablesColumnSettings($settings)
     {
-        // $this->refresh();
-        // $settings = $this->settings;
+        $this->refresh();
+        $settings = $this->settings;
 
-        // $settings['manufacturers_table_columns'] = Manufacturer::getDefaultTableColumnsForUser($this);
+        $settings['manufacturers_table_columns'] = Manufacturer::getDefaultTableColumnsForUser($this);
+
+        $this->update(['settings' => $settings]);
     }
 
     /**
@@ -262,19 +286,28 @@ class User extends Authenticatable
     public function resetSpecificTableColumnSettings($table) {}
 
     /**
-     * Update the specified setting for the user.
+     * Collects all table columns for a given key from user settings.
      *
      * @param  string  $key
-     * @param  mixed  $value
-     * @return void
+     * @return \Illuminate\Support\Collection
      */
-    public function updateSetting($key, $value): void
+    public function collectTableColumnsBySettingsKey($key): Collection
     {
-        $settings = $this->settings;
-        $settings[$key] = $value;
+        return collect($this->settings[$key])->sortBy('order');
+    }
 
-        $this->settings = $settings;
-        $this->save();
+    /**
+     * Filters out only the visible columns from the provided collection.
+     *
+     * @param  \Illuminate\Support\Collection  $columns
+     * @return array
+     */
+    public static function filterOnlyVisibleColumns($columns): array
+    {
+        return $columns->filter(fn($column) => $column['visible'] ?? false)
+            ->sortBy('order')
+            ->values()
+            ->all();
     }
 
     /*
