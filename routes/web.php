@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticatedSessionController;
+use App\Http\Controllers\MainController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
@@ -13,6 +14,8 @@ Route::controller(AuthenticatedSessionController::class)->group(function () {
 });
 
 Route::middleware('auth', 'auth.session')->group(function () {
+    Route::get('/', [MainController::class, 'redirectToHomePage'])->name('home');
+
     Route::controller(SettingController::class)->prefix('/settings')->name('settings.')->group(function () {
         Route::patch('locale', 'updateLocale')->name('update-locale');
         Route::patch('preferred-theme', 'toggleTheme')->name('toggle-theme');

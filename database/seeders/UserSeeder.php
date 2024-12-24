@@ -62,13 +62,13 @@ class UserSeeder extends Seeder
         ];
 
         $MADModerators = [
-            ['name' => 'Nuruloev Olimjon', 'email' => 'olim@mail.com', 'photo' => 'mad.jpg'],
-            ['name' => 'Shahriyor Pirov', 'email' => 'shahriyor@mail.com', 'photo' => 'mad.jpg'],
-            ['name' => 'Alim Munavarov', 'email' => 'alim@mail.com', 'photo' => 'mad.jpg'],
+            ['name' => 'Nuruloev Olimjon', 'email' => 'olim@mail.com', 'photo' => 'mad.png'],
+            ['name' => 'Shahriyor Pirov', 'email' => 'shahriyor@mail.com', 'photo' => 'mad.png'],
+            ['name' => 'Alim Munavarov', 'email' => 'alim@mail.com', 'photo' => 'mad.png'],
         ];
 
         $MADGuests = [
-            ['name' => 'Mad guest', 'email' => 'madguest@mail.com', 'photo' => 'mad.jpg'],
+            ['name' => 'Mad guest', 'email' => 'madguest@mail.com', 'photo' => 'mad.png'],
         ];
 
         // Create MAD admins
@@ -120,9 +120,9 @@ class UserSeeder extends Seeder
         $bdmRoleID = Role::findByName(Role::BDM_NAME);
 
         $bdms = [
-            ['name' => 'Irini Kouimtzidou', 'email' => 'irini@mail.com', 'photo' => 'bdm.jpg'],
-            ['name' => 'Darya Rassulova', 'email' => 'darya@mail.com', 'photo' => 'bdm.jpg'],
-            ['name' => 'Nastya Karimova', 'email' => 'nastya@mail.com', 'photo' => 'bdm.jpg'],
+            ['name' => 'Irini Kouimtzidou', 'email' => 'irini@mail.com', 'photo' => 'bdm.png'],
+            ['name' => 'Darya Rassulova', 'email' => 'darya@mail.com', 'photo' => 'bdm.png'],
+            ['name' => 'Nastya Karimova', 'email' => 'nastya@mail.com', 'photo' => 'bdm.png'],
         ];
 
         // Create MAD guests

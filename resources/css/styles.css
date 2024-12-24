@@ -11,7 +11,7 @@ body {
     /* Layouts */
     --shrinked-body-max-width: 1680px;
     --header-height: 48px;
-    --leftbar-width: 180px;
+    --leftbar-width: 150px;
     --collapsed-leftbar-max-width: 24px;
     --rightbar-width: 200px;
     --table-toolbar-height: 52px;
@@ -400,6 +400,7 @@ a {
 .radio {
     border-color: var(--theme-radio-border-color);
 }
+
 /* ------------ /end Form ------------ */
 
 
@@ -844,6 +845,7 @@ a {
 .main-title--marginless {
     margin-bottom: 0;
 }
+
 /* ------------ /end Titles ------------ */
 
 
@@ -1077,116 +1079,43 @@ a {
     cursor: pointer;
 }
 
+.main-table .td__badges-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
 /* ------------ /end Main table ------------ */
 
 
-/* ------------ Nested Set ------------ */
-/* Requires refactoring */
-.nested-container {
-    padding: 24px 32px;
-}
-
-.nested {
+/* ------------ Ava ------------ */
+.ava {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin: 0;
-    padding: 0;
-
+    align-items: center;
+    gap: 12px;
 }
 
-/* Root elements */
-.nested>.nested__item>.nested__item-body {
-    margin-bottom: 6px;
-    font-weight: 500;
-}
-
-/* Direct Childs container */
-.nested .nested__item>ol {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-/* Hide Collapsed items direct childs */
-.nested__item--collapsed>ol {
-    display: none !important;
-}
-
-/* Item body */
-.nested__item-body {
-    display: flex;
-    border: var(--form-input-border);
-    padding: 6px 8px;
-    border-radius: 4px;
-    cursor: grab;
-}
-
-.nested__item-body .material-symbols-outlined {
-    font-size: 22px;
-    cursor: pointer;
-}
-
-.nested__item .material-symbols-outlined {
+.ava__image {
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    transition: 0.3s;
 }
 
-.nested__item .material-symbols-outlined:hover {
-    background-color: #e1e1e1;
+.ava__text {
+    display: flex;
+    flex-direction: column;
 }
 
-/* Items direct body toggler */
-.nested__item--collapsed>.nested__item-body .nested__item-toggler {
-    transform: rotate(180deg);
-}
-
-.nested__item--leaf .nested__item-toggler {
+.ava__title:empty {
     display: none;
 }
 
-.nested__item-title {
-    margin-left: 8px;
-    margin-right: auto;
+.ava__description {
+    font-size: 15px;
+    color: var(--theme-lighter-text-color);
 }
 
-/* Delete button */
-.nested__item-destroy-btn {
-    color: var(--theme-danger-color);
-}
-/* ------------ /end Nested Set ------------ */
-
-
-/* ------------ Authentication pages ------------ */
-/* Login Page */
-.login-page .main {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 0;
+.ava__description:empty {
+    display: none;
 }
 
-.auth-box {
-    min-width: 520px;
-    padding: 60px;
-    display: flex;
-    flex-direction: column;
-}
-
-.auth-box__logo {
-    margin: auto;
-}
-
-.auth-box__logo .logo__image {
-    width: 180px;
-    display: flex;
-}
-
-.auth-box__title {
-    margin: 24px 0;
-    font-size: 28px;
-    font-weight: 600;
-}
-
-/* ------------ /END Authentication pages ------------ */
+/* ------------ /END Ava ------------ */

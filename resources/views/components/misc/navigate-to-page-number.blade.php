@@ -16,5 +16,5 @@
         value="{{ $currentPage }}"
         required>
 
-    <x-misc.button style="shadowed" class="navigate-to-page-number__submit">{{ __('Go') }}</x-global.button>
+    <x-misc.button style="shadowed" class="navigate-to-page-number__submit">{{ __('Go') }}</x-misc.button>
 </form>

@@ -9,7 +9,7 @@
             <div class="modal__header">
                 <p class="modal__title">{{ $title }}</p>
 
-                <x-misc.button class="modal__dismiss-button" style="transparent" icon="close" data-click-action="hide-visible-modal"></x-global.button>
+                <x-misc.button class="modal__dismiss-button" style="transparent" icon="close" data-click-action="hide-visible-modal"></x-misc.button>
             </div>
 
             {{-- Body --}}

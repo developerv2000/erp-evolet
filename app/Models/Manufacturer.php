@@ -105,12 +105,12 @@ class Manufacturer extends Model
             'lastComment',
 
             'analyst' => function ($query) {
-                $query->select(['id', 'name'])
+                $query->select(['id', 'name', 'photo'])
                     ->withOnly([]);
             },
 
             'bdm' => function ($query) {
-                $query->select(['id', 'name'])
+                $query->select(['id', 'name', 'photo'])
                     ->withOnly([]);
             },
         ]);

@@ -1,4 +1,40 @@
-/* Profile page */
+/* ------------ Authentication pages ------------ */
+/* Login Page */
+.login-page .main {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0;
+}
+
+.auth-box {
+    min-width: 520px;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-box__logo {
+    margin: auto;
+}
+
+.auth-box__logo .logo__image {
+    width: 180px;
+    display: flex;
+}
+
+.auth-box__title {
+    margin: 24px 0;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+/* ------------ /END Authentication pages ------------ */
+
+
+/* ------------ Profile page ------------ */
 .profile-edit #profile-update-form {
     margin-bottom: 40px;
 }
+/* ------------ /END Profile page ------------ */

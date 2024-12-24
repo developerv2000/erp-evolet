@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 
 class User extends Authenticatable
 {
@@ -274,7 +275,7 @@ class User extends Authenticatable
     public static function resetAllSettingsToDefaultForAll()
     {
         self::all()->each(function ($user) {
-            $user->resetDefaultSettings();
+            $user->resetAllSettingsToDefault();
         });
     }
 
@@ -355,5 +356,31 @@ class User extends Authenticatable
 
         // Logout other devices using the new password
         Auth::logoutOtherDevices($request->new_password);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Profile
+    |--------------------------------------------------------------------------
+    */
+
+    public function detectHomeRouteName()
+    {
+        $homepageRoutes = [
+            // MAD department
+            'manufacturers.index' => 'view-MAD-EPP',
+            'product-searches.index' => 'view-MAD-KVPP',
+            'products.index' => 'view-MAD-IVP',
+            'processes.index' => 'view-MAD-VPS',
+        ];
+
+        foreach ($homepageRoutes as $routeName => $gate) {
+            if (Gate::allows($gate)) {
+                return route($routeName);
+            }
+        }
+
+        // Default home if no pages are accessible
+        return route('profile.edit');
     }
 }
