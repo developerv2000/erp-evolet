@@ -61,4 +61,18 @@ class Comment extends Model
             }
         });
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Misc
+    |--------------------------------------------------------------------------
+    */
+
+    public static function loadRecordsMinifiedUsers($comments)
+    {
+        return $comments->load(['user' => function ($query) {
+            $query->select('id', 'name', 'photo')
+                ->withOnly([]);
+        }]);
+    }
 }

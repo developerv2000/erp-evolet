@@ -38,3 +38,61 @@
     margin-bottom: 40px;
 }
 /* ------------ /END Profile page ------------ */
+
+
+/* ------------ Comment pages ------------ */
+/* Create form */
+.create-comments-form {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.create-comments-form__submit {
+    align-self: flex-end;
+    margin-top: 20px;
+}
+
+/* List */
+.comments-list-wrapper {
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.comments-list__item {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.comments-list__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.comments-list__actions {
+    display: flex;
+    gap: 6px;
+}
+
+.comments-list__actions .button--rounded {
+    padding: 6px;
+}
+
+.comments-list__item-body {
+    padding-left: 48px;
+}
+
+.comments-list__ava .ava__name {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* ------------ /end Comment pages ------------ */

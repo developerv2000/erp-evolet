@@ -1054,6 +1054,14 @@ a {
     padding-right: var(--main-table-side-paddings);
 }
 
+.main-table .td__link {
+    color: var(--theme-main-color);
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 .main-table .td__view {
     color: var(--theme-lighter-text-color);
 }
@@ -1111,7 +1119,7 @@ a {
 
 .ava__description {
     font-size: 15px;
-    color: var(--theme-lighter-text-color);
+    color: var(--theme-lightest-text-color);
 }
 
 .ava__description:empty {

@@ -116,6 +116,15 @@ class Manufacturer extends Model
         ]);
     }
 
+    public function scopeWithBasicRelationCounts($query)
+    {
+        return $query->withCount([
+            'comments',
+            // 'products',
+            // 'meetings',
+        ]);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Filtering
@@ -213,5 +222,10 @@ class Manufacturer extends Model
         }
 
         return $columns;
+    }
+
+    public function getCommentsPageTitle()
+    {
+        return $this->name;
     }
 }

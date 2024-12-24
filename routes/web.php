@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthenticatedSessionController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
+use App\Support\Generators\CRUDRouteGenerator;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthenticatedSessionController::class)->group(function () {
@@ -32,6 +34,12 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::get('profile', 'edit')->name('edit');
         Route::patch('profile', 'update')->name('update');
         Route::patch('password', 'updatePassword')->name('update-password');
+    });
+
+    Route::prefix('comments')->controller(CommentController::class)->name('comments.')->group(function () {
+        Route::get('/view/{commentable_type}/{commentable_id}', 'index')->name('index');
+
+        CRUDRouteGenerator::defineDefaultRoutesOnly(['edit', 'store', 'update', 'destroy'], 'id', null, 'can:edit-comments');
     });
 });
 

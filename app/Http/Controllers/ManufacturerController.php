@@ -24,7 +24,7 @@ class ManufacturerController extends Controller
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
-        $query = Manufacturer::withBasicRelations();
+        $query = Manufacturer::withBasicRelations()->withBasicRelationCounts();
         $filteredQuery = Manufacturer::filterQueryForRequest($query, $request);
         $records = Manufacturer::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 

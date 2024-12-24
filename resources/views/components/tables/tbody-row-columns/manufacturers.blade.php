@@ -86,7 +86,7 @@
     @break
 
     @case('Comments')
-        Comments
+        <x-tables.partials.td.model-comments-link :record="$record" />
     @break
 
     @case('Last comment')
