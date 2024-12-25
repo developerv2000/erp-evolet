@@ -61,13 +61,20 @@
 .comments-list {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
 }
 
 .comments-list__item {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    padding-bottom: 4px;
+    border-bottom: var(--theme-border);
+}
+
+.comments-list__item:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
 }
 
 .comments-list__header {
@@ -87,6 +94,12 @@
 
 .comments-list__item-body {
     padding-left: 48px;
+    font-size: 15px;
+}
+
+.comments-list__item-body img {
+    width: auto;
+    height: auto;
 }
 
 .comments-list__ava .ava__name {

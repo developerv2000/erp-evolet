@@ -33,7 +33,7 @@
                     </div>
 
                     <div class="comments-list__item-body">
-                        {{ $comment->body }}
+                        {!! $comment->body !!}
                     </div>
                 </div>
             @endforeach

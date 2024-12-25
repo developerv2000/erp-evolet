@@ -50,7 +50,7 @@
     </div>
 
     {{-- Modals --}}
-    <x-modals.multiple-delete form-action="{{ route('manufacturers.destroy') }}" :force-delete="false" />
+    <x-modals.multiple-delete form-action="{{ route('manufacturers.destroy') }}" :forceDelete="false" />
 @endsection
 
 @section('rightbar')

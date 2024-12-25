@@ -8,7 +8,8 @@
             action="{{ $formAction }}"
             method="POST"
             data-before-submit="appends-inputs"
-            data-inputs-selector=".main-table .td__checkbox">
+            data-inputs-selector=".main-table .td__checkbox"
+            data-on-submit="show-spinner">
 
             @csrf
             @method('PATCH')

@@ -25,7 +25,7 @@ trait DestroysModelRecords
      * @param Request $request The request object.
      * @return \Illuminate\Http\RedirectResponse Redirect back to the previous page.
      */
-    public function dashboardDestroy(Request $request)
+    public function destroy(Request $request)
     {
         // Extract id or ids from request as array to delete through loop
         $ids = (array) ($request->input('id') ?: $request->input('ids'));

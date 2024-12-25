@@ -1092,6 +1092,11 @@ a {
     flex-wrap: wrap;
     gap: 8px;
 }
+
+.main-table .td__last-comment img {
+    width: auto;
+    height: auto;
+}
 /* ------------ /end Main table ------------ */
 
 

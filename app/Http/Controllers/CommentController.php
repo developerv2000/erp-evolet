@@ -11,7 +11,7 @@ class CommentController extends Controller
 {
     use DestroysModelRecords;
 
-    public $model = Comment::class; // used in multiple destroy trait
+    public static $model = Comment::class; // used in multiple destroy trait
 
     public function index(Request $request)
     {
@@ -30,5 +30,28 @@ class CommentController extends Controller
         return view('comments.index', compact('record'));
     }
 
-    
+    public function store(Request $request)
+    {
+        $model = $request->input('commentable_type');
+        $recordID = $request->input('commentable_id');
+
+        $record = $model::withTrashed()->find($recordID);
+        $record->storeComment($request->input('body'));
+
+        return redirect()->back();
+    }
+
+    public function edit(Comment $record)
+    {
+        $title = $record->commentable->getCommentsPageTitle();
+
+        return view('comments.edit', compact('record', 'title'));
+    }
+
+    public function update(Request $request, Comment $record)
+    {
+        $record->update($request->all());
+
+        return redirect($request->input('previous_url'));
+    }
 }

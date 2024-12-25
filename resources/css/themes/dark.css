@@ -25,7 +25,7 @@
     --theme-lighter-text-color: #b6c0cd;
     --theme-lightest-text-color: #5e6e82;
     --theme-text-color-on-hover: #edf2f9;
-    --theme-button-text-color: white;
+    --theme-button-text-color: #dbdbdb;
 
     /* Theme Borders */
     --theme-border: 1px solid var(--theme-border-color);

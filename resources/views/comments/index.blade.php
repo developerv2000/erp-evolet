@@ -23,6 +23,6 @@
         @include('comments.partials.list')
 
         {{-- Modals --}}
-        <x-modals.target-delete forceDelete="false" />
+        <x-modals.target-delete :forceDelete="false" />
     </div>
 @endsection

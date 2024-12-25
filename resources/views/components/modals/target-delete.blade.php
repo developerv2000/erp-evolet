@@ -6,7 +6,8 @@
             class="target-delete-form"
             id="target-delete-form"
             action="#" {{-- Updates by JS --}}
-            method="POST">
+            method="POST"
+            data-on-submit="show-spinner">
 
             @csrf
             @method('DELETE')

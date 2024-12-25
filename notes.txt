@@ -1,5 +1,6 @@
 Global:
     Country and CountryCodes united in Country
+    Comments text improoved to simditor. Requires surrounding all comments with tag <p>
 
 MAD:
     Tables:

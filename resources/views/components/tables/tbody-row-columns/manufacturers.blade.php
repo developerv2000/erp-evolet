@@ -90,7 +90,9 @@
     @break
 
     @case('Last comment')
-        <x-tables.partials.td.max-lines-limited-text :text="$record->lastComment?->body" />
+        <div class="td__last-comment">
+            <x-tables.partials.td.max-lines-limited-text :text="$record->lastComment?->body" />
+        </div>
     @break
 
     @case('Comments date')

@@ -101,7 +101,7 @@
 
 .modal--visible {
     visibility: visible;
-    z-index: 3;
+    z-index: 11;
 }
 
 .modal__overlay {

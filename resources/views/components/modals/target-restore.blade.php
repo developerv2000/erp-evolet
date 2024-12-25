@@ -4,7 +4,8 @@
             class="target-restore-form"
             id="target-restore-form"
             action="#" {{-- Updates by JS --}}
-            method="POST">
+            method="POST"
+            data-on-submit="show-spinner">
 
             @csrf
             @method('PATCH')

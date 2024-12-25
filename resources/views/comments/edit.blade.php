@@ -1,30 +1,46 @@
-@extends('layouts.app', ['page' => 'comments-edit'])
+@extends('layouts.app', [
+    'pageName' => 'comments-edit',
+    'mainAutoOverflowed' => false,
+])
 
-@section('main')
-    <div class="pre-content styled-box">
-        @include('layouts.breadcrumbs', [
-            'crumbs' => [$title, __('Comments') . ' # ' . $instance->id],
-            'fullScreen' => false,
-        ])
+@section('content')
+    {{-- Toolbar --}}
+    <div class="toolbar">
+        {{-- blade-formatter-disable --}}
+            @php
+                $crumbs = [
+                    ['link' => null, 'text' => $title],
+                    ['link' => null, 'text' => __('Comments') . ' # ' . $record->id]
+                ];
+            @endphp
+            {{-- blade-formatter-enable --}}
 
-        <div class="pre-content__actions">
-            <x-different.button style="action" icon="add" type="submit" form="edit-form">{{ __('Update') }}</x-different.button>
+        <x-layouts.breadcrumbs :crumbs="$crumbs" />
+
+        <div class="toolbar__buttons-wrapper">
+            <x-misc.button
+                class="toolbar__button"
+                style="shadowed"
+                type="submit"
+                form="edit-form"
+                icon="done_all">{{ __('Update') }}
+            </x-misc.button>
         </div>
     </div>
 
-    <x-forms.template.edit-template action="{{ route('comments.update', $instance->id) }}">
-        <div class="form__section">
-            <x-forms.textarea.instance-edit-textarea
-                label="Comment"
-                name="body"
-                :instance="$instance"
-                required />
+    <x-form-templates.edit-template action="{{ route('comments.update', $record->id) }}">
+        <div class="form__block">
+            <x-form.simditor-textareas.record-field-textarea
+                labelText="Текст"
+                field="body"
+                :model="$record"
+                :isRequired="true" />
 
-            <x-forms.input.instance-edit-input
-                label="Date of creation"
-                name="created_at"
-                :instance="$instance"
-                required />
+            <x-form.inputs.record-field-input
+                labelText="Date of creation"
+                field="created_at"
+                :model="$record"
+                :isRequired="true" />
         </div>
-    </x-forms.template.edit-template>
+    </x-form-templates.edit-template>
 @endsection
