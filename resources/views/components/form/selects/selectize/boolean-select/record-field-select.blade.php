@@ -16,7 +16,7 @@
     $selectedValue = old($inputName, $model->{$field});
 @endphp
 
-<x-form.groups.default-group
+<x-form.groups.wrapped-label-group
     :labelText="$labelText"
     :errorFieldName="$inputName"
     :validationErrorKey="$validationErrorKey"
@@ -36,4 +36,4 @@
         <option value="{{ $falseOptionValue }}" @selected(isset($selectedValue) && $selectedValue == $falseOptionValue)>{{ __($falseOptionLabel) }}</option>
     </select>
 
-</x-form.groups.default-group>
+</x-form.groups.wrapped-label-group>

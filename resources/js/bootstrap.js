@@ -73,24 +73,28 @@ function initializeSimditors() {
         imageButton: 'upload',
     };
 
-    // Unimaged simditor
+    // Simple simditor without image upload
     document.querySelectorAll('.simditor:not(.simditor--imaged)').forEach(textarea => {
         new Simditor({ ...simditorConfigs, textarea });
     });
 
-    // Imaged simditor
-    document.querySelectorAll('.simditor--imaged').forEach(textarea => {
+    // Image-uploadable simditor
+    document.querySelectorAll('.simditor--image-uploadable').forEach(textarea => {
         new Simditor({
             ...simditorConfigs,
             textarea,
             toolbar: imageToolbar,
             upload: {
-                url: '/simditor/upload-image',
-                fileKey: 'image',
+                url: '/upload-simditor-image', // route url
+                fileKey: 'image', // $request->file('image')
                 connectionCount: 10,
                 leaveConfirm: 'Пожалуйста дождитесь окончания загрузки изображений на сервер! Вы уверены что хотите закрыть страницу?',
+                params: {
+                    _token: document.querySelector('meta[name="csrf-token"]').content, // CSRF token
+                    folder: textarea.dataset.imageUploadFolder, // Folder to save images
+                }
             },
-            defaultImage: '/img/dashboard/simditor-default-image.png',
+            defaultImage: '/img/form/uploading-image.png', // Default image while uploading
         });
     });
 }

@@ -25,3 +25,4 @@ yarn-error.log
 /.osp/project.ini
 /.htaccess
 /public/img/users/*
+/public/img/comments/*

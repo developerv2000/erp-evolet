@@ -7,7 +7,7 @@
     'rows' => 5, // Rows count of the input field
 ])
 
-<x-form.groups.default-group
+<x-form.groups.wrapped-label-group
     :labelText="$labelText"
     :errorFieldName="$inputName"
     :validationErrorKey="$validationErrorKey"
@@ -18,4 +18,4 @@
         name="{{ $inputName }}"
         rows={{ $rows }}
         @if ($isRequired) required @endif>{{ request()->input($inputName, $initialValue) }}</textarea>
-</x-form.groups.default-group>
+</x-form.groups.wrapped-label-group>

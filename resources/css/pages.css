@@ -48,9 +48,8 @@
     padding: 20px;
 }
 
-.create-comments-form__submit {
-    align-self: flex-end;
-    margin-top: 20px;
+.create-comments-form .form__submit {
+    margin-left: auto;
 }
 
 /* List */
@@ -62,7 +61,7 @@
 .comments-list {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 24px;
 }
 
 .comments-list__item {

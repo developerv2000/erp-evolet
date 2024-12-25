@@ -6,7 +6,7 @@
     'isRequired' => false, // Determines if the field is required.
 ])
 
-<x-form.groups.default-group
+<x-form.groups.wrapped-label-group
     :labelText="$labelText"
     :errorFieldName="$inputName"
     :validationErrorKey="$validationErrorKey"
@@ -17,4 +17,4 @@
         name="{{ $inputName }}"
         value="{{ old($inputName, $initialValue) }}"
         @if ($isRequired) required @endif>
-</x-form.groups.default-group>
+</x-form.groups.wrapped-label-group>

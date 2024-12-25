@@ -11,7 +11,7 @@
     $hasError = $errorFieldName && $inputErrors->has($errorFieldName);
 @endphp
 
-<div {{ $attributes->merge(['class' => 'form-group radio-group' . ($hasError ? ' form-group--error' : '')]) }}>
+<div {{ $attributes->merge(['class' => 'form-group standard-label-group' . ($hasError ? ' form-group--error' : '')]) }}>
     {{-- Render the label and indicate if the field is required --}}
     <label class="label">
         <p class="label__text">
@@ -23,10 +23,14 @@
         </p>
     </label>
 
-    <div class="form-group__input-container radio-group__options-container">
-        {{-- Render radio options --}}
+    <div class="form-group__input-container">
+        {{-- Render the slot (usually an input field) --}}
         {{ $slot }}
+
+        {{-- Render error icon --}}
+        <span class="form-group__error-icon material-symbols-outlined">{{ $icon }}</span>
     </div>
+
 
     {{-- Display the first error message if there is one --}}
     {{-- blade-formatter-disable-next-line --}}

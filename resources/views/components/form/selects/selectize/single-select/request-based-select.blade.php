@@ -12,7 +12,7 @@
     $selectedValue = request()->input($inputName, $initialValue);
 @endphp
 
-<x-form.groups.default-group
+<x-form.groups.wrapped-label-group
     :labelText="$labelText"
     :errorFieldName="$inputName"
     :validationErrorKey="$validationErrorKey"
@@ -36,4 +36,4 @@
         @endforeach
     </select>
 
-</x-form.groups.default-group>
+</x-form.groups.wrapped-label-group>

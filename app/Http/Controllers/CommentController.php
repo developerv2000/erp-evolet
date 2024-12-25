@@ -29,4 +29,6 @@ class CommentController extends Controller
 
         return view('comments.index', compact('record'));
     }
+
+    
 }

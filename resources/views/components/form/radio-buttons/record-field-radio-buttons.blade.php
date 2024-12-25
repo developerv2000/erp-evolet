@@ -16,8 +16,8 @@
     $selectedValue = old($inputName, $model->{$field});
 @endphp
 
-<x-form.groups.radio-group
-    :class="$attributes['class']"
+<x-form.groups.standard-label-group
+    :class="'radio-group ' . $attributes['class']"
     :labelText="$labelText"
     :errorFieldName="$inputName"
     :validationErrorKey="$validationErrorKey"
@@ -37,4 +37,4 @@
             <div class="radio-group__option-caption">{{ $option->{$optionCaptionField} }}</div>
         </label>
     @endforeach
-</x-form.groups.radio-group>
+</x-form.groups.standard-label-group>

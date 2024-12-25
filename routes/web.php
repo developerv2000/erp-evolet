@@ -17,6 +17,7 @@ Route::controller(AuthenticatedSessionController::class)->group(function () {
 
 Route::middleware('auth', 'auth.session')->group(function () {
     Route::get('/', [MainController::class, 'redirectToHomePage'])->name('home');
+    Route::post('/upload-simditor-image', [MainController::class, 'uploadSimditorImage']);
 
     Route::controller(SettingController::class)->prefix('/settings')->name('settings.')->group(function () {
         Route::patch('locale', 'updateLocale')->name('update-locale');

@@ -3,20 +3,22 @@
     'model', // Model instance for retrieving field values.
     'field', // Model attribute to display in the input.
     'inputName' => $field, // Name for the input field.
-    'initialValue' => $model->{$field}, // Initial value of the input field.
     'validationErrorKey' => null, // Validation error bag key, if any.
     'isRequired' => false, // Determines if the field is required.
+    'rows' => 5, // Rows count of the input field
 ])
 
-<x-form.groups.wrapped-label-group
+{{-- Important: Standard label group is used instead of Wrapped label group --}}
+
+<x-form.groups.standard-label-group
     :labelText="$labelText"
     :errorFieldName="$inputName"
     :validationErrorKey="$validationErrorKey"
     :isRequired="$isRequired">
 
-    <input
-        {{ $attributes->merge(['class' => 'input']) }}
+    <textarea
+        {{ $attributes->merge(['class' => 'textarea simditor']) }}
         name="{{ $inputName }}"
-        value="{{ old($inputName, $initialValue) }}"
-        @if ($isRequired) required @endif>
-</x-form.groups.wrapped-label-group>
+        rows={{ $rows }}
+        @if ($isRequired) required @endif>{{ old($inputName, $model->{$field}) }}</textarea>
+</x-form.groups.standard-label-group>
