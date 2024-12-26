@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
+use App\Support\Abstracts\BaseModel;
+use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\AddsDefaultQueryParamsToRequest;
 use App\Support\Traits\Model\Commentable;
 use App\Support\Traits\Model\FinalizesQueryForRequest;
 use App\Support\Traits\Model\HasAttachments;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Gate;
 
-class Manufacturer extends Model
+class Manufacturer extends BaseModel implements HasTitle
 {
     /** @use HasFactory<\Database\Factories\ManufacturerFactory> */
     use HasFactory;
@@ -147,6 +148,32 @@ class Manufacturer extends Model
             'belongsToMany' => ['productClasses', 'zones', 'blacklists'],
             'dateRange' => ['created_at', 'updated_at'],
         ];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Contracts
+    |--------------------------------------------------------------------------
+    */
+
+    public function getTitleAttribute(): string
+    {
+        return $this->name;
+    }
+
+    public function generateBreadcrumbs(): array
+    {
+        $breadcrumbs = [
+            ['link' => route('manufacturers.index'), 'text' => __('EPP')],
+        ];
+
+        if ($this->trashed()) {
+            $breadcrumbs[] = ['link' => route('manufacturers.trash'), 'text' => __('Trash')];
+        }
+
+        $breadcrumbs[] = ['link' => route('manufacturers.edit', $this->id), 'text' => $this->title];
+
+        return $breadcrumbs;
     }
 
     /*

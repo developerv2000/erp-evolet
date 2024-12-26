@@ -7,16 +7,7 @@
     <div class="main-box">
         {{-- Toolbar --}}
         <div class="toolbar">
-            {{-- blade-formatter-disable --}}
-            @php
-                $crumbs = [
-                    ['link' => null, 'text' => $record->getCommentsPageTitle()],
-                    ['link' => null, 'text' => __('Comments') . ' — ' . $record->comments->count()]
-                ];
-            @endphp
-            {{-- blade-formatter-enable --}}
-
-            <x-layouts.breadcrumbs :crumbs="$crumbs" />
+            <x-misc.breadcrumbs :crumbs="$crumbs" />
         </div>
 
         @include('comments.partials.create-form')

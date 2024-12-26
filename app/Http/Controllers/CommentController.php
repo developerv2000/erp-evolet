@@ -27,7 +27,14 @@ class CommentController extends Controller
         // Load comments minified users
         Comment::loadRecordsMinifiedUsers($record->comments);
 
-        return view('comments.index', compact('record'));
+        // Generate breadcrumbs
+        $crumbs = $record->generateBreadcrumbs();
+        array_push(
+            $crumbs,
+            ['link' => null, 'text' => __('Comments')],
+        );
+
+        return view('comments.index', compact('record', 'crumbs'));
     }
 
     public function store(Request $request)
@@ -43,9 +50,17 @@ class CommentController extends Controller
 
     public function edit(Comment $record)
     {
-        $title = $record->commentable->getCommentsPageTitle();
+        $record->load('commentable');
 
-        return view('comments.edit', compact('record', 'title'));
+        // Generate breadcrumbs
+        $crumbs = $record->commentable->generateBreadcrumbs();
+        array_push(
+            $crumbs,
+            ['link' => null, 'text' => __('Comments')],
+            ['link' => null, 'text' => '#' . $record->id]
+        );
+
+        return view('comments.edit', compact('record', 'crumbs'));
     }
 
     public function update(Request $request, Comment $record)

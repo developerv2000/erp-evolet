@@ -16,7 +16,7 @@
             @endphp
             {{-- blade-formatter-enable --}}
 
-            <x-layouts.breadcrumbs :crumbs="$crumbs" />
+            <x-misc.breadcrumbs :crumbs="$crumbs" />
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">

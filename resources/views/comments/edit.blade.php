@@ -6,16 +6,7 @@
 @section('content')
     {{-- Toolbar --}}
     <div class="toolbar">
-        {{-- blade-formatter-disable --}}
-            @php
-                $crumbs = [
-                    ['link' => null, 'text' => $title],
-                    ['link' => null, 'text' => __('Comments') . ' # ' . $record->id]
-                ];
-            @endphp
-            {{-- blade-formatter-enable --}}
-
-        <x-layouts.breadcrumbs :crumbs="$crumbs" />
+        <x-misc.breadcrumbs :crumbs="$crumbs" />
 
         <div class="toolbar__buttons-wrapper">
             <x-misc.button
