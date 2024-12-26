@@ -74,7 +74,11 @@
     @break
 
     @case('Website')
-        <x-tables.partials.td.max-lines-limited-text :text="$record->website" />
+        @if ($record->website)
+            <div class="td__max-lines-limited-text" data-on-click="toggle-td-text-max-lines">
+                <a class="td__link text-lowercase" href="{{ $record->website }}" target="_blank">{{ $record->website }}</a>
+            </div>
+        @endif
     @break
 
     @case('About company')
@@ -122,4 +126,5 @@
     @case('Edit attachments')
         Attachments
     @break
+
 @endswitch

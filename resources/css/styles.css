@@ -35,7 +35,7 @@ body {
 /* Scrollbar width & height */
 body::-webkit-scrollbar,
 .thin-scrollbar::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
     height: 10px;
 }
 
@@ -128,6 +128,9 @@ a {
     box-shadow: var(--theme-box-shadow);
 }
 
+.text-lowercase {
+    text-transform: lowercase;
+}
 
 /* ------------ Buttons ------------ */
 .button {
@@ -952,6 +955,10 @@ a {
     overflow: auto;
 }
 
+.main-table-wrapper::-webkit-scrollbar {
+    width: 6px;
+}
+
 .main-wrapper.fullscreen .main-table-wrapper {
     max-height: calc(100vh - var(--table-toolbar-height) - var(--main-table-pagination-height));
 }
@@ -1097,6 +1104,11 @@ a {
     width: auto;
     height: auto;
 }
+
+.main-table .td__last-comment table {
+    display: none;
+}
+
 /* ------------ /end Main table ------------ */
 
 

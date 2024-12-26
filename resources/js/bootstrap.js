@@ -64,7 +64,7 @@ function initializeSelectizes() {
 function initializeSimditors() {
     Simditor.locale = 'ru-RU';
 
-    const simpleToolbar = ['title', 'bold', 'italic', 'underline', 'color', '|', 'ol', 'ul', 'blockquote', 'code', 'table', '|', 'link', 'hr', '|', 'indent', 'outdent', 'alignment'];
+    const simpleToolbar = ['title', 'bold', 'italic', 'underline', 'color', '|', 'ol', 'ul', 'blockquote', 'table', '|', 'link', 'hr', '|', 'indent', 'outdent', 'alignment'];
     const imageToolbar = [...simpleToolbar, 'image'];
 
     const simditorConfigs = {

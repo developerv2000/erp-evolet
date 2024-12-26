@@ -145,6 +145,7 @@
     display: flex;
     border: 8px solid var(--theme-body-background-color);
 }
+
 /* ------------ /end Form ------------ */
 
 
@@ -264,6 +265,7 @@
     background-color: var(--theme-main-color);
     border-color: var(--theme-main-color);
 }
+
 /* ------------ /end Radiobutton ------------ */
 
 
@@ -484,23 +486,16 @@
     background-color: var(--form-input-background-color);
 }
 
+/* ----- Toolbar ----- */
 .simditor .simditor-toolbar {
     border-bottom: var(--form-input-border);
     background-color: var(--theme-box-background-color);
 }
 
-.simditor .simditor-body {
-    padding: 16px;
-    min-height: 200px;
-    font-size: var(--form-input-font-size);
-    line-height: var(--form-input-line-height);
-    color: var(--form-input-text-color);
-    font-family: inherit;
-}
-
 /* Toolbar icons */
 .simditor .simditor-toolbar>ul>li>.toolbar-item {
     width: 44px;
+    font-size: 16px;
     color: var(--theme-text-color);
 }
 
@@ -510,7 +505,105 @@
     color: var(--theme-button-text-color);
 }
 
-/* Text color */
+/* Toolbar menu (dropdown) */
+.simditor .simditor-toolbar .toolbar-menu {
+    background-color: var(--theme-box-background-color);
+    box-shadow: var(--theme-box-background-color);
+    outline: var(--theme-border);
+}
+
+/* Toolbar menu button  */
+.simditor .simditor-toolbar>ul>li.menu-on .toolbar-item {
+    background-color: var(--theme-main-color);
+    box-shadow: var(--theme-box-shadow);
+    color: var(--theme-button-text-color);
+}
+
+/* Toolbar menu before */
+.simditor .simditor-toolbar .toolbar-menu:before {
+    background-color: var(--theme-body-background-color);
+}
+
+/* Toolbar menu list */
+.simditor .simditor-toolbar .toolbar-menu ul {
+    background-color: var(--theme-box-background-color);
+}
+
+/* Toolbar menu list item */
+.simditor .simditor-toolbar .toolbar-menu ul>li .menu-item {
+    color: var(--theme-text-color) !important;
+
+    &:hover {
+        color: var(--theme-text-color-on-hover) !important;
+        background-color: var(--theme-body-background-color) !important;
+    }
+}
+
+/* Toolbar menu dropdown separator */
+.simditor .simditor-toolbar .toolbar-menu ul>li .separator {
+    border: var(--theme-border);
+}
+
+/* Toolbar table */
+.simditor .simditor-toolbar .toolbar-menu.toolbar-menu-table .menu-create-table {
+    background-color: var(--theme-box-background-color);
+}
+
+/* Toolbar table cells */
+.simditor .simditor-toolbar .toolbar-menu.toolbar-menu-table .menu-create-table table td:before {
+    border: var(--theme-border);
+    background: var(--theme-box-background-color);
+}
+
+/* Toolbar table selected cells */
+.simditor .simditor-toolbar .toolbar-menu.toolbar-menu-table .menu-create-table table td.selected:before {
+    background: var(--theme-secondary-color);
+}
+
+/* Toolbar colors */
+.simditor .simditor-toolbar .toolbar-menu.toolbar-menu-color .color-list li .font-color-1 {
+    background-color: var(--theme-main-color);
+}
+
+.simditor .simditor-toolbar .toolbar-menu.toolbar-menu-color .color-list li .font-color-2 {
+    background-color: var(--theme-secondary-color);
+}
+
+.simditor .simditor-toolbar .toolbar-menu.toolbar-menu-color .color-list li .font-color-3 {
+    background-color: var(--theme-danger-color);
+}
+
+.simditor .simditor-toolbar .toolbar-menu.toolbar-menu-color .color-list li .font-color-4 {
+    background-color: var(--theme-success-color);
+}
+
+.simditor .simditor-toolbar .toolbar-menu.toolbar-menu-color .color-list li .font-color-5 {
+    background-color: var(--theme-cancel-color);
+}
+
+.simditor .simditor-toolbar .toolbar-menu.toolbar-menu-color .color-list li .font-color-6 {
+    background-color: #FAC858;
+}
+
+.simditor .simditor-toolbar .toolbar-menu.toolbar-menu-color .color-list li .font-color-7 {
+    background-color: #9A60B4;
+}
+
+.simditor .simditor-toolbar .toolbar-menu.toolbar-menu-color .color-list li .font-color.font-color-default {
+    background-color: #0037b7;
+}
+
+/* ----- Body ----- */
+.simditor .simditor-body {
+    padding: 16px;
+    min-height: 200px;
+    font-size: var(--form-input-font-size);
+    line-height: var(--form-input-line-height);
+    color: var(--form-input-text-color);
+    font-family: inherit;
+}
+
+/* Body Text color */
 .simditor .simditor-body p,
 .simditor .simditor-body div,
 .editor-style p,
@@ -518,25 +611,43 @@
     color: var(--form-input-text-color);
 }
 
-/* Link color */
+/* Body header colors */
+.simditor .simditor-body h1,
+.simditor .simditor-body h2,
+.simditor .simditor-body h3,
+.simditor .simditor-body h4,
+.simditor .simditor-body h5,
+.simditor .simditor-body h6,
+.editor-style h1,
+.editor-style h2,
+.editor-style h3,
+.editor-style h4,
+.editor-style h5,
+.editor-style h6 {
+    color: var(--theme-text-color);
+}
+
+/* Body links */
 .simditor .simditor-body a,
-.editor-style a {
+.editor-style a,
+.simditor .simditor-body a:visited,
+.editor-style a:visited {
     color: var(--theme-main-color);
 }
 
-/* Link popover  */
+/* Body link popover  */
 .simditor .simditor-popover {
     padding: 6px 12px;
     background-color: var(--theme-box-background-color);
     box-shadow: var(--theme-box-shadow);
 }
 
-/* Link popover fields container */
+/* Body link popover fields container */
 .simditor .simditor-popover .settings-field {
     height: auto;
 }
 
-/* Link popover fieldss */
+/* Body link popover fields */
 .simditor .simditor-popover .link-text,
 .simditor .simditor-popover .link-url,
 .simditor .simditor-popover .link-target {
@@ -544,6 +655,38 @@
     color: var(--form-input-text-color);
     border: var(--form-input-border);
     background-color: var(--form-input-background-color);
+}
+
+/* Body blockquote */
+.simditor .simditor-body blockquote,
+.editor-style blockquote {
+    border-color: var(--theme-border-color);
+}
+
+/* Body table thead */
+.simditor .simditor-body table thead,
+.editor-style table thead {
+    color: var(--theme-lighter-text-color);
+    background-color: var(--theme-body-background-color);
+    font-weight: 500;
+}
+
+/* Body table cells */
+.simditor .simditor-body table td,
+.simditor .simditor-body table th,
+.editor-style table td,
+.editor-style table th {
+    border: var(--theme-border);
+    height: auto;
+    padding: 6px;
+}
+
+/* Body table focused cells */
+.simditor .simditor-body table td.active,
+.simditor .simditor-body table th.active,
+.editor-style table td.active,
+.editor-style table th.active {
+    background-color: var(--theme-table-tr-hover-background-color);
 }
 
 /* ------------ /end Simditor ------------ */
