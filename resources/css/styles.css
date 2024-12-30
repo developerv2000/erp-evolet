@@ -32,10 +32,14 @@ body {
     --form-input-border-radius: var(--theme-border-radius);
 }
 
-/* Scrollbar width & height */
-body::-webkit-scrollbar,
-.thin-scrollbar::-webkit-scrollbar {
+/* Scrollbars width & height */
+body::-webkit-scrollbar {
     width: 8px;
+    height: 10px;
+}
+
+.thin-scrollbar::-webkit-scrollbar {
+    width: 6px;
     height: 10px;
 }
 
@@ -955,10 +959,6 @@ a {
     overflow: auto;
 }
 
-.main-table-wrapper::-webkit-scrollbar {
-    width: 6px;
-}
-
 .main-wrapper.fullscreen .main-table-wrapper {
     max-height: calc(100vh - var(--table-toolbar-height) - var(--main-table-pagination-height));
 }
@@ -1144,3 +1144,68 @@ a {
 }
 
 /* ------------ /END Ava ------------ */
+
+
+/* ------------ Simditor text ------------ */
+.simditor-text h1,
+.simditor-text h2,
+.simditor-text h3,
+.simditor-text h4,
+.simditor-text h5,
+.simditor-text h6 {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.simditor-text a {
+    color: var(--theme-main-color);
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.simditor-text a *:hover {
+    text-decoration: underline;
+}
+
+.simditor-text img {
+    width: auto;
+    height: auto;
+}
+
+/* List table */
+.simditor-text table {
+    color: var(--theme-table-text-color);
+    border-collapse: collapse;
+}
+
+.simditor-text table thead {
+    font-size: 14px;
+    color: var(--theme-lighter-text-color);
+    background-color: var(--theme-body-background-color);
+}
+
+.simditor-text table th {
+    vertical-align: middle;
+    padding: 8px;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: var(--theme-border);
+}
+
+.simditor-text table tbody {
+    font-size: 14px;
+    vertical-align: top;
+}
+
+.simditor-text table td {
+    padding: 8px;
+    word-break: break-word;
+    justify-items: flex-start;
+    border: var(--theme-border);
+}
+
+/* ------------ /END Simditor text ------------ */

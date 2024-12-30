@@ -83,6 +83,10 @@
     align-items: flex-start;
 }
 
+.comments-list__ava .ava__title {
+    font-weight: 500;
+}
+
 .comments-list__actions {
     display: flex;
     gap: 6px;
@@ -95,54 +99,6 @@
 .comments-list__item-body {
     padding-left: 48px;
     font-size: 15px;
-}
-
-.comments-list__item-body a {
-    color: var(--theme-main-color);
-}
-
-.comments-list__item-body img {
-    width: auto;
-    height: auto;
-}
-
-.comments-list__ava .ava__name {
-    font-size: 15px;
-    font-weight: 600;
-}
-
-/* List table */
-.comments-list__item-body table {
-    color: var(--theme-table-text-color);
-    border-collapse: collapse;
-}
-
-.comments-list__item-body table thead {
-    font-size: 14px;
-    color: var(--theme-lighter-text-color);
-    background-color: var(--theme-body-background-color);
-}
-
-.comments-list__item-body table th {
-    vertical-align: middle;
-    padding: 8px;
-    font-weight: 400;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    border: var(--theme-border);
-}
-
-.comments-list__item-body table tbody {
-    font-size: 14px;
-    vertical-align: top;
-}
-
-.comments-list__item-body table td {
-    padding: 8px;
-    word-break: break-word;
-    justify-items: flex-start;
-    border: var(--theme-border);
 }
 
 /* ------------ /end Comment pages ------------ */

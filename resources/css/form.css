@@ -544,6 +544,20 @@
     border: var(--theme-border);
 }
 
+/* Toolbar titles */
+/* Hide h2 - h5 */
+.simditor .simditor-toolbar .toolbar-menu-title ul li:nth-child(4),
+.simditor .simditor-toolbar .toolbar-menu-title ul li:nth-child(5),
+.simditor .simditor-toolbar .toolbar-menu-title ul li:nth-child(6),
+.simditor .simditor-toolbar .toolbar-menu-title ul li:nth-child(7) {
+    display: none;
+}
+
+/* Toolbar h1 title */
+.simditor .simditor-toolbar .toolbar-menu ul > li .menu-item.menu-item-h1 {
+    font-size: 18px;
+}
+
 /* Toolbar table */
 .simditor .simditor-toolbar .toolbar-menu.toolbar-menu-table .menu-create-table {
     background-color: var(--theme-box-background-color);
@@ -624,7 +638,8 @@
 .editor-style h4,
 .editor-style h5,
 .editor-style h6 {
-    color: var(--theme-text-color);
+    font-size: 18px;
+    font-weight: 500;
 }
 
 /* Body links */

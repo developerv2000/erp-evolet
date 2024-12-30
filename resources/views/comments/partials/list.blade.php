@@ -32,7 +32,7 @@
                         @endcan
                     </div>
 
-                    <div class="comments-list__item-body">
+                    <div class="comments-list__item-body simditor-text">
                         {!! $comment->body !!}
                     </div>
                 </div>
