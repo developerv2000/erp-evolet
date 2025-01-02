@@ -1,7 +1,13 @@
 <?php
 
+use App\Models\Country;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
+
+Schedule::call(function () {
+    Country::recalculateAllUsageCounts();
+})->daily();
 
 Artisan::command('users:reset-settings', function () {
     User::resetAllSettingsToDefaultForAll();

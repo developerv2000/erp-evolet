@@ -16,7 +16,7 @@
 
 @if ($includePagination && $records->hasPages())
     <div class="pagination-wrapper">
-        <x-misc.navigate-to-page-number :current-page="$records->currentPage()" :last-page="$records->lastPage()" />
+        <x-layouts.navigate-to-page-number :current-page="$records->currentPage()" :last-page="$records->lastPage()" />
         {{ $records->links('layouts.pagination') }}
     </div>
 @endif

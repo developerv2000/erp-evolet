@@ -15,9 +15,6 @@ class Permission extends Model
     |--------------------------------------------------------------------------
     */
 
-    // View roles
-    const CAN_VIEW_ROLES_TABLE_NAME = 'can view Roles table';
-
     // Delete from trash
     const CAN_DELETE_FROM_TRASH_NAME = 'can delete from trash';
 
@@ -181,7 +178,6 @@ class Permission extends Model
 
         return array_merge($moderatorPermissions, [
             // Additional views
-            self::CAN_VIEW_ROLES_TABLE_NAME,
             self::CAN_VIEW_MAD_MISC_NAME,
             self::CAN_VIEW_MAD_USERS_NAME,
 

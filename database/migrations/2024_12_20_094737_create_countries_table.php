@@ -15,6 +15,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('id')->autoIncrement();
             $table->string('name')->unique();
             $table->string('code')->unique();
+            $table->unsignedMediumInteger('usage_count')->default(0);
         });
     }
 

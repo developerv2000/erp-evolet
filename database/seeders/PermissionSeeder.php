@@ -21,7 +21,6 @@ class PermissionSeeder extends Seeder
         */
 
         $globals = [
-            Permission::CAN_VIEW_ROLES_TABLE_NAME,
             Permission::CAN_DELETE_FROM_TRASH_NAME,
             Permission::CAN_EDIT_COMMENTS_NAME,
             Permission::CAN_EXPORT_RECORDS_AS_EXCEL_NAME,

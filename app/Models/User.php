@@ -73,11 +73,6 @@ class User extends Authenticatable
         ];
     }
 
-    protected $with = [
-        'roles',
-        'permissions',
-    ];
-
     /*
     |--------------------------------------------------------------------------
     | Relations
@@ -121,7 +116,7 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    public function scopeOnlyBdms($query)
+    public function scopeOnlyBDMs($query)
     {
         return $query->whereRelation('roles', 'name', Role::BDM_NAME);
     }
@@ -129,6 +124,22 @@ class User extends Authenticatable
     public function scopeOnlyMADAnalysts($query)
     {
         return $query->whereRelation('roles', 'name', Role::MAD_ANALYST_NAME);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Queries
+    |--------------------------------------------------------------------------
+    */
+
+    public static function getBDMsMinifed()
+    {
+        return self::onlyBdms()->select('id', 'name')->get();
+    }
+
+    public static function getMADAnalystsMinified()
+    {
+        return self::onlyMADAnalysts()->select('id', 'name')->get();
     }
 
     /*
@@ -362,7 +373,7 @@ class User extends Authenticatable
 
     /*
     |--------------------------------------------------------------------------
-    | Profile
+    | Misc
     |--------------------------------------------------------------------------
     */
 

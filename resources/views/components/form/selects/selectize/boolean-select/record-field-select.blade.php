@@ -2,8 +2,8 @@
     'labelText', // Label for the select input.
     'model', // Model instance being edited to populate the selected option.
     'field', // Model attribute to select as default.
-    'trueOptionLabel' => 'Да',
-    'falseOptionLabel' => 'Нет',
+    'trueOptionLabel' => __('Yes'),
+    'falseOptionLabel' => __('No'),
     'trueOptionValue' => 1,
     'falseOptionValue' => 0,
     'inputName' => $field, // Name for the input field.

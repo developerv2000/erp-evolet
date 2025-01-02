@@ -15,7 +15,7 @@
         @endphp
         {{-- blade-formatter-enable --}}
 
-        <x-misc.breadcrumbs :crumbs="$crumbs" />
+        <x-layouts.breadcrumbs :crumbs="$crumbs" />
     </div>
 
     {{-- Personal data --}}

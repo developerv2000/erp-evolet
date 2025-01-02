@@ -16,7 +16,7 @@ class GlobalViewComposersDefiner
 
     private static function definePaginationLimitComposer()
     {
-        self::defineViewComposer('components.dashboard.filters.partials.pagination-limit-input', [
+        self::defineViewComposer('components.filter.partials.pagination-limit-input', [
             'paginationLimitOptions' => ModelHelper::getPaginationLimitOptions(),
         ]);
     }

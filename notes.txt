@@ -13,3 +13,14 @@ MAD:
             is_important => important
 
 
+
+--------------------------- Not done yet (what left) ------------------------------
+Country:
+    recalculateUsageCount() => Requires KVPP + VPS
+
+Manufacturers:
+    filterQueryByProcessCountries() => Requires VPS
+    Filter / Product class => Required IVP
+    tbody IVP
+    tbody Meetings
+

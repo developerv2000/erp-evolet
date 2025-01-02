@@ -8,6 +8,7 @@ use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\AddsDefaultQueryParamsToRequest;
 use App\Support\Traits\Model\Commentable;
 use App\Support\Traits\Model\FinalizesQueryForRequest;
+use App\Support\Traits\Model\GetsMinifiedRecordsWithName;
 use App\Support\Traits\Model\HasAttachments;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,6 +23,7 @@ class Manufacturer extends BaseModel implements HasTitle
     use HasAttachments;
     use AddsDefaultQueryParamsToRequest;
     use FinalizesQueryForRequest;
+    use GetsMinifiedRecordsWithName;
 
     /*
     |--------------------------------------------------------------------------
@@ -138,10 +140,46 @@ class Manufacturer extends BaseModel implements HasTitle
         // Apply base filters using helper
         $query = QueryFilterHelper::applyFilters($query, $request, self::getFilterConfig());
 
+        // Additional filters
+        self::filterQueryByRegion($query, $request);
+        self::filterQueryByProcessCountries($query, $request);
+
         return $query;
     }
 
-    public static function getFilterConfig(): array
+    /**
+     * Apply filters to the query based on the specific manufacturer countries.
+     *
+     * @param Illuminate\Database\Eloquent\Builder $query The query builder instance to apply filters to.
+     * @param Illuminate\Http\Request $request The HTTP request object containing filter parameters.
+     * @return Illuminate\Database\Eloquent\Builder The modified query builder instance.
+     */
+    public static function filterQueryByRegion($query, $request)
+    {
+        $region = $request->input('region');
+
+        if ($region) {
+            // Get the ID of the country 'INDIA' for comparison
+            $indiaCountryId = Country::getIndiaCountryID();
+
+            // Apply conditions based on the region
+            switch ($region) {
+                case 'EUROPE':
+                    // Exclude manufacturers from India
+                    $query->where('country_id', '!=', $indiaCountryId);
+                    break;
+
+                case 'INDIA':
+                    // Include only manufacturers from India
+                    $query->where('country_id', $indiaCountryId);
+                    break;
+            }
+        }
+    }
+
+    public static function filterQueryByProcessCountries($query, $request) {}
+
+    private static function getFilterConfig(): array
     {
         return [
             'whereEqual' => ['analyst_user_id', 'bdm_user_id', 'category_id', 'active', 'important'],

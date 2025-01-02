@@ -6,7 +6,7 @@
 @section('content')
     {{-- Toolbar --}}
     <div class="toolbar">
-        <x-misc.breadcrumbs :crumbs="$crumbs" />
+        <x-layouts.breadcrumbs :crumbs="$crumbs" />
 
         <div class="toolbar__buttons-wrapper">
             <x-misc.button

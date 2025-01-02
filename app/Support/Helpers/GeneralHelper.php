@@ -30,8 +30,8 @@ class GeneralHelper
     public static function getBooleanOptionsArray()
     {
         return [
-            (object) ['caption' => trans('Да'), 'value' => 1],
-            (object) ['caption' => trans('Нет'), 'value' => 0],
+            (object) ['caption' => trans('Yes'), 'value' => 1],
+            (object) ['caption' => trans('No'), 'value' => 0],
         ];
     }
 }

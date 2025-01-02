@@ -1,8 +1,8 @@
 @props([
     'labelText', // Label text for the input field.
     'inputName', // Name for the input field.
-    'trueOptionLabel' => 'Да',
-    'falseOptionLabel' => 'Нет',
+    'trueOptionLabel' => __('Yes'),
+    'falseOptionLabel' => __('No'),
     'trueOptionValue' => 1,
     'falseOptionValue' => 0,
     'initialValue' => null, // Initial value of the input field.

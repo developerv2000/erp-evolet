@@ -7,7 +7,7 @@
     <div class="main-box styled-box">
         {{-- Toolbar --}}
         <div class="toolbar toolbar--joined toolbar--for-table">
-            <x-misc.breadcrumbs :crumbs="$breadcrumbs" />
+            <x-layouts.breadcrumbs :crumbs="$breadcrumbs" />
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
