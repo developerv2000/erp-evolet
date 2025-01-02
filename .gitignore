@@ -22,7 +22,10 @@ yarn-error.log
 /.vscode
 /.zed
 
-/.osp/project.ini
 /.htaccess
+/.osp/project.ini
+
 /public/img/users/*
 /public/img/comments/*
+
+/public/attachments/Manufacturer/*

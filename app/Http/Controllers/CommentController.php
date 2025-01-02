@@ -11,30 +11,30 @@ class CommentController extends Controller
 {
     use DestroysModelRecords;
 
-    public static $model = Comment::class; // used in multiple destroy trait
+    // used in multiple destroy trait
+    public static $model = Comment::class;
 
     public function index(Request $request)
     {
-        // Find model
-        $modelBaseName = $request->route('commentable_type');
-        $model = ModelHelper::addFullNamespaceToModelBasename($modelBaseName);
-
-        // Load model comments
-        $recordID = $request->route('commentable_id');
-        $record = $model::withTrashed()->find($recordID);
-        $record->load('comments');
+        // Retrieve the model and record with comments eagerly loaded
+        $model = ModelHelper::addFullNamespaceToModelBasename(
+            $request->route('commentable_type')
+        );
+        $record = $model::withTrashed()->with(['comments'])->findOrFail(
+            $request->route('commentable_id')
+        );
 
         // Load comments minified users
         Comment::loadRecordsMinifiedUsers($record->comments);
 
         // Generate breadcrumbs
-        $crumbs = $record->generateBreadcrumbs();
-        array_push(
-            $crumbs,
-            ['link' => null, 'text' => __('Comments')],
-        );
+        $breadcrumbs = $record->generateBreadcrumbs();
+        $breadcrumbs[] = [
+            'link' => null,
+            'text' => __('Comments'),
+        ];
 
-        return view('comments.index', compact('record', 'crumbs'));
+        return view('comments.index', compact('record', 'breadcrumbs'));
     }
 
     public function store(Request $request)

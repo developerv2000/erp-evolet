@@ -38,18 +38,34 @@ class Attachment extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Get the file size in megabytes.
+     *
+     * @return float
+     */
+    public function getFileSizeInMegabytesAttribute()
+    {
+        return round($this->file_size / (1024 * 1024), 2);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Events
     |--------------------------------------------------------------------------
     */
 
     protected static function booted()
     {
-        static::creating(function ($instance) {
-            $instance->created_at = now();
+        static::creating(function ($record) {
+            $record->created_at = now();
         });
 
-        static::deleting(function ($instance) {
-            $instance->deleteFileFromStorage();
+        static::deleting(function ($record) {
+            $record->deleteFileFromStorage();
         });
     }
 
@@ -73,15 +89,5 @@ class Attachment extends Model
         if (file_exists($filePath)) {
             unlink($filePath);
         }
-    }
-
-    /**
-     * Get the file size in megabytes.
-     *
-     * @return float
-     */
-    public function getFileSizeInMegabytesAttribute()
-    {
-        return round($this->file_size / (1024 * 1024), 2);
     }
 }

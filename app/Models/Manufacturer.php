@@ -121,6 +121,7 @@ class Manufacturer extends BaseModel implements HasTitle
     {
         return $query->withCount([
             'comments',
+            'attachments',
             // 'products',
             // 'meetings',
         ]);
@@ -240,13 +241,6 @@ class Manufacturer extends BaseModel implements HasTitle
             ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
             ['name' => 'Attachments', 'order' => $order++, 'width' => 160, 'visible' => 1],
         );
-
-        if (Gate::forUser($user)->allows('edit-MAD-EPP')) {
-            array_push(
-                $columns,
-                ['name' => 'Edit attachments', 'order' => $order++, 'width' => 192, 'visible' => 1],
-            );
-        }
 
         return $columns;
     }

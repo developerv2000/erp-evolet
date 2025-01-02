@@ -2,8 +2,14 @@ Global:
     Country and CountryCodes united in Country
     Comments text improoved to simditor. Requires surrounding all comments with tag <p>
 
+    Tables:
+        attachments:
+            file_name => filename
+
 MAD:
     Tables:
         manufacturers:
             is_active => active
             is_important => important
+
+

@@ -1,6 +1,6 @@
 @props(['forceDelete'])
 
-<x-misc.modal class="target-delete-modal" title="Удаление записи">
+<x-misc.modal class="target-delete-modal" title="{{ __('Удаление записи') }}">
     <x-slot:body>
         <form
             class="target-delete-form"
@@ -19,13 +19,13 @@
                 <input type="hidden" name="force_delete" value="1">
             @endif
 
-            <p>Вы уверены, что хотите удалить запись?</p>
-            <p>Также, удалятся все связанные с ним записи!</p>
+            <p>{{ __('Вы уверены, что хотите удалить запись') }}?</p>
+            <p>{{ __('Также, удалятся все связанные с ним записи') }}!</p>
         </form>
     </x-slot:body>
 
     <x-slot:footer>
-        <x-misc.button style="cancel" data-click-action="hide-visible-modal">Отмена</x-misc.button>
-        <x-misc.button style="danger" type="submit" form="target-delete-form">Удалить</x-misc.button>
+        <x-misc.button style="cancel" data-click-action="hide-visible-modal">{{ __('Отмена') }}</x-misc.button>
+        <x-misc.button style="danger" type="submit" form="target-delete-form">{{ __('Удалить') }}</x-misc.button>
     </x-slot:footer>
 </x-misc.modal>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MainController;
@@ -41,6 +42,11 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::get('/view/{commentable_type}/{commentable_id}', 'index')->name('index');
 
         CRUDRouteGenerator::defineDefaultRoutesOnly(['edit', 'store', 'update', 'destroy'], 'id', null, 'can:edit-comments');
+    });
+
+    Route::prefix('model-attachments')->controller(AttachmentController::class)->name('attachments.')->group(function () {
+        Route::get('/view/{attachable_type}/{attachable_id}', 'index')->name('index');
+        Route::delete('/destroy', 'destroy')->name('destroy');
     });
 });
 

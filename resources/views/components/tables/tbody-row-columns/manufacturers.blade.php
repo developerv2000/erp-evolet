@@ -120,11 +120,7 @@
     @break
 
     @case('Attachments')
-        Attachments
-    @break
-
-    @case('Edit attachments')
-        Attachments
+        <x-tables.partials.td.model-attachments-link :record="$record" />
     @break
 
 @endswitch

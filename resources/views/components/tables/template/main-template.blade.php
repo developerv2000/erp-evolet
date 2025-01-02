@@ -1,6 +1,6 @@
 @props(['records', 'includePagination' => true])
 
-<div class="main-table-wrapper thin-scrollbar @unless ($records->hasPages()) main-table-wrapper--without-pagination @endif">
+<div class="main-table-wrapper thin-scrollbar @if (!$includePagination || ($records && !$records->hasPages())) main-table-wrapper--without-pagination @endif">
     <table {{ $attributes->merge(['class' => 'main-table']) }}>
         <thead>
             <tr>

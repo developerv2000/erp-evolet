@@ -24,7 +24,7 @@
                     class="toolbar__button"
                     style="shadowed"
                     link="{{ route('manufacturers.create') }}"
-                    icon="add">{{ __('Store') }}
+                    icon="add">{{ __('New') }}
                 </x-misc.buttoned-link>
 
                 <x-misc.button
@@ -32,7 +32,7 @@
                     style="shadowed"
                     icon="delete"
                     data-click-action="show-modal"
-                    data-modal-selector=".multiple-delete-modal">{{ __('Delete') }}
+                    data-modal-selector=".multiple-delete-modal">{{ __('Delete selected') }}
                 </x-misc.button>
 
                 <x-misc.button

@@ -7,7 +7,7 @@
     <div class="main-box">
         {{-- Toolbar --}}
         <div class="toolbar">
-            <x-misc.breadcrumbs :crumbs="$crumbs" />
+            <x-misc.breadcrumbs :crumbs="$breadcrumbs" />
         </div>
 
         @include('comments.partials.create-form')

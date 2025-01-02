@@ -15,7 +15,7 @@ class ManufacturerController extends Controller
     use RestoresModelRecords;
 
     // used in multiple destroy/restore traits
-    public $model = Manufacturer::class;
+    public static $model = Manufacturer::class;
 
     public function index(Request $request)
     {

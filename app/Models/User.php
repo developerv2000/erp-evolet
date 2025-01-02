@@ -237,7 +237,8 @@ class User extends Authenticatable
 
         // Empty settings for Inactive users
         if ($this->isInactive()) {
-            $this->update(['settings' => null]);
+            $this->settings = null;
+            $this->save();
             return;
         }
 
@@ -248,7 +249,8 @@ class User extends Authenticatable
             'locale' => User::DEFAULT_LOCALE,
         ];
 
-        $this->update(['settings' => $settings]);
+        $this->settings = $settings;
+        $this->save();
 
         // Table settings
         $this->resetMADTablesColumnSettings($settings);
@@ -261,10 +263,10 @@ class User extends Authenticatable
     {
         $this->refresh();
         $settings = $this->settings;
-
         $settings['manufacturers_table_columns'] = Manufacturer::getDefaultTableColumnsForUser($this);
 
-        $this->update(['settings' => $settings]);
+        $this->settings = $settings;
+        $this->save();
     }
 
     /**
