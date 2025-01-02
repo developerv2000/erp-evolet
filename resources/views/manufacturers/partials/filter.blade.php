@@ -33,12 +33,12 @@
         labelText="Status"
         inputName="active"
         :trueOptionLabel="__('Active')"
-        :falseOptionLabel="__('Stoped')" />
+        :falseOptionLabel="__('Stop/pause')" />
 
-    {{-- <x-form.selects.selectize.id-based-multiple-select.request-based-select
+    <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Product class"
         inputName="productClasses[]"
-        :options="$productClasses" /> --}}
+        :options="$productClasses" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Zones"

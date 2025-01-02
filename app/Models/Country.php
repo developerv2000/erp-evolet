@@ -58,15 +58,14 @@ class Country extends Model implements UsageCountable
 
     /*
     |--------------------------------------------------------------------------
-    | Misc
+    | Contracts
     |--------------------------------------------------------------------------
     */
 
-    // Implement method declared in UsageCountable interface
     public function recalculateUsageCount(): void
     {
-        $this->update([
-            // 'usage_count' => $this->processes()->count() + $this->productSearches()->count(),
-        ]);
+        // $this->update([
+        //     'usage_count' => $this->processes()->count() + $this->productSearches()->count(),
+        // ]);
     }
 }

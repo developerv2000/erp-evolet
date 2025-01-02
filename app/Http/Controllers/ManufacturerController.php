@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ManufacturerStoreRequest;
 use App\Models\Manufacturer;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
@@ -33,5 +34,17 @@ class ManufacturerController extends Controller
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
         return view('manufacturers.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+    }
+
+    public function create()
+    {
+        return view('manufacturers.create');
+    }
+
+    public function store(ManufacturerStoreRequest $request)
+    {
+        Manufacturer::createFromRequest($request);
+
+        return to_route('manufacturers.index');
     }
 }

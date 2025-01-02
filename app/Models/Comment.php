@@ -64,6 +64,30 @@ class Comment extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Get plain text without HTML tags.
+     * Not used yet.
+     */
+    public function getPlainTextAttribute()
+    {
+        // Strip HTML tags
+        $plainText = strip_tags($this->body);
+
+        // Normalize and decode
+        $decodedText = htmlspecialchars_decode($plainText);
+
+        // Trimme whitespace
+        $trimmedText = trim($decodedText);
+
+        return $trimmedText;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Misc
     |--------------------------------------------------------------------------
     */

@@ -5,7 +5,7 @@
     /* Theme different attributes */
     --theme-scrollbar-color: #383f48;
     --theme-transition: 0.3s ease;
-    --theme-box-shadow: 0 7px 14px 0 rgba(3, 12, 51, 0.15), 0 3px 6px 0 rgba(0, 0, 0, 0.2);;
+    --theme-box-shadow: 0 0px 2px 0 rgba(65, 69, 88, 0.1), 0 2px 4px 0 rgba(0, 0, 0, 0.07);
 
     /* Theme Colors */
     --theme-main-color: #2C7BE5;

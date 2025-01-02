@@ -28,7 +28,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 20px;
     padding: 20px;
     border-radius: var(--theme-border-radius);
     background-color: var(--theme-box-background-color);
@@ -124,6 +124,10 @@
 .radio-group--horizontal {
     flex-direction: row;
     gap: 24px;
+}
+
+.radio-group--horizontal .label {
+    margin-bottom: 0;
 }
 
 .radio-group--horizontal .form-group__input-container {

@@ -34,7 +34,7 @@ trait Commentable
      * @param string|null $comment The comment body.
      * @return void
      */
-    public function storeComment(?string $comment): void
+    public function addComment(?string $comment): void
     {
         if (!$comment) {
             return;
@@ -44,5 +44,23 @@ trait Commentable
             'body' => $comment,
             'user_id' => request()->user()->id,
         ]);
+    }
+
+    /**
+     * Store comment from the request.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
+    public function storeCommentFromRequest($request): void
+    {
+        $comment = $request->input('comment');
+
+        if ($comment) {
+            $this->comments()->create([
+                'body' => $comment,
+                'user_id' => request()->user()->id,
+            ]);
+        }
     }
 }

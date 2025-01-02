@@ -6,6 +6,7 @@ use App\Models\Country;
 use App\Models\Manufacturer;
 use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
+use App\Models\ProductClass;
 use App\Models\User;
 use App\Models\Zone;
 use App\Support\Helpers\GeneralHelper;
@@ -29,7 +30,15 @@ class MADViewComposersDefiner
     private static function defineManufacturerComposers()
     {
         $defaultShareData = self::getDefaultManufacturersShareData();
-        self::defineViewComposer(['manufacturers.partials.filter'], array_merge($defaultShareData, [
+
+        self::defineViewComposer([
+            'manufacturers.partials.create-form',
+            'manufacturers.partials.edit-form',
+        ], array_merge($defaultShareData, [
+            'statusOptions' => Manufacturer::getStatusOptions(),
+        ]));
+
+        self::defineViewComposer('manufacturers.partials.filter', array_merge($defaultShareData, [
             'regions' => Country::getRegionOptions(),
         ]));
     }
@@ -50,7 +59,7 @@ class MADViewComposersDefiner
             'manufacturers' => Manufacturer::getMinifiedRecordsWithName(),
             'categories' => ManufacturerCategory::orderByName()->get(),
             'zones' => Zone::orderByName()->get(),
-            // 'productClasses' => ProductClass::getAll(),
+            'productClasses' => ProductClass::orderByName()->get(),
             'blacklists' => ManufacturerBlacklist::orderByName()->get(),
             'booleanOptions' => GeneralHelper::getBooleanOptionsArray(),
         ];

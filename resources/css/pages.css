@@ -33,13 +33,6 @@
 /* ------------ /END Authentication pages ------------ */
 
 
-/* ------------ Profile page ------------ */
-.profile-edit #profile-update-form {
-    margin-bottom: 40px;
-}
-/* ------------ /END Profile page ------------ */
-
-
 /* ------------ Comment pages ------------ */
 /* Create form */
 .create-comments-form {

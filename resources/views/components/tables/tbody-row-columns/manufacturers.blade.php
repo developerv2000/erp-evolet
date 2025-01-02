@@ -95,7 +95,7 @@
 
     @case('Last comment')
         <div class="td__last-comment">
-            <x-tables.partials.td.max-lines-limited-text :text="$record->lastComment?->body" />
+            <x-tables.partials.td.max-lines-limited-text :text="$record->lastComment?->plain_text" />
         </div>
     @break
 
@@ -121,6 +121,7 @@
 
     @case('Attachments')
         <x-tables.partials.td.model-attachments-link :record="$record" />
+        <x-tables.partials.td.model-attachments-list :attachments="$record->attachments" />
     @break
 
 @endswitch

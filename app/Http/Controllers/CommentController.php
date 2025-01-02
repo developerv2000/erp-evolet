@@ -43,7 +43,7 @@ class CommentController extends Controller
         $recordID = $request->input('commentable_id');
 
         $record = $model::withTrashed()->find($recordID);
-        $record->storeComment($request->input('body'));
+        $record->addComment($request->input('body'));
 
         return redirect()->back();
     }

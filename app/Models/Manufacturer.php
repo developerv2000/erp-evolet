@@ -217,6 +217,36 @@ class Manufacturer extends BaseModel implements HasTitle
 
     /*
     |--------------------------------------------------------------------------
+    | Create & Update
+    |--------------------------------------------------------------------------
+    */
+
+    public static function createFromRequest($request)
+    {
+        $record = self::create($request->all());
+
+        // BelongsToMany relations
+        $record->zones()->attach($request->input('zones'));
+        $record->productClasses()->attach($request->input('productClasses'));
+        $record->blacklists()->attach($request->input('blacklists'));
+
+        // HasMany relations
+        $record->storePresencesOnCreate($request->input('presences'));
+        $record->storeCommentFromRequest($request);
+        $record->storeAttachmentsFromRequest($request);
+    }
+
+    private function storePresencesOnCreate($presences)
+    {
+        if (!$presences) return;
+
+        foreach ($presences as $name) {
+            $this->presences()->create(['name' => $name]);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Misc
     |--------------------------------------------------------------------------
     */
@@ -283,8 +313,18 @@ class Manufacturer extends BaseModel implements HasTitle
         return $columns;
     }
 
-    public function getCommentsPageTitle()
+    /**
+     * Return an array of status options
+     *
+     * Used on records create/update as radiogroups options
+     *
+     * @return array
+     */
+    public static function getStatusOptions()
     {
-        return $this->name;
+        return [
+            (object) ['caption' => trans('Active'), 'value' => 1],
+            (object) ['caption' => trans('Stop/pause'), 'value' => 0],
+        ];
     }
 }

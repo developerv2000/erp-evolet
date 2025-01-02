@@ -55,7 +55,7 @@ trait HasAttachments
      * @param \Illuminate\Http\Request $request
      * @return void
      */
-    public function storeAttachments($request)
+    public function storeAttachmentsFromRequest($request)
     {
         $attachments = $request->file('attachments');
 
@@ -67,8 +67,8 @@ trait HasAttachments
 
                 // Save attachment details in the database
                 $this->addAttachment([
+                    'filename' => $fileName,
                     'file_path' => "attachments/" . class_basename($this) . "/{$this->id}/" . $fileName,
-                    'file_name' => $fileName,
                     'file_type' => $attachment->getClientMimeType(),
                     'file_size' => $attachment->getSize(),
                 ]);

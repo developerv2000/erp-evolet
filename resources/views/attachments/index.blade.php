@@ -16,7 +16,7 @@
                     style="shadowed"
                     icon="delete"
                     data-click-action="show-modal"
-                    data-modal-selector=".multiple-delete-modal">{{ __('Delete') }}
+                    data-modal-selector=".multiple-delete-modal">{{ __('Delete selected') }}
                 </x-misc.button>
             </div>
         </div>

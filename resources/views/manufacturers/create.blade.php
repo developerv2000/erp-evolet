@@ -11,7 +11,7 @@
             @php
                 $crumbs = [
                     ['link' => route('manufacturers.index'), 'text' => __('EPP')],
-                    ['link' => null, 'text' => __('Create new')]
+                    ['link' => null, 'text' => __('Create new record')]
                 ];
             @endphp
             {{-- blade-formatter-enable --}}
@@ -20,17 +20,18 @@
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
-                <x-misc.buttoned
+                <x-misc.button
                     class="toolbar__button"
                     style="shadowed"
                     type="submit"
                     form="create-form"
                     icon="done_all">{{ __('Store') }}
-                </x-misc.buttoned>
+                </x-misc.button>
             </div>
         </div>
 
         {{-- Create form --}}
+        @include('manufacturers.partials.create-form')
     </div>
 
 @endsection
