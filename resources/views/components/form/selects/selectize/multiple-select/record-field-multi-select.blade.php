@@ -28,7 +28,7 @@
 
         {{-- Loop through the options and generate each option tag --}}
         @foreach ($options as $option)
-            <option value="{{ $option }}" @selected(in_array($option->id, $selectedValues))>
+            <option value="{{ $option }}" @selected(in_array($option, $selectedValues))>
                 {{ $option }}
             </option>
         @endforeach

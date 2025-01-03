@@ -91,6 +91,20 @@ class Manufacturer extends BaseModel implements HasTitle
 
     /*
     |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Used on manufacturers.edit form
+     */
+    public function getPresenceNamesArrayAttribute(): array
+    {
+        return $this->presences->pluck('name')->toArray();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Scopes
     |--------------------------------------------------------------------------
     */
@@ -245,6 +259,42 @@ class Manufacturer extends BaseModel implements HasTitle
         }
     }
 
+    public function updateFromRequest($request)
+    {
+        $this->update($request->all());
+
+        // BelongsToMany relations
+        $this->zones()->sync($request->input('zones'));
+        $this->productClasses()->sync($request->input('productClasses'));
+        $this->blacklists()->sync($request->input('blacklists'));
+
+        // HasMany relations
+        $this->syncPresencesOnEdit($request);
+        $this->storeCommentFromRequest($request);
+        $this->storeAttachmentsFromRequest($request);
+    }
+
+    private function syncPresencesOnEdit($request)
+    {
+        $presences = $request->input('presences');
+
+        // Remove existing presences if $presences is empty
+        if (!$presences) {
+            $this->presences()->delete();
+            return;
+        }
+
+        // Add new presences
+        foreach ($presences as $name) {
+            if (!$this->presences->contains('name', $name)) {
+                $this->presences()->create(['name' => $name]);
+            }
+        }
+
+        // Delete removed presences
+        $this->presences()->whereNotIn('name', $presences)->delete();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Misc
@@ -307,7 +357,7 @@ class Manufacturer extends BaseModel implements HasTitle
             ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Meetings', 'order' => $order++, 'width' => 106, 'visible' => 1],
             ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
-            ['name' => 'Attachments', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Attachments', 'order' => $order++, 'width' => 180, 'visible' => 1],
         );
 
         return $columns;

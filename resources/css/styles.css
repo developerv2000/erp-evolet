@@ -413,6 +413,12 @@ a {
     margin-bottom: 40px;
 }
 
+.edit-form__last-comment {
+    padding: var(--form-input-padding);
+    background-color: var(--theme-body-background-color);
+    border: var(--form-input-border);
+    border-radius: var(--theme-border-radius);
+}
 /* ------------ /end Form ------------ */
 
 

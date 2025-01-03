@@ -57,10 +57,7 @@ trait Commentable
         $comment = $request->input('comment');
 
         if ($comment) {
-            $this->comments()->create([
-                'body' => $comment,
-                'user_id' => request()->user()->id,
-            ]);
+            $this->addComment($comment);
         }
     }
 }

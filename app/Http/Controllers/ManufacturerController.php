@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ManufacturerStoreRequest;
+use App\Http\Requests\ManufacturerUpdateRequest;
 use App\Models\Manufacturer;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
@@ -46,5 +47,17 @@ class ManufacturerController extends Controller
         Manufacturer::createFromRequest($request);
 
         return to_route('manufacturers.index');
+    }
+
+    public function edit(Manufacturer $record)
+    {
+        return view('manufacturers.edit', compact('record'));
+    }
+
+    public function update(ManufacturerUpdateRequest $request, Manufacturer $record)
+    {
+        $record->updateFromRequest($request);
+
+        return redirect($request->input('previous_url'));
     }
 }
