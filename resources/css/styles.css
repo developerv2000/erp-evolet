@@ -1109,19 +1109,6 @@ a {
     gap: 8px;
 }
 
-.main-table .td__last-comment h1 {
-    font-size: 18px;
-}
-
-.main-table .td__last-comment img {
-    width: auto;
-    height: auto;
-}
-
-.main-table .td__last-comment table {
-    display: none;
-}
-
 /* ------------ /end Main table ------------ */
 
 

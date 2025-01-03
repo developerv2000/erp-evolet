@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Comment extends Model
 {
@@ -70,20 +71,24 @@ class Comment extends Model
 
     /**
      * Get plain text without HTML tags.
-     * Not used yet.
+     * Used on displaying last comment.
      */
     public function getPlainTextAttribute()
     {
-        // Strip HTML tags
-        $plainText = strip_tags($this->body);
+        // Add a space after each closing tag to prevent text from joining
+        $withSpaces = preg_replace('/>(?!\s)/', '> ', $this->body);
 
-        // Normalize and decode
+        // Strip HTML tags
+        $plainText = strip_tags($withSpaces);
+
+        // Normalize by decoding HTML entities
         $decodedText = htmlspecialchars_decode($plainText);
 
-        // Trimme whitespace
-        $trimmedText = trim($decodedText);
+        // Replace multiple spaces with a single space
+        $normalizedText = preg_replace('/\s+/', ' ', $decodedText);
 
-        return $trimmedText;
+        // Trim the result
+        return Str::of($normalizedText)->trim();
     }
 
     /*
