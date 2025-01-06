@@ -26,7 +26,7 @@ const targetRestoreModal = document.querySelector('.target-restore-modal');
 
 /*
 |--------------------------------------------------------------------------
-| Functions
+| Export functions
 |--------------------------------------------------------------------------
 */
 
@@ -170,4 +170,54 @@ export function displayLocalImage(evt) {
     if (file) {
         image.src = URL.createObjectURL(file);
     }
+}
+
+export function disableExportAsExcelFormSubmitButton(evt) {
+    const form = evt.target;
+    const submitButton = form.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+}
+
+/**
+ * Increase/decrase table columns form trackbar width, on width input update
+ */
+export function handleTableColumnWidthInputUpdate(evt) {
+    const sortableItem = evt.target.closest('.sortable-columns__item');
+    const trackbar = sortableItem.querySelector('.sortable-columns__width-trackbar');
+    trackbar.style.width = evt.target.value + 'px';
+}
+
+export function handleEditTableColumnsSubmit(evt) {
+    evt.preventDefault();
+    showSpinner();
+
+    const form = evt.target;
+    const action = form.action;
+    const columns = Array.from(form.querySelectorAll('.sortable-columns__item'));
+    const sortedColumns = columns.map(mapSortableTableColumnsData)
+
+    axios.patch(action, { columns: sortedColumns }, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(() => {
+            window.location.reload();
+        })
+        .finally(hideSpinner);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Private functions
+|--------------------------------------------------------------------------
+*/
+
+function mapSortableTableColumnsData(item, index) {
+    const column = {};
+    column.name = item.dataset.columnName;
+    column.order = index + 1;
+    column.width = parseInt(item.querySelector('.sortable-columns__width-input').value);
+    column.visible = item.querySelector('.switch').checked ? 1 : 0;
+    return column;
 }

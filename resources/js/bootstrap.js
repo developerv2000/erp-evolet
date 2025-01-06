@@ -119,43 +119,6 @@ function initializeDateRangerPickers() {
     });
 }
 
-/**
- * Requires refactoring
- */
-function initializeNestedsets() {
-    // Initialize nestedset container
-    $('.nested').nestedSortable({
-        handle: 'div',
-        items: 'li',
-        toleranceElement: '> div',
-        excludeRoot: true,
-        maxLevels: 2,
-        isTree: true,
-        expandOnHover: 700,
-        startCollapsed: true,
-        branchClass: 'nested__item--parent',
-        leafClass: 'nested__item--leaf',
-        collapsedClass: 'nested__item--collapsed',
-        expandedClass: 'nested__item--expanded',
-        hoveringClass: 'nested__item--hover',
-    });
-
-    // Initialize nestedset collapse togglers
-    document.querySelectorAll('.nested__item-toggler').forEach((item) => {
-        item.addEventListener('click', (evt) => {
-            let item = evt.target.closest('.nested__item');
-            item.classList.toggle('nested__item--collapsed');
-            item.classList.toggle('nested__item--expanded');
-        });
-    });
-
-    // Initialize delete buttons
-    document.querySelectorAll('.nested__item-destroy-btn').forEach((item) => {
-        item.addEventListener('click', (evt) => {
-            evt.target.closest('.nested__item').remove();
-        });
-    });
-}
 
 /*
 |--------------------------------------------------------------------------
@@ -170,7 +133,6 @@ function init() {
     initializeSelectizes();
     initializeSimditors();
     initializeDateRangerPickers();
-    initializeNestedsets();
 }
 
 init();

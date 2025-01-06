@@ -28,15 +28,18 @@ const leftbarToggler = document.querySelector('.header__leftbar-toggler');
 const fullscreenButtons = document.querySelectorAll('[data-click-action="request-fullscreen"]');
 const targetDeleteModalButtons = document.querySelectorAll('[data-click-action="show-target-delete-modal"]');
 const targetRestoreModalButtons = document.querySelectorAll('[data-click-action="show-target-restore-modal"]');
-const nestedsetUpdater = document.querySelector('[data-click-action="submit-nestedset-update"]');
 
 // Forms
 const filterForm = document.querySelector('.filter-form');
 const appendsInputsBeforeSubmitForms = document.querySelectorAll('[data-before-submit="appends-inputs"]');
 const showsSpinnerOnSubmitForms = document.querySelectorAll('[data-on-submit="show-spinner"]');
+const exportAsExcelForm = document.querySelector('.export-as-excel-form');
 
 // Image inputs with preview
 const imageInputsWithPreview = document.querySelectorAll('.image-input-group-with-preview__input');
+
+// Table columns form
+const editTableColumnsForm = document.querySelector('.edit-table-columns-form');
 
 /*
 |--------------------------------------------------------------------------
@@ -90,11 +93,11 @@ targetRestoreModalButtons.forEach((button) => {
 
 filterForm?.addEventListener('submit', (evt) => functions.handleFilterFormSubmit(evt));
 
-nestedsetUpdater?.addEventListener('click', (evt) => functions.handleUpdateNestedsetSubmit(evt));
-
 imageInputsWithPreview.forEach((input) => {
     input.addEventListener('change', (evt) => functions.displayLocalImage(evt));
 });
+
+exportAsExcelForm?.addEventListener('submit', (evt) => functions.disableExportAsExcelFormSubmitButton(evt));
 
 /*
 |--------------------------------------------------------------------------
@@ -102,8 +105,26 @@ imageInputsWithPreview.forEach((input) => {
 |--------------------------------------------------------------------------
 */
 
+function initializeEditTableColumnsForm() {
+    if (!editTableColumnsForm) {
+        return;
+    }
+
+    // Make table columns sortable
+    $('.sortable-columns').sortable();
+
+    // Add event listeners for each form width inputs
+    editTableColumnsForm.querySelectorAll('.sortable-columns__width-input').forEach(input => {
+        input.addEventListener('input', (evt) => functions.handleTableColumnWidthInputUpdate(evt));
+    });
+
+    // Add event listener for the form submit
+    editTableColumnsForm.addEventListener('submit', (evt) => functions.handleEditTableColumnsSubmit(evt));
+}
+
 init();
 
 function init() {
     functions.moveFilterActiveInputsToTop(filterForm);
+    initializeEditTableColumnsForm();
 }

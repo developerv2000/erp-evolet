@@ -22,11 +22,48 @@ class SettingController extends Controller
         return redirect()->back();
     }
 
-    public function toggleDashboardLeftbar(Request $request)
+    public function toggleLeftbar(Request $request)
     {
         $user = $request->user();
-        $reversedLeftbar = !$user->settings['collapsed_dashboard_leftbar'];
-        $user->updateSetting('collapsed_dashboard_leftbar', $reversedLeftbar);
+        $reversedLeftbar = !$user->settings['collapsed_leftbar'];
+        $user->updateSetting('collapsed_leftbar', $reversedLeftbar);
+
+        return true;
+    }
+
+    /**
+     * Update table columns including orders, widths, and visibility.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateTableColumns(Request $request, $key)
+    {
+        $user = $request->user();
+        $settings = $user->settings;
+
+        // Check if the key exists in user settings
+        if (!isset($settings[$key])) {
+            abort(404, 'Settings key not found');
+        }
+
+        $columns = collect($settings[$key]);
+
+        // Update column only if it exists in user settings
+        $requestColumns = collect($request->columns)->keyBy('name');
+        $columns = $columns->map(function ($column) use ($requestColumns) {
+            if ($requestColumns->has($column['name'])) {
+                $requestColumn = $requestColumns->get($column['name']);
+                $column['order'] = $requestColumn['order'];
+                $column['width'] = $requestColumn['width'];
+                $column['visible'] = $requestColumn['visible'];
+            }
+            return $column;
+        });
+
+        // Sort columns by order and update user settings
+        $orderedColumns = $columns->sortBy('order')->values()->all();
+        $user->updateSetting($key, $orderedColumns);
 
         return true;
     }

@@ -256,7 +256,7 @@ class User extends Authenticatable
         // Appearance settings
         $settings = [
             'preferred_theme' => User::DEFAULT_PREFERRED_THEME,
-            'collapsed_dashboard_leftbar' => User::DEFAULT_COLLAPSED_LEFTBAR,
+            'collapsed_leftbar' => User::DEFAULT_COLLAPSED_LEFTBAR,
             'locale' => User::DEFAULT_LOCALE,
         ];
 
@@ -274,7 +274,7 @@ class User extends Authenticatable
     {
         $this->refresh();
         $settings = $this->settings;
-        $settings['manufacturers_table_columns'] = Manufacturer::getDefaultTableColumnsForUser($this);
+        $settings['MAD_EPP_table_columns'] = Manufacturer::getDefaultTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();

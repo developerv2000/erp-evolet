@@ -31,11 +31,19 @@
                     <x-misc.button
                         class="toolbar__button"
                         style="shadowed"
-                        icon="delete"
+                        icon="close"
                         data-click-action="show-modal"
                         data-modal-selector=".multiple-delete-modal">{{ __('Delete selected') }}
                     </x-misc.button>
                 @endcan
+
+                <x-misc.button
+                    class="toolbar__button"
+                    style="shadowed"
+                    icon="settings"
+                    data-click-action="show-modal"
+                    data-modal-selector=".edit-table-columns-modal">{{ __('Columns') }}
+                </x-misc.button>
 
                 @can('export-records-as-excel')
                     <x-form.misc.export-as-excel-form action="{{ route('manufacturers.export-as-excel') }}" />
@@ -56,8 +64,14 @@
     </div>
 
     {{-- Modals --}}
+    <x-modals.edit-table-columns
+        form-action="{{ route('settings.update-table-columns', 'MAD_EPP_table_columns') }}"
+        :columns="$allTableColumns" />
+
     @can('edit-MAD-EPP')
-        <x-modals.multiple-delete form-action="{{ route('manufacturers.destroy') }}" :forceDelete="false" />
+        <x-modals.multiple-delete
+            form-action="{{ route('manufacturers.destroy') }}"
+            :forceDelete="false" />
     @endcan
 @endsection
 

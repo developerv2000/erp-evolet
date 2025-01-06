@@ -118,13 +118,14 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 60px;
+    padding: 40px;
     background-color: #00000063;
 }
 
 .modal__box {
     min-width: 480px;
-    max-width: 90vw;
+    /* 100vw - .modal__inner:padding-X */
+    max-width: calc(100vw - 80px);
     transform: translateY(-50px);
     transition: 0.3s;
     opacity: 0;
@@ -154,7 +155,8 @@
 
 .modal__body {
     position: relative;
-    max-height: 90vh;
+    /* 100vh - .modal__inner:padding-Y - .modal__header - .modal__footer  */
+    max-height: calc(100vh - 80px - 62px - 86px);
     overflow-y: auto;
     padding: 20px;
     border-color: #dee2e6;

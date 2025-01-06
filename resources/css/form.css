@@ -136,6 +136,16 @@
     gap: 24px;
 }
 
+/* Switch form group */
+.switch-group {
+    display: flex;
+}
+
+.switch-group .label {
+    flex-direction: row;
+    gap: 20px;
+}
+
 /* Image input group with preview */
 .image-input-group-with-preview .form-group__input-container {
     display: flex;
@@ -245,6 +255,32 @@
 }
 
 /* ------------ /end Checkbox ------------ */
+
+
+/* ------------ Switch ------------ */
+.switch {
+    width: 2em;
+    height: 1em;
+    font-size: 20px;
+    border: var(--theme-border);
+    border-radius: 2em;
+    background-image: url(/img/form/switch.svg);
+    background-position: left center;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: contain;
+    appearance: none;
+    transition: background-position .15s ease-in-out;
+    print-color-adjust: exact;
+}
+
+.switch:checked {
+    border-color: var(--theme-main-color);
+    background-image: url(/img/form/switch-checked.svg);
+    background-position: right center;
+    background-color: var(--theme-main-color);
+}
+/* ------------ /end Switch ------------ */
 
 
 /* ------------ Radiobutton ------------ */
@@ -558,7 +594,7 @@
 }
 
 /* Toolbar h1 title */
-.simditor .simditor-toolbar .toolbar-menu ul > li .menu-item.menu-item-h1 {
+.simditor .simditor-toolbar .toolbar-menu ul>li .menu-item.menu-item-h1 {
     font-size: 18px;
 }
 

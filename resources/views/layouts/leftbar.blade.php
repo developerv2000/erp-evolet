@@ -2,7 +2,7 @@
     @class([
         'leftbar',
         'leftbar--collapsed' => auth()->user()->settings[
-            'collapsed_dashboard_leftbar'
+            'collapsed_leftbar'
         ],
     ])>
     <div class="leftbar__inner thin-scrollbar">
