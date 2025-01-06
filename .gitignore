@@ -29,3 +29,10 @@ yarn-error.log
 /public/img/comments/*
 
 /public/attachments/Manufacturer/*
+
+/storage/app/excel/exports/epp/*
+/storage/app/excel/exports/ivp/*
+/storage/app/excel/exports/product-selection/*
+/storage/app/excel/exports/vps/*
+/storage/app/excel/exports/kvpp/*
+/storage/app/excel/exports/plan/*

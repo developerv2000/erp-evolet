@@ -20,20 +20,26 @@
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
-                <x-misc.buttoned-link
-                    class="toolbar__button"
-                    style="shadowed"
-                    link="{{ route('manufacturers.create') }}"
-                    icon="add">{{ __('New') }}
-                </x-misc.buttoned-link>
+                @can('edit-MAD-EPP')
+                    <x-misc.buttoned-link
+                        class="toolbar__button"
+                        style="shadowed"
+                        link="{{ route('manufacturers.create') }}"
+                        icon="add">{{ __('New') }}
+                    </x-misc.buttoned-link>
 
-                <x-misc.button
-                    class="toolbar__button"
-                    style="shadowed"
-                    icon="delete"
-                    data-click-action="show-modal"
-                    data-modal-selector=".multiple-delete-modal">{{ __('Delete selected') }}
-                </x-misc.button>
+                    <x-misc.button
+                        class="toolbar__button"
+                        style="shadowed"
+                        icon="delete"
+                        data-click-action="show-modal"
+                        data-modal-selector=".multiple-delete-modal">{{ __('Delete selected') }}
+                    </x-misc.button>
+                @endcan
+
+                @can('export-records-as-excel')
+                    <x-form.misc.export-as-excel-form action="{{ route('manufacturers.export-as-excel') }}" />
+                @endcan
 
                 <x-misc.button
                     class="toolbar__button"
@@ -50,7 +56,9 @@
     </div>
 
     {{-- Modals --}}
-    <x-modals.multiple-delete form-action="{{ route('manufacturers.destroy') }}" :forceDelete="false" />
+    @can('edit-MAD-EPP')
+        <x-modals.multiple-delete form-action="{{ route('manufacturers.destroy') }}" :forceDelete="false" />
+    @endcan
 @endsection
 
 @section('rightbar')

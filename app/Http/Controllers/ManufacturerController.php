@@ -60,4 +60,19 @@ class ManufacturerController extends Controller
 
         return redirect($request->input('previous_url'));
     }
+
+    public function exportAsExcel(Request $request)
+    {
+        // Preapare request for valid model querying
+        Manufacturer::addRefererQueryParamsToRequest($request);
+        Manufacturer::addDefaultQueryParamsToRequest($request);
+
+        // Get finalized records query
+        $query = Manufacturer::withRelationsForExport();
+        $filteredQuery = Manufacturer::filterQueryForRequest($query, $request);
+        $records = Manufacturer::finalizeQueryForRequest($filteredQuery, $request, 'query');
+
+        // Export records
+        return Manufacturer::exportRecordsAsExcel($records);
+    }
 }

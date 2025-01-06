@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 // EPP
 Route::prefix('manufacturers')->controller(ManufacturerController::class)->name('manufacturers.')->group(function () {
     CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-MAD-EPP', 'can:edit-MAD-EPP');
+    Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
 });
 
 // IVP

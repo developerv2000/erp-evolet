@@ -3,27 +3,26 @@
 namespace App\Models;
 
 use App\Support\Abstracts\BaseModel;
+use App\Support\Contracts\Model\CanExportRecordsAsExcel;
 use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\QueryFilterHelper;
-use App\Support\Traits\Model\AddsDefaultQueryParamsToRequest;
 use App\Support\Traits\Model\Commentable;
-use App\Support\Traits\Model\FinalizesQueryForRequest;
+use App\Support\Traits\Model\ExportsRecordsAsExcel;
 use App\Support\Traits\Model\GetsMinifiedRecordsWithName;
 use App\Support\Traits\Model\HasAttachments;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Gate;
 
-class Manufacturer extends BaseModel implements HasTitle
+class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 {
     /** @use HasFactory<\Database\Factories\ManufacturerFactory> */
     use HasFactory;
     use SoftDeletes;
     use Commentable;
     use HasAttachments;
-    use AddsDefaultQueryParamsToRequest;
-    use FinalizesQueryForRequest;
     use GetsMinifiedRecordsWithName;
+    use ExportsRecordsAsExcel;
 
     /*
     |--------------------------------------------------------------------------
@@ -34,6 +33,10 @@ class Manufacturer extends BaseModel implements HasTitle
     const DEFAULT_ORDER_BY = 'updated_at';
     const DEFAULT_ORDER_TYPE = 'desc';
     const DEFAULT_PAGINATION_LIMIT = 50;
+
+    const LIMITED_EXCEL_RECORDS_COUNT_FOR_EXPORT = 15;
+    const STORAGE_PATH_OF_EXCEL_TEMPLATE_FILE_FOR_EXPORT = 'app/excel/export-templates/epp.xlsx';
+    const STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES = 'app/excel/exports/epp';
 
     /*
     |--------------------------------------------------------------------------
@@ -138,9 +141,76 @@ class Manufacturer extends BaseModel implements HasTitle
         return $query->withCount([
             'comments',
             'attachments',
-            // 'products',
-            // 'meetings',
+            // 'products', // Not done yet
+            // 'meetings', // Not done yet
         ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Contracts
+    |--------------------------------------------------------------------------
+    */
+
+    // Implement method defined in BaseModel abstract class
+    public function generateBreadcrumbs(): array
+    {
+        $breadcrumbs = [
+            ['link' => route('manufacturers.index'), 'text' => __('EPP')],
+        ];
+
+        if ($this->trashed()) {
+            $breadcrumbs[] = ['link' => route('manufacturers.trash'), 'text' => __('Trash')];
+        }
+
+        $breadcrumbs[] = ['link' => route('manufacturers.edit', $this->id), 'text' => $this->title];
+
+        return $breadcrumbs;
+    }
+
+    // Implement method declared in HasTitle Interface
+    public function getTitleAttribute(): string
+    {
+        return $this->name;
+    }
+
+    // Implement method declared in CanExportRecordsAsExcel Interface
+    public function scopeWithRelationsForExport($query)
+    {
+        return $query->withBasicRelations()
+            ->with(['comments'])
+            ->withCount([
+                // 'products', // Not done yet
+                // 'meetings', // Not done yet
+            ]);
+    }
+
+    // Implement method declared in CanExportRecordsAsExcel Interface
+    public function getExcelColumnValuesForExport(): array
+    {
+        return [
+            $this->id,
+            $this->bdm->name,
+            $this->analyst->name,
+            $this->country->name,
+            $this->products_count,
+            $this->name,
+            $this->category->name,
+            $this->active ? __('Active') : __('Stoped'),
+            $this->important ? __('Important') : '',
+            $this->productClasses->pluck('name')->implode(' '),
+            $this->zones->pluck('name')->implode(' '),
+            $this->blacklists->pluck('name')->implode(' '),
+            $this->presences->pluck('name')->implode(' '),
+            $this->website,
+            $this->about,
+            $this->relationship,
+            $this->comments->pluck('body')->implode(' / '),
+            $this->lastComment?->created_at,
+            $this->created_at,
+            $this->updated_at,
+            $this->meetings_count,
+        ];
     }
 
     /*
@@ -201,32 +271,6 @@ class Manufacturer extends BaseModel implements HasTitle
             'belongsToMany' => ['productClasses', 'zones', 'blacklists'],
             'dateRange' => ['created_at', 'updated_at'],
         ];
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Contracts
-    |--------------------------------------------------------------------------
-    */
-
-    public function getTitleAttribute(): string
-    {
-        return $this->name;
-    }
-
-    public function generateBreadcrumbs(): array
-    {
-        $breadcrumbs = [
-            ['link' => route('manufacturers.index'), 'text' => __('EPP')],
-        ];
-
-        if ($this->trashed()) {
-            $breadcrumbs[] = ['link' => route('manufacturers.trash'), 'text' => __('Trash')];
-        }
-
-        $breadcrumbs[] = ['link' => route('manufacturers.edit', $this->id), 'text' => $this->title];
-
-        return $breadcrumbs;
     }
 
     /*
