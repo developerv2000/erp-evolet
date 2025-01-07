@@ -1,4 +1,5 @@
 @extends('layouts.app', [
+    'pageTitle' => __('Comment') . ' #' . $record->id,
     'pageName' => 'comments-edit',
     'mainAutoOverflowed' => false,
 ])

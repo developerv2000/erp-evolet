@@ -1,4 +1,5 @@
 @extends('layouts.app', [
+    'pageTitle' => __('Attachments') . ' — ' . $record->title,
     'pageName' => 'attachments-index',
     'mainAutoOverflowed' => false,
 ])

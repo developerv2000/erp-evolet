@@ -1,4 +1,5 @@
 @extends('layouts.app', [
+    'pageTitle' => $record->title . ' — ' . __('EPP'),
     'pageName' => 'manufacturers-edit',
     'mainAutoOverflowed' => false,
 ])

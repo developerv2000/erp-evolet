@@ -955,6 +955,10 @@ a {
 
 .breadcrumbs__item .breadcrumbs__item-link {
     color: var(--theme-main-color);
+
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 .breadcrumbs__item::before {

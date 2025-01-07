@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-    'pageTitle' => __('My profile'),
+    'pageTitle' => __('My profile') . ' — ERP',
     'pageName' => 'profile-edit',
     'mainAutoOverflowed' => false,
 ])
