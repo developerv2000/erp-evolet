@@ -24,3 +24,8 @@ Manufacturers:
     tbody IVP
     tbody Meetings
 
+
+
+**** Required *****
+Notifications page
+Translations

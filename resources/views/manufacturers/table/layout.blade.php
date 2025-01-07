@@ -1,5 +1,3 @@
-@props(['records', 'visibleTableColumns', 'trashedRecords' => false])
-
 <x-tables.template.main-template :records="$records">
     {{-- thead titles --}}
     <x-slot:thead-titles>
@@ -7,11 +5,12 @@
 
         @if ($trashedRecords)
             <th width="130"><x-tables.partials.th.deleted-at /></th>
+            <th width="40"><x-tables.partials.th.restore /></th>
         @endif
 
         @foreach ($visibleTableColumns as $column)
             <th width="{{ $column['width'] }}">
-                <x-tables.thead-columns.manufacturers :column="$column" />
+                @include('manufacturers.table.thead-columns')
             </th>
         @endforeach
     </x-slot:thead-titles>
@@ -24,11 +23,12 @@
 
                 @if ($trashedRecords)
                     <td>{{ $record->deleted_at->isoFormat('DD MMM Y') }}</td>
+                    <td><x-tables.partials.td.restore :form-action="route('manufacturers.restore')" :record-id="$record->id" /></td>
                 @endif
 
                 @foreach ($visibleTableColumns as $column)
                     <td>
-                        <x-tables.tbody-row-columns.manufacturers :record="$record" :column="$column" />
+                        @include('manufacturers.table.tbody-row-columns')
                     </td>
                 @endforeach
             </tr>

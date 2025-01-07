@@ -169,6 +169,10 @@ a {
     border-radius: 50%;
 }
 
+.button--margined-bottom {
+    margin-bottom: 4px;
+}
+
 .button--transparent {
     padding: 0;
     color: var(--theme-text-color);
@@ -219,6 +223,22 @@ a {
     }
 }
 
+.button--arrowed-link {
+    flex-direction: row-reverse;
+}
+
+.button--arrowed-link .button__text {
+    font-weight: 400;
+}
+
+.button--arrowed-link:hover .button__text {
+    text-decoration: underline;
+}
+
+.button--arrowed-link .button__icon {
+    font-size: 20px;
+    color: var(--theme-success-color);
+}
 /* ------------ /end Buttons ------------ */
 
 
@@ -1078,10 +1098,6 @@ a {
     &:hover {
         text-decoration: underline;
     }
-}
-
-.main-table .td__link--secondary {
-    color: var(--theme-secondary-color);
 }
 
 .main-table .td__view {

@@ -37,6 +37,24 @@ class ManufacturerController extends Controller
         return view('manufacturers.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
+    public function trash(Request $request)
+    {
+        // Preapare request for valid model querying
+        Manufacturer::addDefaultQueryParamsToRequest($request);
+        UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
+
+        // Get trashed finalized records paginated
+        $query = Manufacturer::onlyTrashed()->withBasicRelations()->withBasicRelationCounts();
+        $filteredQuery = Manufacturer::filterQueryForRequest($query, $request);
+        $records = Manufacturer::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
+
+        // Get all and only visible table columns
+        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey('MAD_EPP_table_columns');
+        $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
+
+        return view('manufacturers.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+    }
+
     public function create()
     {
         return view('manufacturers.create');
@@ -49,13 +67,25 @@ class ManufacturerController extends Controller
         return to_route('manufacturers.index');
     }
 
-    public function edit(Manufacturer $record)
+    /**
+     * Route model binding is not used, because trashed records can also be edited.
+     * Route model binding looks only for untrashed records!
+     */
+    public function edit(Request $request, $record)
     {
+        $record = Manufacturer::withTrashed()->findOrFail($record);
+        $record->loadBasicNonBelongsToRelations();
+
         return view('manufacturers.edit', compact('record'));
     }
 
-    public function update(ManufacturerUpdateRequest $request, Manufacturer $record)
+    /**
+     * Route model binding is not used, because trashed records can also be edited.
+     * Route model binding looks only for untrashed records!
+     */
+    public function update(ManufacturerUpdateRequest $request, $record)
     {
+        $record = Manufacturer::withTrashed()->findOrFail($record);
         $record->updateFromRequest($request);
 
         return redirect($request->input('previous_url'));

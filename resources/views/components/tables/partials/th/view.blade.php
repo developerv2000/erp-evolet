@@ -1,1 +1,1 @@
-<x-misc.material-symbol class="th__iconed-title unselectable" icon="visibility" title="{{ __('Посмотреть') }}" />
+<x-misc.material-symbol class="th__iconed-title unselectable" icon="visibility" title="{{ __('View') }}" />

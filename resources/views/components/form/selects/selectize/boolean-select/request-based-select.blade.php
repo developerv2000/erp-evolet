@@ -27,9 +27,7 @@
         @if ($isRequired) required @endif>
 
         {{-- Empty option for placeholder --}}
-        @unless ($isRequired)
-            <option></option>
-        @endunless
+        <option></option>
 
         <option value="{{ $trueOptionValue }}" @selected($selectedValue == $trueOptionValue)>{{ __($trueOptionLabel) }}</option>
         <option value="{{ $falseOptionValue }}" @selected(isset($selectedValue) && $selectedValue == $falseOptionValue)>{{ __($falseOptionLabel) }}</option>

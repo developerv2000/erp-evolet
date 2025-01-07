@@ -22,11 +22,11 @@ trait RestoresModelRecords
      * @param Request $request The request object.
      * @return \Illuminate\Http\RedirectResponse Redirect back to the previous page.
      */
-    public function dashboardRestore(Request $request)
+    public function restore(Request $request)
     {
         // Extract id or ids from request as array to restore through loop
         $ids = (array) ($request->input('id') ?: $request->input('ids'));
- 
+
         // Restore records
         foreach ($ids as $id) {
             // Check if model exists in trash before restoring

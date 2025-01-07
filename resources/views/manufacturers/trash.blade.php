@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-    'pageName' => 'manufacturers-index',
+    'pageName' => 'manufacturers-trash',
     'mainAutoOverflowed' => true,
 ])
 
@@ -11,6 +11,7 @@
             @php
                 $crumbs = [
                     ['link' => route('manufacturers.index'), 'text' => __('EPP')],
+                    ['link' => route('manufacturers.trash'), 'text' => __('Trash')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -20,33 +21,25 @@
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
-                @can('edit-MAD-EPP')
-                    <x-misc.buttoned-link
-                        class="toolbar__button"
-                        style="shadowed"
-                        link="{{ route('manufacturers.create') }}"
-                        icon="add">{{ __('New') }}
-                    </x-misc.buttoned-link>
-
+                @can('delete-from-trash')
                     <x-misc.button
                         class="toolbar__button"
                         style="shadowed"
                         icon="close"
                         data-click-action="show-modal"
-                        data-modal-selector=".multiple-delete-modal">{{ __('Delete selected') }}
+                        data-modal-selector=".multiple-delete-modal">{{ __('Permanently delete selected') }}
                     </x-misc.button>
                 @endcan
 
-                @can('export-records-as-excel')
-                    <x-form.misc.export-as-excel-form action="{{ route('manufacturers.export-as-excel') }}" />
+                @can('edit-MAD-EPP')
+                    <x-misc.button
+                        class="toolbar__button"
+                        style="shadowed"
+                        icon="history"
+                        data-click-action="show-modal"
+                        data-modal-selector=".multiple-restore-modal">{{ __('Restore selected') }}
+                    </x-misc.button>
                 @endcan
-
-                <x-misc.buttoned-link
-                    class="toolbar__button"
-                    style="shadowed"
-                    link="{{ route('manufacturers.trash') }}"
-                    icon="delete">{{ __('Trash') }}
-                </x-misc.buttoned-link>
 
                 <x-misc.button
                     class="toolbar__button"
@@ -67,7 +60,7 @@
         </div>
 
         {{-- Table --}}
-        @include('manufacturers.table.layout', ['trashedRecords' => false])
+        @include('manufacturers.table.layout', ['trashedRecords' => true])
     </div>
 
     {{-- Modals --}}
@@ -75,10 +68,17 @@
         form-action="{{ route('settings.update-table-columns', 'MAD_EPP_table_columns') }}"
         :columns="$allTableColumns" />
 
-    @can('edit-MAD-EPP')
+    @can('delete-from-trash')
         <x-modals.multiple-delete
             form-action="{{ route('manufacturers.destroy') }}"
-            :forceDelete="false" />
+            :forceDelete="true" />
+    @endcan
+
+    @can('edit-MAD-EPP')
+        <x-modals.multiple-restore
+            form-action="{{ route('manufacturers.restore') }}" />
+
+        <x-modals.target-restore />
     @endcan
 @endsection
 

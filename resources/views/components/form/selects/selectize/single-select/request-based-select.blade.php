@@ -24,9 +24,7 @@
         @if ($isRequired) required @endif>
 
         {{-- Empty option for placeholder --}}
-        @unless ($isRequired)
-            <option></option>
-        @endunless
+        <option></option>
 
         {{-- Loop through the options and generate each option tag --}}
         @foreach ($options as $option)

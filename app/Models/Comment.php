@@ -97,6 +97,9 @@ class Comment extends Model
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Used in comments.index page
+     */
     public static function loadRecordsMinifiedUsers($comments)
     {
         return $comments->load(['user' => function ($query) {

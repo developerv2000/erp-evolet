@@ -148,6 +148,26 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     /*
     |--------------------------------------------------------------------------
+    | Relation loads
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Used on manufacturers.edit page
+     */
+    public function loadBasicNonBelongsToRelations()
+    {
+        $this->load([
+            'presences',
+            'blacklists',
+            'productClasses',
+            'zones',
+            'lastComment',
+        ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Contracts
     |--------------------------------------------------------------------------
     */
@@ -418,7 +438,7 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
     {
         return [
             (object) ['caption' => trans('Active'), 'value' => 1],
-            (object) ['caption' => trans('Stop/pause'), 'value' => 0],
+            (object) ['caption' => trans('Stoped'), 'value' => 0],
         ];
     }
 }

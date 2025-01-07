@@ -15,7 +15,7 @@ class ManufacturerUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $recordID = $this->route('record')->id;
+        $recordID = $this->route('record');
 
         return [
             'name' => [Rule::unique(Manufacturer::class)->ignore($recordID)]

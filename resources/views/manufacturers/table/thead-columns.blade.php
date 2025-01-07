@@ -1,5 +1,3 @@
-@props(['column'])
-
 @switch($column['name'])
     {{-- Edit --}}
     @case('Edit')

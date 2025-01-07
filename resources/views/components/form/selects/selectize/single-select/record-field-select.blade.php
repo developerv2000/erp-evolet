@@ -25,9 +25,7 @@
         @if ($isRequired) required @endif>
 
         {{-- Empty option for placeholder --}}
-        @unless ($isRequired)
-            <option></option>
-        @endunless
+        <option></option>
 
         {{-- Generate options dynamically from the provided collection --}}
         @foreach ($options as $option)

@@ -1,5 +1,3 @@
-@props(['record', 'column'])
-
 @switch($column['name'])
     @case('Edit')
         <x-tables.partials.td.edit :link="route('manufacturers.edit', $record->id)" />

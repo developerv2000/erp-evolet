@@ -1,7 +1,9 @@
 @props(['record'])
 
-<a class="td__link td__link--secondary" href="{{ route('attachments.index', [class_basename($record), $record->id]) }}">
+<x-misc.buttoned-link
+    style="transparent"
+    class="button--arrowed-link button--margined-bottom"
+    icon="arrow_forward"
+    link="{{ route('attachments.index', [class_basename($record), $record->id]) }}">
     {{ $record->attachments_count }} {{ __('attachments') }}
-</a>
-
-<br>
+</x-misc.buttoned-link>
