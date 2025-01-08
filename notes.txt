@@ -20,12 +20,5 @@ Country:
 
 Manufacturers:
     filterQueryByProcessCountries() => Requires VPS
-    Filter / Product class => Required IVP
     tbody IVP
     tbody Meetings
-
-
-
-**** Required *****
-Notifications page
-Translations

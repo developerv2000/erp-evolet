@@ -1,6 +1,6 @@
 @props(['formAction', 'columns'])
 
-<x-misc.modal class="edit-table-columns-modal" title="{{ __('Setup columns') }}">
+<x-misc.modal class="edit-table-columns-modal" title="{{ __('Edit columns') }}">
     <x-slot:body>
         <form
             class="edit-table-columns-form"

@@ -17,8 +17,11 @@ Route::controller(AuthenticatedSessionController::class)->group(function () {
 });
 
 Route::middleware('auth', 'auth.session')->group(function () {
-    Route::get('/', [MainController::class, 'redirectToHomePage'])->name('home');
-    Route::post('/upload-simditor-image', [MainController::class, 'uploadSimditorImage']);
+    Route::controller(MainController::class)->group(function () {
+        Route::get('/', 'redirectToHomePage')->name('home');
+        Route::post('/upload-simditor-image', 'uploadSimditorImage');
+        Route::post('/navigate-to-page-number', 'navigateToPageNumber')->name('navigate-to-page-number');
+    });
 
     Route::controller(SettingController::class)->prefix('/settings')->name('settings.')->group(function () {
         Route::patch('locale', 'updateLocale')->name('update-locale');

@@ -23,7 +23,7 @@
     <x-form-templates.edit-template action="{{ route('comments.update', $record->id) }}">
         <div class="form__block">
             <x-form.simditor-textareas.record-field-textarea
-                labelText="Текст"
+                labelText="Text"
                 field="body"
                 :model="$record"
                 :isRequired="true" />

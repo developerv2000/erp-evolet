@@ -2,7 +2,7 @@
 
 @unless (in_array('created_at', $exclude))
     <x-form.inputs.request-based-input
-        labelText="Created at"
+        labelText="Date of creation"
         inputName="created_at"
         class="date-range-picker-input"
         autocomplete="off" />
@@ -10,7 +10,7 @@
 
 @unless (in_array('updated_at', $exclude))
     <x-form.inputs.request-based-input
-        labelText="Updated at"
+        labelText="Update date"
         inputName="updated_at"
         class="date-range-picker-input"
         autocomplete="off" />

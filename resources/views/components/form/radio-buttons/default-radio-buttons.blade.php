@@ -32,7 +32,7 @@
                 value="{{ $option->{$optionValueField} }}"
                 @checked($option->{$optionValueField} == $selectedValue)>
 
-            <div class="radio-group__option-caption">{{ $option->{$optionCaptionField} }}</div>
+            <div class="radio-group__option-caption">{{ __($option->{$optionCaptionField}) }}</div>
         </label>
     @endforeach
 </x-form.groups.standard-label-group>

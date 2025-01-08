@@ -1,6 +1,6 @@
 @if ($record->comments->count())
     <div class="comments-list-wrapper styled-box">
-        <h2 class="comments-list-title main-title">{{ __('All comments' . ' — ' . $record->comments->count()) }}</h2>
+        <h2 class="comments-list-title main-title">{{ __('All comments') . ' — ' . $record->comments->count() }}</h2>
 
         <div class="comments-list">
             @foreach ($record->comments as $comment)

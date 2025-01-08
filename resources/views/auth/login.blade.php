@@ -1,4 +1,7 @@
-@extends('auth.app', ['pageName' => 'login-page'])
+@extends('auth.app', [
+    'pageTitle' => __('Login') . ' — ERP',
+    'pageName' => 'login-page',
+])
 
 @section('content')
     <div class="auth-box styled-box">

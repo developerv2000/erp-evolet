@@ -2,7 +2,7 @@
     <div class="header__inner">
         {{-- Logo --}}
         <div class="header__logo-wrapper">
-            <x-misc.material-symbol class="header__leftbar-toggler unselectable" icon="menu" title="Переключить меню" />
+            <x-misc.material-symbol class="header__leftbar-toggler unselectable" icon="menu" title="{{ __('Toggle menu') }}" />
 
             <a class="header__logo-link" href="/">
                 <h4 class="header__logo-text">EVOLET</h4>

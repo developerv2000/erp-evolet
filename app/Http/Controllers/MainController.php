@@ -25,4 +25,23 @@ class MainController extends Controller
             'file_path' => asset($folder . '/' . $filename),
         ]);
     }
+
+    public function navigateToPageNumber(Request $request)
+    {
+        $url = $request->input('full_url');
+        $navigateToPage = $request->input('navigate_to_page');
+
+        // Parse the URL and get the query as an array
+        $parsedUrl = parse_url($url);
+        parse_str($parsedUrl['query'] ?? '', $query);
+
+        // Update the 'page' parameter with the new page number
+        $query['page'] = $navigateToPage;
+
+        // Build the modified URL with the updated query
+        $newUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . $parsedUrl['path'] . '?' . http_build_query($query);
+
+        // Redirect to the modified URL
+        return redirect($newUrl);
+    }
 }

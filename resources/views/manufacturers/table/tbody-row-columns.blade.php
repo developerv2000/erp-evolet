@@ -37,7 +37,7 @@
         @if ($record->active)
             <span class="badge badge--blue">{{ __('Active') }}</span>
         @else
-            <span class="badge badge--grey">{{ __('Stoped') }}</span>
+            <span class="badge badge--grey">{{ __('Stopped') }}</span>
         @endif
     @break
 
@@ -61,7 +61,7 @@
         @endforeach
     @break
 
-    @case('Black list')
+    @case('Blacklist')
         @foreach ($record->blacklists as $list)
             {{ $list->name }} <br>
         @endforeach

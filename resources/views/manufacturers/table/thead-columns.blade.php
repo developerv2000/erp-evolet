@@ -5,6 +5,10 @@
     @break
 
     {{-- Links --}}
+    @case('ID')
+        <x-tables.partials.th.id />
+    @break
+
     @case('BDM')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="bdm_user_id" />
     @break
@@ -42,7 +46,8 @@
     @break
 
     {{-- Static text --}}
+
     @default
-        <div title="{{ $column['name'] }}">{{ $column['name'] }}</div>
+        <div title="{{ __($column['name']) }}">{{ __($column['name']) }}</div>
     @break
 @endswitch

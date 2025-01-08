@@ -225,7 +225,7 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
             $this->website,
             $this->about,
             $this->relationship,
-            $this->comments->pluck('body')->implode(' / '),
+            $this->comments->pluck('plain_text')->implode(' / '),
             $this->lastComment?->created_at,
             $this->created_at,
             $this->updated_at,
@@ -407,10 +407,10 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Category', 'order' => $order++, 'width' => 104, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 106, 'visible' => 1],
             ['name' => 'Important', 'order' => $order++, 'width' => 100, 'visible' => 1],
-            ['name' => 'Product class', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            ['name' => 'Product class', 'order' => $order++, 'width' => 114, 'visible' => 1],
             ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
-            ['name' => 'Black list', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Presence', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Blacklist', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Presence', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'Website', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'About company', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Relationship', 'order' => $order++, 'width' => 200, 'visible' => 1],
@@ -420,7 +420,7 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Meetings', 'order' => $order++, 'width' => 106, 'visible' => 1],
-            ['name' => 'ID', 'order' => $order++, 'width' => 70, 'visible' => 1],
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Attachments', 'order' => $order++, 'width' => 180, 'visible' => 1],
         );
 
@@ -438,7 +438,7 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
     {
         return [
             (object) ['caption' => trans('Active'), 'value' => 1],
-            (object) ['caption' => trans('Stoped'), 'value' => 0],
+            (object) ['caption' => trans('Stopped'), 'value' => 0],
         ];
     }
 }
