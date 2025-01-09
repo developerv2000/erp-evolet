@@ -22,3 +22,9 @@ Manufacturers:
     filterQueryByProcessCountries() => Requires VPS
     tbody IVP
     tbody Meetings
+    EVENTS => Requires IVP & VPS
+
+Product:
+    Additional attributes => Requires VPS & KVPP
+    EVENTS => Requires VPS & KVPP
+    

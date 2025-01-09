@@ -31,10 +31,12 @@ class MADViewComposersDefiner
     {
         $defaultShareData = self::getDefaultManufacturersShareData();
 
-        self::defineViewComposer([
-            'manufacturers.partials.create-form',
-            'manufacturers.partials.edit-form',
-        ], array_merge($defaultShareData, [
+        self::defineViewComposer('manufacturers.partials.create-form', array_merge($defaultShareData, [
+            'statusOptions' => Manufacturer::getStatusOptions(),
+            'defaultSelectedZoneIDs' => Zone::getRelatedDefaultSelectedIDValues(),
+        ]));
+
+        self::defineViewComposer('manufacturers.partials.edit-form', array_merge($defaultShareData, [
             'statusOptions' => Manufacturer::getStatusOptions(),
         ]));
 

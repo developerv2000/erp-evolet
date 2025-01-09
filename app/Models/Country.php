@@ -62,6 +62,7 @@ class Country extends Model implements UsageCountable
     |--------------------------------------------------------------------------
     */
 
+    // Implement method declared in UsageCountable interface
     public function recalculateUsageCount(): void
     {
         // $this->update([

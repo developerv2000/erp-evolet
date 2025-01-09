@@ -24,6 +24,10 @@ class DatabaseSeeder extends Seeder
             ZoneSeeder::class,
             ProductClassSeeder::class,
             ManufacturerSeeder::class,
+            InnSeeder::class,
+            ProductFormSeeder::class,
+            ProductShelfLifeSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }

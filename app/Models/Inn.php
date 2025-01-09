@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use App\Support\Traits\Model\FindsRecordByName;
 use App\Support\Traits\Model\ScopesOrderingByName;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductClass extends Model
+class Inn extends Model
 {
     use ScopesOrderingByName;
 
@@ -25,20 +24,8 @@ class ProductClass extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function manufacturers()
+    public function products()
     {
-        return $this->belongsToMany(Manufacturer::class);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Misc
-    |--------------------------------------------------------------------------
-    */
-
-    // Get default selected id on products.create page
-    public static function getDefaultSelectedIDValue()
-    {
-        return self::where('name', 'ЛС')->value('id');
+        return $this->hasMany(Product::class);
     }
 }

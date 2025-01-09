@@ -45,6 +45,7 @@
                 labelText="Zones"
                 inputName="zones[]"
                 :options="$zones"
+                :initialValues="$defaultSelectedZoneIDs"
                 :isRequired="true" />
 
             <x-form.selects.selectize.id-based-multiple-select.default-select

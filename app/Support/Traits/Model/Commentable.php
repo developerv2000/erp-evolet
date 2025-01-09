@@ -29,6 +29,18 @@ trait Commentable
     }
 
     /**
+     * Boot the trait and add model events.
+     */
+    public static function bootCommentable()
+    {
+        static::forceDeleting(function ($model) {
+            foreach ($model->comments as $comment) {
+                $comment->delete();
+            }
+        });
+    }
+
+    /**
      * Store a new comment associated with the model.
      *
      * @param string|null $comment The comment body.

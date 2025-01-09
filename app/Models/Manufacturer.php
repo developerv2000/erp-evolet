@@ -52,6 +52,11 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
     |--------------------------------------------------------------------------
     */
 
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
     public function category()
     {
         return $this->belongsTo(ManufacturerCategory::class);
@@ -108,6 +113,57 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     /*
     |--------------------------------------------------------------------------
+    | Events
+    |--------------------------------------------------------------------------
+    */
+
+    protected static function booted(): void
+    {
+        static::saving(function ($record) {
+            $record->name = strtoupper($record->name);
+        });
+
+        static::deleting(function ($record) { // trashing
+            foreach ($record->products as $product) {
+                $product->delete();
+            }
+
+            // foreach ($record->meetings as $meeting) {
+            //     $meeting->delete();
+            // }
+        });
+
+        static::restored(function ($record) {
+            foreach ($record->products()->onlyTrashed()->get() as $product) {
+                $product->restore();
+            }
+
+            // foreach ($record->meetings()->onlyTrashed()->get() as $meeting) {
+            //     $meeting->restore();
+            // }
+        });
+
+        static::forceDeleting(function ($record) {
+            $record->zones()->detach();
+            $record->productClasses()->detach();
+            $record->blacklists()->detach();
+
+            foreach ($record->presences as $presence) {
+                $presence->delete();
+            }
+
+            foreach ($record->products()->withTrashed()->get() as $product) {
+                $product->forceDelete();
+            }
+
+            // foreach ($record->meetings()->withTrashed()->get() as $meeting) {
+            //     $meeting->forceDelete();
+            // }
+        });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Scopes
     |--------------------------------------------------------------------------
     */
@@ -120,19 +176,12 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
             'presences',
             'blacklists',
             'productClasses',
-            'attachments',
             'zones',
+            'attachments',
             'lastComment',
 
-            'analyst' => function ($query) {
-                $query->select(['id', 'name', 'photo'])
-                    ->withOnly([]);
-            },
-
-            'bdm' => function ($query) {
-                $query->select(['id', 'name', 'photo'])
-                    ->withOnly([]);
-            },
+            'analyst:id,name,photo',
+            'bdm:id,name,photo',
         ]);
     }
 
@@ -198,11 +247,8 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
     public function scopeWithRelationsForExport($query)
     {
         return $query->withBasicRelations()
-            ->with(['comments'])
-            ->withCount([
-                // 'products', // Not done yet
-                // 'meetings', // Not done yet
-            ]);
+            ->withBasicRelationsCount()
+            ->with(['comments']);
     }
 
     // Implement method declared in CanExportRecordsAsExcel Interface

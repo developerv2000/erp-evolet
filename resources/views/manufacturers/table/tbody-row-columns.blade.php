@@ -116,7 +116,10 @@
     @break
 
     @case('Attachments')
-        <x-tables.partials.td.model-attachments-link :record="$record" />
+        @can('edit-MAD-EPP')
+            <x-tables.partials.td.model-attachments-link :record="$record" />
+        @endcan
+
         <x-tables.partials.td.model-attachments-list :attachments="$record->attachments" />
     @break
 
