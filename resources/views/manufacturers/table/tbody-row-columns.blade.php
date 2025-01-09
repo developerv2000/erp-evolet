@@ -74,7 +74,7 @@
     @case('Website')
         @if ($record->website)
             <div class="td__max-lines-limited-text" data-on-click="toggle-td-text-max-lines">
-                <a class="td__link text-lowercase" href="{{ $record->website }}" target="_blank">{{ $record->website }}</a>
+                <a class="main-link text-lowercase" href="{{ $record->website }}" target="_blank">{{ $record->website }}</a>
             </div>
         @endif
     @break

@@ -136,6 +136,14 @@ a {
     text-transform: lowercase;
 }
 
+.main-link {
+    color: var(--theme-main-color);
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 /* ------------ Buttons ------------ */
 .button {
     display: flex;
@@ -518,7 +526,7 @@ a {
 
 .header__logo-text::first-letter {
     color: var(--theme-main-color);
-    font-weight: 900;
+    font-weight: bold;
 }
 
 /* Menu */
@@ -869,7 +877,7 @@ a {
     padding-bottom: 10px;
 }
 
-/* ------------ /END Rightbar ------------ */
+/* ------------ /end Rightbar ------------ */
 
 
 /* ------------ Titles ------------ */
@@ -951,14 +959,6 @@ a {
     display: flex;
     align-items: center;
     gap: 4px;
-}
-
-.breadcrumbs__item .breadcrumbs__item-link {
-    color: var(--theme-main-color);
-
-    &:hover {
-        text-decoration: underline;
-    }
 }
 
 .breadcrumbs__item::before {
@@ -1096,14 +1096,6 @@ a {
     padding-right: var(--main-table-side-paddings);
 }
 
-.main-table .td__link {
-    color: var(--theme-main-color);
-
-    &:hover {
-        text-decoration: underline;
-    }
-}
-
 .main-table .td__view {
     color: var(--theme-lighter-text-color);
 }
@@ -1169,7 +1161,7 @@ a {
     display: none;
 }
 
-/* ------------ /END Ava ------------ */
+/* ------------ /end Ava ------------ */
 
 
 /* ------------ Simditor text ------------ */
@@ -1234,14 +1226,14 @@ a {
     border: var(--theme-border);
 }
 
-/* ------------ /END Simditor text ------------ */
+/* ------------ /end Simditor text ------------ */
 
 
 /* ------------ Export as excel form ------------ */
 .export-as-excel-form .button:disabled {
     cursor: not-allowed;
 }
-/* ------------ /END Export as excel form ------------ */
+/* ------------ /end Export as excel form ------------ */
 
 
 /* ------------ Sortable columns ------------ */
@@ -1277,4 +1269,40 @@ a {
     background-color: var(--theme-secondary-color);
 }
 
-/* ------------ /END Sortable columns ------------ */
+/* ------------ /end Sortable columns ------------ */
+
+
+/* ------------ Similar records ------------ */
+.similar-records-wrapper:empty {
+    display: none;
+}
+
+.similar-records__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.similar-records__list-item {
+    display: flex;
+    gap: 12px;
+}
+
+.similar-records__list-link {
+    font-weight: 500;
+}
+
+.similar-records__list-text {
+    display: flex;
+    gap: 12px;
+}
+
+.similar-records__empty-text {
+    display: flex;
+    gap: 8px;
+}
+
+.similar-records__empty-text-icon {
+    color: var(--theme-success-color);
+}
+/* ------------ /end Similar records ------------ */

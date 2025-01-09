@@ -34,6 +34,7 @@ const filterForm = document.querySelector('.filter-form');
 const appendsInputsBeforeSubmitForms = document.querySelectorAll('[data-before-submit="appends-inputs"]');
 const showsSpinnerOnSubmitForms = document.querySelectorAll('[data-on-submit="show-spinner"]');
 const exportAsExcelForm = document.querySelector('.export-as-excel-form');
+const productsCreateForm = document.querySelector('.products-create-form');
 
 // Image inputs with preview
 const imageInputsWithPreview = document.querySelectorAll('.image-input-group-with-preview__input');
@@ -122,9 +123,24 @@ function initializeEditTableColumnsForm() {
     editTableColumnsForm.addEventListener('submit', (evt) => functions.handleEditTableColumnsSubmit(evt));
 }
 
+function initializeProductsCreateForm() {
+    if (!productsCreateForm) {
+        return;
+    }
+
+    // Select the dropdowns for manufacturer, inn, and form
+    const selects = productsCreateForm.querySelectorAll('select[name="manufacturer_id"], select[name="inn_id"], select[name="form_id')
+
+    // Attach change event listeners to all select dropdowns
+    for (const select of selects) {
+        select.selectize.on('change', (value) => functions.displayProductsSimilarRecords());
+    }
+}
+
 init();
 
 function init() {
     functions.moveFilterActiveInputsToTop(filterForm);
     initializeEditTableColumnsForm();
+    initializeProductsCreateForm();
 }

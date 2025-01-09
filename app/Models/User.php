@@ -275,6 +275,7 @@ class User extends Authenticatable
         $this->refresh();
         $settings = $this->settings;
         $settings['MAD_EPP_table_columns'] = Manufacturer::getDefaultTableColumnsForUser($this);
+        $settings['MAD_IVP_table_columns'] = Product::getDefaultTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();

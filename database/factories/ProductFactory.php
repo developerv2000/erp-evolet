@@ -50,13 +50,13 @@ class ProductFactory extends Factory
 
             $generic->comments()->saveMany([
                 new Comment([
-                    'body' => fake()->sentences(2, true),
+                    'body' => '<p>' . fake()->sentences(2, true) . '</p>',
                     'user_id' => User::onlyMADAnalysts()->inRandomOrder()->first()->id,
                     'created_at' => now()
                 ]),
 
                 new Comment([
-                    'body' => fake()->sentences(2, true),
+                    'body' => '<p>' . fake()->sentences(2, true) . '</p>',
                     'user_id' => User::onlyMADAnalysts()->inRandomOrder()->first()->id,
                     'created_at' => now()
                 ]),

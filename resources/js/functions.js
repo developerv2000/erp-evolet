@@ -12,7 +12,8 @@ import { hideSpinner, showModal, showSpinner } from "../custom-components/script
 |--------------------------------------------------------------------------
 */
 
-const TOGGLE_LEFTBAR_URL = '/settings/collapsed-leftbar';
+const TOGGLE_LEFTBAR_PATCH_URL = '/settings/collapsed-leftbar';
+const GET_PRODUCTS_SIMILAR_RECORDS_POST_URL = '/products/get-similar-records'
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,7 @@ const TOGGLE_LEFTBAR_URL = '/settings/collapsed-leftbar';
 const leftbar = document.querySelector('.leftbar');
 const targetDeleteModal = document.querySelector('.target-delete-modal');
 const targetRestoreModal = document.querySelector('.target-restore-modal');
+const similarRecordsWrapper = document.querySelector('.similar-records-wrapper');
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +37,7 @@ export function toggleTextMaxLines(target) {
 }
 
 export function toggleLeftbar() {
-    axios.patch(TOGGLE_LEFTBAR_URL)
+    axios.patch(TOGGLE_LEFTBAR_PATCH_URL)
         .finally(() => {
             leftbar.classList.toggle('leftbar--collapsed');
         });
@@ -205,6 +207,39 @@ export function handleEditTableColumnsSubmit(evt) {
             window.location.reload();
         })
         .finally(hideSpinner);
+}
+
+export function displayProductsSimilarRecords() {
+    // Get manufacturer, inn, and form ID values
+    const manufacturerID = document.querySelector('select[name="manufacturer_id"]').value;
+    const innID = document.querySelector('select[name="inn_id"]').value;
+    const formID = document.querySelector('select[name="form_id"]').value;
+
+    // Return if any required fields are empty
+    if (manufacturerID == '' || innID == '' || formID == '') {
+        similarRecordsWrapper.innerHTML = '';
+        return;
+    }
+
+    // Prepare data to be sent in the AJAX request
+    const data = {
+        'manufacturer_id': manufacturerID,
+        'inn_id': innID,
+        'form_id': formID,
+    };
+
+    // Send a POST request to the server to get similar records
+    axios.post(GET_PRODUCTS_SIMILAR_RECORDS_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            similarRecordsWrapper.innerHTML = response.data;
+        })
+        .finally(function () {
+            hideSpinner();
+        });
 }
 
 /*

@@ -420,6 +420,21 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
     }
 
     /**
+     * Return an array of status options
+     *
+     * Used on records create/update as radiogroups options
+     *
+     * @return array
+     */
+    public static function getStatusOptions()
+    {
+        return [
+            (object) ['caption' => trans('Active'), 'value' => 1],
+            (object) ['caption' => trans('Stopped'), 'value' => 0],
+        ];
+    }
+
+    /**
      * Provides the default table columns along with their properties.
      *
      * These columns are typically used to display data in tables,
@@ -471,20 +486,5 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
         );
 
         return $columns;
-    }
-
-    /**
-     * Return an array of status options
-     *
-     * Used on records create/update as radiogroups options
-     *
-     * @return array
-     */
-    public static function getStatusOptions()
-    {
-        return [
-            (object) ['caption' => trans('Active'), 'value' => 1],
-            (object) ['caption' => trans('Stopped'), 'value' => 0],
-        ];
     }
 }

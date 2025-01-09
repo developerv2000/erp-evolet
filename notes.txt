@@ -27,4 +27,9 @@ Manufacturers:
 Product:
     Additional attributes => Requires VPS & KVPP
     EVENTS => Requires VPS & KVPP
-    
+
+    Table:
+        MOQ => format
+
+    Create form:
+        Dosage & pack => specific format

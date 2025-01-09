@@ -20,7 +20,7 @@
                 </td>
 
                 <td>
-                    <a class="td__link" href="{{ asset($attachment->file_path) }}" target="_blank">
+                    <a class="main-link" href="{{ asset($attachment->file_path) }}" target="_blank">
                         {{ $attachment->filename }}
                     </a>
                 </td>

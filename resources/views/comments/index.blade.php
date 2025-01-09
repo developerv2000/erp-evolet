@@ -11,7 +11,10 @@
             <x-layouts.breadcrumbs :crumbs="$breadcrumbs" />
         </div>
 
-        @include('comments.partials.create-form')
+        @can('edit-comments')
+            @include('comments.partials.create-form')
+        @endcan
+
         @include('comments.partials.list')
 
         {{-- Modals --}}

@@ -253,7 +253,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             $this->manufacturer->analyst->name,
             $this->created_at,
             $this->updated_at,
-            'Matched KVPPs', // $this->matched_kvpps->count(), Not done yet
+            'Matched KVPPs', // $this->matched_product_searches->count(), Not done yet
         ];
     }
 
@@ -343,6 +343,35 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     | Misc
     |--------------------------------------------------------------------------
     */
+
+    // Used on filter
+    public static function getAllUniqueBrands()
+    {
+        return self::whereNotNull('brand')->distinct()->pluck('brand');
+    }
+
+    /**
+     * Get similar records based on the provided request data.
+     *
+     * Used for AJAX requests to retrieve similar records, on the products create form.
+     *
+     * @param  \Illuminate\Http\Request  $request The request object containing form data.
+     * @return \Illuminate\Database\Eloquent\Collection A collection of similar records.
+     */
+    public static function getSimilarRecordsForRequest($request)
+    {
+        // Get the family IDs of the selected form
+        $formFamilyIDs = ProductForm::find($request->form_id)->getFamilyIDs();
+
+        // Query similar records based on manufacturer, inn, and form family IDs
+        $similarRecords = Product::where('manufacturer_id', $request->manufacturer_id)
+            ->where('inn_id', $request->inn_id)
+            ->whereIn('form_id', $formFamilyIDs)
+            ->with(['form'])
+            ->get();
+
+        return $similarRecords;
+    }
 
     /**
      * Provides the default table columns along with their properties.
