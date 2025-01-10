@@ -37,7 +37,7 @@
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="class_id" />
     @break
 
-    @case('Manufacturer Brand')
+    @case('Brand')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="brand" />
     @break
 

@@ -37,7 +37,7 @@
                 :model="$record" />
 
             <x-form.inputs.record-field-input
-                labelText="Manufacturer Brand"
+                labelText="Brand"
                 field="brand"
                 :model="$record" />
         </div>

@@ -35,7 +35,7 @@
         {{ $record->manufacturer->name }}
     @break
 
-    @case('Manufacturer Brand')
+    @case('Brand')
         {{ $record->brand }}
     @break
 

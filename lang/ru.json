@@ -97,6 +97,9 @@
     "Stopped": "Остановлен",
     "Important": "Важный",
 
+    "Similar records": "Похожие записи",
+    "No similar records found": "Похожих записей не найдено",
+
     "Analyst": "Аналитик",
     "BDM": "БДМ",
     "Country": "Страна",
@@ -110,6 +113,27 @@
     "About company": "О компании",
     "Relationship": "Отношения",
     "Has VPS for country": "Имеет ВПЦ для страны",
+
+    "Processes": "Процессы",
+    "processes": "процесса",
+    "New process": "Новый процесс",
+    "Brand": "Бренд",
+    "Generic": "Дженерик",
+    "Form": "Форма",
+    "Basic form": "Основная форма",
+    "Dosage": "Доза",
+    "Pack": "Упаковка",
+    "MOQ": "Мин. объем заказа",
+    "Shelf life": "Срок Годности",
+    "Dossier": "Досье",
+    "Bioequivalence": "Биоэквив.",
+    "Validity period": "Срок дейст.",
+    "Registered in EU": "Зарег. в ЕС",
+    "Registered": "Зарегистр.",
+    "Sold in EU": "Прод. в ЕС",
+    "Sold": "Продается",
+    "Down payment": "Доп. платёж",
+    "Matched KVPPs": "Совпадение с КВПП",
 
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

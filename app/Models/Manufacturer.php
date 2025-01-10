@@ -247,7 +247,7 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
     public function scopeWithRelationsForExport($query)
     {
         return $query->withBasicRelations()
-            ->withBasicRelationsCount()
+            ->withBasicRelationCounts()
             ->with(['comments']);
     }
 

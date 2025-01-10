@@ -35,7 +35,7 @@
                 inputName="pack" />
 
             <x-form.inputs.default-input
-                labelText="Manufacturer Brand"
+                labelText="Brand"
                 inputName="brand" />
         </div>
 

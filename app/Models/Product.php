@@ -141,12 +141,15 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     {
         return $query->with([
             'inn',
-            'form',
             'shelfLife',
             'class',
             'zones',
             'attachments',
             'lastComment',
+
+            'form' => function ($formsQuery) {
+                $formsQuery->with(['parent']);
+            },
 
             'manufacturer' => function ($manufacturersQuery) {
                 $manufacturersQuery->select([
@@ -229,7 +232,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     public function scopeWithRelationsForExport($query)
     {
         return $query->withBasicRelations()
-            ->withBasicRelationsCount()
+            ->withBasicRelationCounts()
             ->with(['comments']);
     }
 
@@ -424,7 +427,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Product class', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Dossier', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
-            ['name' => 'Manufacturer Brand', 'order' => $order++, 'width' => 182, 'visible' => 1],
+            ['name' => 'Brand', 'order' => $order++, 'width' => 182, 'visible' => 1],
             ['name' => 'Bioequivalence', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Validity period', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'Registered in EU', 'order' => $order++, 'width' => 138, 'visible' => 1],

@@ -95,7 +95,7 @@ class MADViewComposersDefiner
             'analystUsers' => User::getMADAnalystsMinified(),
             'bdmUsers' => User::getBDMsMinifed(),
             'productClasses' => ProductClass::orderByName()->get(),
-            'productForms' => ProductForm::orderByName()->get(),
+            'productForms' => ProductForm::getMinifiedRecordsWithName(),
             'shelfLifes' => ProductShelfLife::all(),
             'zones' => Zone::orderByName()->get(),
             'inns' => Inn::orderByName()->get(),

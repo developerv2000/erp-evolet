@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('pack')->nullable();
             $table->string('moq')->nullable();
 
-            $table->string('dossier', 1000)->nullable();
-            $table->string('bioequivalence', 600)->nullable();
-            $table->string('down_payment', 400)->nullable();
-            $table->string('validity_period', 400)->nullable();
+            $table->string('dossier', 600)->nullable();
+            $table->string('bioequivalence', 400)->nullable();
+            $table->string('down_payment', 300)->nullable();
+            $table->string('validity_period', 300)->nullable();
             $table->boolean('registered_in_eu')->default(0);
             $table->boolean('sold_in_eu')->default(0);
 
