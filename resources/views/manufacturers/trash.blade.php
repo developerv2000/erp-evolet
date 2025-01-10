@@ -45,14 +45,6 @@
                 <x-misc.button
                     class="toolbar__button"
                     style="shadowed"
-                    icon="settings"
-                    data-click-action="show-modal"
-                    data-modal-selector=".edit-table-columns-modal">{{ __('Columns') }}
-                </x-misc.button>
-
-                <x-misc.button
-                    class="toolbar__button"
-                    style="shadowed"
                     icon="fullscreen"
                     data-click-action="request-fullscreen"
                     data-target-selector="{{ '.main-wrapper' }}">{{ __('Fullscreen') }}
@@ -65,10 +57,6 @@
     </div>
 
     {{-- Modals --}}
-    <x-modals.edit-table-columns
-        form-action="{{ route('settings.update-table-columns', 'MAD_EPP_table_columns') }}"
-        :columns="$allTableColumns" />
-
     @can('delete-from-trash')
         <x-modals.multiple-delete
             form-action="{{ route('manufacturers.destroy') }}"

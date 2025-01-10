@@ -4,7 +4,17 @@
     @break
 
     @case('Processes')
-        Processes
+        <x-misc.buttoned-link
+            style="transparent"
+            class="button--arrowed-link button--margined-bottom"
+            icon="arrow_forward"
+            :link="$record->processes_index_link">
+            {{ $record->processes_count }} {{ __('processes') }}
+        </x-misc.buttoned-link>
+
+        <a class="main-link" href="{{ route('processes.create', ['product_id' => $record->id]) }}">
+            {{ __('New process') }}
+        </a>
     @break
 
     @case('Category')

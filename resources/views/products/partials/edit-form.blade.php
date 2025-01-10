@@ -1,51 +1,76 @@
-<x-form-templates.edit-template :action="route('manufacturers.update', $record->id)">
+<x-form-templates.edit-template :action="route('products.update', $record->id)">
+    <div class="form__block">
+        <div class="form__row">
+            <x-form.selects.selectize.id-based-single-select.record-field-select
+                labelText="Manufacturer"
+                field="manufacturer_id"
+                :model="$record"
+                :options="$manufacturers"
+                :isRequired="true" />
+
+            <x-form.selects.selectize.id-based-single-select.record-field-select
+                labelText="Generic"
+                field="inn_id"
+                :model="$record"
+                :options="$inns"
+                :isRequired="true" />
+
+            <x-form.selects.selectize.id-based-single-select.record-field-select
+                labelText="Form"
+                field="form_id"
+                :model="$record"
+                :options="$productForms"
+                :isRequired="true" />
+        </div>
+    </div>
+
     <div class="form__block">
         <div class="form__row">
             <x-form.inputs.record-field-input
-                labelText="Manufacturer"
-                field="name"
-                :model="$record"
-                :isRequired="true" />
+                labelText="Dosage"
+                field="dosage"
+                :model="$record" />
 
+            <x-form.inputs.record-field-input
+                labelText="Pack"
+                field="pack"
+                :model="$record" />
+
+            <x-form.inputs.record-field-input
+                labelText="Manufacturer Brand"
+                field="brand"
+                :model="$record" />
+        </div>
+
+        <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Category"
-                field="category_id"
-                :model="$record"
-                :options="$categories"
-                :isRequired="true" />
-
-            <x-form.selects.selectize.id-based-multiple-select.record-relation-select
                 labelText="Product class"
-                inputName="productClasses[]"
+                field="class_id"
                 :model="$record"
                 :options="$productClasses"
                 :isRequired="true" />
-        </div>
 
-        <div class="form__row">
-            <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Analyst"
-                field="analyst_user_id"
-                :model="$record"
-                :options="$analystUsers"
-                :isRequired="true" />
+            <x-form.inputs.record-field-input
+                labelText="MOQ"
+                field="moq"
+                :model="$record" />
 
             <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="BDM"
-                field="bdm_user_id"
+                labelText="Shelf life"
+                field="shelf_life_id"
                 :model="$record"
-                :options="$bdmUsers"
-                :isRequired="true" />
-
-            <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Country"
-                field="country_id"
-                :model="$record"
-                :options="$countriesOrderedByName"
+                :options="$shelfLifes"
                 :isRequired="true" />
         </div>
+    </div>
 
+    <div class="form__block">
         <div class="form__row">
+            <x-form.inputs.record-field-input
+                labelText="Dossier"
+                field="dossier"
+                :model="$record" />
+
             <x-form.selects.selectize.id-based-multiple-select.record-relation-select
                 labelText="Zones"
                 inputName="zones[]"
@@ -53,65 +78,42 @@
                 :options="$zones"
                 :isRequired="true" />
 
-            <x-form.selects.selectize.id-based-multiple-select.record-relation-select
-                labelText="Blacklist"
-                inputName="blacklists[]"
-                :model="$record"
-                :options="$blacklists" />
-
-            <x-form.selects.selectize.multiple-select.record-field-multi-select
-                labelText="Presence"
-                field="presence_names_array"
-                inputName="presences[]"
-                :model="$record"
-                :taggable="true"
-                :options="$record->presence_names_array" />
+            <x-form.inputs.record-field-input
+                labelText="Bioequivalence"
+                field="bioequivalence"
+                :model="$record" />
         </div>
-    </div>
 
-    <div class="form__block">
-        <div class="form__row">
-            <x-form.radio-buttons.record-field-radio-buttons
-                class="radio-group--horizontal"
-                labelText="Status"
-                field="active"
-                :model="$record"
-                :options="$statusOptions"
-                :initialValue="true"
-                :isRequired="true" />
-
-            <x-form.radio-buttons.record-field-radio-buttons
-                class="radio-group--horizontal"
-                labelText="Important"
-                field="important"
-                :model="$record"
-                :options="$booleanOptions"
-                :isRequired="true" />
-
-            <div class="form-group"></div>
-        </div>
-    </div>
-
-    <div class="form__block">
         <div class="form__row">
             <x-form.inputs.record-field-input
-                labelText="Website"
-                field="website"
+                labelText="Down payment"
+                field="down_payment"
                 :model="$record" />
 
             <x-form.inputs.record-field-input
-                labelText="Relationship"
-                field="relationship"
+                labelText="Validity period"
+                field="validity_period"
                 :model="$record" />
 
             <x-form.misc.attach-files-input />
         </div>
+    </div>
 
+    <div class="form__block">
         <div class="form__row">
-            <x-form.textareas.record-field-textarea
-                labelText="About company"
-                field="about"
-                :model="$record" />
+            <x-form.radio-buttons.record-field-radio-buttons
+                class="radio-group--horizontal"
+                labelText="Registered in EU"
+                field="registered_in_eu"
+                :model="$record"
+                :options="$booleanOptions" />
+
+            <x-form.radio-buttons.record-field-radio-buttons
+                class="radio-group--horizontal"
+                labelText="Sold in EU"
+                field="sold_in_eu"
+                :model="$record"
+                :options="$booleanOptions" />
         </div>
     </div>
 

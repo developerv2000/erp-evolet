@@ -87,6 +87,17 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     |--------------------------------------------------------------------------
     */
 
+    public function getProcessesIndexLinkAttribute()
+    {
+        return route('processes.index', [
+            'manufacturer_id[]' => $this->manufacturer_id,
+            'inn_id[]' => $this->inn_id,
+            'form_id[]' => $this->form_id,
+            'dosage' => $this->dosage,
+            'pack' => $this->pack,
+        ]);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Events
@@ -106,17 +117,17 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
                 $record->manufacturer->restoreQuietly();
             }
 
-            foreach ($record->processes()->onlyTrashed()->get() as $process) {
-                $process->restoreQuietly();
-            }
+            // foreach ($record->processes()->onlyTrashed()->get() as $process) {
+            //     $process->restoreQuietly();
+            // }
         });
 
         static::forceDeleting(function ($record) {
             $record->zones()->detach();
 
-            foreach ($record->processes()->withTrashed()->get() as $process) {
-                $process->forceDelete();
-            }
+            // foreach ($record->processes()->withTrashed()->get() as $process) {
+            //     $process->forceDelete();
+            // }
         });
     }
 
@@ -399,7 +410,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
         array_push(
             $columns,
-            ['name' => 'Processes', 'order' => $order++, 'width' => 146, 'visible' => 1],
+            ['name' => 'Processes', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Category', 'order' => $order++, 'width' => 84, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 144, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
