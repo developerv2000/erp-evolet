@@ -7,6 +7,7 @@
 import './bootstrap';
 import * as functions from './functions';
 import { showSpinner } from '../custom-components/script';
+import { debounce } from './utilities';
 
 /*
 |--------------------------------------------------------------------------
@@ -35,12 +36,11 @@ const appendsInputsBeforeSubmitForms = document.querySelectorAll('[data-before-s
 const showsSpinnerOnSubmitForms = document.querySelectorAll('[data-on-submit="show-spinner"]');
 const exportAsExcelForm = document.querySelector('.export-as-excel-form');
 const productsCreateForm = document.querySelector('.products-create-form');
-
-// Image inputs with preview
-const imageInputsWithPreview = document.querySelectorAll('.image-input-group-with-preview__input');
-
-// Table columns form
 const editTableColumnsForm = document.querySelector('.edit-table-columns-form');
+
+// Inputs
+const specificFormatableInputs = document.querySelectorAll('.specific-formatable-input');
+const imageInputsWithPreview = document.querySelectorAll('.image-input-group-with-preview__input');
 
 /*
 |--------------------------------------------------------------------------
@@ -99,6 +99,11 @@ imageInputsWithPreview.forEach((input) => {
 });
 
 exportAsExcelForm?.addEventListener('submit', (evt) => functions.disableExportAsExcelFormSubmitButton(evt));
+
+// Validate specific input ('dosage', 'pack', 'INN', etc) values.
+specificFormatableInputs.forEach((input) => {
+    input.addEventListener('input', debounce((evt) => functions.validateSpecificFormatableInput(evt)));
+});
 
 /*
 |--------------------------------------------------------------------------

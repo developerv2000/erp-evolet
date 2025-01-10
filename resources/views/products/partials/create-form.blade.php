@@ -27,10 +27,12 @@
     <div class="form__block">
         <div class="form__row">
             <x-form.inputs.default-input
+                class="specific-formatable-input"
                 labelText="Dosage"
                 inputName="dosage" />
 
             <x-form.inputs.default-input
+                class="specific-formatable-input"
                 labelText="Pack"
                 inputName="pack" />
 
@@ -49,7 +51,9 @@
 
             <x-form.inputs.default-input
                 labelText="MOQ"
-                inputName="moq" />
+                inputName="moq"
+                type="number"
+                min="1" />
 
             <x-form.selects.selectize.id-based-single-select.default-select
                 labelText="Shelf life"

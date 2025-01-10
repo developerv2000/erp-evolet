@@ -27,11 +27,13 @@
     <div class="form__block">
         <div class="form__row">
             <x-form.inputs.record-field-input
+                class="specific-formatable-input"
                 labelText="Dosage"
                 field="dosage"
                 :model="$record" />
 
             <x-form.inputs.record-field-input
+                class="specific-formatable-input"
                 labelText="Pack"
                 field="pack"
                 :model="$record" />
@@ -53,7 +55,9 @@
             <x-form.inputs.record-field-input
                 labelText="MOQ"
                 field="moq"
-                :model="$record" />
+                :model="$record"
+                type="number"
+                min="1" />
 
             <x-form.selects.selectize.id-based-single-select.record-field-select
                 labelText="Shelf life"

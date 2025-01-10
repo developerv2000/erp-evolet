@@ -60,7 +60,9 @@
     @break
 
     @case('MOQ')
-        {{ $record->moq }}
+        @if ($record->moq)
+            <x-tables.partials.td.formatted-price :price="$record->moq" />
+        @endif
     @break
 
     @case('Shelf life')

@@ -29,7 +29,7 @@ Product:
     EVENTS => Requires VPS & KVPP
 
     Table:
-        MOQ => format
+        MOQ => string replaced with INT
 
     Create form:
         Dosage & pack => specific format

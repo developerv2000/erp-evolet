@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('brand')->nullable();
             $table->string('dosage', 300)->nullable();
             $table->string('pack')->nullable();
-            $table->string('moq')->nullable();
+            $table->unsignedMediumInteger('moq')->nullable();
 
             $table->string('dossier', 600)->nullable();
             $table->string('bioequivalence', 400)->nullable();

@@ -16,7 +16,9 @@
     @break
 
     @case('IVP')
-        IVP
+        <a class="main-link" href="{{ route('products.index', ['manufacturer_id[]' => $record->id]) }}">
+            {{ $record->products_count }} {{ __('products') }}
+        </a>
     @break
 
     @case('Manufacturer')

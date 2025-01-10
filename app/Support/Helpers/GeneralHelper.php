@@ -50,4 +50,15 @@ class GeneralHelper
 
         return mb_substr($value, 0, $length) . '...';
     }
+
+    /**
+     * Convert a numeric price into a formatted string representation.
+     *
+     * @param float|int $price The numeric price to format.
+     * @return string The formatted price string.
+     */
+    public static function formatPrice($price)
+    {
+        return number_format((int)$price, 0, ',', ' ');
+    }
 }

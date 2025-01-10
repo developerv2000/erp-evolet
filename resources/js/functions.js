@@ -181,7 +181,7 @@ export function disableExportAsExcelFormSubmitButton(evt) {
 }
 
 /**
- * Increase/decrase table columns form trackbar width, on width input update
+ * Increase/decrease table columns form trackbar width, on width input update
  */
 export function handleTableColumnWidthInputUpdate(evt) {
     const sortableItem = evt.target.closest('.sortable-columns__item');
@@ -240,6 +240,30 @@ export function displayProductsSimilarRecords() {
         .finally(function () {
             hideSpinner();
         });
+}
+
+/**
+ * Validate specific input ('dosage', 'pack', 'INN', etc) values.
+ */
+export function validateSpecificFormatableInput(evt) {
+    const target = evt.target;
+
+    target.value = target.value
+        // Add spaces before and after '*', '+', '%' and '/' symbols
+        .replace(/([+%/*])/g, ' $1 ')
+        // Replace consecutive whitespaces with a single space
+        .replace(/\s+/g, ' ')
+        // Separate letters from numbers
+        .replace(/(\d+)([a-zA-Z]+)/g, '$1 $2')
+        .replace(/([a-zA-Z]+)(\d+)/g, '$1 $2')
+        // Remove non-English characters
+        .replace(/[^a-zA-Z0-9\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g, '')
+        // Remove inner whitespaces
+        .replace(/\s+(?=\S)/g, ' ')
+        // Replace symbols ',' with '.'
+        .replace(/,/g, '.')
+        // Convert the entire string to uppercase
+        .toUpperCase();
 }
 
 /*
