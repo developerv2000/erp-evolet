@@ -2,7 +2,7 @@
 
 namespace App\Support\Helpers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class GeneralHelper
 {
@@ -60,5 +60,29 @@ class GeneralHelper
     public static function formatPrice($price)
     {
         return number_format((int)$price, 0, ',', ' ');
+    }
+
+    /**
+     * Get plain text from string without HTML tags.
+     */
+    public function getPlainTextFromStr($string)
+    {
+        if (empty($string)) {
+            return '';
+        }
+
+        return Str::of($string)
+            // Add a space after each closing tag to prevent text from joining
+            ->replaceMatches('/>(?!\s)/', '> ')
+            // Strip HTML tags
+            ->stripTags()
+            // Decode HTML entities
+            ->htmlspecialcharsDecode()
+            // Replace multiple spaces with a single space
+            ->replaceMatches('/\s+/', ' ')
+            // Remove spaces before commas and dots
+            ->replaceMatches('/\s+([,.])/', '$1')
+            // Trim the result
+            ->trim();
     }
 }

@@ -28,6 +28,12 @@ class DatabaseSeeder extends Seeder
             ProductFormSeeder::class,
             ProductShelfLifeSeeder::class,
             ProductSeeder::class,
+            CurrencySeeder::class,
+            MarketingAuthorizationHolderSeeder::class,
+            ProcessResponsiblePersonSeeder::class,
+            ProcessGeneralStatusSeeder::class,
+            ProcessStatusSeeder::class,
+            // ProcessSeeder::class,
         ]);
     }
 }

@@ -928,7 +928,12 @@ a {
 }
 
 .toolbar__button {
-    padding: 8px 12px;
+    padding: 8px 10px;
+    gap: 6px;
+
+    &:hover {
+        color: var(--theme-text-color-on-hover);
+    }
 }
 
 .toolbar__button .button__icon {

@@ -29,7 +29,22 @@ Product:
     EVENTS => Requires VPS & KVPP
 
     Table:
-        MOQ => string replaced with INT
+        MOQ => string replaced with INT. Must fix all existed MOQs. Remove non-numeric symbols and trim
+
 
     Create form:
         Dosage & pack => specific format
+
+Process:
+    Tables:
+        process_general_statuses:
+            visible_only_for_admins => renamed to requires_permission
+
+        processes:
+            status_update_date => removed
+            contracted_in_plan => contracted
+            registered_in_plan => registered
+
+        process_statuses:
+            Added 'NKk' to the middle. Requires fixing all old 'status_id' of processes
+
