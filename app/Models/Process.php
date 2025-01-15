@@ -30,6 +30,8 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     |--------------------------------------------------------------------------
     */
 
+    const SETTINGS_MAD_TABLE_COLUMNS_KEY = 'MAD_VPS_table_columns';
+
     const DEFAULT_ORDER_BY = 'updated_at';
     const DEFAULT_ORDER_TYPE = 'desc';
     const DEFAULT_PAGINATION_LIMIT = 50;
@@ -116,12 +118,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
     public function clinicalTrialCountries()
     {
-        return $this->belongsToMany(
-            Country::class,
-            'clinical_trial_country_process',
-            'process_id',
-            'country_id'
-        );
+        return $this->belongsToMany(Country::class, 'clinical_trial_country_process');
     }
 
     public function responsiblePeople()
@@ -223,6 +220,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
         static::updating(function ($record) {
             $record->updateStatusHistory();
+            $record->notifyUsersOnContractStage();
         });
 
         static::saving(function ($record) {
@@ -233,7 +231,6 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             $record->handleForecastUpdateDate();
             $record->handleIncreasedPriceDate();
             $record->handleResponsiblePeopleUpdateDate();
-            $record->notifyUsersOnContractStage();
         });
 
         static::restoring(function ($record) {
@@ -816,7 +813,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     /**
      * Notify users if status has been updated to contact stage.
      *
-     * Used during the saving event of the model.
+     * Used during the updating event of the model.
      */
     private function notifyUsersOnContractStage()
     {
@@ -853,10 +850,14 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     public static function addGeneralStatusPeriodsForRecords($records)
     {
         // Load the statusHistory relationship for all records to avoid N+1 query problem
-        $records->load('statusHistory');
+        $records->load([
+            'statusHistory' => function ($historyQuery) {
+                $historyQuery->with(['status']);
+            },
+        ]);
 
         // Get all general statuses
-        $generalStatuses = ProcessGeneralStatus::getAll();
+        $generalStatuses = ProcessGeneralStatus::all();
 
         foreach ($records as $record) {
             // Clone general statuses to avoid modifying the original collection
@@ -867,7 +868,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             foreach ($clonedGeneralStatuses as $generalStatus) {
                 // Filter status histories related to the current general status
                 $histories = $record->statusHistory->filter(function ($history) use ($generalStatus) {
-                    return $history->status->generalStatus->id === $generalStatus->id;
+                    return $history->status->general_status_id === $generalStatus->id;
                 });
 
                 // Skip if no histories found
@@ -944,6 +945,90 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                 ['name' => '7НПР', 'order' => $order++, 'width' => 50, 'visible' => 1],
             );
         }
+
+        array_push(
+            $columns,
+            ['name' => 'Product status', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            ['name' => 'Product status An*', 'order' => $order++, 'width' => 136, 'visible' => 1],
+            ['name' => 'General status', 'order' => $order++, 'width' => 110, 'visible' => 1],
+
+            ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Search country', 'order' => $order++, 'width' => 130, 'visible' => 1],
+
+            ['name' => 'Manufacturer category', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Manufacturer country', 'order' => $order++, 'width' => 174, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+
+            ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Form', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'MOQ', 'order' => $order++, 'width' => 158, 'visible' => 1],
+            ['name' => 'Shelf life', 'order' => $order++, 'width' => 130, 'visible' => 1],
+
+            ['name' => 'Manufacturer price 1', 'order' => $order++, 'width' => 164, 'visible' => 1],
+            ['name' => 'Manufacturer price 2', 'order' => $order++, 'width' => 166, 'visible' => 1],
+            ['name' => 'Currency', 'order' => $order++, 'width' => 92, 'visible' => 1],
+            ['name' => 'Price in USD', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Agreed price', 'order' => $order++, 'width' => 114, 'visible' => 1],
+            ['name' => 'Our price 2', 'order' => $order++, 'width' => 118, 'visible' => 1],
+            ['name' => 'Our price 1', 'order' => $order++, 'width' => 118, 'visible' => 1],
+            ['name' => 'Increased price', 'order' => $order++, 'width' => 158, 'visible' => 1],
+            ['name' => 'Increased price %', 'order' => $order++, 'width' => 172, 'visible' => 1],
+            ['name' => 'Increased price date', 'order' => $order++, 'width' => 164, 'visible' => 1],
+
+            ['name' => 'Product class', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 100, 'visible' => 1],
+
+            ['name' => 'Date of forecast', 'order' => $order++, 'width' => 136, 'visible' => 1],
+            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
+
+            ['name' => 'Dossier status', 'order' => $order++, 'width' => 124, 'visible' => 1],
+            ['name' => 'Year Cr/Be', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Countries Cr/Be', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'Country ich', 'order' => $order++, 'width' => 108, 'visible' => 1],
+            ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
+            ['name' => 'Down payment 1', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Down payment 2', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Down payment condition', 'order' => $order++, 'width' => 194, 'visible' => 1],
+
+            ['name' => 'Responsible', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Responsible update date', 'order' => $order++, 'width' => 250, 'visible' => 1],
+            ['name' => 'Days have passed', 'order' => $order++, 'width' => 130, 'visible' => 1],
+
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
+
+            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+        );
+
+        if (Gate::forUser($user)->allows('edit-MAD-VPS-status-history')) {
+            array_push(
+                $columns,
+                ['name' => 'History', 'order' => $order++, 'width' => 72, 'visible' => 1]
+            );
+        }
+
+        array_push(
+            $columns,
+            ['name' => 'ВП', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'ПО', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'АЦ', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'СЦ', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'Кк', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'КД', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'НПР', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'Р', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'Зя', 'order' => $order++, 'width' => 200, 'visible' => 1],
+            ['name' => 'Отмена', 'order' => $order++, 'width' => 200, 'visible' => 1],
+        );
 
         return $columns;
     }

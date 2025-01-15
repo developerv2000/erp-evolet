@@ -29,6 +29,8 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     |--------------------------------------------------------------------------
     */
 
+    const SETTINGS_MAD_TABLE_COLUMNS_KEY = 'MAD_IVP_table_columns';
+
     const DEFAULT_ORDER_BY = 'updated_at';
     const DEFAULT_ORDER_TYPE = 'desc';
     const DEFAULT_PAGINATION_LIMIT = 50;

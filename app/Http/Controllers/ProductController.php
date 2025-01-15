@@ -31,7 +31,7 @@ class ProductController extends Controller
         $records = Product::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
         // Get all and only visible table columns
-        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey('MAD_IVP_table_columns');
+        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Product::SETTINGS_MAD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
         return view('products.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
@@ -49,7 +49,7 @@ class ProductController extends Controller
         $records = Product::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
         // Get all and only visible table columns
-        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey('MAD_IVP_table_columns');
+        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Product::SETTINGS_MAD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
         return view('products.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));

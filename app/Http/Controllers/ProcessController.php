@@ -2,65 +2,112 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProcessUpdateRequest;
 use App\Models\Process;
-use App\Http\Requests\StoreProcessRequest;
-use App\Http\Requests\UpdateProcessRequest;
+use App\Models\User;
+use App\Support\Helpers\UrlHelper;
+use App\Support\Traits\Controller\DestroysModelRecords;
+use App\Support\Traits\Controller\RestoresModelRecords;
+use Illuminate\Http\Request;
 
 class ProcessController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    use DestroysModelRecords;
+    use RestoresModelRecords;
+
+    // used in multiple destroy/restore traits
+    public static $model = Process::class;
+
+    public function index(Request $request)
     {
-        //
+        // Preapare request for valid model querying
+        Process::addDefaultQueryParamsToRequest($request);
+        UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
+
+        // Get finalized records paginated
+        $query = Process::withBasicRelations()->withBasicRelationCounts();
+        $filteredQuery = Process::filterQueryForRequest($query, $request);
+        $records = Process::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
+
+        // Add 'general_status_periods' for records
+        Process::addGeneralStatusPeriodsForRecords($records);
+
+        // Get all and only visible table columns
+        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Process::SETTINGS_MAD_TABLE_COLUMNS_KEY);
+        $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
+
+        return view('processes.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function trash(Request $request)
+    {
+        // Preapare request for valid model querying
+        Process::addDefaultQueryParamsToRequest($request);
+        UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
+
+        // Get trashed finalized records paginated
+        $query = Process::onlyTrashed()->withBasicRelations()->withBasicRelationCounts();
+        $filteredQuery = Process::filterQueryForRequest($query, $request);
+        $records = Process::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
+
+        // Add 'general_status_periods' for records
+        Process::addGeneralStatusPeriodsForRecords($records);
+
+        // Get all and only visible table columns
+        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Process::SETTINGS_MAD_TABLE_COLUMNS_KEY);
+        $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
+
+        return view('processes.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+    }
+
     public function create()
     {
-        //
+        return view('processes.create');
+    }
+
+    public function store(ProcessStoreRequest $request)
+    {
+        Process::createFromRequest($request);
+
+        return to_route('processes.index');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Route model binding is not used, because trashed records can also be edited.
+     * Route model binding looks only for untrashed records!
      */
-    public function store(StoreProcessRequest $request)
+    public function edit(Request $request, $record)
     {
-        //
+        $record = Process::withTrashed()->findOrFail($record);
+        $record->loadBasicNonBelongsToRelations();
+
+        return view('processes.edit', compact('record'));
     }
 
     /**
-     * Display the specified resource.
+     * Route model binding is not used, because trashed records can also be edited.
+     * Route model binding looks only for untrashed records!
      */
-    public function show(Process $process)
+    public function update(ProcessUpdateRequest $request, $record)
     {
-        //
+        $record = Process::withTrashed()->findOrFail($record);
+        $record->updateFromRequest($request);
+
+        return redirect($request->input('previous_url'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Process $process)
+    public function exportAsExcel(Request $request)
     {
-        //
-    }
+        // Preapare request for valid model querying
+        Process::addRefererQueryParamsToRequest($request);
+        Process::addDefaultQueryParamsToRequest($request);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateProcessRequest $request, Process $process)
-    {
-        //
-    }
+        // Get finalized records query
+        $query = Process::withRelationsForExport();
+        $filteredQuery = Process::filterQueryForRequest($query, $request);
+        $records = Process::finalizeQueryForRequest($filteredQuery, $request, 'query');
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Process $process)
-    {
-        //
+        // Export records
+        return Process::exportRecordsAsExcel($records);
     }
 }

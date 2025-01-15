@@ -16,7 +16,11 @@ class EnsureUserRelationsAreLoaded
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->check()) {
-            auth()->user()->loadMissing(['roles', 'permissions']);
+            auth()->user()->loadMissing([
+                'roles',
+                'permissions',
+                'responsibleCountries',
+            ]);
         }
 
         return $next($request);

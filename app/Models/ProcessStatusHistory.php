@@ -35,54 +35,14 @@ class ProcessStatusHistory extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function generalStatus()
+    public function status()
     {
-        return $this->belongsTo(ProcessGeneralStatus::class, 'general_status_id');
+        return $this->belongsTo(ProcessStatus::class);
     }
 
     public function processes()
     {
         return $this->hasMany(Process::class);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Misc
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Close status history by updating the 'end_date' and calculating the 'duration_days'.
-     *
-     * Called when process status is being changed.
-     *
-     * @return void
-     */
-    public function close()
-    {
-        $this->update([
-            'end_date' => now(),
-            'duration_days' => $this->start_date->diffInDays(now()),
-        ]);
-    }
-
-    /**
-     * Determine if this status history is the active history of the associated process.
-     *
-     * @return bool True if this is the active status history of the process, false otherwise.
-     */
-    public function isActiveStatusHistory()
-    {
-        // Retrieve the process associated with the current process_id
-        $process = Process::find($this->process_id);
-
-        // Return false if the process is not found
-        if (!$process) {
-            return false;
-        }
-
-        // Check if this 'status_id' matches the process's 'status_id' and 'end_date' is null
-        return $process->status_id == $this->status_id && is_null($this->end_date);
     }
 
     /*
@@ -129,5 +89,45 @@ class ProcessStatusHistory extends Model
 
         // Delete the status history record
         $this->delete();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Misc
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Close status history by updating the 'end_date' and calculating the 'duration_days'.
+     *
+     * Called when process status is being changed.
+     *
+     * @return void
+     */
+    public function close()
+    {
+        $this->update([
+            'end_date' => now(),
+            'duration_days' => $this->start_date->diffInDays(now()),
+        ]);
+    }
+
+    /**
+     * Determine if this status history is the active history of the associated process.
+     *
+     * @return bool True if this is the active status history of the process, false otherwise.
+     */
+    public function isActiveStatusHistory()
+    {
+        // Retrieve the process associated with the current process_id
+        $process = Process::find($this->process_id);
+
+        // Return false if the process is not found
+        if (!$process) {
+            return false;
+        }
+
+        // Check if this 'status_id' matches the process's 'status_id' and 'end_date' is null
+        return $process->status_id == $this->status_id && is_null($this->end_date);
     }
 }

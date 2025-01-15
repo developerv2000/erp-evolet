@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ManufacturerController;
+use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProductController;
 use App\Support\Generators\CRUDRouteGenerator;
 use Illuminate\Support\Facades\Route;

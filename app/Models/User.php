@@ -94,6 +94,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Permission::class);
     }
 
+    public function responsibleCountries()
+    {
+        return $this->belongsToMany(Country::class, 'responsible_country_user');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes

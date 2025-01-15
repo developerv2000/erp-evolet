@@ -30,6 +30,8 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
     |--------------------------------------------------------------------------
     */
 
+    const SETTINGS_MAD_TABLE_COLUMNS_KEY = 'MAD_EPP_table_columns';
+
     const DEFAULT_ORDER_BY = 'updated_at';
     const DEFAULT_ORDER_TYPE = 'desc';
     const DEFAULT_PAGINATION_LIMIT = 50;

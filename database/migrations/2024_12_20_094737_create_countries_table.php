@@ -31,6 +31,20 @@ return new class extends Migration
 
             $table->primary(['process_id', 'country_id']);
         });
+
+        Schema::create('responsible_country_user', function (Blueprint $table) {
+            $table->unsignedSmallInteger('country_id')
+                ->foreign()
+                ->references('id')
+                ->on('country_codes');
+
+            $table->unsignedSmallInteger('user_id')
+                ->foreign()
+                ->references('id')
+                ->on('users');
+
+            $table->primary(['country_id', 'user_id']);
+        });
     }
 
     /**

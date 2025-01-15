@@ -13,6 +13,7 @@
         @foreach ($records as $record)
             <tr>
                 <td><x-tables.partials.td.checkbox :value="$record->id" /></td>
+                <td>{{ $record->created_at->isoformat('DD MMM Y HH:mm:ss') }}</td>
 
                 <td>
                     @if ($record->read_at)

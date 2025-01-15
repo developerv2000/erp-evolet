@@ -12,6 +12,9 @@ MAD:
             is_active => active
             is_important => important
 
+        user_responsible_country_code => responsible_country_user
+            country_code_id => country_id => Must be fixed!!!
+
 
 
 --------------------------- Not done yet (what left) ------------------------------

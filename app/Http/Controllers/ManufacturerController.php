@@ -31,7 +31,7 @@ class ManufacturerController extends Controller
         $records = Manufacturer::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
         // Get all and only visible table columns
-        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey('MAD_EPP_table_columns');
+        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Manufacturer::SETTINGS_MAD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
         return view('manufacturers.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
@@ -49,7 +49,7 @@ class ManufacturerController extends Controller
         $records = Manufacturer::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
         // Get all and only visible table columns
-        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey('MAD_EPP_table_columns');
+        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Manufacturer::SETTINGS_MAD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
         return view('manufacturers.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));

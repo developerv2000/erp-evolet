@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             ProcessResponsiblePersonSeeder::class,
             ProcessGeneralStatusSeeder::class,
             ProcessStatusSeeder::class,
-            // ProcessSeeder::class,
+            ProcessSeeder::class,
         ]);
     }
 }

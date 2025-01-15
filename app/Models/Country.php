@@ -34,6 +34,16 @@ class Country extends Model implements UsageCountable
         return $this->hasMany(Manufacturer::class);
     }
 
+    public function responsibleUsers()
+    {
+        return $this->belongsToMany(User::class, 'responsible_country_user');
+    }
+
+    public function clinicalTrialProcesses()
+    {
+        return $this->belongsToMany(Process::class, 'clinical_trial_country_process');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Queries
