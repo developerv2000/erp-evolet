@@ -3,6 +3,7 @@
 namespace App\Support\Helpers;
 
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class GeneralHelper
 {
@@ -84,5 +85,38 @@ class GeneralHelper
             ->replaceMatches('/\s+([,.])/', '$1')
             // Trim the result
             ->trim();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Percentage calculations
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Calculate the percentage of an amount.
+     *
+     * @param float $amount The total amount.
+     * @param float $percentage The percentage to calculate.
+     * @return float The calculated value.
+     */
+    public static function calculatePercentage(float $amount, float $percentage): float
+    {
+        return ($amount * $percentage) / 100;
+    }
+
+    /**
+     * Calculate the percentage a value represents of a total.
+     *
+     * @param float $total The total amount (representing 100%).
+     * @param float $value The value to calculate the percentage for.
+     * @return float The percentage the value represents of the total.
+     */
+    public static function calculatePercentageOfTotal(float $total, float $value): float
+    {
+        if ($total == 0) {
+            throw new InvalidArgumentException("Total cannot be zero.");
+        }
+        return ($value / $total) * 100;
     }
 }

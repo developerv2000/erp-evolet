@@ -1,5 +1,5 @@
 @switch($record->type)
-    @case('App\Notifications\ProcessOnContractStage')
+    @case('App\Notifications\ProcessStageUpdatedToContract')
         <div>
             {{ __('Status of process') }}
             <a class="main-link" href="{{ route('processes.index', ['id[]' => $record->data['process_id']]) }}">

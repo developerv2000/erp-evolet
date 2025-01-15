@@ -85,13 +85,13 @@ class PermissionSeeder extends Seeder
             Permission::CAN_VIEW_KPI_EXTENDED_VERSION_NAME,
             Permission::CAN_VIEW_KPI_OF_ALL_ANALYSTS,
 
-            Permission::CAN_CONTROL_ASP_PROCESSES,
+            Permission::CAN_CONTROL_MAD_ASP_PROCESSES,
 
             Permission::CAN_VIEW_MAD_VPS_OF_ALL_ANALYSTS_NAME,
             Permission::CAN_EDIT_MAD_VPS_OF_ALL_ANALYSTS_NAME,
             Permission::CAN_EDIT_MAD_VPS_STATUS_HISTORY_NAME,
             Permission::CAN_UPGRADE_MAD_VPS_STATUS_AFTER_CONTRACT_STAGE_NAME,
-            Permission::CAN_RECIEVE_NOTIFICATION_ON_MAD_VPS_CONTRACT,
+            Permission::CAN_RECEIVE_NOTIFICATION_ON_MAD_VPS_CONTRACT,
         ];
 
         foreach ($MADs as $mad) {

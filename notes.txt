@@ -36,15 +36,24 @@ Product:
         Dosage & pack => specific format
 
 Process:
+    getCoincidentKvppsAttribute() => Requires KVPP
+
     Tables:
         process_general_statuses:
             visible_only_for_admins => renamed to requires_permission
 
         processes:
             status_update_date => removed
+            manufacturer_followed_offered_price_in_usd => removed
+            increased_price_percentage => removed
+
             contracted_in_plan => contracted
             registered_in_plan => registered
 
         process_statuses:
             Added 'NKk' to the middle. Requires fixing all old 'status_id' of processes
+
+
+        Filter:
+            status_update_date => must done
 

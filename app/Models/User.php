@@ -397,4 +397,13 @@ class User extends Authenticatable
         // Default home if no pages are accessible
         return route('profile.edit');
     }
+
+    public static function notifyProcessOnContractStageToAll($notification)
+    {
+        self::all()->each(function ($user) use ($notification) {
+            if (Gate::forUser($user)->allows('receive-notification-on-MAD-VPS-contract')) {
+                $user->notify($notification);
+            }
+        });
+    }
 }

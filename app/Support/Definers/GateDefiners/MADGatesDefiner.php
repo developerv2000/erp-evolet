@@ -92,7 +92,7 @@ class MADGatesDefiner
         });
 
         Gate::define('control-MAD-ASP-processes', function ($user) {
-            return $user->hasPermission('can control ASP processes');
+            return $user->hasPermission('can control MAD ASP processes');
         });
 
         Gate::define('view-MAD-VPS-of-all-analysts', function ($user) {

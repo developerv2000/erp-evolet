@@ -57,6 +57,18 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return $this->hasMany(Product::class);
     }
 
+    public function processes()
+    {
+        return $this->hasManyThrough(
+            Process::class,
+            Product::class,
+            'manufacturer_id', // Foreign key on Products table
+            'product_id',   // Foreign key on Processes table
+            'id',         // Local key on Manufacturers table
+            'id'          // Local key on Products table
+        );
+    }
+
     public function category()
     {
         return $this->belongsTo(ManufacturerCategory::class);
@@ -202,7 +214,10 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
     */
 
     /**
-     * Used on manufacturers.edit page
+     * Load basic non belongsTo relations like hasMany, belongsToMany etc,
+     * There is no need of loading belongsTo relations on records edit page.
+     *
+     * Used on manufacturers.edit page.
      */
     public function loadBasicNonBelongsToRelations()
     {
@@ -291,8 +306,8 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
         $query = QueryFilterHelper::applyFilters($query, $request, self::getFilterConfig());
 
         // Additional filters
-        self::filterQueryByRegion($query, $request);
-        self::filterQueryByProcessCountries($query, $request);
+        self::applyRegionFilter($query, $request);
+        self::applyProcessCountriesFilter($query, $request);
 
         return $query;
     }
@@ -304,7 +319,7 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
      * @param Illuminate\Http\Request $request The HTTP request object containing filter parameters.
      * @return Illuminate\Database\Eloquent\Builder The modified query builder instance.
      */
-    public static function filterQueryByRegion($query, $request)
+    public static function applyRegionFilter($query, $request)
     {
         $region = $request->input('region');
 
@@ -327,7 +342,7 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
         }
     }
 
-    public static function filterQueryByProcessCountries($query, $request) {}
+    public static function applyProcessCountriesFilter($query, $request) {}
 
     private static function getFilterConfig(): array
     {

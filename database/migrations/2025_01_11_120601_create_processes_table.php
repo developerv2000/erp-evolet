@@ -31,6 +31,9 @@ return new class extends Migration
                 ->references('id')
                 ->on('process_statuses');
 
+            // auto
+            $table->date('responsible_people_update_date');
+
             // Stage 1 (ВП)
             // required and immutable after stage 1
             $table->unsignedSmallInteger('country_id')
@@ -38,8 +41,6 @@ return new class extends Migration
                 ->foreign()
                 ->references('id')
                 ->on('countries');
-
-            $table->date('responsible_people_update_date'); // auto
 
             // Stage 2 (ПО)
             $table->unsignedInteger('forecast_year_1')->nullable(); // required
@@ -65,7 +66,6 @@ return new class extends Migration
 
             $table->decimal('manufacturer_first_offered_price', 8, 2)->nullable(); // required
             $table->decimal('manufacturer_followed_offered_price', 8, 2)->nullable(); // required
-            $table->decimal('manufacturer_followed_offered_price_in_usd', 8, 2)->nullable(); // auto
             $table->decimal('our_first_offered_price', 8, 2)->nullable(); // required
             $table->decimal('our_followed_offered_price', 8, 2)->nullable(); // required
 
@@ -83,7 +83,6 @@ return new class extends Migration
             // Stage 4 (СЦ)
             $table->decimal('agreed_price', 8, 2)->nullable(); // required
             $table->decimal('increased_price', 8, 2)->nullable(); // nullable
-            $table->decimal('increased_price_percentage', 8, 2)->nullable(); // auto
             $table->date('increased_price_date')->nullable(); // auto
 
             $table->timestamps();

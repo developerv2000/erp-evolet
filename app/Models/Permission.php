@@ -82,14 +82,14 @@ class Permission extends Model
     const CAN_VIEW_KPI_OF_ALL_ANALYSTS = 'can view MAD KPI of all analysts';
 
     // ASP
-    const CAN_CONTROL_ASP_PROCESSES = 'can control ASP processes';
+    const CAN_CONTROL_MAD_ASP_PROCESSES = 'can control MAD ASP processes';
 
     // VPS
     const CAN_VIEW_MAD_VPS_OF_ALL_ANALYSTS_NAME = 'can view MAD VPS of all analysts';
     const CAN_EDIT_MAD_VPS_OF_ALL_ANALYSTS_NAME = 'can edit MAD VPS of all analysts';
     const CAN_EDIT_MAD_VPS_STATUS_HISTORY_NAME = 'can edit MAD VPS status history';
     const CAN_UPGRADE_MAD_VPS_STATUS_AFTER_CONTRACT_STAGE_NAME = 'can upgrade MAD VPS status after contract stage';
-    const CAN_RECIEVE_NOTIFICATION_ON_MAD_VPS_CONTRACT = 'can recieve notification on MAD VPS contract';
+    const CAN_RECEIVE_NOTIFICATION_ON_MAD_VPS_CONTRACT = 'can receive notification on MAD VPS contract';
 
     /*
     |--------------------------------------------------------------------------
@@ -193,12 +193,12 @@ class Permission extends Model
             self::CAN_VIEW_MAD_KVPP_MATCHING_PROCESSES_NAME,
             self::CAN_VIEW_KPI_EXTENDED_VERSION_NAME,
             self::CAN_VIEW_KPI_OF_ALL_ANALYSTS,
-            self::CAN_CONTROL_ASP_PROCESSES,
+            self::CAN_CONTROL_MAD_ASP_PROCESSES,
             self::CAN_VIEW_MAD_VPS_OF_ALL_ANALYSTS_NAME,
             self::CAN_EDIT_MAD_VPS_OF_ALL_ANALYSTS_NAME,
             self::CAN_EDIT_MAD_VPS_STATUS_HISTORY_NAME,
             self::CAN_UPGRADE_MAD_VPS_STATUS_AFTER_CONTRACT_STAGE_NAME,
-            self::CAN_RECIEVE_NOTIFICATION_ON_MAD_VPS_CONTRACT,
+            self::CAN_RECEIVE_NOTIFICATION_ON_MAD_VPS_CONTRACT,
         ]);
     }
 }

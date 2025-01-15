@@ -114,11 +114,11 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
         static::restoring(function ($record) {
             if ($record->manufacturer->trashed()) {
-                $record->manufacturer->restoreQuietly();
+                $record->manufacturer->restore();
             }
 
             // foreach ($record->processes()->onlyTrashed()->get() as $process) {
-            //     $process->restoreQuietly();
+            //     $process->restore();
             // }
         });
 
@@ -188,7 +188,10 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     */
 
     /**
-     * Used on manufacturers.edit page
+     * Load basic non belongsTo relations like hasMany, belongsToMany etc,
+     * There is no need of loading belongsTo relations on records edit page.
+     *
+     * Used on products.edit page.
      */
     public function loadBasicNonBelongsToRelations()
     {

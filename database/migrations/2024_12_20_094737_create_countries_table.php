@@ -17,6 +17,20 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->unsignedMediumInteger('usage_count')->default(0);
         });
+
+        Schema::create('clinical_trial_country_process', function (Blueprint $table) {
+            $table->unsignedInteger('process_id')
+                ->foreign()
+                ->references('id')
+                ->on('processes');
+
+            $table->unsignedSmallInteger('country_id')
+                ->foreign()
+                ->references('id')
+                ->on('countries');
+
+            $table->primary(['process_id', 'country_id']);
+        });
     }
 
     /**
@@ -25,5 +39,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('countries');
+        Schema::dropIfExists('clinical_trial_country_process');
     }
 };

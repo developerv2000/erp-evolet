@@ -1,12 +1,14 @@
 <?php
 
 use App\Models\Country;
+use App\Models\Currency;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::call(function () {
     Country::recalculateAllUsageCounts();
+    Currency::updateAllUSDRatios();
 })->daily();
 
 Artisan::command('users:reset-settings', function () {
