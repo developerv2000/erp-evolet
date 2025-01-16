@@ -42,6 +42,10 @@ const editTableColumnsForm = document.querySelector('.edit-table-columns-form');
 const specificFormatableInputs = document.querySelectorAll('.specific-formatable-input');
 const imageInputsWithPreview = document.querySelectorAll('.image-input-group-with-preview__input');
 
+// Checkboxes
+const toggleProcessContractedValueChbs = document.querySelectorAll('[data-on-toggle="toggle-process-contracted-boolean"]');
+const toggleProcessRegisteredValueChbs = document.querySelectorAll('[data-on-toggle="toggle-process-registered-boolean"]');
+
 /*
 |--------------------------------------------------------------------------
 | Event Listeners
@@ -103,6 +107,14 @@ exportAsExcelForm?.addEventListener('submit', (evt) => functions.disableExportAs
 // Validate specific input ('dosage', 'pack', 'INN', etc) values.
 specificFormatableInputs.forEach((input) => {
     input.addEventListener('input', debounce((evt) => functions.validateSpecificFormatableInput(evt)));
+});
+
+toggleProcessContractedValueChbs.forEach((cbexkbox) => {
+    cbexkbox.addEventListener('change', (evt) => functions.updateProcessContractedValue(evt));
+});
+
+toggleProcessRegisteredValueChbs.forEach((cbexkbox) => {
+    cbexkbox.addEventListener('change', (evt) => functions.updateProcessRegisteredValue(evt));
 });
 
 /*

@@ -14,6 +14,8 @@ import { hideSpinner, showModal, showSpinner } from "../custom-components/script
 
 const TOGGLE_LEFTBAR_PATCH_URL = '/settings/collapsed-leftbar';
 const GET_PRODUCTS_SIMILAR_RECORDS_POST_URL = '/products/get-similar-records'
+const UPDATE_PROCESSES_CONTRACTED_VALUE_POST_URL = '/processes/update-contracted-value';
+const UPDATE_PROCESSES_REGISTERED_VALUE_POST_URL = '/processes/update-registered-value';
 
 /*
 |--------------------------------------------------------------------------
@@ -264,6 +266,50 @@ export function validateSpecificFormatableInput(evt) {
         .replace(/,/g, '.')
         // Convert the entire string to uppercase
         .toUpperCase();
+}
+
+export function updateProcessContractedValue(evt) {
+    showSpinner();
+
+    const chb = evt.target;
+    const processID = chb.dataset.processId;
+
+    const data = {
+        'contracted': chb.checked,
+        'process_id': processID,
+    };
+
+    axios.post(UPDATE_PROCESSES_CONTRACTED_VALUE_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .finally(function () {
+            // Hide any loading spinner after the request is complete
+            hideSpinner();
+        });
+}
+
+export function updateProcessRegisteredValue(evt) {
+    showSpinner();
+
+    const chb = evt.target;
+    const processID = chb.dataset.processId;
+
+    const data = {
+        'registered': chb.checked,
+        'process_id': processID,
+    };
+
+    axios.post(UPDATE_PROCESSES_REGISTERED_VALUE_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .finally(function () {
+            // Hide any loading spinner after the request is complete
+            hideSpinner();
+        });
 }
 
 /*

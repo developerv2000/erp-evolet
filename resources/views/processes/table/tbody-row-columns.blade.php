@@ -18,13 +18,13 @@
 
     @case('5Кк')
         @if ($record->isReadyForASP())
-            <input class="checkbox td__checkbox" type="checkbox" data-toggle-action="toggle-process-contracted-boolean" data-process-id={{ $record->id }} @checked($record->contracted)>
+            <input class="checkbox td__checkbox" type="checkbox" data-on-toggle="toggle-process-contracted-boolean" data-process-id={{ $record->id }} @checked($record->contracted)>
         @endif
     @break
 
     @case('7НПР')
         @if ($record->isReadyForASP())
-            <input class="checkbox td__checkbox" type="checkbox" data-toggle-action="toggle-process-registered-boolean" data-process-id={{ $record->id }} @checked($record->registered)>
+            <input class="checkbox td__checkbox" type="checkbox" data-on-toggle="toggle-process-registered-boolean" data-process-id={{ $record->id }} @checked($record->registered)>
         @endif
     @break
 

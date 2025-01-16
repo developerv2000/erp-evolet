@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProcessUpdateRequest;
+use App\Models\Country;
 use App\Models\Process;
+use App\Models\ProcessStatus;
+use App\Models\Product;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
 use App\Support\Traits\Controller\DestroysModelRecords;
@@ -60,9 +63,43 @@ class ProcessController extends Controller
         return view('processes.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('processes.create');
+        $product = Product::withBasicRelations()->find($request->product_id);
+
+        return view('processes.create', compact('product'));
+    }
+
+    /**
+     * Return required stage inputs, for each stage,
+     * on status select change.
+     *
+     * Ajax request.
+     */
+    public function getCreateFormStageInputs(Request $request)
+    {
+        $product = Product::find($request->product_id);
+        $status = ProcessStatus::find($request->status_id);
+        $stage = $status->generalStatus->stage;
+
+        return view('processes.partials.create-form-stage-inputs', compact('product', 'stage'));
+    }
+
+    /**
+     * Return required forecast inputs, for each countries separately,
+     * on status/search_countries select changes.
+     *
+     * Ajax request.
+     */
+    public function getCreateFormForecastInputs(Request $request)
+    {
+        $status = ProcessStatus::find($request->status_id);
+        $stage = $status->generalStatus->stage;
+
+        $countryIDs = $request->input('country_ids', []);
+        $selectedCountries = Country::whereIn('id', $countryIDs)->get();
+
+        return view('processes.partials.create-form-forecast-inputs', compact('stage', 'selectedCountries'));
     }
 
     public function store(ProcessStoreRequest $request)
@@ -109,5 +146,31 @@ class ProcessController extends Controller
 
         // Export records
         return Process::exportRecordsAsExcel($records);
+    }
+
+    /**
+     * AJAX request
+     */
+    public function updateContractedValue(Request $request)
+    {
+        $process = Process::find($request->process_id);
+        $process->contracted = $request->contracted ?: false;
+        $process->timestamps = false;
+        $process->saveQuietly();
+
+        return $process;
+    }
+
+    /**
+     * AJAX request
+     */
+    public function updateRegisteredValue(Request $request)
+    {
+        $process = Process::find($request->process_id);
+        $process->registered = $request->registered ?: false;
+        $process->timestamps = false;
+        $process->saveQuietly();
+
+        return $process;
     }
 }

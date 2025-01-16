@@ -27,8 +27,18 @@ Route::middleware('auth', 'auth.session')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-MAD-VPS', 'can:edit-MAD-VPS');
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
 
+        // Duplication
         Route::get('/duplication/{record}', 'duplication')->name('duplication')->middleware('can:edit-MAD-VPS');
         Route::post('/duplicate', 'duplicate')->name('duplicate')->middleware('can:edit-MAD-VPS');
+
+        // Ajax requests on checkbox toggle
+        Route::post('/update-contracted-value', 'updateContractedValue')->middleware('can:control-MAD-ASP-processes');
+        Route::post('/update-registered-value', 'updateRegisteredValue')->middleware('can:control-MAD-ASP-processes');
+
+        // Ajax request for getting create/edit stage inputs
+        Route::post('/get-create-form-stage-inputs', 'getCreateFormStageInputs');
+        Route::post('/get-create-form-forecast-inputs', 'getCreateFormForecastInputs');
+        Route::post('/get-edit-form-stage-inputs', 'getEditFormStageInputs');
     });
 
     Route::prefix('processes/{process}/status-history')

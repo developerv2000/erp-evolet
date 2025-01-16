@@ -1369,5 +1369,26 @@ a {
 /* ------------ /end General process colors ------------ */
 
 
+/* ------------ About product block ------------ */
+.about-product-block {
+    padding: 20px;
+    margin-bottom: 20px;
+}
+/* ------------ /end About product block ------------ */
+
+
+/* ------------ Secondary talbe ------------ */
+.secondary-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.secondary-table td {
+    padding: 6px 12px;
+    border: var(--form-input-border);
+}
+/* ------------ /end Secondary table ------------ */
+
+
 
 

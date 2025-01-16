@@ -76,7 +76,7 @@ class MADViewComposersDefiner
         $defaultShareData = self::getDefaultProcessesShareData();
 
         self::defineViewComposer('processes.partials.create-form', array_merge($defaultShareData, [
-
+            'shelfLifes' => ProductShelfLife::all(),
         ]));
 
         self::defineViewComposer('processes.partials.edit-form', $defaultShareData);

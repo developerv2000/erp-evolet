@@ -1,120 +1,79 @@
-<x-form-templates.create-template class="products-create-form" :action="route('products.store')">
+<x-form-templates.create-template class="processes-create-form" :action="route('processes.store')">
+    {{-- Product edit block --}}
     <div class="form__block">
         <div class="form__row">
-            <x-form.selects.selectize.id-based-single-select.default-select
-                labelText="Manufacturer"
-                inputName="manufacturer_id"
-                :options="$manufacturers"
-                :isRequired="true" />
-
-            <x-form.selects.selectize.id-based-single-select.default-select
-                labelText="Generic"
-                inputName="inn_id"
-                :options="$inns"
-                :isRequired="true" />
-
-            <x-form.selects.selectize.id-based-single-select.default-select
+            <x-form.selects.selectize.id-based-single-select.record-field-select
                 labelText="Form"
-                inputName="form_id"
+                field="form_id"
+                :model="$product"
                 :options="$productForms"
                 :isRequired="true" />
-        </div>
-    </div>
 
-    {{-- Container used to hold similar products, after AJAX request --}}
-    <div class="form__block similar-records-wrapper"></div>
-
-    <div class="form__block">
-        <div class="form__row">
-            <x-form.inputs.default-input
+            <x-form.inputs.record-field-input
                 class="specific-formatable-input"
                 labelText="Dosage"
-                inputName="dosage" />
+                field="dosage"
+                :model="$product"
+                isRequired="{{ $product->dosage ? true : false }}" />
 
-            <x-form.inputs.default-input
+            <x-form.inputs.record-field-input
                 class="specific-formatable-input"
                 labelText="Pack"
-                inputName="pack" />
-
-            <x-form.inputs.default-input
-                labelText="Brand"
-                inputName="brand" />
+                field="pack"
+                :model="$product"
+                isRequired="{{ $product->pack ? true : false }}" />
         </div>
 
         <div class="form__row">
-            <x-form.selects.selectize.id-based-single-select.default-select
-                labelText="Product class"
-                inputName="class_id"
-                :options="$productClasses"
-                :initialValue="$defaultSelectedClassID"
-                :isRequired="true" />
-
-            <x-form.inputs.default-input
-                labelText="MOQ"
-                inputName="moq"
-                type="number"
-                min="1" />
-
-            <x-form.selects.selectize.id-based-single-select.default-select
+            <x-form.selects.selectize.id-based-single-select.record-field-select
                 labelText="Shelf life"
-                inputName="shelf_life_id"
+                field="shelf_life_id"
+                :model="$product"
                 :options="$shelfLifes"
                 :isRequired="true" />
-        </div>
-    </div>
 
-    <div class="form__block">
-        <div class="form__row">
-            <x-form.inputs.default-input
-                labelText="Dossier"
-                inputName="dossier" />
-
-            <x-form.selects.selectize.id-based-multiple-select.default-select
-                labelText="Zones"
-                inputName="zones[]"
-                :options="$zones"
-                :initialValues="$defaultSelectedZoneIDs"
-                :isRequired="true" />
-
-            <x-form.inputs.default-input
-                labelText="Bioequivalence"
-                inputName="bioequivalence" />
-        </div>
-
-        <div class="form__row">
-            <x-form.inputs.default-input
-                labelText="Down payment"
-                inputName="down_payment" />
-
-            <x-form.inputs.default-input
-                labelText="Validity period"
-                inputName="validity_period" />
-
-            <x-form.misc.attach-files-input />
-        </div>
-    </div>
-
-    <div class="form__block">
-        <div class="form__row">
-            <x-form.radio-buttons.default-radio-buttons
-                class="radio-group--horizontal"
-                labelText="Registered in EU"
-                inputName="registered_in_eu"
-                :options="$booleanOptions"
-                :initialValue="false"
-                :isRequired="true" />
-
-            <x-form.radio-buttons.default-radio-buttons
-                class="radio-group--horizontal"
-                labelText="Sold in EU"
-                inputName="sold_in_eu"
-                :options="$booleanOptions"
-                :initialValue="false"
+            <x-form.selects.selectize.id-based-single-select.record-field-select
+                labelText="Product class"
+                field="class_id"
+                :model="$product"
+                :options="$productClasses"
                 :isRequired="true" />
 
             <div class="form-group"></div>
         </div>
     </div>
+
+    {{-- Main block --}}
+    <div class="form__block">
+        <div class="form__row">
+            <x-form.selects.selectize.id-based-single-select.default-select
+                labelText="Product status"
+                class="single-selectize--manually-initializable"
+                inputName="status_id"
+                :options="$statuses"
+                :isRequired="true" />
+
+            <x-form.selects.selectize.id-based-multiple-select.default-select
+                labelText="Search country"
+                class="multiple-selectize--manually-initializable"
+                inputName="country_ids[]"
+                :options="$countriesOrderedByUsageCount"
+                optionCaptionField="code"
+                :isRequired="true" />
+
+            <x-form.selects.selectize.id-based-multiple-select.default-select
+                labelText="Responsible"
+                inputName="responsiblePeople[]"
+                :options="$responsiblePeople"
+                :isRequired="true" />
+        </div>
+    </div>
+
+    {{-- Forecast inputs wrapper hidden initially  --}}
+    <div class="processes-create__forecast-inputs-wrapper form__block">@include('processes.partials.create-form-forecast-inputs', ['stage' => 1, 'selectedCountryCodes' => []])</div>
+
+    {{-- Stage inputs wrapper hidden initially  --}}
+    <div class="processes-create__stage-inputs-wrapper">@include('processes.partials.create-form-stage-inputs', ['stage' => 2])</div>
 
     <div class="form__block">
         <x-form.misc.comment-inputs-on-model-create />

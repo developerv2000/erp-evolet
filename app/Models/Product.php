@@ -58,6 +58,11 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $this->belongsTo(Manufacturer::class)->withTrashed();
     }
 
+    public function processes()
+    {
+        return $this->hasMany(Process::class);
+    }
+
     public function inn()
     {
         return $this->belongsTo(Inn::class);
@@ -179,7 +184,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $query->withCount([
             'comments',
             'attachments',
-            // 'processes', // Not done yet
+            'processes',
         ]);
     }
 
@@ -383,7 +388,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $formFamilyIDs = ProductForm::find($request->form_id)->getFamilyIDs();
 
         // Query similar records based on manufacturer, inn, and form family IDs
-        $similarRecords = Product::where('manufacturer_id', $request->manufacturer_id)
+        $similarRecords = Product::withTrashed()->where('manufacturer_id', $request->manufacturer_id)
             ->where('inn_id', $request->inn_id)
             ->whereIn('form_id', $formFamilyIDs)
             ->with(['form'])

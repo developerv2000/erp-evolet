@@ -95,3 +95,15 @@
 }
 
 /* ------------ /end Comment pages ------------ */
+
+
+/* ------------ Processes pages ------------ */
+/* Create page */
+.processes-create__forecast-inputs-wrapper:empty {
+    display: none;
+}
+
+.processes-create__stage-inputs-wrapper:empty {
+    display: none;
+}
+/* ------------ /end Processes pages ------------ */
