@@ -7,6 +7,10 @@ use App\Models\Inn;
 use App\Models\Manufacturer;
 use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
+use App\Models\MarketingAuthorizationHolder;
+use App\Models\ProcessGeneralStatus;
+use App\Models\ProcessResponsiblePerson;
+use App\Models\ProcessStatus;
 use App\Models\Product;
 use App\Models\ProductClass;
 use App\Models\ProductForm;
@@ -24,6 +28,7 @@ class MADViewComposersDefiner
     {
         self::defineManufacturerComposers();
         self::defineProductComposers();
+        self::defineProcessComposers();
     }
 
     /*
@@ -66,6 +71,24 @@ class MADViewComposersDefiner
         ]));
     }
 
+    private static function defineProcessComposers()
+    {
+        $defaultShareData = self::getDefaultProcessesShareData();
+
+        self::defineViewComposer('processes.partials.create-form', array_merge($defaultShareData, [
+
+        ]));
+
+        self::defineViewComposer('processes.partials.edit-form', $defaultShareData);
+
+        self::defineViewComposer('processes.partials.filter', array_merge($defaultShareData, [
+            'generalStatuses' => ProcessGeneralStatus::all(),
+            'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueNamesForAnalysts(),
+            'regions' => Country::getRegionOptions(),
+            'brands' => Product::getAllUniqueBrands(),
+        ]));
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Default shared datas
@@ -102,6 +125,24 @@ class MADViewComposersDefiner
             'countriesOrderedByName' => Country::orderByName()->get(),
             'manufacturerCategories' => ManufacturerCategory::orderByName()->get(),
             'booleanOptions' => GeneralHelper::getBooleanOptionsArray(),
+        ];
+    }
+
+    private static function getDefaultProcessesShareData()
+    {
+        return [
+            'countriesOrderedByName' => Country::orderByName()->get(),
+            'countriesOrderedByUsageCount' => Country::orderByUsageCount()->get(),
+            'manufacturers' => Manufacturer::getMinifiedRecordsWithName(),
+            'inns' => Inn::orderByName()->get(),
+            'productForms' => ProductForm::getMinifiedRecordsWithName(),
+            'analystUsers' => User::getMADAnalystsMinified(),
+            'bdmUsers' => User::getBDMsMinifed(),
+            'responsiblePeople' => ProcessResponsiblePerson::orderByName()->get(),
+            'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
+            'productClasses' => ProductClass::orderByName()->get(),
+            'manufacturerCategories' => ManufacturerCategory::orderByName()->get(),
+            'statuses' => ProcessStatus::all(),
         ];
     }
 }

@@ -331,12 +331,12 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
             // Apply conditions based on the region
             switch ($region) {
-                case 'EUROPE':
+                case 'Europe':
                     // Exclude manufacturers from India
                     $query->where('country_id', '!=', $indiaCountryId);
                     break;
 
-                case 'INDIA':
+                case 'India':
                     // Include only manufacturers from India
                     $query->where('country_id', $indiaCountryId);
                     break;
@@ -452,14 +452,14 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
     }
 
     /**
-     * Provides the default table columns along with their properties.
+     * Provides the default MAD table columns along with their properties.
      *
      * These columns are typically used to display data in tables,
      * such as on index and trash pages, and are iterated over in a loop.
      *
      * @return array
      */
-    public static function getDefaultTableColumnsForUser($user)
+    public static function getDefaultMADTableColumnsForUser($user)
     {
         if (Gate::forUser($user)->denies('view-MAD-EPP')) {
             return null;

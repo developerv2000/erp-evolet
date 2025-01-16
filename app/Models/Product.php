@@ -33,7 +33,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     const DEFAULT_ORDER_BY = 'updated_at';
     const DEFAULT_ORDER_TYPE = 'desc';
-    const DEFAULT_PAGINATION_LIMIT = 50;
+    const DEFAULT_PAGINATION_LIMIT = 40;
 
     const LIMITED_EXCEL_RECORDS_COUNT_FOR_EXPORT = 15;
     const STORAGE_PATH_OF_EXCEL_TEMPLATE_FILE_FOR_EXPORT = 'app/excel/export-templates/ivp.xlsx';
@@ -393,14 +393,14 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     }
 
     /**
-     * Provides the default table columns along with their properties.
+     * Provides the default MAD table columns along with their properties.
      *
      * These columns are typically used to display data in tables,
      * such as on index and trash pages, and are iterated over in a loop.
      *
      * @return array
      */
-    public static function getDefaultTableColumnsForUser($user)
+    public static function getDefaultMADTableColumnsForUser($user)
     {
         if (Gate::forUser($user)->denies('view-MAD-IVP')) {
             return null;

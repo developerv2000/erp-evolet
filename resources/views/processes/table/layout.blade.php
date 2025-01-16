@@ -10,7 +10,7 @@
 
         @foreach ($visibleTableColumns as $column)
             <th width="{{ $column['width'] }}">
-                @include('products.table.thead-columns')
+                @include('processes.table.thead-columns')
             </th>
         @endforeach
     </x-slot:thead-titles>
@@ -23,12 +23,12 @@
 
                 @if ($trashedRecords)
                     <td>{{ $record->deleted_at->isoFormat('DD MMM Y') }}</td>
-                    <td><x-tables.partials.td.restore :form-action="route('products.restore')" :record-id="$record->id" /></td>
+                    <td><x-tables.partials.td.restore :form-action="route('processes.restore')" :record-id="$record->id" /></td>
                 @endif
 
                 @foreach ($visibleTableColumns as $column)
                     <td>
-                        @include('products.table.tbody-row-columns')
+                        @include('processes.table.tbody-row-columns')
                     </td>
                 @endforeach
             </tr>

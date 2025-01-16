@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\ProcessController;
+use App\Http\Controllers\ProcessStatusHistoryController;
 use App\Http\Controllers\ProductController;
 use App\Support\Generators\CRUDRouteGenerator;
 use Illuminate\Support\Facades\Route;
@@ -25,7 +26,18 @@ Route::middleware('auth', 'auth.session')->group(function () {
     Route::prefix('processes')->controller(ProcessController::class)->name('processes.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-MAD-VPS', 'can:edit-MAD-VPS');
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
+
+        Route::get('/duplication/{record}', 'duplication')->name('duplication')->middleware('can:edit-MAD-VPS');
+        Route::post('/duplicate', 'duplicate')->name('duplicate')->middleware('can:edit-MAD-VPS');
     });
+
+    Route::prefix('processes/{process}/status-history')
+        ->controller(ProcessStatusHistoryController::class)
+        ->name('processes.status-history.')
+        ->middleware('can:edit-MAD-VPS-status-history')
+        ->group(function () {
+            CRUDRouteGenerator::defineDefaultRoutesOnly(['index', 'edit', 'update', 'destroy']);
+        });
 
     // KVPP
     Route::prefix('product-searches')->controller(ProductSearchController::class)->name('product-searches.')->group(function () {
@@ -34,7 +46,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     // Meetings
-    Route::prefix('meetings')->controller(ProcessController::class)->name('meetings.')->group(function () {
+    Route::prefix('meetings')->controller(MeetingController::class)->name('meetings.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-MAD-Meetings', 'can:edit-MAD-Meetings');
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });

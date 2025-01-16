@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => __('IVP'),
-    'pageName' => 'products-index',
+    'pageTitle' => __('VPS'),
+    'pageName' => 'processes-index',
     'mainAutoOverflowed' => true,
 ])
 
@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('products.index'), 'text' => __('IVP')],
+                    ['link' => route('processes.index'), 'text' => __('VPS')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -21,14 +21,7 @@
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
-                @can('edit-MAD-IVP')
-                    <x-misc.buttoned-link
-                        class="toolbar__button"
-                        style="shadowed"
-                        link="{{ route('products.create') }}"
-                        icon="add">{{ __('New') }}
-                    </x-misc.buttoned-link>
-
+                @can('edit-MAD-VPS')
                     <x-misc.button
                         class="toolbar__button"
                         style="shadowed"
@@ -39,13 +32,13 @@
                 @endcan
 
                 @can('export-records-as-excel')
-                    <x-form.misc.export-as-excel-form action="{{ route('products.export-as-excel') }}" />
+                    <x-form.misc.export-as-excel-form action="{{ route('processes.export-as-excel') }}" />
                 @endcan
 
                 <x-misc.buttoned-link
                     class="toolbar__button"
                     style="shadowed"
-                    link="{{ route('products.trash') }}"
+                    link="{{ route('processes.trash') }}"
                     icon="delete">{{ __('Trash') }}
                 </x-misc.buttoned-link>
 
@@ -68,21 +61,21 @@
         </div>
 
         {{-- Table --}}
-        @include('products.table.layout', ['trashedRecords' => false])
+        @include('processes.table.layout', ['trashedRecords' => false])
     </div>
 
     {{-- Modals --}}
     <x-modals.edit-table-columns
-        form-action="{{ route('settings.update-table-columns', 'MAD_IVP_table_columns') }}"
+        form-action="{{ route('settings.update-table-columns', 'MAD_VPS_table_columns') }}"
         :columns="$allTableColumns" />
 
-    @can('edit-MAD-IVP')
+    @can('edit-MAD-VPS')
         <x-modals.multiple-delete
-            form-action="{{ route('products.destroy') }}"
+            form-action="{{ route('processes.destroy') }}"
             :forceDelete="false" />
     @endcan
 @endsection
 
 @section('rightbar')
-    @include('products.partials.filter')
+    @include('processes.partials.filter')
 @endsection

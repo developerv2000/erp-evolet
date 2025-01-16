@@ -1117,6 +1117,10 @@ a {
     color: var(--theme-success-color);
 }
 
+.main-table .td__duplicate {
+    color: var(--theme-success-color);
+}
+
 .main-table .td__max-lines-limited-text {
     display: -webkit-box;
     line-clamp: 3;
@@ -1311,3 +1315,59 @@ a {
     color: var(--theme-success-color);
 }
 /* ------------ /end Similar records ------------ */
+
+
+/* ------------ Process status periods ------------ */
+.process-status-periods__hr {
+    height: 4px;
+    margin: 8px 0;
+    border: none;
+}
+/* ------------ /end Process status periods ------------ */
+
+
+/* ------------ General process colors ------------ */
+.process-general-status-1 {
+    background-color: #5470C6;
+}
+
+.process-general-status-2 {
+    background-color: #91CC75;
+}
+
+.process-general-status-3 {
+    background-color: #FAC858;
+}
+
+.process-general-status-4 {
+    background-color: #EE6666;
+}
+
+.process-general-status-5 {
+    background-color: #73C0DE;
+}
+
+.process-general-status-6 {
+    background-color: #3BA272;
+}
+
+.process-general-status-7 {
+    background-color: #FC8452;
+}
+
+.process-general-status-8 {
+    background-color: #9A60B4;
+}
+
+.process-general-status-9 {
+    background-color: #EA7CCC;
+}
+
+.process-general-status-10 {
+    background-color: #5470C6;
+}
+/* ------------ /end General process colors ------------ */
+
+
+
+

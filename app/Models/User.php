@@ -279,8 +279,9 @@ class User extends Authenticatable
     {
         $this->refresh();
         $settings = $this->settings;
-        $settings['MAD_EPP_table_columns'] = Manufacturer::getDefaultTableColumnsForUser($this);
-        $settings['MAD_IVP_table_columns'] = Product::getDefaultTableColumnsForUser($this);
+        $settings[Manufacturer::SETTINGS_MAD_TABLE_COLUMNS_KEY] = Manufacturer::getDefaultMADTableColumnsForUser($this);
+        $settings[Product::SETTINGS_MAD_TABLE_COLUMNS_KEY] = Product::getDefaultMADTableColumnsForUser($this);
+        $settings[Process::SETTINGS_MAD_TABLE_COLUMNS_KEY] = Process::getDefaultMADTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();

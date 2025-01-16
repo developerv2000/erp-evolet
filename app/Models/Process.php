@@ -92,7 +92,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
     public function statusHistory()
     {
-        return $this->hasMany(ProcessStatusHistory::class);
+        return $this->hasMany(ProcessStatusHistory::class)->orderBy('id', 'asc');
     }
 
     public function currentStatusHistory()
@@ -103,7 +103,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
     public function searchCountry()
     {
-        return $this->belongsTo(Country::class);
+        return $this->belongsTo(Country::class, 'country_id');
     }
 
     public function currency()
@@ -265,7 +265,9 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             'responsiblePeople',
             'lastComment',
 
-            'currentStatusHistory:id,start_date',
+            'statusHistory' => function ($historyQuery) {
+                $historyQuery->with(['status']);
+            },
 
             'status' => function ($statusQuery) {
                 $statusQuery->with('generalStatus');
@@ -545,14 +547,11 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                     'name' => 'manufacturer',
                     'attribute' => 'bdm_user_id',
                 ],
-            ],
 
-            'relationEqualAmbiguous' => [
                 [
                     'name' => 'manufacturer',
-                    'attribute' => 'manufacturer_category_id',
-                    'ambiguousAttribute' => 'manufacturers.category_id',
-                ]
+                    'attribute' => 'category_id',
+                ],
             ],
 
             'relationIn' => [
@@ -828,9 +827,9 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     }
 
     /**
-     * CHeck whether process can be added to plan (ASP)
+     * CHeck whether process can be added to ASP (СПГ)
      */
-    public function isReadyForPlan()
+    public function isReadyForASP()
     {
         return $this->status->generalStatus->stage >= 5;
     }
@@ -849,13 +848,6 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
      */
     public static function addGeneralStatusPeriodsForRecords($records)
     {
-        // Load the statusHistory relationship for all records to avoid N+1 query problem
-        $records->load([
-            'statusHistory' => function ($historyQuery) {
-                $historyQuery->with(['status']);
-            },
-        ]);
-
         // Get all general statuses
         $generalStatuses = ProcessGeneralStatus::all();
 
@@ -908,14 +900,14 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     }
 
     /**
-     * Provides the default table columns along with their properties.
+     * Provides the default MAD table columns along with their properties.
      *
      * These columns are typically used to display data in tables,
      * such as on index and trash pages, and are iterated over in a loop.
      *
      * @return array
      */
-    public static function getDefaultTableColumnsForUser($user)
+    public static function getDefaultMADTableColumnsForUser($user)
     {
         if (Gate::forUser($user)->denies('view-MAD-VPS')) {
             return null;

@@ -4,61 +4,110 @@
         <x-tables.partials.th.edit />
     @break
 
+    {{-- Duplicate --}}
+    @case('Duplicate')
+        <x-misc.material-symbol class="th__iconed-title unselectable" icon="content_copy" title="{{ __('Duplicate') }}" />
+    @break
+
     {{-- Links --}}
     @case('ID')
         <x-tables.partials.th.id />
     @break
 
-    @case('Manufacturer')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="manufacturer_id" />
+    @case('Search country')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="country_id" />
     @break
 
-    @case('Generic')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="inn_id" />
+    @case('Product status')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="status_id" />
     @break
 
-    @case('Form')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="form_id" />
+    @case('MAH')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="marketing_authorization_holder_id" />
     @break
 
-    @case('Dosage')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="dosage" />
+    @case('Manufacturer price 1')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="manufacturer_first_offered_price" />
     @break
 
-    @case('MOQ')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="moq" />
+    @case('Manufacturer price 2')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="manufacturer_followed_offered_price" />
     @break
 
-    @case('Shelf life')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="shelf_life_id" />
+    @case('Currency')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="currency_id" />
     @break
 
-    @case('Product class')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="class_id" />
+    @case('Agreed price')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="agreed_price" />
     @break
 
-    @case('Brand')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="brand" />
+    @case('Our price 2')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="our_followed_offered_price" />
     @break
 
-    @case('Bioequivalence')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="bioequivalence" />
+    @case('Our price 1')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="our_first_offered_price" />
     @break
 
-    @case('Validity period')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="validity_period" />
+    @case('Increased price')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="increased_price" />
     @break
 
-    @case('Down payment')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="down_payment" />
+    @case('Increased price date')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="increased_price_date" />
     @break
 
-    @case('Registered in EU')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="registered_in_eu" />
+    @case('Dossier status')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="dossier_status" />
     @break
 
-    @case('Sold in EU')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="sold_in_eu" />
+    @case('Year Cr/Be')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="clinical_trial_year" />
+    @break
+
+    @case('Country ich')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="clinical_trial_ich_country" />
+    @break
+
+    @case('Down payment 1')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="down_payment_1" />
+    @break
+
+    @case('Down payment 2')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="down_payment_2" />
+    @break
+
+    @case('Down payment condition')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="down_payment_condition" />
+    @break
+
+    @case('Date of forecast')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="forecast_year_1_update_date" />
+    @break
+
+    @case('Forecast 1 year')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="forecast_year_1" />
+    @break
+
+    @case('Forecast 2 year')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="forecast_year_2" />
+    @break
+
+    @case('Forecast 3 year')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="forecast_year_3" />
+    @break
+
+    @case('Responsible update date')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="responsible_people_update_date" />
+    @break
+
+    @case('Brand Eng')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="trademark_en" />
+    @break
+
+    @case('Brand Rus')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="trademark_ru" />
     @break
 
     @case('Date of creation')
