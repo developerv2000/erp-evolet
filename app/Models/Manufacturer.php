@@ -211,29 +211,6 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     /*
     |--------------------------------------------------------------------------
-    | Relation loads
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Load basic non belongsTo relations like hasMany, belongsToMany etc,
-     * There is no need of loading belongsTo relations on records edit page.
-     *
-     * Used on manufacturers.edit page.
-     */
-    public function loadBasicNonBelongsToRelations()
-    {
-        $this->load([
-            'presences',
-            'blacklists',
-            'productClasses',
-            'zones',
-            'lastComment',
-        ]);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
     | Contracts
     |--------------------------------------------------------------------------
     */

@@ -66,7 +66,7 @@ class ProcessController extends Controller
 
     public function create(Request $request)
     {
-        $product = Product::withBasicRelations()->find($request->product_id);
+        $product = Product::find($request->product_id);
 
         return view('processes.create', compact('product'));
     }
@@ -90,7 +90,7 @@ class ProcessController extends Controller
      * Return required forecast inputs, for each countries separately,
      * on status/search_countries select changes.
      *
-     * Ajax request.
+     * Ajax request on processes.create.
      */
     public function getCreateFormForecastInputs(Request $request)
     {
@@ -117,9 +117,26 @@ class ProcessController extends Controller
     public function edit(Request $request, $record)
     {
         $record = Process::withTrashed()->findOrFail($record);
-        $record->loadBasicNonBelongsToRelations();
+        $product = $record->product;
 
-        return view('processes.edit', compact('record'));
+        return view('processes.edit', compact('record', 'product'));
+    }
+
+    /**
+     * Return required stage inputs, for each stage,
+     * on status select change.
+     *
+     * Ajax request on processes.edit.
+     */
+    public function getEditFormStageInputs(Request $request)
+    {
+        $record = Process::find($request->process_id);
+        $product = $record->product;
+
+        $status = ProcessStatus::find($request->status_id);
+        $stage = $status->generalStatus->stage;
+
+        return view('processes.partials.edit-form-stage-inputs', compact('record', 'product', 'stage'));
     }
 
     /**

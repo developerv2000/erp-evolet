@@ -89,7 +89,6 @@ class ProductController extends Controller
     public function edit(Request $request, $record)
     {
         $record = Product::withTrashed()->findOrFail($record);
-        $record->loadBasicNonBelongsToRelations();
 
         return view('products.edit', compact('record'));
     }

@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => $record->title . ' — ' . __('IVP'),
-    'pageName' => 'products-edit',
+    'pageTitle' => $record->title . ' — ' . __('VPS'),
+    'pageName' => 'processes-edit',
     'mainAutoOverflowed' => false,
 ])
 
@@ -23,7 +23,8 @@
         </div>
 
         {{-- Edit form --}}
-        @include('products.partials.edit-form')
+        @include('processes.partials.about-product')
+        @include('processes.partials.edit-form')
     </div>
 
 @endsection

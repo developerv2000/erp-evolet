@@ -190,26 +190,6 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     /*
     |--------------------------------------------------------------------------
-    | Relation loads
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Load basic non belongsTo relations like hasMany, belongsToMany etc,
-     * There is no need of loading belongsTo relations on records edit page.
-     *
-     * Used on products.edit page.
-     */
-    public function loadBasicNonBelongsToRelations()
-    {
-        $this->load([
-            'zones',
-            'lastComment',
-        ]);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
     | Contracts
     |--------------------------------------------------------------------------
     */

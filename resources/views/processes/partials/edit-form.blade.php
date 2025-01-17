@@ -1,125 +1,59 @@
-<x-form-templates.edit-template :action="route('products.update', $record->id)">
+<x-form-templates.edit-template class="processes-edit-form" :action="route('processes.update', $record->id)">
+    <input type="hidden" name="process_id" value="{{ $record->id }}">
+    <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+    {{-- Edit product block --}}
+    @include('processes.partials.edit-product-form-block')
+
+    {{-- Main block --}}
     <div class="form__block">
-        <div class="form__row">
-            <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Manufacturer"
-                field="manufacturer_id"
-                :model="$record"
-                :options="$manufacturers"
-                :isRequired="true" />
-
-            <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Generic"
-                field="inn_id"
-                :model="$record"
-                :options="$inns"
-                :isRequired="true" />
-
-            <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Form"
-                field="form_id"
-                :model="$record"
-                :options="$productForms"
-                :isRequired="true" />
-        </div>
-    </div>
-
-    <div class="form__block">
-        <div class="form__row">
-            <x-form.inputs.record-field-input
-                class="specific-formatable-input"
-                labelText="Dosage"
-                field="dosage"
-                :model="$record" />
-
-            <x-form.inputs.record-field-input
-                class="specific-formatable-input"
-                labelText="Pack"
-                field="pack"
-                :model="$record" />
-
-            <x-form.inputs.record-field-input
-                labelText="Brand"
-                field="brand"
-                :model="$record" />
-        </div>
+        <h3 class="main-title main-title--marginless">{{ __('Main') }}</h3>
 
         <div class="form__row">
-            <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Product class"
-                field="class_id"
-                :model="$record"
-                :options="$productClasses"
-                :isRequired="true" />
+            {{-- Check if user is able to edit status --}}
+            @if ($record->currentStatusCanBeEditedForAuthtUser())
+                <x-form.selects.selectize.id-based-single-select.record-field-select
+                    labelText="Product status"
+                    field="status_id"
+                    :model="$record"
+                    :options="$statuses"
+                    :isRequired="true" />
+            @else
+                <x-form.inputs.default-input
+                    labelText="Product status"
+                    inputName="readonly_status_id"
+                    initialValue="{{ $record->status->name }}"
+                    readonly />
+            @endif
 
-            <x-form.inputs.record-field-input
-                labelText="MOQ"
-                field="moq"
-                :model="$record"
-                type="number"
-                min="1" />
-
-            <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Shelf life"
-                field="shelf_life_id"
-                :model="$record"
-                :options="$shelfLifes"
-                :isRequired="true" />
-        </div>
-    </div>
-
-    <div class="form__block">
-        <div class="form__row">
-            <x-form.inputs.record-field-input
-                labelText="Dossier"
-                field="dossier"
-                :model="$record" />
+            {{-- Country can`t be edited after stage 1 --}}
+            @if ($record->status->generalStatus->stage == 1)
+                <x-form.selects.selectize.id-based-single-select.record-field-select
+                    labelText="Search country"
+                    field="country_id"
+                    :model="$record"
+                    :options="$countriesOrderedByUsageCount"
+                    optionCaptionField="code"
+                    :isRequired="true" />
+            @else
+                <x-form.inputs.default-input
+                    labelText="Search country"
+                    inputName="readonly_country_id"
+                    initialValue="{{ $record->searchCountry->code }}"
+                    readonly />
+            @endif
 
             <x-form.selects.selectize.id-based-multiple-select.record-relation-select
-                labelText="Zones"
-                inputName="zones[]"
+                labelText="Responsible"
+                inputName="responsiblePeople[]"
                 :model="$record"
-                :options="$zones"
+                :options="$responsiblePeople"
                 :isRequired="true" />
-
-            <x-form.inputs.record-field-input
-                labelText="Bioequivalence"
-                field="bioequivalence"
-                :model="$record" />
-        </div>
-
-        <div class="form__row">
-            <x-form.inputs.record-field-input
-                labelText="Down payment"
-                field="down_payment"
-                :model="$record" />
-
-            <x-form.inputs.record-field-input
-                labelText="Validity period"
-                field="validity_period"
-                :model="$record" />
-
-            <x-form.misc.attach-files-input />
         </div>
     </div>
 
-    <div class="form__block">
-        <div class="form__row">
-            <x-form.radio-buttons.record-field-radio-buttons
-                class="radio-group--horizontal"
-                labelText="Registered in EU"
-                field="registered_in_eu"
-                :model="$record"
-                :options="$booleanOptions" />
-
-            <x-form.radio-buttons.record-field-radio-buttons
-                class="radio-group--horizontal"
-                labelText="Sold in EU"
-                field="sold_in_eu"
-                :model="$record"
-                :options="$booleanOptions" />
-        </div>
-    </div>
+    {{-- Stage inputs wrapper  --}}
+    <div class="processes-edit__stage-inputs-wrapper">@include('processes.partials.edit-form-stage-inputs', ['stage' => $record->status->generalStatus->stage])</div>
 
     <div class="form__block">
         <x-form.misc.comment-inputs-on-model-edit :record="$record" />

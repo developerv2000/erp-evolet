@@ -322,27 +322,6 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
     /*
     |--------------------------------------------------------------------------
-    | Relation loads
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Load basic non belongsTo relations like hasMany, belongsToMany etc,
-     * There is no need of loading belongsTo relations on records edit page.
-     *
-     * Used on processes.edit page.
-     */
-    public function loadBasicNonBelongsToRelations()
-    {
-        $this->load([
-            'clinicalTrialCountries',
-            'responsiblePeople',
-            'lastComment',
-        ]);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
     | Contracts
     |--------------------------------------------------------------------------
     */
@@ -836,6 +815,17 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     public function isReadyForASP()
     {
         return $this->status->generalStatus->stage >= 5;
+    }
+
+    /**
+     * Check wether current status of process can be edited by authenticated user or not.
+     *
+     * Used in processes.edit page.
+     */
+    public function currentStatusCanBeEditedForAuthtUser()
+    {
+        return Gate::allows('upgrade-MAD-VPS-status-after-contract-stage')
+            || !$this->status->generalStatus->requires_permission;
     }
 
     /**

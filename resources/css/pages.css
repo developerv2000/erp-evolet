@@ -47,7 +47,7 @@
 
 /* List */
 .comments-list-wrapper {
-    margin-top: 20px;
+    margin: 20px 0 40px;
     padding: 20px;
 }
 
@@ -100,17 +100,17 @@
 /* ------------ Processes pages ------------ */
 /* Create & Edit pages */
 .processes-create__forecast-inputs-wrapper,
-.processes-create__stage-inputs-wrapper {
+.processes-create__stage-inputs-wrapper,
+.processes-edit__stage-inputs-wrapper {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.processes-create__forecast-inputs-wrapper:empty {
+.processes-create__forecast-inputs-wrapper:empty,
+.processes-create__stage-inputs-wrapper:empty,
+.processes-edit__stage-inputs-wrapper:empty {
     display: none;
 }
 
-.processes-create__stage-inputs-wrapper:empty {
-    display: none;
-}
 /* ------------ /end Processes pages ------------ */

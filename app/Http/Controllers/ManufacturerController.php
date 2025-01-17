@@ -74,7 +74,6 @@ class ManufacturerController extends Controller
     public function edit(Request $request, $record)
     {
         $record = Manufacturer::withTrashed()->findOrFail($record);
-        $record->loadBasicNonBelongsToRelations();
 
         return view('manufacturers.edit', compact('record'));
     }

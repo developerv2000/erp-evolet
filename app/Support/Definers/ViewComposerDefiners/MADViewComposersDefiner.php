@@ -74,26 +74,31 @@ class MADViewComposersDefiner
 
     private static function defineProcessComposers()
     {
-        $defaultShareData = self::getDefaultProcessesShareData();
-
-        self::defineViewComposer('processes.partials.create-form', [
-            'productForms' => ProductForm::getMinifiedRecordsWithName(),
-            'shelfLifes' => ProductShelfLife::all(),
-            'productClasses' => ProductClass::orderByName()->get(),
-            'statuses' => ProcessStatus::all(),
+        self::defineViewComposer([
+            'processes.partials.create-form',
+            'processes.partials.edit-form',
+        ], [
+            'statuses' => ProcessStatus::getAllRestrictedByPermissions(), // IMPORTANT
             'countriesOrderedByUsageCount' => Country::orderByUsageCount()->get(),
             'responsiblePeople' => ProcessResponsiblePerson::orderByName()->get(),
         ]);
 
-        self::defineViewComposer('processes.partials.create-form-stage-inputs', array_merge($defaultShareData, [
+        self::defineViewComposer('processes.partials.edit-product-form-block', [
+            'productForms' => ProductForm::getMinifiedRecordsWithName(),
+            'shelfLifes' => ProductShelfLife::all(),
+            'productClasses' => ProductClass::orderByName()->get(),
+        ]);
+
+        self::defineViewComposer([
+            'processes.partials.create-form-stage-inputs',
+            'processes.partials.edit-form-stage-inputs',
+        ], [
             'countriesOrderedByName' => Country::orderByName()->get(),
             'currencies' => Currency::orderByName()->get(),
             'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
-        ]));
+        ]);
 
-        self::defineViewComposer('processes.partials.edit-form', $defaultShareData);
-
-        self::defineViewComposer('processes.partials.filter', array_merge($defaultShareData, [
+        self::defineViewComposer('processes.partials.filter', [
             'countriesOrderedByName' => Country::orderByName()->get(),
             'countriesOrderedByUsageCount' => Country::orderByUsageCount()->get(),
             'manufacturers' => Manufacturer::getMinifiedRecordsWithName(),
@@ -110,7 +115,7 @@ class MADViewComposersDefiner
             'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueNamesForAnalysts(),
             'regions' => Country::getRegionOptions(),
             'brands' => Product::getAllUniqueBrands(),
-        ]));
+        ]);
     }
 
     /*
@@ -150,10 +155,5 @@ class MADViewComposersDefiner
             'manufacturerCategories' => ManufacturerCategory::orderByName()->get(),
             'booleanOptions' => GeneralHelper::getBooleanOptionsArray(),
         ];
-    }
-
-    private static function getDefaultProcessesShareData()
-    {
-        return [];
     }
 }
