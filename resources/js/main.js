@@ -37,6 +37,7 @@ const showsSpinnerOnSubmitForms = document.querySelectorAll('[data-on-submit="sh
 const exportAsExcelForm = document.querySelector('.export-as-excel-form');
 const productsCreateForm = document.querySelector('.products-create-form');
 const editTableColumnsForm = document.querySelector('.edit-table-columns-form');
+const processesCreateForm = document.querySelector('.processes-create-form');
 
 // Inputs
 const specificFormatableInputs = document.querySelectorAll('.specific-formatable-input');
@@ -154,10 +155,25 @@ function initializeProductsCreateForm() {
     }
 }
 
+function initializeProcessesCreateForm() {
+    if (!processesCreateForm) {
+        return;
+    }
+
+    // Select the dropdowns for status and countries
+    const statusSelect = processesCreateForm.querySelector('select[name="status_id"]');
+    const countriesSelect = processesCreateForm.querySelector('select[name="country_ids[]"]');
+
+    // Attach change event listeners to selects
+    statusSelect.selectize.on('change', (value) => functions.updateProcessCreateStageInputs(value));
+    countriesSelect.selectize.on('change', (values) => functions.updateProcessCreateForecastInputs(values));
+}
+
 init();
 
 function init() {
     functions.moveFilterActiveInputsToTop(filterForm);
     initializeEditTableColumnsForm();
     initializeProductsCreateForm();
+    initializeProcessesCreateForm();
 }

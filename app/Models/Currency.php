@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Support\Traits\Model\ScopesOrderingByName;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 
 class Currency extends Model
 {
+    use ScopesOrderingByName;
+
     /*
     |--------------------------------------------------------------------------
     | Constants

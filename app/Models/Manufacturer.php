@@ -134,7 +134,7 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
     protected static function booted(): void
     {
         static::saving(function ($record) {
-            $record->name = strtoupper($record->name);
+            $record->name = mb_strtoupper($record->name);
         });
 
         static::deleting(function ($record) { // trashing

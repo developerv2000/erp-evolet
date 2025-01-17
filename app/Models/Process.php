@@ -113,7 +113,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
     public function MAH()
     {
-        return $this->belongsTo(MarketingAuthorizationHolder::class);
+        return $this->belongsTo(MarketingAuthorizationHolder::class, 'marketing_authorization_holder_id');
     }
 
     public function clinicalTrialCountries()
@@ -224,8 +224,8 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         });
 
         static::saving(function ($record) {
-            $record->trademark_en = strtoupper($record->trademark_en ?: '');
-            $record->trademark_ru = strtoupper($record->trademark_ru ?: '');
+            $record->trademark_en = mb_strtoupper($record->trademark_en ?: '');
+            $record->trademark_ru = mb_strtoupper($record->trademark_ru ?: '');
 
             $record->syncRelatedProductUpdates();
             $record->handleForecastUpdateDate();
@@ -619,7 +619,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
      * @param App\Http\Requests\ProcessStoreRequest $request The request containing the input data.
      * @return void
      */
-    public static function createFromRequest($request)
+    public static function createMultipleRecordsFromRequest($request)
     {
         $countryIDs = $request->input('country_ids');
 
@@ -793,17 +793,21 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     {
         $product = $this->product;
 
-        // Product class is available only at stages 1 and 2
-        if (request()->filled('class_id')) {
-            $product->class_id = request()->input('class_id');
-        }
+        // Global attributes
+        $product->fill(request()->only([
+            'form_id',
+            'dosage',
+            'pack',
+            'shelf_life_id',
+            'class_id',
+        ]));
 
-        // Shelf life and MOQ are available from stage 2
-        if (request()->filled('shelf_life_id')) {
-            $product->shelf_life_id = request()->input('shelf_life_id');
+        // MOQ is available from stage 2
+        if (request()->has('moq')) {
             $product->moq = request()->input('moq');
         }
 
+        // Save only if any field is updated
         if ($product->isDirty()) {
             $product->save();
         }

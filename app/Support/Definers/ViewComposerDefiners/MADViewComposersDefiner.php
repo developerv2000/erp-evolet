@@ -3,6 +3,7 @@
 namespace App\Support\Definers\ViewComposerDefiners;
 
 use App\Models\Country;
+use App\Models\Currency;
 use App\Models\Inn;
 use App\Models\Manufacturer;
 use App\Models\ManufacturerBlacklist;
@@ -75,13 +76,36 @@ class MADViewComposersDefiner
     {
         $defaultShareData = self::getDefaultProcessesShareData();
 
-        self::defineViewComposer('processes.partials.create-form', array_merge($defaultShareData, [
+        self::defineViewComposer('processes.partials.create-form', [
+            'productForms' => ProductForm::getMinifiedRecordsWithName(),
             'shelfLifes' => ProductShelfLife::all(),
+            'productClasses' => ProductClass::orderByName()->get(),
+            'statuses' => ProcessStatus::all(),
+            'countriesOrderedByUsageCount' => Country::orderByUsageCount()->get(),
+            'responsiblePeople' => ProcessResponsiblePerson::orderByName()->get(),
+        ]);
+
+        self::defineViewComposer('processes.partials.create-form-stage-inputs', array_merge($defaultShareData, [
+            'countriesOrderedByName' => Country::orderByName()->get(),
+            'currencies' => Currency::orderByName()->get(),
+            'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
         ]));
 
         self::defineViewComposer('processes.partials.edit-form', $defaultShareData);
 
         self::defineViewComposer('processes.partials.filter', array_merge($defaultShareData, [
+            'countriesOrderedByName' => Country::orderByName()->get(),
+            'countriesOrderedByUsageCount' => Country::orderByUsageCount()->get(),
+            'manufacturers' => Manufacturer::getMinifiedRecordsWithName(),
+            'inns' => Inn::orderByName()->get(),
+            'productForms' => ProductForm::getMinifiedRecordsWithName(),
+            'analystUsers' => User::getMADAnalystsMinified(),
+            'bdmUsers' => User::getBDMsMinifed(),
+            'responsiblePeople' => ProcessResponsiblePerson::orderByName()->get(),
+            'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
+            'productClasses' => ProductClass::orderByName()->get(),
+            'manufacturerCategories' => ManufacturerCategory::orderByName()->get(),
+            'statuses' => ProcessStatus::all(),
             'generalStatuses' => ProcessGeneralStatus::all(),
             'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueNamesForAnalysts(),
             'regions' => Country::getRegionOptions(),
@@ -130,19 +154,6 @@ class MADViewComposersDefiner
 
     private static function getDefaultProcessesShareData()
     {
-        return [
-            'countriesOrderedByName' => Country::orderByName()->get(),
-            'countriesOrderedByUsageCount' => Country::orderByUsageCount()->get(),
-            'manufacturers' => Manufacturer::getMinifiedRecordsWithName(),
-            'inns' => Inn::orderByName()->get(),
-            'productForms' => ProductForm::getMinifiedRecordsWithName(),
-            'analystUsers' => User::getMADAnalystsMinified(),
-            'bdmUsers' => User::getBDMsMinifed(),
-            'responsiblePeople' => ProcessResponsiblePerson::orderByName()->get(),
-            'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
-            'productClasses' => ProductClass::orderByName()->get(),
-            'manufacturerCategories' => ManufacturerCategory::orderByName()->get(),
-            'statuses' => ProcessStatus::all(),
-        ];
+        return [];
     }
 }

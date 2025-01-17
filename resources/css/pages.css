@@ -98,7 +98,14 @@
 
 
 /* ------------ Processes pages ------------ */
-/* Create page */
+/* Create & Edit pages */
+.processes-create__forecast-inputs-wrapper,
+.processes-create__stage-inputs-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
 .processes-create__forecast-inputs-wrapper:empty {
     display: none;
 }

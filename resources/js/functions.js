@@ -16,6 +16,8 @@ const TOGGLE_LEFTBAR_PATCH_URL = '/settings/collapsed-leftbar';
 const GET_PRODUCTS_SIMILAR_RECORDS_POST_URL = '/products/get-similar-records'
 const UPDATE_PROCESSES_CONTRACTED_VALUE_POST_URL = '/processes/update-contracted-value';
 const UPDATE_PROCESSES_REGISTERED_VALUE_POST_URL = '/processes/update-registered-value';
+const GET_PROCESS_CREATE_STAGE_INPUTS_POST_URL = '/processes/get-create-form-stage-inputs';
+const GET_PROCESS_CREATE_FORECAST_INPUTS_POST_URL = '/processes/get-create-form-forecast-inputs';
 
 /*
 |--------------------------------------------------------------------------
@@ -312,11 +314,115 @@ export function updateProcessRegisteredValue(evt) {
         });
 }
 
+export function updateProcessCreateStageInputs(status_id) {
+    showSpinner();
+
+    // Prepare data to be sent in the AJAX request
+    const data = {
+        'product_id': document.querySelector('input[name="product_id"]').value,
+        'status_id': status_id,
+    }
+
+    // Send a POST request to the server to get updated stage inputs
+    axios.post(GET_PROCESS_CREATE_STAGE_INPUTS_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            // Replace old inputs with the new ones received from the server
+            const inputsWrapper = document.querySelector('.processes-create__stage-inputs-wrapper')
+            inputsWrapper.innerHTML = response.data;
+
+            // Initialize new unselectized selects
+            initializeUnselectizedSelects();
+
+            // Refresh forecast inputs
+            const countriesSelect = document.querySelector('select[name="country_ids[]"]');
+            const selectedCountryIDs = countriesSelect.selectize.getValue();
+            updateProcessCreateForecastInputs(selectedCountryIDs);
+        })
+        .finally(function () {
+            hideSpinner();
+        });
+}
+
+export function updateProcessCreateForecastInputs(country_ids) {
+    // Return if status_id not selected yet
+    const statusID = document.querySelector('select[name="status_id"]').value;
+
+    if (!statusID) {
+        return;
+    }
+
+    showSpinner();
+
+    // Prepare data to be sent in the AJAX request
+    const data = {
+        'country_ids': country_ids,
+        'status_id': statusID,
+    }
+
+    // Send a POST request to the server to get updated forecast inputs
+    axios.post(GET_PROCESS_CREATE_FORECAST_INPUTS_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            // Replace old inputs with the new ones received from the server
+            const inputsWrapper = document.querySelector('.processes-create__forecast-inputs-wrapper')
+            inputsWrapper.innerHTML = response.data;
+        })
+        .finally(function () {
+            hideSpinner();
+        });
+}
+
 /*
 |--------------------------------------------------------------------------
 | Private functions
 |--------------------------------------------------------------------------
 */
+
+function initializeUnselectizedSelects() {
+    const SELECTIZE_CLASSES = {
+        SINGLE_UNLINKED: 'select.single-selectize:not(.single-selectize--linked):not(.single-selectize--manually-initializable):not(.selectized)',
+        SINGLE_LINKED: 'select.single-selectize--linked:not(.single-selectize--manually-initializable):not(.selectized)',
+        MULTIPLE_UNTAGGABLE: 'select.multiple-selectize:not(.multiple-selectize--taggable):not(.multiple-selectize--manually-initializable):not(.selectized)',
+        MULTIPLE_TAGGABLE: 'select.multiple-selectize--taggable:not(.multiple-selectize--manually-initializable):not(.selectized)',
+    };
+
+    // Single unlinked selectize
+    $(SELECTIZE_CLASSES.SINGLE_UNLINKED).selectize({
+        plugins: ["auto_position", "preserve_on_blur"],
+    });
+
+    // Single linked selectize
+    $(SELECTIZE_CLASSES.SINGLE_LINKED).selectize({
+        plugins: ["auto_position", "preserve_on_blur"],
+        onChange(value) {
+            window.location = value;
+        },
+    });
+
+    // Multiple untaggable selectize
+    $(SELECTIZE_CLASSES.MULTIPLE_UNTAGGABLE).selectize({
+        plugins: ["auto_position", "preserve_on_blur"],
+    });
+
+    // Multiple Taggable Selectize
+    $(SELECTIZE_CLASSES.MULTIPLE_TAGGABLE).selectize({
+        plugins: ["auto_position", "preserve_on_blur"],
+        create(input, callback) {
+            callback({
+                value: input,
+                text: input,
+            });
+        },
+        // createOnBlur: true,
+    });
+}
 
 function mapSortableTableColumnsData(item, index) {
     const column = {};

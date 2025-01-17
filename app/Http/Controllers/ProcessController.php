@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProcessStoreRequest;
 use App\Http\Requests\ProcessUpdateRequest;
 use App\Models\Country;
 use App\Models\Process;
@@ -104,7 +105,7 @@ class ProcessController extends Controller
 
     public function store(ProcessStoreRequest $request)
     {
-        Process::createFromRequest($request);
+        Process::createMultipleRecordsFromRequest($request);
 
         return to_route('processes.index');
     }

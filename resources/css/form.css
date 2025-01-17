@@ -326,6 +326,7 @@
     border: var(--theme-border);
     border-radius: var(--theme-border-radius);
     transition: var(--theme-transition);
+    box-shadow: none;
 }
 
 /* Single/multiple selectizes input text color while typing/searching */
