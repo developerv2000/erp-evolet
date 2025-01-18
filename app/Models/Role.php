@@ -38,10 +38,6 @@ class Role extends Model
 
     public $timestamps = false;
 
-    protected $with = [
-        'permissions',
-    ];
-
     /*
     |--------------------------------------------------------------------------
     | Relations

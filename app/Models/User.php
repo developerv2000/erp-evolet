@@ -121,6 +121,17 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
+    public function scopeWithBasicRelations($query)
+    {
+        return $query->with([
+            'roles' => function ($rolesQuery) {
+                $rolesQuery->with('permissions');
+            },
+            'permissions',
+            'responsibleCountries',
+        ]);
+    }
+
     public function scopeOnlyBDMs($query)
     {
         return $query->whereRelation('roles', 'name', Role::BDM_NAME);
@@ -129,6 +140,28 @@ class User extends Authenticatable
     public function scopeOnlyMADAnalysts($query)
     {
         return $query->whereRelation('roles', 'name', Role::MAD_ANALYST_NAME);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relation loads
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Load basic relations for authenticated user.
+     *
+     * Used in EnsureUserRelationsAreLoaded middleware.
+     */
+    public function loadBasicAuthRelations()
+    {
+        $this->loadMissing([
+            'roles' => function ($rolesQuery) {
+                $rolesQuery->with('permissions');
+            },
+            'permissions',
+            'responsibleCountries',
+        ]);
     }
 
     /*
@@ -406,7 +439,7 @@ class User extends Authenticatable
 
     public static function notifyProcessOnContractStageToAll($notification)
     {
-        self::all()->each(function ($user) use ($notification) {
+        self::withBasicRelations()->each(function ($user) use ($notification) {
             if (Gate::forUser($user)->allows('receive-notification-on-MAD-VPS-contract')) {
                 $user->notify($notification);
             }
