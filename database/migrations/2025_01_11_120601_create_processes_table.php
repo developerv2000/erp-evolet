@@ -66,7 +66,6 @@ return new class extends Migration
 
             $table->decimal('manufacturer_first_offered_price', 8, 2)->nullable(); // required
             $table->decimal('manufacturer_followed_offered_price', 8, 2)->nullable(); // required
-            $table->decimal('manufacturer_offered_price_in_usd', 8, 2)->nullable(); // auto
             $table->decimal('our_first_offered_price', 8, 2)->nullable(); // required
             $table->decimal('our_followed_offered_price', 8, 2)->nullable(); // required
 

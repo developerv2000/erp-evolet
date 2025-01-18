@@ -60,24 +60,20 @@ class Currency extends Model
     }
 
     /**
-     * Convert the given price from the specified currency to USD.
+     * Convert a given price from the specified currency to USD.
      *
-     * @param float $price The price to convert.
-     * @param string $currencyName The name of the currency to convert from.
+     * @param float $price The price to be converted.
+     * @param Currency|null $currency The currency to convert from. If null, the original price is returned.
      * @return float The converted price in USD.
      */
-    public static function convertPriceToUSD(float $price, string $currencyName): float
+    public static function convertPriceToUSD(float $price, ?Currency $currency): float
     {
-        // Retrieve the currency information from the database
-        $currency = self::where('name', $currencyName)->first();
-
-        // If the currency is found, calculate the converted price
-        if ($currency) {
-            $converted = $price * $currency->usd_ratio;
-            return $converted;
-        } else {
-            // If the currency is not found, return the original price
-            return $price;
+        // If a valid currency is provided, perform the conversion using its USD ratio.
+        if ($currency && $currency->usd_ratio > 0) {
+            return $price * $currency->usd_ratio;
         }
+
+        // If no currency is provided or USD ratio is invalid, return the original price.
+        return $price;
     }
 }
