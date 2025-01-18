@@ -39,6 +39,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::post('/get-create-form-stage-inputs', 'getCreateFormStageInputs');
         Route::post('/get-create-form-forecast-inputs', 'getCreateFormForecastInputs');
         Route::post('/get-edit-form-stage-inputs', 'getEditFormStageInputs');
+        Route::post('/get-duplicate-form-stage-inputs', 'getDuplicateFormStageInputs');
     });
 
     Route::prefix('processes/{process}/status-history')

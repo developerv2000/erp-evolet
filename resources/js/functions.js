@@ -12,13 +12,19 @@ import { hideSpinner, showModal, showSpinner } from "../custom-components/script
 |--------------------------------------------------------------------------
 */
 
+// Global
 const TOGGLE_LEFTBAR_PATCH_URL = '/settings/collapsed-leftbar';
+
+// IVP
 const GET_PRODUCTS_SIMILAR_RECORDS_POST_URL = '/products/get-similar-records'
+
+// VPS
 const UPDATE_PROCESSES_CONTRACTED_VALUE_POST_URL = '/processes/update-contracted-value';
 const UPDATE_PROCESSES_REGISTERED_VALUE_POST_URL = '/processes/update-registered-value';
 const GET_PROCESS_CREATE_STAGE_INPUTS_POST_URL = '/processes/get-create-form-stage-inputs';
 const GET_PROCESS_CREATE_FORECAST_INPUTS_POST_URL = '/processes/get-create-form-forecast-inputs';
 const GET_PROCESS_EDIT_STAGE_INPUTS_POST_URL = '/processes/get-edit-form-stage-inputs';
+const GET_PROCESS_DUPLICATE_STAGE_INPUTS_POST_URL = '/processes/get-duplicate-form-stage-inputs';
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +36,10 @@ const leftbar = document.querySelector('.leftbar');
 const targetDeleteModal = document.querySelector('.target-delete-modal');
 const targetRestoreModal = document.querySelector('.target-restore-modal');
 const similarRecordsWrapper = document.querySelector('.similar-records-wrapper');
+
+// VPS
+const processesForecastInputsWrapper = document.querySelector('.processes-create__forecast-inputs-wrapper');
+const processesStageInputsWrapper = document.querySelector('.processes-stage-inputs-wrapper');
 
 /*
 |--------------------------------------------------------------------------
@@ -332,8 +342,7 @@ export function updateProcessCreateStageInputs(status_id) {
     })
         .then(response => {
             // Replace old inputs with the new ones received from the server
-            const inputsWrapper = document.querySelector('.processes-create__stage-inputs-wrapper')
-            inputsWrapper.innerHTML = response.data;
+            processesStageInputsWrapper.innerHTML = response.data;
 
             // Initialize new unselectized selects
             initializeUnselectizedSelects();
@@ -372,8 +381,7 @@ export function updateProcessCreateForecastInputs(country_ids) {
     })
         .then(response => {
             // Replace old inputs with the new ones received from the server
-            const inputsWrapper = document.querySelector('.processes-create__forecast-inputs-wrapper')
-            inputsWrapper.innerHTML = response.data;
+            processesForecastInputsWrapper.innerHTML = response.data;
         })
         .finally(function () {
             hideSpinner();
@@ -397,8 +405,34 @@ export function updateProcessEditStageInputs(status_id) {
     })
         .then(response => {
             // Replace old inputs with the new ones received from the server
-            const inputsWrapper = document.querySelector('.processes-edit__stage-inputs-wrapper')
-            inputsWrapper.innerHTML = response.data;
+            processesStageInputsWrapper.innerHTML = response.data;
+
+            // Initialize new unselectized selects
+            initializeUnselectizedSelects();
+        })
+        .finally(function () {
+            hideSpinner();
+        });
+}
+
+export function updateProcessDuplicateStageInputs(status_id) {
+    showSpinner();
+
+    // Prepare data to be sent in the AJAX request
+    const data = {
+        'process_id': document.querySelector('input[name="process_id"]').value,
+        'status_id': status_id,
+    }
+
+    // Send a POST request to the server to get updated stage inputs
+    axios.post(GET_PROCESS_DUPLICATE_STAGE_INPUTS_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            // Replace old inputs with the new ones received from the server
+            processesStageInputsWrapper.innerHTML = response.data;
 
             // Initialize new unselectized selects
             initializeUnselectizedSelects();

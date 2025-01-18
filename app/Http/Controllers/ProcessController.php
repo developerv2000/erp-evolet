@@ -66,9 +66,10 @@ class ProcessController extends Controller
 
     public function create(Request $request)
     {
+        $restrictedStatuses = ProcessStatus::getAllRestrictedByPermissions(); // IMPORTANT
         $product = Product::find($request->product_id);
 
-        return view('processes.create', compact('product'));
+        return view('processes.create', compact('product', 'restrictedStatuses'));
     }
 
     /**
@@ -117,9 +118,12 @@ class ProcessController extends Controller
     public function edit(Request $request, $record)
     {
         $record = Process::withTrashed()->findOrFail($record);
+        $record->ensureAuthUserHasAccessToProcess($request);
         $product = $record->product;
 
-        return view('processes.edit', compact('record', 'product'));
+        $restrictedStatuses = ProcessStatus::getAllRestrictedByPermissions(); // IMPORTANT
+
+        return view('processes.edit', compact('record', 'product', 'restrictedStatuses'));
     }
 
     /**
@@ -149,6 +153,43 @@ class ProcessController extends Controller
         $record->updateFromRequest($request);
 
         return redirect($request->input('previous_url'));
+    }
+
+    public function duplication(Request $request, Process $record)
+    {
+        $record->ensureAuthUserHasAccessToProcess($request);
+        $product = $record->product;
+
+        $restrictedStatuses = ProcessStatus::getAllRestrictedByPermissions(); // IMPORTANT
+
+        return view('processes.duplicate', compact('record', 'product', 'restrictedStatuses'));
+    }
+
+    /**
+     * Return required stage inputs, for each stage,
+     * on status select change.
+     *
+     * Ajax request on processes.duplicate.
+     */
+    public function getDuplicateFormStageInputs(Request $request)
+    {
+        $record = Process::find($request->process_id);
+        $product = $record->product;
+
+        $status = ProcessStatus::find($request->status_id);
+        $stage = $status->generalStatus->stage;
+
+        return view('processes.partials.duplicate-form-stage-inputs', compact('record', 'product', 'stage'));
+    }
+
+    /**
+     * Create new updated record from the specified record.
+     */
+    public function duplicate(Request $request)
+    {
+        Process::duplicateFromRequest($request);
+
+        return redirect()->route('processes.index');
     }
 
     public function exportAsExcel(Request $request)

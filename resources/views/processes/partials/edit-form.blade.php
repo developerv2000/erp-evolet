@@ -16,7 +16,7 @@
                     labelText="Product status"
                     field="status_id"
                     :model="$record"
-                    :options="$statuses"
+                    :options="$restrictedStatuses"
                     :isRequired="true" />
             @else
                 <x-form.inputs.default-input
@@ -52,8 +52,8 @@
         </div>
     </div>
 
-    {{-- Stage inputs wrapper  --}}
-    <div class="processes-edit__stage-inputs-wrapper">@include('processes.partials.edit-form-stage-inputs', ['stage' => $record->status->generalStatus->stage])</div>
+    {{-- Stage inputs wrapper. Same class for create/edit/duplicate  --}}
+    <div class="processes-stage-inputs-wrapper">@include('processes.partials.edit-form-stage-inputs', ['stage' => $record->status->generalStatus->stage])</div>
 
     <div class="form__block">
         <x-form.misc.comment-inputs-on-model-edit :record="$record" />

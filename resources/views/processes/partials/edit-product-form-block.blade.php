@@ -13,15 +13,13 @@
             class="specific-formatable-input"
             labelText="Dosage"
             field="dosage"
-            :model="$product"
-            isRequired="{{ $product->dosage ? true : false }}" />
+            :model="$product" />
 
         <x-form.inputs.record-field-input
             class="specific-formatable-input"
             labelText="Pack"
             field="pack"
-            :model="$product"
-            isRequired="{{ $product->pack ? true : false }}" />
+            :model="$product" />
     </div>
 
     <div class="form__row">

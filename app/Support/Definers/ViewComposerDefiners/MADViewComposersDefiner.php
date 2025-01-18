@@ -77,8 +77,8 @@ class MADViewComposersDefiner
         self::defineViewComposer([
             'processes.partials.create-form',
             'processes.partials.edit-form',
+            'processes.partials.duplicate-form',
         ], [
-            'statuses' => ProcessStatus::getAllRestrictedByPermissions(), // IMPORTANT
             'countriesOrderedByUsageCount' => Country::orderByUsageCount()->get(),
             'responsiblePeople' => ProcessResponsiblePerson::orderByName()->get(),
         ]);
@@ -92,6 +92,7 @@ class MADViewComposersDefiner
         self::defineViewComposer([
             'processes.partials.create-form-stage-inputs',
             'processes.partials.edit-form-stage-inputs',
+            'processes.partials.duplicate-form-stage-inputs',
         ], [
             'countriesOrderedByName' => Country::orderByName()->get(),
             'currencies' => Currency::orderByName()->get(),

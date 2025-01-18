@@ -1,4 +1,5 @@
-<x-form-templates.create-template class="processes-create-form" :action="route('processes.store')">
+<x-form-templates.edit-template class="processes-duplicate-form" :action="route('processes.duplicate')" method="POST" submitText="Diplicate">
+    <input type="hidden" name="process_id" value="{{ $record->id }}">
     <input type="hidden" name="product_id" value="{{ $product->id }}">
 
     {{-- Edit product block --}}
@@ -9,34 +10,34 @@
         <h3 class="main-title main-title--marginless">{{ __('Main') }}</h3>
 
         <div class="form__row">
-            <x-form.selects.selectize.id-based-single-select.default-select
+            <x-form.selects.selectize.id-based-single-select.record-field-select
                 labelText="Product status"
-                inputName="status_id"
+                field="status_id"
+                :model="$record"
                 :options="$restrictedStatuses"
                 :isRequired="true" />
 
-            <x-form.selects.selectize.id-based-multiple-select.default-select
+            <x-form.selects.selectize.id-based-single-select.record-field-select
                 labelText="Search country"
-                inputName="country_ids[]"
+                field="country_id"
+                :model="$record"
                 :options="$countriesOrderedByUsageCount"
                 optionCaptionField="code"
                 :isRequired="true" />
 
-            <x-form.selects.selectize.id-based-multiple-select.default-select
+            <x-form.selects.selectize.id-based-multiple-select.record-relation-select
                 labelText="Responsible"
                 inputName="responsiblePeople[]"
+                :model="$record"
                 :options="$responsiblePeople"
                 :isRequired="true" />
         </div>
     </div>
 
-    {{-- Forecast inputs wrapper hidden initially  --}}
-    <div class="processes-create__forecast-inputs-wrapper">@include('processes.partials.create-form-forecast-inputs', ['stage' => 1, 'selectedCountryCodes' => []])</div>
-
     {{-- Stage inputs wrapper. Same class for create/edit/duplicate  --}}
-    <div class="processes-stage-inputs-wrapper">@include('processes.partials.create-form-stage-inputs', ['stage' => 1])</div>
+    <div class="processes-stage-inputs-wrapper">@include('processes.partials.duplicate-form-stage-inputs', ['stage' => $record->status->generalStatus->stage])</div>
 
     <div class="form__block">
         <x-form.misc.comment-inputs-on-model-create />
     </div>
-</x-form-templates.create-template>
+</x-form-templates.edit-template>

@@ -152,30 +152,6 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     }
 
     /**
-     * Get the manufacturer's offered price in USD.
-     *
-     * This accessor calculates the manufacturer's offered price in USD by
-     * considering the followed offered price if available; otherwise,
-     * it defaults to the first offered price. If a price exists, it
-     * converts the value to USD using the associated currency.
-     *
-     * @return float|null The manufacturer's offered price in USD, or null if no price is available.
-     */
-    public function getManufacturerOfferedPriceInUsdAttribute()
-    {
-        $currencyName = $this->currency?->name;
-
-        // Determine the manufacturer's final offered price:
-        // Use the followed price if it exists; otherwise, use the first price.
-        $finalPrice = $this->manufacturer_followed_offered_price
-            ?: $this->manufacturer_first_offered_price;
-
-        return $finalPrice
-            ? Currency::convertPriceToUSD($finalPrice, $currencyName)
-            : null;
-    }
-
-    /**
      * Get the percentage increase of the price.
      *
      * @return float|null The percentage increase, rounded to two decimal places, or null if calculation is not possible.
@@ -228,6 +204,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             $record->trademark_ru = mb_strtoupper($record->trademark_ru ?: '');
 
             $record->syncRelatedProductUpdates();
+            $record->handleManufacturerOfferedPriceInUSD();
             $record->handleForecastUpdateDate();
             $record->handleIncreasedPriceDate();
             $record->handleResponsiblePeopleUpdateDate();
@@ -793,6 +770,31 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     }
 
     /**
+     * Validate models 'manufacturer_offered_price_in_usd' attribute.
+     *
+     * This method calculates the manufacturer's offered price in USD by
+     * considering the followed offered price if available; otherwise,
+     * it defaults to the first offered price. If a price exists, it
+     * converts the value to USD using the associated currency.
+     *
+     * Used during the saving event of the model.
+     */
+    private function handleManufacturerOfferedPriceInUSD()
+    {
+        $currencyName = $this->currency?->name;
+
+        // Determine the manufacturer's final offered price:
+        // Use the followed price if it exists; otherwise, use the first price.
+        $finalPrice = $this->manufacturer_followed_offered_price
+            ?: $this->manufacturer_first_offered_price;
+
+        $this->manufacturer_offered_price_in_usd =
+            $finalPrice
+            ? Currency::convertPriceToUSD($finalPrice, $currencyName)
+            : null;
+    }
+
+    /**
      * Notify users if status has been updated to contact stage.
      *
      * Used during the updating event of the model.
@@ -815,6 +817,20 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     public function isReadyForASP()
     {
         return $this->status->generalStatus->stage >= 5;
+    }
+
+    /**
+     * Check wether current status of process can be edited by authenticated user or not.
+     *
+     * Used in processes.edit & processes.duplicate pages.
+     */
+    public function ensureAuthUserHasAccessToProcess($request)
+    {
+        $userID = $request->user()->id;
+
+        if ($this->product->manufacturer->analyst_user_id != $userID) {
+            Gate::authorize('edit-MAD-VPS-of-all-analysts');
+        }
     }
 
     /**

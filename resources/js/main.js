@@ -30,22 +30,24 @@ const fullscreenButtons = document.querySelectorAll('[data-click-action="request
 const targetDeleteModalButtons = document.querySelectorAll('[data-click-action="show-target-delete-modal"]');
 const targetRestoreModalButtons = document.querySelectorAll('[data-click-action="show-target-restore-modal"]');
 
-// Forms
+// Global forms
 const filterForm = document.querySelector('.filter-form');
 const appendsInputsBeforeSubmitForms = document.querySelectorAll('[data-before-submit="appends-inputs"]');
 const showsSpinnerOnSubmitForms = document.querySelectorAll('[data-on-submit="show-spinner"]');
 const exportAsExcelForm = document.querySelector('.export-as-excel-form');
-const productsCreateForm = document.querySelector('.products-create-form');
 const editTableColumnsForm = document.querySelector('.edit-table-columns-form');
+const productsCreateForm = document.querySelector('.products-create-form');
 
+// VPS forms
 const processesCreateForm = document.querySelector('.processes-create-form');
 const processesEditForm = document.querySelector('.processes-edit-form');
+const processesDuplicateForm = document.querySelector('.processes-duplicate-form');
 
-// Inputs
+// Global inputs
 const specificFormatableInputs = document.querySelectorAll('.specific-formatable-input');
 const imageInputsWithPreview = document.querySelectorAll('.image-input-group-with-preview__input');
 
-// Checkboxes
+// VPS checkboxes
 const toggleProcessContractedValueChbs = document.querySelectorAll('[data-on-toggle="toggle-process-contracted-boolean"]');
 const toggleProcessRegisteredValueChbs = document.querySelectorAll('[data-on-toggle="toggle-process-registered-boolean"]');
 
@@ -181,12 +183,28 @@ function initializeProcessesEditForm() {
     statusSelect.selectize.on('change', (value) => functions.updateProcessEditStageInputs(value));
 }
 
+function initializeProcessesDuplicateForm() {
+    if (!processesDuplicateForm) {
+        return;
+    }
+
+    // Select the status dropdown and attach event listener
+    const statusSelect = processesDuplicateForm.querySelector('select[name="status_id"]');
+    statusSelect.selectize.on('change', (value) => functions.updateProcessDuplicateStageInputs(value));
+}
+
 init();
 
 function init() {
     functions.moveFilterActiveInputsToTop(filterForm);
+    // Global
     initializeEditTableColumnsForm();
+
+    // IVP
     initializeProductsCreateForm();
+
+    // VPS
     initializeProcessesCreateForm();
     initializeProcessesEditForm();
+    initializeProcessesDuplicateForm();
 }
