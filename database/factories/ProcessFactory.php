@@ -28,9 +28,9 @@ class ProcessFactory extends Factory
 
     public function configure()
     {
-        return $this->afterCreating(function ($process) {
-            $process->responsiblePeople()->attach(rand(1, 10));
-            $process->responsiblePeople()->attach(rand(11, 20));
+        return $this->afterCreating(function ($record) {
+            $record->responsiblePeople()->attach(rand(1, 10));
+            $record->responsiblePeople()->attach(rand(11, 20));
         });
     }
 }

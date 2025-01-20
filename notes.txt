@@ -13,7 +13,7 @@ MAD:
             is_important => important
 
         user_responsible_country_code => responsible_country_user
-            country_code_id => country_id => Must be fixed!!!
+            country_code_id => country_id => All ids must be fixed!!!
 
         products:
             MOQ => string replaced with INT. Must fix all existed MOQs. Remove non-numeric symbols and trim
@@ -31,6 +31,16 @@ MAD:
 
             contracted_in_plan => contracted
             registered_in_plan => registered
+
+        kvpp_statuses => product_search_statuses
+        kvpp_priorities => product_search_priorities
+
+        kvpps => product_searches:
+            country_code_id => country_id. All ids must be fixed!!!
+
+        country_code_kvpp => additional_search_country_product_search:
+            country_code_id => country_id. All ids must be fixed!!!
+            kvpp_id => product_search_id
 
 
 --------------------------- Not done yet (what left) ------------------------------

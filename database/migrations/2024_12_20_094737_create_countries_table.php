@@ -45,6 +45,20 @@ return new class extends Migration
 
             $table->primary(['country_id', 'user_id']);
         });
+
+        Schema::create('additional_search_country_product_search', function (Blueprint $table) {
+            $table->unsignedInteger('country_id')
+                ->foreign()
+                ->references('id')
+                ->on('countries');
+
+            $table->unsignedSmallInteger('product_search_id')
+                ->foreign()
+                ->references('id')
+                ->on('product_searches');
+
+            $table->primary(['country_id', 'product_search_id']);
+        });
     }
 
     /**

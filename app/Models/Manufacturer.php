@@ -321,7 +321,23 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
         }
     }
 
-    public static function applyProcessCountriesFilter($query, $request) {}
+    /**
+     * Apply filters to the query based on the country ID of related processes.
+     *
+     * This filter method returns records, which have related processes for selected countries.
+     */
+    public static function applyProcessCountriesFilter($query, $request)
+    {
+        $relationInAmbiguous = [
+            [
+                'name' => 'processes',
+                'attribute' => 'process_country_id',
+                'ambiguousAttribute' => 'processes.country_id',
+            ]
+        ];
+
+        QueryFilterHelper::filterRelationInAmbiguous($request, $query, $relationInAmbiguous);
+    }
 
     private static function getFilterConfig(): array
     {

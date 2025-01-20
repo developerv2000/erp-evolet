@@ -40,23 +40,23 @@ class ManufacturerFactory extends Factory
 
     public function configure(): static
     {
-        return $this->afterCreating(function ($manufacturer) {
-            $manufacturer->presences()->saveMany([
+        return $this->afterCreating(function ($record) {
+            $record->presences()->saveMany([
                 new ManufacturerPresence(['name' => fake()->country()]),
                 new ManufacturerPresence(['name' => fake()->country()]),
             ]);
 
             Lottery::odds(1, 2)
-                ->winner(function () use ($manufacturer) {
-                    $manufacturer->blacklists()->attach(rand(1, ManufacturerBlacklist::count()));
+                ->winner(function () use ($record) {
+                    $record->blacklists()->attach(rand(1, ManufacturerBlacklist::count()));
                 })
                 ->choose();
 
-            $manufacturer->zones()->attach(rand(1, Zone::count()));
-            $manufacturer->productClasses()->attach(rand(1, 2));
-            $manufacturer->productClasses()->attach(rand(3, 4));
+            $record->zones()->attach(rand(1, Zone::count()));
+            $record->productClasses()->attach(rand(1, 2));
+            $record->productClasses()->attach(rand(3, 4));
 
-            $manufacturer->comments()->saveMany([
+            $record->comments()->saveMany([
                 new Comment([
                     'body' => '<p>' . fake()->sentences(2, true) . '</p>',
                     'user_id' => User::onlyMADAnalysts()->inRandomOrder()->first()->id,

@@ -45,10 +45,10 @@ class ProductFactory extends Factory
 
     public function configure()
     {
-        return $this->afterCreating(function ($generic) {
-            $generic->zones()->attach(rand(1, Zone::count()));
+        return $this->afterCreating(function ($record) {
+            $record->zones()->attach(rand(1, Zone::count()));
 
-            $generic->comments()->saveMany([
+            $record->comments()->saveMany([
                 new Comment([
                     'body' => '<p>' . fake()->sentences(2, true) . '</p>',
                     'user_id' => User::onlyMADAnalysts()->inRandomOrder()->first()->id,

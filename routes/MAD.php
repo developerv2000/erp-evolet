@@ -53,7 +53,9 @@ Route::middleware('auth', 'auth.session')->group(function () {
     // KVPP
     Route::prefix('product-searches')->controller(ProductSearchController::class)->name('product-searches.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-MAD-KVPP', 'can:edit-MAD-KVPP');
+        
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
+        Route::post('/get-similar-records', 'getSimilarRecordsForRequest');  // AJAX request on create form for uniqness
     });
 
     // Meetings
