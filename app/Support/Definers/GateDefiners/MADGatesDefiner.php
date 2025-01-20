@@ -79,8 +79,8 @@ class MADGatesDefiner
         });
 
         // Other permissions
-        Gate::define('view-MAD-KVPP-coincident-processes', function ($user) {
-            return $user->hasPermission('can view MAD KVPP coincident processes');
+        Gate::define('view-MAD-KVPP-matching-processes', function ($user) {
+            return $user->hasPermission('can view MAD KVPP matching processes');
         });
 
         Gate::define('view-MAD-extended-KPI-version', function ($user) {

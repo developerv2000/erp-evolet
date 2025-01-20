@@ -135,8 +135,12 @@
         {{ $record->updated_at->isoformat('DD MMM Y') }}
     @break
 
-    @case('Matched KVPPs')
-        Matched KVPPs
+    @case('Matched KVPP')
+        @foreach ($record->matched_product_searches as $productSearch)
+            <a class="main-link" href="{{ route('product-searches.index', ['id[]' => $productSearch->id]) }}">
+                # {{ $productSearch->id }} {{ $productSearch->country->code }}
+            </a><br>
+        @endforeach
     @break
 
     @case('ID')

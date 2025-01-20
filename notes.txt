@@ -44,17 +44,11 @@ MAD:
 
 
 --------------------------- Not done yet (what left) ------------------------------
+Products selection export
+
 Country:
     recalculateUsageCount() => Requires KVPP + VPS
 
 Manufacturers:
-    filterQueryByProcessCountries() => Requires VPS
     tbody Meetings
     EVENTS => Requires Meetings
-
-Product:
-    Matched KVPPs
-
-Process:
-    getCoincidentKvppsAttribute() => Requires KVPP
-

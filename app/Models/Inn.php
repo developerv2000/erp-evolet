@@ -28,4 +28,9 @@ class Inn extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function productSearches()
+    {
+        return $this->hasMany(ProductSearch::class);
+    }
 }

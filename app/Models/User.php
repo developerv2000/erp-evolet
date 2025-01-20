@@ -99,6 +99,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Country::class, 'responsible_country_user');
     }
 
+    public function productSearches()
+    {
+        return $this->hasMany(ProductSearch::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes
@@ -315,6 +320,7 @@ class User extends Authenticatable
         $settings[Manufacturer::SETTINGS_MAD_TABLE_COLUMNS_KEY] = Manufacturer::getDefaultMADTableColumnsForUser($this);
         $settings[Product::SETTINGS_MAD_TABLE_COLUMNS_KEY] = Product::getDefaultMADTableColumnsForUser($this);
         $settings[Process::SETTINGS_MAD_TABLE_COLUMNS_KEY] = Process::getDefaultMADTableColumnsForUser($this);
+        $settings[ProductSearch::SETTINGS_MAD_TABLE_COLUMNS_KEY] = ProductSearch::getDefaultMADTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();

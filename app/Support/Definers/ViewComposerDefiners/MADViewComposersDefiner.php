@@ -9,12 +9,15 @@ use App\Models\Manufacturer;
 use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
 use App\Models\MarketingAuthorizationHolder;
+use App\Models\PortfolioManager;
 use App\Models\ProcessGeneralStatus;
 use App\Models\ProcessResponsiblePerson;
 use App\Models\ProcessStatus;
 use App\Models\Product;
 use App\Models\ProductClass;
 use App\Models\ProductForm;
+use App\Models\ProductSearchPriority;
+use App\Models\ProductSearchStatus;
 use App\Models\ProductShelfLife;
 use App\Models\User;
 use App\Models\Zone;
@@ -30,6 +33,7 @@ class MADViewComposersDefiner
         self::defineManufacturerComposers();
         self::defineProductComposers();
         self::defineProcessComposers();
+        self::defineProductSearchComposers();
     }
 
     /*
@@ -119,6 +123,20 @@ class MADViewComposersDefiner
         ]);
     }
 
+    private static function defineProductSearchComposers()
+    {
+        $defaultShareData = self::getDefaultProductSearchesShareData();
+
+        self::defineViewComposer('product-searches.partials.create-form', array_merge($defaultShareData, [
+        ]));
+
+        self::defineViewComposer('product-searches.partials.edit-form', $defaultShareData);
+
+        self::defineViewComposer('product-searches.partials.filter', array_merge($defaultShareData, [
+
+        ]));
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Default shared datas
@@ -155,6 +173,21 @@ class MADViewComposersDefiner
             'countriesOrderedByName' => Country::orderByName()->get(),
             'manufacturerCategories' => ManufacturerCategory::orderByName()->get(),
             'booleanOptions' => GeneralHelper::getBooleanOptionsArray(),
+        ];
+    }
+
+    private static function getDefaultProductSearchesShareData()
+    {
+        return [
+            'countriesOrderedByUsageCount' => Country::orderByUsageCount()->get(),
+            'booleanOptions' => GeneralHelper::getBooleanOptionsArray(),
+            'statuses' => ProductSearchStatus::orderByName()->get(),
+            'priorities' => ProductSearchPriority::orderByName()->get(),
+            'inns' => Inn::orderByName()->get(),
+            'productForms' => ProductForm::getMinifiedRecordsWithName(),
+            'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
+            'portfolioManagers' => PortfolioManager::orderByName()->get(),
+            'analystUsers' => User::getMADAnalystsMinified(),
         ];
     }
 }

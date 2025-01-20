@@ -28,4 +28,15 @@ class ProductSearchStatus extends Model
     {
         return $this->hasMany(ProductSearch::class, 'status_id');
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Misc
+    |--------------------------------------------------------------------------
+    */
+
+    public function getDefaultSelectedIDValue()
+    {
+        return self::where('name', 'B')->value('id');
+    }
 }

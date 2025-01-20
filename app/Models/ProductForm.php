@@ -41,6 +41,11 @@ class ProductForm extends Model
         return $this->hasMany(Product::class, 'form_id');
     }
 
+    public function productSearches()
+    {
+        return $this->hasMany(ProductSearch::class, 'form_id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes

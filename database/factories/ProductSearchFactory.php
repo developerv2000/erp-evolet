@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Comment;
 use App\Models\Country;
 use App\Models\Inn;
 use App\Models\MarketingAuthorizationHolder;

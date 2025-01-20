@@ -29,4 +29,8 @@ class MarketingAuthorizationHolder extends Model
         return $this->hasMany(Process::class);
     }
 
+    public function productSearches()
+    {
+        return $this->hasMany(ProductSearch::class);
+    }
 }

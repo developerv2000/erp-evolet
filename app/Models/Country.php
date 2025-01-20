@@ -44,6 +44,16 @@ class Country extends Model implements UsageCountable
         return $this->belongsToMany(Process::class, 'clinical_trial_country_process');
     }
 
+    public function productSearches()
+    {
+        return $this->hasMany(ProductSearch::class);
+    }
+
+    public function additionalProductSearches()
+    {
+        return $this->belongsToMany(ProductSearch::class, 'additional_search_country_product_search');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Queries

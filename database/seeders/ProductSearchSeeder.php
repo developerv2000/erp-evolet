@@ -1,4 +1,4 @@
-Kvpp::factory()->count(10)->create();<?php
+<?php
 
 namespace Database\Seeders;
 

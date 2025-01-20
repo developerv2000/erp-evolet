@@ -28,4 +28,15 @@ class ProductSearchPriority extends Model
     {
         return $this->hasMany(ProductSearch::class, 'priority_id');
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Misc
+    |--------------------------------------------------------------------------
+    */
+
+    public function getDefaultSelectedIDValue()
+    {
+        return self::where('name', 'Поиск')->value('id');
+    }
 }

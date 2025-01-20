@@ -4,6 +4,7 @@ use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProcessStatusHistoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductSearchController;
 use App\Support\Generators\CRUDRouteGenerator;
 use Illuminate\Support\Facades\Route;
 
@@ -53,7 +54,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     // KVPP
     Route::prefix('product-searches')->controller(ProductSearchController::class)->name('product-searches.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-MAD-KVPP', 'can:edit-MAD-KVPP');
-        
+
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
         Route::post('/get-similar-records', 'getSimilarRecordsForRequest');  // AJAX request on create form for uniqness
     });

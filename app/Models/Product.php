@@ -33,7 +33,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     const DEFAULT_ORDER_BY = 'updated_at';
     const DEFAULT_ORDER_TYPE = 'desc';
-    const DEFAULT_PAGINATION_LIMIT = 40;
+    const DEFAULT_PAGINATION_LIMIT = 50;
 
     const LIMITED_EXCEL_RECORDS_COUNT_FOR_EXPORT = 15;
     const STORAGE_PATH_OF_EXCEL_TEMPLATE_FILE_FOR_EXPORT = 'app/excel/export-templates/ivp.xlsx';
@@ -103,6 +103,19 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             'dosage' => $this->dosage,
             'pack' => $this->pack,
         ]);
+    }
+
+    public function getMatchedProductSearchesAttribute()
+    {
+        return ProductSearch::where([
+            'inn_id' => $this->inn_id,
+            'form_id' => $this->form_id,
+            'dosage' => $this->dosage,
+            'pack' => $this->pack,
+        ])
+            ->select('id', 'country_id')
+            ->withOnly('country')
+            ->get();
     }
 
     /*
@@ -430,7 +443,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Matched KVPPs', 'order' => $order++, 'width' => 146, 'visible' => 1],
+            ['name' => 'Matched KVPP', 'order' => $order++, 'width' => 146, 'visible' => 1],
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Attachments', 'order' => $order++, 'width' => 180, 'visible' => 1],
         );

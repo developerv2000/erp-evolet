@@ -34,6 +34,10 @@ class DatabaseSeeder extends Seeder
             ProcessGeneralStatusSeeder::class,
             ProcessStatusSeeder::class,
             ProcessSeeder::class,
+            ProductSearchStatusSeeder::class,
+            ProductSearchPrioritySeeder::class,
+            PortfolioManagerSeeder::class,
+            ProductSearchSeeder::class,
         ]);
     }
 }
