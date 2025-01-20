@@ -37,6 +37,7 @@ const showsSpinnerOnSubmitForms = document.querySelectorAll('[data-on-submit="sh
 const exportAsExcelForm = document.querySelector('.export-as-excel-form');
 const editTableColumnsForm = document.querySelector('.edit-table-columns-form');
 const productsCreateForm = document.querySelector('.products-create-form');
+const productSearchesCreateForm = document.querySelector('.product-searches-create-form');
 
 // VPS forms
 const processesCreateForm = document.querySelector('.processes-create-form');
@@ -151,7 +152,7 @@ function initializeProductsCreateForm() {
     }
 
     // Select the dropdowns for manufacturer, inn, and form
-    const selects = productsCreateForm.querySelectorAll('select[name="manufacturer_id"], select[name="inn_id"], select[name="form_id')
+    const selects = productsCreateForm.querySelectorAll('select[name="manufacturer_id"], select[name="inn_id"], select[name="form_id');
 
     // Attach change event listeners to all select dropdowns
     for (const select of selects) {
@@ -193,6 +194,31 @@ function initializeProcessesDuplicateForm() {
     statusSelect.selectize.on('change', (value) => functions.updateProcessDuplicateStageInputs(value));
 }
 
+function initializeProductSearchesCreateForm() {
+    if (!productSearchesCreateForm) {
+        return;
+    }
+
+    // Select the dropdowns for country, inn, and form
+    const selects = productSearchesCreateForm.querySelectorAll('select[name="country_id"], select[name="inn_id"], select[name="form_id');
+
+    // Attach change event listeners to all select dropdowns
+    for (const select of selects) {
+        select.selectize.on('change', (value) => functions.displayProductSearchesSimilarRecords());
+    }
+
+    // Select inputs for dosage and pack
+    const inputs = productSearchesCreateForm.querySelectorAll('input[name="dosage"], input[name="pack"]');
+
+    // Attach change event listeners to all inputs
+    for (let input of inputs) {
+        // IMPORTANT: Delay 1000 is used because input values are also formatted via debounce
+        input.addEventListener('input', debounce(() => {
+            functions.displayProductSearchesSimilarRecords();
+        }, 1000));
+    }
+}
+
 init();
 
 function init() {
@@ -207,4 +233,7 @@ function init() {
     initializeProcessesCreateForm();
     initializeProcessesEditForm();
     initializeProcessesDuplicateForm();
+
+    // KVPP
+    initializeProductSearchesCreateForm();
 }

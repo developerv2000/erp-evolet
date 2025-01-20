@@ -347,7 +347,7 @@ class ProductSearch extends BaseModel implements HasTitle, CanExportRecordsAsExc
         // Get the family IDs of the selected form
         $formFamilyIDs = ProductForm::find($request->form_id)->getFamilyIDs();
 
-        // Query similar records based on manufacturer, inn, and form family IDs
+        // Query similar records based on country, inn, form family IDs, dosage and pack
         $similarRecords = self::withTrashed()
             ->where([
                 'inn_id' => $request->inn_id,
@@ -396,8 +396,8 @@ class ProductSearch extends BaseModel implements HasTitle, CanExportRecordsAsExc
             ['name' => 'Source EU', 'order' => $order++, 'width' => 118, 'visible' => 1],
             ['name' => 'Source IN', 'order' => $order++, 'width' => 118, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
-            ['name' => 'Portfolio manager', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Country', 'order' => $order++, 'width' => 86, 'visible' => 1],
+            ['name' => 'Portfolio manager', 'order' => $order++, 'width' => 104, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 80, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 92, 'visible' => 1],
             ['name' => 'Priority', 'order' => $order++, 'width' => 106, 'visible' => 1],
         );
@@ -419,7 +419,7 @@ class ProductSearch extends BaseModel implements HasTitle, CanExportRecordsAsExc
             ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
             ['name' => 'Additional search info', 'order' => $order++, 'width' => 160, 'visible' => 1],
-            ['name' => 'Additional search countries', 'order' => $order++, 'width' => 192, 'visible' => 1],
+            ['name' => 'Additional search countries', 'order' => $order++, 'width' => 158, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
@@ -427,7 +427,7 @@ class ProductSearch extends BaseModel implements HasTitle, CanExportRecordsAsExc
             ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 168, 'visible' => 1],
         );
 
         return $columns;

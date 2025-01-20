@@ -128,13 +128,14 @@ class MADViewComposersDefiner
         $defaultShareData = self::getDefaultProductSearchesShareData();
 
         self::defineViewComposer('product-searches.partials.create-form', array_merge($defaultShareData, [
+            'defaultSelectedStatusID' => ProductSearchStatus::getDefaultSelectedIDValue(),
+            'defaultSelectedPriorityID' => ProductSearchPriority::getDefaultSelectedIDValue(),
         ]));
 
-        self::defineViewComposer('product-searches.partials.edit-form', $defaultShareData);
-
-        self::defineViewComposer('product-searches.partials.filter', array_merge($defaultShareData, [
-
-        ]));
+        self::defineViewComposer([
+            'product-searches.partials.edit-form',
+            'product-searches.partials.filter'
+        ], $defaultShareData);
     }
 
     /*

@@ -35,8 +35,8 @@ class ProductSearchPriority extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function getDefaultSelectedIDValue()
+    public static function getDefaultSelectedIDValue()
     {
-        return self::where('name', 'Поиск')->value('id');
+        return self::where('name', 'B')->value('id');
     }
 }

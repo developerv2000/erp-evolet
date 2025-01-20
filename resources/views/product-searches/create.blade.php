@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => __('Create new') . ' — ' . __('IVP'),
-    'pageName' => 'products-create',
+    'pageTitle' => __('Create new') . ' — ' . __('KVPP'),
+    'pageName' => 'product-searches-create',
     'mainAutoOverflowed' => false,
 ])
 
@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('products.index'), 'text' => __('IVP')],
+                    ['link' => route('product-searches.index'), 'text' => __('KVPP')],
                     ['link' => null, 'text' => __('Create new record')]
                 ];
             @endphp
@@ -32,7 +32,7 @@
         </div>
 
         {{-- Create form --}}
-        @include('products.partials.create-form')
+        @include('product-searches.partials.create-form')
     </div>
 
 @endsection

@@ -1,10 +1,11 @@
-<x-form-templates.create-template class="products-create-form" :action="route('products.store')">
+<x-form-templates.create-template class="product-searches-create-form" :action="route('products.store')">
     <div class="form__block">
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.default-select
-                labelText="Manufacturer"
-                inputName="manufacturer_id"
-                :options="$manufacturers"
+                labelText="Country"
+                inputName="country_id"
+                :options="$countriesOrderedByUsageCount"
+                optionCaptionField="code"
                 :isRequired="true" />
 
             <x-form.selects.selectize.id-based-single-select.default-select
@@ -19,12 +20,7 @@
                 :options="$productForms"
                 :isRequired="true" />
         </div>
-    </div>
 
-    {{-- Container used to hold similar products, after AJAX request --}}
-    <div class="form__block similar-records-wrapper"></div>
-
-    <div class="form__block">
         <div class="form__row">
             <x-form.inputs.default-input
                 class="specific-formatable-input"
@@ -36,61 +32,61 @@
                 labelText="Pack"
                 inputName="pack" />
 
-            <x-form.inputs.default-input
-                labelText="Brand"
-                inputName="brand" />
-        </div>
-
-        <div class="form__row">
-            <x-form.selects.selectize.id-based-single-select.default-select
-                labelText="Product class"
-                inputName="class_id"
-                :options="$productClasses"
-                :initialValue="$defaultSelectedClassID"
-                :isRequired="true" />
-
-            <x-form.inputs.default-input
-                labelText="MOQ"
-                inputName="moq"
-                type="number"
-                min="1" />
-
-            <x-form.selects.selectize.id-based-single-select.default-select
-                labelText="Shelf life"
-                inputName="shelf_life_id"
-                :options="$shelfLifes"
-                :isRequired="true" />
+            <div class="form-group"></div>
         </div>
     </div>
 
+    {{-- Container used to hold similar products, after AJAX request --}}
+    <div class="form__block similar-records-wrapper"></div>
+
     <div class="form__block">
         <div class="form__row">
-            <x-form.inputs.default-input
-                labelText="Dossier"
-                inputName="dossier" />
+            <x-form.selects.selectize.id-based-multiple-select.default-select
+                labelText="MAH"
+                inputName="marketing_authorization_holder_ids[]"
+                :options="$MAHs"
+                :isRequired="true" />
+
+            <x-form.selects.selectize.id-based-single-select.default-select
+                labelText="Status"
+                inputName="status_id"
+                :options="$statuses"
+                :initialValue="$defaultSelectedStatusID"
+                :isRequired="true" />
+
+            <x-form.selects.selectize.id-based-single-select.default-select
+                labelText="Priority"
+                inputName="priority_id"
+                :options="$priorities"
+                :initialValue="$defaultSelectedPriorityID"
+                :isRequired="true" />
+        </div>
+
+        <div class="form__row">
+            <x-form.selects.selectize.id-based-single-select.default-select
+                labelText="Portfolio manager"
+                inputName="portfolio_manager_id"
+                :options="$portfolioManagers" />
+
+            <x-form.selects.selectize.id-based-single-select.default-select
+                labelText="Analyst"
+                inputName="analyst_user_id"
+                :options="$analystUsers" />
 
             <x-form.selects.selectize.id-based-multiple-select.default-select
-                labelText="Zones"
-                inputName="zones[]"
-                :options="$zones"
-                :initialValues="$defaultSelectedZoneIDs"
-                :isRequired="true" />
-
-            <x-form.inputs.default-input
-                labelText="Bioequivalence"
-                inputName="bioequivalence" />
+                labelText="Additional search countries"
+                inputName="additionalSearchCountries[]"
+                :options="$countriesOrderedByUsageCount"
+                optionCaptionField="code" />
         </div>
 
         <div class="form__row">
             <x-form.inputs.default-input
-                labelText="Down payment"
-                inputName="down_payment" />
+                labelText="Additional search info"
+                inputName="additional_search_information" />
 
-            <x-form.inputs.default-input
-                labelText="Validity period"
-                inputName="validity_period" />
-
-            <x-form.misc.attach-files-input />
+            <div class="form-group"></div>
+            <div class="form-group"></div>
         </div>
     </div>
 
@@ -98,21 +94,43 @@
         <div class="form__row">
             <x-form.radio-buttons.default-radio-buttons
                 class="radio-group--horizontal"
-                labelText="Registered in EU"
-                inputName="registered_in_eu"
+                labelText="Source EU"
+                inputName="source_eu"
                 :options="$booleanOptions"
-                :initialValue="false"
+                :initialValue="true"
                 :isRequired="true" />
 
             <x-form.radio-buttons.default-radio-buttons
                 class="radio-group--horizontal"
-                labelText="Sold in EU"
-                inputName="sold_in_eu"
+                labelText="Source IN"
+                inputName="source_in"
                 :options="$booleanOptions"
-                :initialValue="false"
+                :initialValue="true"
                 :isRequired="true" />
 
             <div class="form-group"></div>
+        </div>
+    </div>
+
+    <div class="form__block">
+        <div class="form__row">
+            <x-form.inputs.default-input
+                labelText="Forecast 1 year"
+                inputName="forecast_year_1"
+                type="number"
+                min="1" />
+
+            <x-form.inputs.default-input
+                labelText="Forecast 2 year"
+                inputName="forecast_year_2"
+                type="number"
+                min="1" />
+
+            <x-form.inputs.default-input
+                labelText="Forecast 3 year"
+                inputName="forecast_year_3"
+                type="number"
+                min="1" />
         </div>
     </div>
 

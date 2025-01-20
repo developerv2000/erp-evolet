@@ -3,14 +3,17 @@
 
     @if (count($similarRecords))
         <div class="similar-records__list">
-            @foreach ($similarRecords as $product)
+            @foreach ($similarRecords as $record)
                 <div class="similar-records__list-item">
-                    <a class="similar-records__list-link main-link" href="{{ route('products.index', ['id[]' => $product->id]) }}" target="_blank"># {{ $product->id }}</a>
+                    <a class="similar-records__list-link main-link" href="{{ route('product-searches.index', ['id[]' => $record->id]) }}" target="_blank"># {{ $record->id }}</a>
 
                     <div class="similar-records__list-text">
-                        <span>{{ __('Form') }}: {{ $product->form->name }}</span>
-                        <span>{{ __('Dosage') }}: {{ $product->dosage }}</span>
-                        <span>{{ __('Pack') }}: {{ $product->pack }}</span>
+                        <span>{{ __('ID') }}: {{ $record->id }}</span>
+                        <span>{{ __('Form') }}: {{ $record->form->name }}</span>
+                        <span>{{ __('Dosage') }}: {{ $record->dosage }}</span>
+                        <span>{{ __('Pack') }}: {{ $record->pack }}</span>
+                        <span>{{ __('Country') }}: {{ $record->country->code }}</span>
+                        <span>{{ __('MAH') }}: {{ $record->MAH->name }}</span>
                     </div>
                 </div>
             @endforeach

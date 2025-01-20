@@ -26,6 +26,9 @@ const GET_PROCESS_CREATE_FORECAST_INPUTS_POST_URL = '/processes/get-create-form-
 const GET_PROCESS_EDIT_STAGE_INPUTS_POST_URL = '/processes/get-edit-form-stage-inputs';
 const GET_PROCESS_DUPLICATE_STAGE_INPUTS_POST_URL = '/processes/get-duplicate-form-stage-inputs';
 
+// KVPP
+const GET_PRODUCT_SEARCHES_SIMILAR_RECORDS_POST_URL = '/product-searches/get-similar-records'
+
 /*
 |--------------------------------------------------------------------------
 | DOM Elements
@@ -436,6 +439,43 @@ export function updateProcessDuplicateStageInputs(status_id) {
 
             // Initialize new unselectized selects
             initializeUnselectizedSelects();
+        })
+        .finally(function () {
+            hideSpinner();
+        });
+}
+
+export function displayProductSearchesSimilarRecords() {
+    // Get manufacturer, inn, and form ID values
+    const countryID = document.querySelector('select[name="country_id"]').value;
+    const innID = document.querySelector('select[name="inn_id"]').value;
+    const formID = document.querySelector('select[name="form_id"]').value;
+    const dosage = document.querySelector('input[name="dosage"]').value;
+    const pack = document.querySelector('input[name="pack"]').value;
+
+    // Return if any required fields are empty
+    if (countryID == '' || innID == '' || formID == '') {
+        similarRecordsWrapper.innerHTML = '';
+        return;
+    }
+
+    // Prepare data to be sent in the AJAX request
+    const data = {
+        'country_id': countryID,
+        'inn_id': innID,
+        'form_id': formID,
+        'dosage': dosage,
+        'pack': pack,
+    };
+
+    // Send a POST request to the server to get similar records
+    axios.post(GET_PRODUCT_SEARCHES_SIMILAR_RECORDS_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            similarRecordsWrapper.innerHTML = response.data;
         })
         .finally(function () {
             hideSpinner();

@@ -184,5 +184,14 @@
     "days": "дня",
     "About product": "О продукте",
 
+    "Priority": "Приоритет",
+    "Matched VPS": "Совпадение с ВПЦ",
+    "Matched IVP": "Совпадение с ИВП",
+    "Source EU": "Источник EU",
+    "Source IN": "Источник IN",
+    "Additional search info": "Доп инфо для поиска",
+    "Additional search countries": "Доп стран для поиска",
+    "Portfolio manager": "Менеджер",
+
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }
