@@ -17,12 +17,12 @@
         :options="$manufacturers" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="Product status"
+        labelText="Status"
         inputName="status_id[]"
         :options="$statuses" />
 
     <x-form.selects.selectize.multiple-select.request-based-select
-        labelText="Product status An*"
+        labelText="Status An*"
         inputName="name_for_analysts[]"
         :options="$generalStatusNamesForAnalysts" />
 

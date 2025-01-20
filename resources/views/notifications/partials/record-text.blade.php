@@ -5,7 +5,7 @@
             <a class="main-link" href="{{ route('processes.index', ['id[]' => $record->data['process_id']]) }}">
                 #{{ $record->data['process_id'] }}
             </a>
-            {{ __('has been changed to') }} {{ $record->data['status_name'] }}
+            {{ __('has been updated to') }} {{ $record->data['status_name'] }}
         </div>
     @break
 

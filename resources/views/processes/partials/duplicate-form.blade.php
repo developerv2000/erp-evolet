@@ -11,7 +11,7 @@
 
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Product status"
+                labelText="Status"
                 field="status_id"
                 :model="$record"
                 :options="$restrictedStatuses"

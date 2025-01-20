@@ -113,10 +113,10 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     protected static function booted(): void
     {
-        static::deleting(function ($record) { // trash
-            // foreach ($record->processes as $process) {
-            //     $process->delete();
-            // }
+        static::deleting(function ($record) { // trashing
+            foreach ($record->processes as $process) {
+                $process->delete();
+            }
         });
 
         static::restoring(function ($record) {
@@ -124,17 +124,17 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
                 $record->manufacturer->restore();
             }
 
-            // foreach ($record->processes()->onlyTrashed()->get() as $process) {
-            //     $process->restore();
-            // }
+            foreach ($record->processes()->onlyTrashed()->get() as $process) {
+                $process->restore();
+            }
         });
 
         static::forceDeleting(function ($record) {
             $record->zones()->detach();
 
-            // foreach ($record->processes()->withTrashed()->get() as $process) {
-            //     $process->forceDelete();
-            // }
+            foreach ($record->processes()->withTrashed()->get() as $process) {
+                $process->forceDelete();
+            }
         });
     }
 
@@ -414,7 +414,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Pack', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'MOQ', 'order' => $order++, 'width' => 158, 'visible' => 1],
             ['name' => 'Shelf life', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            ['name' => 'Product class', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Product class', 'order' => $order++, 'width' => 96, 'visible' => 1],
             ['name' => 'Dossier', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
             ['name' => 'Brand', 'order' => $order++, 'width' => 150, 'visible' => 1],

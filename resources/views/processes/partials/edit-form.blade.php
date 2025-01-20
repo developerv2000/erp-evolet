@@ -13,14 +13,14 @@
             {{-- Check if user is able to edit status --}}
             @if ($record->currentStatusCanBeEditedForAuthtUser())
                 <x-form.selects.selectize.id-based-single-select.record-field-select
-                    labelText="Product status"
+                    labelText="Status"
                     field="status_id"
                     :model="$record"
                     :options="$restrictedStatuses"
                     :isRequired="true" />
             @else
                 <x-form.inputs.default-input
-                    labelText="Product status"
+                    labelText="Status"
                     inputName="readonly_status_id"
                     initialValue="{{ $record->status->name }}"
                     readonly />

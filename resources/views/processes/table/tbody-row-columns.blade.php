@@ -32,11 +32,11 @@
         {{ $record->searchCountry->code }}
     @break
 
-    @case('Product status')
+    @case('Status')
         {{ $record->status->name }}
     @break
 
-    @case('Product status An*')
+    @case('Status An*')
         {{ $record->status->generalStatus->name_for_analysts }}
     @break
 

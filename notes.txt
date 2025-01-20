@@ -15,35 +15,14 @@ MAD:
         user_responsible_country_code => responsible_country_user
             country_code_id => country_id => Must be fixed!!!
 
+        products:
+            MOQ => string replaced with INT. Must fix all existed MOQs. Remove non-numeric symbols and trim
 
-
---------------------------- Not done yet (what left) ------------------------------
-Country:
-    recalculateUsageCount() => Requires KVPP + VPS
-
-Manufacturers:
-    filterQueryByProcessCountries() => Requires VPS
-    tbody IVP
-    tbody Meetings
-    EVENTS => Requires IVP & VPS
-
-Product:
-    Matched KVPPs
-    EVENTS => Requires VPS & KVPP
-
-    Table:
-        MOQ => string replaced with INT. Must fix all existed MOQs. Remove non-numeric symbols and trim
-
-
-    Create form:
-        Dosage & pack => specific format
-
-Process:
-    getCoincidentKvppsAttribute() => Requires KVPP
-
-    Tables:
         process_general_statuses:
-            visible_only_for_admins => renamed to requires_permission
+            visible_only_for_admins => requires_permission
+
+        process_statuses:
+            Added 'NKk' to the middle. Requires fixing all old 'status_id' of processes
 
         processes:
             status_update_date => removed
@@ -53,10 +32,19 @@ Process:
             contracted_in_plan => contracted
             registered_in_plan => registered
 
-        process_statuses:
-            Added 'NKk' to the middle. Requires fixing all old 'status_id' of processes
 
+--------------------------- Not done yet (what left) ------------------------------
+Country:
+    recalculateUsageCount() => Requires KVPP + VPS
 
-        Filter:
-            status_update_date => must done
+Manufacturers:
+    filterQueryByProcessCountries() => Requires VPS
+    tbody Meetings
+    EVENTS => Requires Meetings
+
+Product:
+    Matched KVPPs
+
+Process:
+    getCoincidentKvppsAttribute() => Requires KVPP
 

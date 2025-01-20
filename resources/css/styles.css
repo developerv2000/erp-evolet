@@ -1318,6 +1318,10 @@ a {
 
 
 /* ------------ Process status periods ------------ */
+.process-status-periods {
+    width: 100%;
+}
+
 .process-status-periods__hr {
     height: 4px;
     margin: 8px 0;

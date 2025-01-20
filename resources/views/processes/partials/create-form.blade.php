@@ -10,7 +10,7 @@
 
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.default-select
-                labelText="Product status"
+                labelText="Status"
                 inputName="status_id"
                 :options="$restrictedStatuses"
                 :isRequired="true" />
