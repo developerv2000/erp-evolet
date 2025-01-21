@@ -20,8 +20,8 @@
     @case('Category')
         <span @class([
             'badge',
-            'badge--yellow' => $record->manufacturer->category->name == 'УДС',
-            'badge--pink' => $record->manufacturer->category->name == 'НПП',
+            'badge--blue' => $record->manufacturer->category->name == 'УДС',
+            'badge--yellow' => $record->manufacturer->category->name == 'НПП',
         ])>
             {{ $record->manufacturer->category->name }}
         </span>

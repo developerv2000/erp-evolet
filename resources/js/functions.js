@@ -62,8 +62,8 @@ export function toggleLeftbar() {
 }
 
 export function toggleTableCheckboxes(table) {
-    const checkboxes = table.querySelectorAll('.td__checkbox');
-    const checkedAll = table.querySelector('.td__checkbox:not(:checked)') ? false : true;
+    const checkboxes = table.querySelectorAll('tr td:first-child .td__checkbox');
+    const checkedAll = table.querySelector('tr td:first-child .td__checkbox:not(:checked)') ? false : true;
 
     checkboxes.forEach((checkbox) => {
         checkbox.checked = !checkedAll;
@@ -238,6 +238,8 @@ export function displayProductsSimilarRecords() {
         similarRecordsWrapper.innerHTML = '';
         return;
     }
+
+    showSpinner();
 
     // Prepare data to be sent in the AJAX request
     const data = {
@@ -458,6 +460,8 @@ export function displayProductSearchesSimilarRecords() {
         similarRecordsWrapper.innerHTML = '';
         return;
     }
+
+    showSpinner();
 
     // Prepare data to be sent in the AJAX request
     const data = {

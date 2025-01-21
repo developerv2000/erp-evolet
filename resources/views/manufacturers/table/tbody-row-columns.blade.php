@@ -28,8 +28,8 @@
     @case('Category')
         <span @class([
             'badge',
-            'badge--yellow' => $record->category->name == 'УДС',
-            'badge--pink' => $record->category->name == 'НПП',
+            'badge--blue' => $record->category->name == 'УДС',
+            'badge--yellow' => $record->category->name == 'НПП',
         ])>
             {{ $record->category->name }}
         </span>
@@ -37,7 +37,7 @@
 
     @case('Status')
         @if ($record->active)
-            <span class="badge badge--blue">{{ __('Active') }}</span>
+            <span class="badge badge--orange">{{ __('Active') }}</span>
         @else
             <span class="badge badge--grey">{{ __('Stopped') }}</span>
         @endif
@@ -45,7 +45,7 @@
 
     @case('Important')
         @if ($record->important)
-            <span class="badge badge--orange">{{ __('Important') }}</span>
+            <span class="badge badge--pink">{{ __('Important') }}</span>
         @endif
     @break
 

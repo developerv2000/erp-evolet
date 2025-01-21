@@ -47,8 +47,8 @@
     @case('Manufacturer category')
         <span @class([
             'badge',
-            'badge--yellow' => $record->product->manufacturer->category->name == 'УДС',
-            'badge--pink' => $record->product->manufacturer->category->name == 'НПП',
+            'badge--blue' => $record->product->manufacturer->category->name == 'УДС',
+            'badge--yellow' => $record->product->manufacturer->category->name == 'НПП',
         ])>
             {{ $record->product->manufacturer->category->name }}
         </span>

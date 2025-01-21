@@ -77,7 +77,6 @@
                 field="active"
                 :model="$record"
                 :options="$statusOptions"
-                :initialValue="true"
                 :isRequired="true" />
 
             <x-form.radio-buttons.record-field-radio-buttons

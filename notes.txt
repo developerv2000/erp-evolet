@@ -37,6 +37,7 @@ MAD:
 
         kvpps => product_searches:
             country_code_id => country_id. All ids must be fixed!!!
+            portfolio_manager_id => nullable removed!
 
         country_code_kvpp => additional_search_country_product_search:
             country_code_id => country_id. All ids must be fixed!!!

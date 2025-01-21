@@ -310,7 +310,7 @@ class ProductSearch extends BaseModel implements HasTitle, CanExportRecordsAsExc
             $record = self::create($mergedRequest->all());
 
             // Store HasMany relations
-            $record->storeCommentFromRequest($request->comment);
+            $record->storeCommentFromRequest($request);
 
             // BelongsToMany relations
             $record->additionalSearchCountries()->attach($request->input('additionalSearchCountries'));

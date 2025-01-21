@@ -1,11 +1,12 @@
-<x-form-templates.edit-template :action="route('products.update', $record->id)">
+<x-form-templates.edit-template :action="route('product-searches.update', $record->id)">
     <div class="form__block">
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Manufacturer"
-                field="manufacturer_id"
+                labelText="Country"
+                field="country_id"
                 :model="$record"
-                :options="$manufacturers"
+                :options="$countriesOrderedByUsageCount"
+                optionCaptionField="code"
                 :isRequired="true" />
 
             <x-form.selects.selectize.id-based-single-select.record-field-select
@@ -22,9 +23,7 @@
                 :options="$productForms"
                 :isRequired="true" />
         </div>
-    </div>
 
-    <div class="form__block">
         <div class="form__row">
             <x-form.inputs.record-field-input
                 class="specific-formatable-input"
@@ -38,86 +37,110 @@
                 field="pack"
                 :model="$record" />
 
-            <x-form.inputs.record-field-input
-                labelText="Brand"
-                field="brand"
-                :model="$record" />
+            <div class="form-group"></div>
+        </div>
+    </div>
+
+    <div class="form__block">
+        <div class="form__row">
+            <x-form.selects.selectize.id-based-single-select.record-field-select
+                labelText="MAH"
+                field="marketing_authorization_holder_id"
+                :model="$record"
+                :options="$MAHs"
+                :isRequired="true" />
+
+            <x-form.selects.selectize.id-based-single-select.record-field-select
+                labelText="Status"
+                field="status_id"
+                :model="$record"
+                :options="$statuses"
+                :isRequired="true" />
+
+            <x-form.selects.selectize.id-based-single-select.record-field-select
+                labelText="Priority"
+                field="priority_id"
+                :model="$record"
+                :options="$priorities"
+                :isRequired="true" />
         </div>
 
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Product class"
-                field="class_id"
+                labelText="Portfolio manager"
+                field="portfolio_manager_id"
                 :model="$record"
-                :options="$productClasses"
+                :options="$portfolioManagers" />
+
+            <x-form.selects.selectize.id-based-single-select.record-field-select
+                labelText="Analyst"
+                field="analyst_user_id"
+                :model="$record"
+                :options="$analystUsers" />
+
+            <x-form.selects.selectize.id-based-multiple-select.record-relation-select
+                labelText="Additional search countries"
+                inputName="additionalSearchCountries[]"
+                :model="$record"
+                :options="$countriesOrderedByUsageCount"
+                optionCaptionField="code" />
+        </div>
+
+        <div class="form__row">
+            <x-form.inputs.record-field-input
+                labelText="Additional search info"
+                field="additional_search_information"
+                :model="$record" />
+
+            <div class="form-group"></div>
+            <div class="form-group"></div>
+        </div>
+    </div>
+
+    <div class="form__block">
+        <div class="form__row">
+            <x-form.radio-buttons.record-field-radio-buttons
+                class="radio-group--horizontal"
+                labelText="Source EU"
+                field="source_eu"
+                :model="$record"
+                :options="$booleanOptions"
                 :isRequired="true" />
 
+            <x-form.radio-buttons.record-field-radio-buttons
+                class="radio-group--horizontal"
+                labelText="Source IN"
+                field="source_in"
+                :model="$record"
+                :options="$booleanOptions"
+                :isRequired="true" />
+
+            <div class="form-group"></div>
+        </div>
+    </div>
+
+    <div class="form__block">
+        <div class="form__row">
             <x-form.inputs.record-field-input
-                labelText="MOQ"
-                field="moq"
+                labelText="Forecast 1 year"
+                field="forecast_year_1"
                 :model="$record"
                 type="number"
                 min="1" />
 
-            <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Shelf life"
-                field="shelf_life_id"
-                :model="$record"
-                :options="$shelfLifes"
-                :isRequired="true" />
-        </div>
-    </div>
-
-    <div class="form__block">
-        <div class="form__row">
             <x-form.inputs.record-field-input
-                labelText="Dossier"
-                field="dossier"
-                :model="$record" />
-
-            <x-form.selects.selectize.id-based-multiple-select.record-relation-select
-                labelText="Zones"
-                inputName="zones[]"
+                labelText="Forecast 2 year"
+                field="forecast_year_2"
                 :model="$record"
-                :options="$zones"
-                :isRequired="true" />
+                type="number"
+                min="1" />
 
             <x-form.inputs.record-field-input
-                labelText="Bioequivalence"
-                field="bioequivalence"
-                :model="$record" />
-        </div>
-
-        <div class="form__row">
-            <x-form.inputs.record-field-input
-                labelText="Down payment"
-                field="down_payment"
-                :model="$record" />
-
-            <x-form.inputs.record-field-input
-                labelText="Validity period"
-                field="validity_period"
-                :model="$record" />
-
-            <x-form.misc.attach-files-input />
-        </div>
-    </div>
-
-    <div class="form__block">
-        <div class="form__row">
-            <x-form.radio-buttons.record-field-radio-buttons
-                class="radio-group--horizontal"
-                labelText="Registered in EU"
-                field="registered_in_eu"
+                labelText="Forecast 3 year"
+                field="forecast_year_3"
                 :model="$record"
-                :options="$booleanOptions" />
-
-            <x-form.radio-buttons.record-field-radio-buttons
-                class="radio-group--horizontal"
-                labelText="Sold in EU"
-                field="sold_in_eu"
-                :model="$record"
-                :options="$booleanOptions" />
+                type="number"
+                min="1" />
         </div>
     </div>
 

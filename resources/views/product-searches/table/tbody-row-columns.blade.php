@@ -30,7 +30,7 @@
     @case('Priority')
         <span @class([
             'badge',
-            'badge--red' => $record->priority->name == 'A',
+            'badge--blue' => $record->priority->name == 'A',
             'badge--green' => $record->priority->name == 'B',
             'badge--yellow' => $record->priority->name == 'C',
         ])>

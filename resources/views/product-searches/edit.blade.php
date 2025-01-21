@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => $record->title . ' — ' . __('IVP'),
-    'pageName' => 'products-edit',
+    'pageTitle' => $record->title . ' — ' . __('KVPP'),
+    'pageName' => 'product-searches-edit',
     'mainAutoOverflowed' => false,
 ])
 
@@ -23,7 +23,7 @@
         </div>
 
         {{-- Edit form --}}
-        @include('products.partials.edit-form')
+        @include('product-searches.partials.edit-form')
     </div>
 
 @endsection

@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => __('Trash') . ' — ' . __('IVP'),
-    'pageName' => 'products-trash',
+    'pageTitle' => __('Trash') . ' — ' . __('KVPP'),
+    'pageName' => 'product-searches-trash',
     'mainAutoOverflowed' => true,
 ])
 
@@ -11,8 +11,8 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('products.index'), 'text' => __('IVP')],
-                    ['link' => route('products.trash'), 'text' => __('Trash')],
+                    ['link' => route('product-searches.index'), 'text' => __('KVPP')],
+                    ['link' => route('product-searches.trash'), 'text' => __('Trash')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -32,7 +32,7 @@
                     </x-misc.button>
                 @endcan
 
-                @can('edit-MAD-IVP')
+                @can('edit-MAD-KVPP')
                     <x-misc.button
                         class="toolbar__button"
                         style="shadowed"
@@ -53,24 +53,24 @@
         </div>
 
         {{-- Table --}}
-        @include('products.table.layout', ['trashedRecords' => true])
+        @include('product-searches.table.layout', ['trashedRecords' => true])
     </div>
 
     {{-- Modals --}}
     @can('delete-from-trash')
         <x-modals.multiple-delete
-            form-action="{{ route('products.destroy') }}"
+            form-action="{{ route('product-searches.destroy') }}"
             :forceDelete="true" />
     @endcan
 
-    @can('edit-MAD-IVP')
+    @can('edit-MAD-KVPP')
         <x-modals.multiple-restore
-            form-action="{{ route('products.restore') }}" />
+            form-action="{{ route('product-searches.restore') }}" />
 
         <x-modals.target-restore />
     @endcan
 @endsection
 
 @section('rightbar')
-    @include('products.partials.filter')
+    @include('product-searches.partials.filter')
 @endsection

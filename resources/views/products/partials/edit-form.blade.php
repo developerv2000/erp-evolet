@@ -110,14 +110,18 @@
                 labelText="Registered in EU"
                 field="registered_in_eu"
                 :model="$record"
-                :options="$booleanOptions" />
+                :options="$booleanOptions"
+                :isRequired="true" />
 
             <x-form.radio-buttons.record-field-radio-buttons
                 class="radio-group--horizontal"
                 labelText="Sold in EU"
                 field="sold_in_eu"
                 :model="$record"
-                :options="$booleanOptions" />
+                :options="$booleanOptions"
+                :isRequired="true" />
+
+            <div class="form-group"></div>
         </div>
     </div>
 
