@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Support\Helpers\QueryFilterHelper;
+use App\Support\Traits\Model\AddsDefaultQueryParamsToRequest;
+use App\Support\Traits\Model\FinalizesQueryForRequest;
 use App\Support\Traits\Model\FindsRecordByName;
 use App\Support\Traits\Model\ScopesOrderingByName;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +13,13 @@ class Permission extends Model
 {
     use FindsRecordByName;
     use ScopesOrderingByName;
+    use AddsDefaultQueryParamsToRequest;
+    use FinalizesQueryForRequest;
+
+    // Querying
+    const DEFAULT_ORDER_BY = 'name';
+    const DEFAULT_ORDER_TYPE = 'asc';
+    const DEFAULT_PAGINATION_LIMIT = 50;
 
     /*
     |--------------------------------------------------------------------------
@@ -120,6 +130,50 @@ class Permission extends Model
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
+
+    public function scopeWithBasicRelations($query)
+    {
+        return $query->with([
+            'department',
+            'roles',
+        ]);
+    }
+
+    public function scopeWithBasicRelationCounts($query)
+    {
+        return $query->withCount([
+            'users',
+        ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Filtering
+    |--------------------------------------------------------------------------
+    */
+
+    public static function filterQueryForRequest($query, $request)
+    {
+        // Apply base filters using helper
+        $query = QueryFilterHelper::applyFilters($query, $request, self::getFilterConfig());
+
+        return $query;
+    }
+
+    private static function getFilterConfig(): array
+    {
+        return [
+            'whereIn' => ['id', 'department_id'],
+            'whereEqual' => ['global'],
+            'belongsToMany' => ['roles'],
+        ];
     }
 
     /*

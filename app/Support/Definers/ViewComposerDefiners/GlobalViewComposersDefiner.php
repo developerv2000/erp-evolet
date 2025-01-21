@@ -16,6 +16,7 @@ class GlobalViewComposersDefiner
     {
         self::definePaginationLimitComposer();
         self::defineRolesComposer();
+        self::definePermissionsComposer();
     }
 
     private static function definePaginationLimitComposer()
@@ -29,8 +30,17 @@ class GlobalViewComposersDefiner
     {
         self::defineViewComposer('roles.partials.filter', [
             'roles' => Role::orderByName()->get(),
-            'departments' => Department::orderByName()->get(),
             'permissions' => Permission::orderByName()->get(),
+            'departments' => Department::orderByName()->get(),
+        ]);
+    }
+
+    private static function definePermissionsComposer()
+    {
+        self::defineViewComposer('permissions.partials.filter', [
+            'permissions' => Permission::orderByName()->get(),
+            'roles' => Role::orderByName()->get(),
+            'departments' => Department::orderByName()->get(),
         ]);
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.app', [
     'pageTitle' => __('Notifications') . ' — ERP',
     'pageName' => 'notifications-index',
-    'mainAutoOverflowed' => false,
+    'mainAutoOverflowed' => true,
 ])
 
 @section('content')

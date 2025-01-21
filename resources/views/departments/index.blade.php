@@ -1,7 +1,7 @@
 @extends('layouts.app', [
     'pageTitle' => __('Departments') . ' — ERP',
     'pageName' => 'departments-index',
-    'mainAutoOverflowed' => false,
+    'mainAutoOverflowed' => true,
 ])
 
 @section('content')

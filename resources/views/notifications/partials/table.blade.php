@@ -1,4 +1,4 @@
-<x-tables.template.main-template :records="null" :includePagination="false">
+<x-tables.template.main-template :records="$records" :includePagination="true">
     {{-- thead titles --}}
     <x-slot:thead-titles>
         <th width="50"><x-tables.partials.th.select-all /></th>

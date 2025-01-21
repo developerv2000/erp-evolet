@@ -2,12 +2,12 @@
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Name"
         inputName="id[]"
-        :options="$roles" />
+        :options="$permissions" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="Permissions"
-        inputName="permissions[]"
-        :options="$permissions" />
+        labelText="Roles"
+        inputName="roles[]"
+        :options="$roles" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Department"

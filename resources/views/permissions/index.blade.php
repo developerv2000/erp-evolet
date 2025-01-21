@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => __('Roles') . ' — ERP',
-    'pageName' => 'roles-index',
+    'pageTitle' => __('Permissions') . ' — ERP',
+    'pageName' => 'permissions-index',
     'mainAutoOverflowed' => true,
 ])
 
@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('roles.index'), 'text' => __('Roles')],
+                    ['link' => route('permissions.index'), 'text' => __('Permissions')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -32,10 +32,10 @@
         </div>
 
         {{-- Table --}}
-        @include('roles.partials.table')
+        @include('permissions.partials.table')
     </div>
 @endsection
 
 @section('rightbar')
-    @include('roles.partials.filter')
+    @include('permissions.partials.filter')
 @endsection

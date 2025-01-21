@@ -17,9 +17,13 @@
     "ASP": "СПГ",
 
     "Departments": "Отделы",
+    "Department": "Отдел",
     "Roles": "Роли",
     "Permissions": "Доступы",
     "Users": "Пользователи",
+    "Abbreviation": "Аббревиатура",
+    "Global": "Глобальный",
+    "Description": "Описание",
 
     "Filtered records": "Отфильтрованных записей",
     "records": "записей",

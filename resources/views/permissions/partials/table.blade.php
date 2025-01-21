@@ -1,7 +1,7 @@
 <x-tables.template.main-template :records="$records" :includePagination="true">
     {{-- thead titles --}}
     <x-slot:thead-titles>
-        <th width="180">
+        <th width="280">
             <x-tables.partials.th.order-link text="Name" order-by="name" />
         </th>
 
@@ -11,8 +11,7 @@
 
         <th width="86">{{ __('Global') }}</th>
         <th width="110">{{ __('Users') }}</th>
-        <th width="320">{{ __('Description') }}</th>
-        <th width="400">{{ __('Permissions') }}</th>
+        <th width="200">{{ __('Roles') }}</th>
     </x-slot:thead-titles>
 
     {{-- tbody rows --}}
@@ -29,16 +28,14 @@
                 </td>
 
                 <td>
-                    <a class="main-link" href="{{ route('users.index', ['roles[]' => $record->id]) }}">
+                    <a class="main-link" href="{{ route('users.index', ['permissions[]' => $record->id]) }}">
                         {{ $record->users_count }}
                     </a>
                 </td>
 
-                <td>{{ $record->description }}</td>
-
                 <td>
-                    @foreach ($record->permissions as $permission)
-                        {{ $permission->name }} |
+                    @foreach ($record->roles as $role)
+                        {{ $role->name }} <br>
                     @endforeach
                 </td>
             </tr>
