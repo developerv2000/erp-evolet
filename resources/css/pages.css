@@ -112,3 +112,10 @@
 }
 
 /* ------------ /end Processes pages ------------ */
+
+
+/* ------------ User pages ------------ */
+.users-index__photo {
+    border-radius: 50%;
+}
+/* ------------ /end User pages ------------ */

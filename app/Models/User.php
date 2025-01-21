@@ -5,6 +5,9 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Support\Helpers\FileHelper;
+use App\Support\Helpers\QueryFilterHelper;
+use App\Support\Traits\Model\AddsDefaultQueryParamsToRequest;
+use App\Support\Traits\Model\FinalizesQueryForRequest;
 use App\Support\Traits\Model\UploadsFile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,12 +20,18 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
     use UploadsFile;
+    use AddsDefaultQueryParamsToRequest;
+    use FinalizesQueryForRequest;
 
     /*
     |--------------------------------------------------------------------------
     | Constants
     |--------------------------------------------------------------------------
     */
+
+    const DEFAULT_ORDER_BY = 'name';
+    const DEFAULT_ORDER_TYPE = 'asc';
+    const DEFAULT_PAGINATION_LIMIT = 50;
 
     const DEFAULT_PREFERRED_THEME = 'light';
     const DEFAULT_COLLAPSED_LEFTBAR = false;
@@ -47,6 +56,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'department_id',
     ];
 
     /**
@@ -129,6 +139,21 @@ class User extends Authenticatable
     public function scopeWithBasicRelations($query)
     {
         return $query->with([
+            'department',
+            'roles',
+            'permissions',
+            'responsibleCountries',
+        ]);
+    }
+
+    /**
+     * Load basic relations, while sending notifications.
+     *
+     * Roles with permissions must be loaded, because of using gates.
+     */
+    public function scopeWithBasicRelationsToNotify($query)
+    {
+        return $query->with([
             'roles' => function ($rolesQuery) {
                 $rolesQuery->with('permissions');
             },
@@ -183,6 +208,13 @@ class User extends Authenticatable
     public static function getMADAnalystsMinified()
     {
         return self::onlyMADAnalysts()->select('id', 'name')->get();
+    }
+
+    public static function getAllMinified()
+    {
+        return self::select('id', 'name')
+            ->orderBy('name', 'asc')
+            ->get();
     }
 
     /*
@@ -430,6 +462,69 @@ class User extends Authenticatable
 
     /*
     |--------------------------------------------------------------------------
+    | Filtering
+    |--------------------------------------------------------------------------
+    */
+
+    public static function filterQueryForRequest($query, $request)
+    {
+        // Apply base filters using helper
+        $query = QueryFilterHelper::applyFilters($query, $request, self::getFilterConfig());
+
+        return $query;
+    }
+
+    private static function getFilterConfig(): array
+    {
+        return [
+            'whereIn' => ['id', 'department_id'],
+            'like' => ['email'],
+            'dateRange' => ['created_at', 'updated_at'],
+            'belongsToMany' => ['permissions', 'roles', 'responsibleCountries'],
+        ];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Create & Update
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Create new user by admin.
+     */
+    public static function createFromRequest($request)
+    {
+        $record = self::create($request->validated());
+
+        // Attach belongsToMany associations
+        $record->roles()->attach($request->input('roles'));
+        $record->permissions()->attach($request->input('permissions'));
+        $record->responsibleCountries()->attach($request->input('responsibleCountries'));
+
+        // Load all settings for the user
+        $record->resetAllSettingsToDefault();
+
+        // Upload user's photo
+        $record->uploadFile('photo', public_path(self::PHOTO_PATH), $record->name);
+        FileHelper::resizeImage($record->photo_file_path, self::PHOTO_WIDTH, self::PHOTO_HEIGHT);
+    }
+
+    public function updateFromRequest($request)
+    {
+        $this->update($request->all());
+
+        // BelongsToMany relations
+        $this->zones()->sync($request->input('zones'));
+
+        // HasMany relations
+        $this->storeCommentFromRequest($request);
+        $this->storeAttachmentsFromRequest($request);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Misc
     |--------------------------------------------------------------------------
     */
@@ -456,7 +551,7 @@ class User extends Authenticatable
 
     public static function notifyProcessOnContractStageToAll($notification)
     {
-        self::withBasicRelations()->each(function ($user) use ($notification) {
+        self::withBasicRelationsToNotify()->each(function ($user) use ($notification) {
             if (Gate::forUser($user)->allows('receive-notification-on-MAD-VPS-contract')) {
                 $user->notify($notification);
             }

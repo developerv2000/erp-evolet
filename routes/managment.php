@@ -15,8 +15,6 @@ Route::middleware('auth', 'auth.session', 'can:administrate')->group(function ()
     // Users
     Route::prefix('users')->controller(UserController::class)->name('users.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show', 'trash', 'restore'], 'id');
-
         Route::patch('/password/{record}', 'updatePassword')->name('update-password');
-        Route::patch('/permissions/{record}', 'updatePermissions')->name('update-permissions');
     });
 });
