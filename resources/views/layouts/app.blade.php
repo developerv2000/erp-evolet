@@ -27,7 +27,7 @@
         @include('layouts.header')
 
         <div class="main-wrapper">
-            @include('layouts.leftbar')
+            @include('layouts.leftbar.layout')
 
             <main class="main @if ($mainAutoOverflowed) main--auto-overflowed @endif">
                 @yield('content')

@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Support\Traits\Model\FindsRecordByName;
+use App\Support\Traits\Model\ScopesOrderingByName;
 use Illuminate\Database\Eloquent\Model;
 
 class Permission extends Model
 {
     use FindsRecordByName;
+    use ScopesOrderingByName;
 
     /*
     |--------------------------------------------------------------------------
@@ -146,6 +148,17 @@ class Permission extends Model
             self::CAN_VIEW_MAD_IVP_NAME,
             self::CAN_VIEW_MAD_MEETINGS_NAME,
             self::CAN_VIEW_MAD_ASP_NAME,
+        ];
+    }
+
+    public static function getMADInternPermissionNames()
+    {
+        return [
+            // View and edit only EPP and IVP
+            self::CAN_VIEW_MAD_EPP_NAME,
+            self::CAN_EDIT_MAD_EPP_NAME,
+            self::CAN_VIEW_MAD_IVP_NAME,
+            self::CAN_EDIT_MAD_IVP_NAME,
         ];
     }
 

@@ -22,9 +22,9 @@ class GlobalGatesDefiner
         |--------------------------------------------------------------------------
         */
 
-        // View roles
-        Gate::define('view-Roles-table', function ($user) {
-            return $user->hasPermission('can view Roles table');
+        // Administrate
+        Gate::define('administrate', function ($user) {
+            return $user->isAnyAdministrator();
         });
 
         // Delete from trash

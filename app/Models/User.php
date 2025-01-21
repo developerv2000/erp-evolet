@@ -196,14 +196,25 @@ class User extends Authenticatable
         return $this->roles->contains('name', $role);
     }
 
+    public function isInactive()
+    {
+        return $this->hasRole(Role::INACTIVE_NAME);
+    }
+
     public function isGlobalAdministrator()
     {
         return $this->hasRole(Role::GLOBAL_ADMINISTRATOR_NAME);
     }
 
-    public function isInactive()
+    public function isMADAdministrator()
     {
-        return $this->hasRole(Role::INACTIVE_NAME);
+        return $this->hasRole(Role::MAD_ADMINISTRATOR_NAME);
+    }
+
+    public function isAnyAdministrator()
+    {
+        return $this->isGlobalAdministrator()
+            || $this->isMADAdministrator();
     }
 
     /*

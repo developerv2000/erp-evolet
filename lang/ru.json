@@ -15,6 +15,10 @@
     "Meetings": "Встречи",
     "KPI": "КПЭ",
     "ASP": "СПГ",
+
+    "Departments": "Отделы",
+    "Roles": "Роли",
+    "Permissions": "Доступы",
     "Users": "Пользователи",
 
     "Filtered records": "Отфильтрованных записей",
