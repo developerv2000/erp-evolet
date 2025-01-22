@@ -9,21 +9,21 @@
                     labelText="{{ __('Forecast 1 year') . ' ' . $country->code }}"
                     inputName="{{ 'forecast_year_1_of_' . $country->code }}"
                     type="number"
-                    min="1"
+                    min="0"
                     :isRequired="true" />
 
                 <x-form.inputs.default-input
                     labelText="{{ __('Forecast 2 year') . ' ' . $country->code }}"
                     inputName="{{ 'forecast_year_2_of_' . $country->code }}"
                     type="number"
-                    min="1"
+                    min="0"
                     :isRequired="true" />
 
                 <x-form.inputs.default-input
                     labelText="{{ __('Forecast 3 year') . ' ' . $country->code }}"
                     inputName="{{ 'forecast_year_3_of_' . $country->code }}"
                     type="number"
-                    min="1"
+                    min="0"
                     :isRequired="true" />
             </div>
         @endforeach

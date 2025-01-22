@@ -245,3 +245,7 @@ MYANMAR (BURMA) => Myanmar => done
                 $user->saveQuietly();
             }
         });
+
+
+
+sudo rm -rf /path/to/directory

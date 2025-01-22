@@ -9,7 +9,7 @@
                 field="forecast_year_1"
                 :model="$record"
                 type="number"
-                min="1"
+                min="0"
                 :isRequired="true" />
 
             <x-form.inputs.record-field-input
@@ -17,7 +17,7 @@
                 field="forecast_year_2"
                 :model="$record"
                 type="number"
-                min="1"
+                min="0"
                 :isRequired="true" />
 
             <x-form.inputs.record-field-input
@@ -25,7 +25,7 @@
                 field="forecast_year_3"
                 :model="$record"
                 type="number"
-                min="1"
+                min="0"
                 :isRequired="true" />
         </div>
     </div>
