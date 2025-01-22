@@ -99,7 +99,7 @@
                 field="manufacturer_first_offered_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :model="$record"
                 :isRequired="true"
                 :readonly="$record->manufacturer_followed_offered_price ? true : false" />
@@ -110,7 +110,7 @@
                 field="manufacturer_followed_offered_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :model="$record"
                 :isRequired="$record->manufacturer_followed_offered_price != null" />
 
@@ -129,7 +129,7 @@
                 field="our_first_offered_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :model="$record"
                 :isRequired="true"
                 :readonly="$record->our_followed_offered_price ? true : false" />
@@ -140,7 +140,7 @@
                 field="our_followed_offered_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :model="$record"
                 :isRequired="$record->our_followed_offered_price != null" />
 
@@ -184,7 +184,7 @@
                 field="agreed_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :model="$record"
                 :isRequired="true" />
 
@@ -193,7 +193,7 @@
                 field="increased_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :model="$record" />
 
             <div class="form-group"></div>

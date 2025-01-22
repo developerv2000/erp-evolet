@@ -9,7 +9,7 @@
                 field="forecast_year_1"
                 :model="$record"
                 type="number"
-                min="1"
+                min="0"
                 :isRequired="true" />
 
             <x-form.inputs.record-field-input
@@ -17,7 +17,7 @@
                 field="forecast_year_2"
                 :model="$record"
                 type="number"
-                min="1"
+                min="0"
                 :isRequired="true" />
 
             <x-form.inputs.record-field-input
@@ -25,7 +25,7 @@
                 field="forecast_year_3"
                 :model="$record"
                 type="number"
-                min="1"
+                min="0"
                 :isRequired="true" />
         </div>
     </div>
@@ -98,7 +98,7 @@
                 field="manufacturer_first_offered_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :model="$record"
                 :isRequired="true" />
 
@@ -107,7 +107,7 @@
                 field="manufacturer_followed_offered_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :model="$record" />
 
             <x-form.selects.selectize.id-based-single-select.record-field-select
@@ -124,7 +124,7 @@
                 field="our_first_offered_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :model="$record"
                 :isRequired="true" />
 
@@ -133,7 +133,7 @@
                 field="our_followed_offered_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :model="$record" />
 
             {{-- Field is nullable until stage 5 --}}
@@ -176,7 +176,7 @@
                 field="agreed_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :model="$record"
                 :isRequired="true" />
 
@@ -185,7 +185,7 @@
                 field="increased_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :model="$record" />
 
             <div class="form-group"></div>

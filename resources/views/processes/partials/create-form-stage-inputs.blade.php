@@ -61,7 +61,7 @@
                 inputName="manufacturer_first_offered_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :isRequired="true" />
 
             <x-form.inputs.default-input
@@ -69,7 +69,7 @@
                 inputName="manufacturer_followed_offered_price"
                 type="number"
                 step="0.01"
-                min="0.01" />
+                min="0.00" />
 
             <x-form.selects.selectize.id-based-single-select.default-select
                 labelText="Currency"
@@ -84,7 +84,7 @@
                 inputName="our_first_offered_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :isRequired="true" />
 
             <x-form.inputs.default-input
@@ -92,7 +92,7 @@
                 inputName="our_followed_offered_price"
                 type="number"
                 step="0.01"
-                min="0.01" />
+                min="0.00" />
 
             {{-- Field is nullable until stage 5 --}}
             <x-form.selects.selectize.id-based-single-select.default-select
@@ -131,7 +131,7 @@
                 inputName="agreed_price"
                 type="number"
                 step="0.01"
-                min="0.01"
+                min="0.00"
                 :isRequired="true" />
 
             <x-form.inputs.default-input
@@ -139,7 +139,7 @@
                 inputName="increased_price"
                 type="number"
                 step="0.01"
-                min="0.01" />
+                min="0.00" />
 
             <div class="form-group"></div>
         </div>
