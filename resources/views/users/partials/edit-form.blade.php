@@ -44,7 +44,7 @@
                 labelText="Responsible"
                 inputName="responsibleCountries[]"
                 :model="$record"
-                :options="$countriesOrderedByUsageCount"
+                :options="$countriesOrderedByProcessesCount"
                 optionCaptionField="code" />
         </div>
 
@@ -65,7 +65,7 @@
 
         <x-form.inputs.default-input
             labelText="New password"
-            inputName="new_password"
+            inputName="password"
             type="password"
             autocomplete="new_password"
             minlength="4"

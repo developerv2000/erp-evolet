@@ -4,7 +4,7 @@
             <x-form.selects.selectize.id-based-single-select.default-select
                 labelText="Country"
                 inputName="country_id"
-                :options="$countriesOrderedByUsageCount"
+                :options="$countriesOrderedByProcessesCount"
                 optionCaptionField="code"
                 :isRequired="true" />
 
@@ -76,7 +76,7 @@
             <x-form.selects.selectize.id-based-multiple-select.default-select
                 labelText="Additional search countries"
                 inputName="additionalSearchCountries[]"
-                :options="$countriesOrderedByUsageCount"
+                :options="$countriesOrderedByProcessesCount"
                 optionCaptionField="code" />
         </div>
 

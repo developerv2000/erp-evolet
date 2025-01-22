@@ -32,7 +32,7 @@
                     labelText="Search country"
                     field="country_id"
                     :model="$record"
-                    :options="$countriesOrderedByUsageCount"
+                    :options="$countriesOrderedByProcessesCount"
                     optionCaptionField="code"
                     :isRequired="true" />
             @else

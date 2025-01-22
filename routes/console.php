@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::call(function () {
-    Country::recalculateAllUsageCounts();
+    Country::recalculateAllProcessCounts();
     Currency::updateAllUSDRatios();
 })->daily();
 

@@ -36,7 +36,7 @@
             <x-form.selects.selectize.id-based-multiple-select.default-select
                 labelText="Responsible"
                 inputName="responsibleCountries[]"
-                :options="$countriesOrderedByUsageCount"
+                :options="$countriesOrderedByProcessesCount"
                 optionCaptionField="code" />
         </div>
 

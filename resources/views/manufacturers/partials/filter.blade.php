@@ -53,7 +53,7 @@
         labelText="Has VPS for country"
         inputName="process_country_id[]"
         optionCaptionField="code"
-        :options="$countriesOrderedByUsageCount" />
+        :options="$countriesOrderedByProcessesCount" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Blacklist"

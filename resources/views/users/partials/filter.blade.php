@@ -23,7 +23,7 @@
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Responsible"
         inputName="responsibleCountries[]"
-        :options="$countriesOrderedByUsageCount"
+        :options="$countriesOrderedByProcessesCount"
         optionCaptionField="code" />
 
     <x-form.inputs.request-based-input

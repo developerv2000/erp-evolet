@@ -20,11 +20,11 @@ class UserStoreRequest extends FormRequest
             'name' => ['string', 'max:255', Rule::unique(User::class)],
             'email' => ['email', 'max:255', Rule::unique(User::class)],
             'photo' => ['file', File::types(['png', 'jpg', 'jpeg'])],
+            'password' => ['required', 'min:4'],
             'department_id' => ['required'],
             'roles' => ['required'],
             'permissions' => ['nullable'],
             'responsibleCountries' => ['nullable'],
-            'password' => ['required', 'min:4'],
         ];
     }
 }

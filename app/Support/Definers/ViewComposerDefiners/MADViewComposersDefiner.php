@@ -83,7 +83,7 @@ class MADViewComposersDefiner
             'processes.partials.edit-form',
             'processes.partials.duplicate-form',
         ], [
-            'countriesOrderedByUsageCount' => Country::orderByUsageCount()->get(),
+            'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
             'responsiblePeople' => ProcessResponsiblePerson::orderByName()->get(),
         ]);
 
@@ -105,7 +105,7 @@ class MADViewComposersDefiner
 
         self::defineViewComposer('processes.partials.filter', [
             'countriesOrderedByName' => Country::orderByName()->get(),
-            'countriesOrderedByUsageCount' => Country::orderByUsageCount()->get(),
+            'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
             'manufacturers' => Manufacturer::getMinifiedRecordsWithName(),
             'inns' => Inn::orderByName()->get(),
             'productForms' => ProductForm::getMinifiedRecordsWithName(),
@@ -150,7 +150,7 @@ class MADViewComposersDefiner
             'analystUsers' => User::getMADAnalystsMinified(),
             'bdmUsers' => User::getBDMsMinifed(),
             'countriesOrderedByName' => Country::orderByName()->get(),
-            'countriesOrderedByUsageCount' => Country::orderByUsageCount()->get(),
+            'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
             'manufacturers' => Manufacturer::getMinifiedRecordsWithName(),
             'categories' => ManufacturerCategory::orderByName()->get(),
             'zones' => Zone::orderByName()->get(),
@@ -180,7 +180,7 @@ class MADViewComposersDefiner
     private static function getDefaultProductSearchesShareData()
     {
         return [
-            'countriesOrderedByUsageCount' => Country::orderByUsageCount()->get(),
+            'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
             'booleanOptions' => GeneralHelper::getBooleanOptionsArray(),
             'statuses' => ProductSearchStatus::orderByName()->get(),
             'priorities' => ProductSearchPriority::orderByName()->get(),

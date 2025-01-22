@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 class Country extends Model implements UsageCountable
 {
     use ScopesOrderingByName;
-    use ScopesOrderingByUsageCount;
     use RecalculatesAllUsageCounts;
 
     /*
@@ -32,6 +31,11 @@ class Country extends Model implements UsageCountable
     public function manufacturers()
     {
         return $this->hasMany(Manufacturer::class);
+    }
+
+    public function processes()
+    {
+        return $this->hasMany(Process::class);
     }
 
     public function responsibleUsers()
@@ -56,6 +60,17 @@ class Country extends Model implements UsageCountable
 
     /*
     |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
+
+    public function scopeOrderByProcessesCount($query)
+    {
+        return $query->orderBy('database_processes_count', 'desc');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Queries
     |--------------------------------------------------------------------------
     */
@@ -68,6 +83,29 @@ class Country extends Model implements UsageCountable
         return self::where('name', 'India')->value('id');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Contracts
+    |--------------------------------------------------------------------------
+    */
+
+    // Implement method declared in UsageCountable interface.
+    public static function recalculateAllUsageCounts(): void {}
+
+    // Implement method declared in UsageCountable interface.
+    public function recalculateUsageCount(): void
+    {
+        // $this->update([
+        //     'usage_count' => $this->processes_count + $this->product_searches_count,
+        // ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Misc
+    |--------------------------------------------------------------------------
+    */
+
     public static function getRegionOptions(): array
     {
         return [
@@ -76,17 +114,13 @@ class Country extends Model implements UsageCountable
         ];
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Contracts
-    |--------------------------------------------------------------------------
-    */
-
-    // Implement method declared in UsageCountable interface
-    public function recalculateUsageCount(): void
+    public static function recalculateAllProcessCounts()
     {
-        // $this->update([
-        //     'usage_count' => $this->processes()->count() + $this->productSearches()->count(),
-        // ]);
+        $records = self::withCount('processes')->get();
+
+        foreach ($records as $record) {
+            $record->database_processes_count = $record->processes_count;
+            $record->save();
+        }
     }
 }

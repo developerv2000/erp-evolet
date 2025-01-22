@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class User extends Authenticatable
@@ -436,28 +438,23 @@ class User extends Authenticatable
 
         // Upload user's photo if provided and resize it
         if ($request->hasFile('photo')) {
-            $this->uploadFile('photo', public_path(self::PHOTO_PATH), $this->name);
-            FileHelper::resizeImage($this->photo_file_path, self::PHOTO_WIDTH, self::PHOTO_HEIGHT);
+            $this->uploadPhoto();
         }
     }
 
     /**
      * Update the user's password from the profile edit page.
      *
-     * This method is used by users to update their own password via the profile edit page.
+     * Important: Laravel automatically logouts user from other devices, while user is updating his own password.
      *
      * @param \Illuminate\Http\Request $request The request object containing the new password.
      * @return void
      */
     public function updateProfilePassword($request): void
     {
-        // Update the user's password with the new hashed password
         $this->update([
             'password' => bcrypt($request->new_password),
         ]);
-
-        // Logout other devices using the new password
-        Auth::logoutOtherDevices($request->new_password);
     }
 
     /*
@@ -506,22 +503,56 @@ class User extends Authenticatable
         $record->resetAllSettingsToDefault();
 
         // Upload user's photo
-        $record->uploadFile('photo', public_path(self::PHOTO_PATH), $record->name);
-        FileHelper::resizeImage($record->photo_file_path, self::PHOTO_WIDTH, self::PHOTO_HEIGHT);
+        $record->uploadPhoto();
     }
 
+    /**
+     * Update user by admin.
+     *
+     * Logouts user from all devices.
+     */
     public function updateFromRequest($request)
     {
-        $this->update($request->all());
+        // Update the user's profile
+        $this->update($request->validated());
 
         // BelongsToMany relations
-        $this->zones()->sync($request->input('zones'));
+        $this->roles()->sync($request->input('roles'));
+        $this->permissions()->sync($request->input('permissions'));
+        $this->responsibleCountries()->sync($request->input('responsibleCountries'));
 
-        // HasMany relations
-        $this->storeCommentFromRequest($request);
-        $this->storeAttachmentsFromRequest($request);
+        // Reset settings
+        $this->resetAllSettingsToDefault();
+
+        // Manually logout user from all devices
+        if (Auth::user()->id != $this->id) {
+            $this->logoutFromAllSessions();
+        }
+
+        // Upload user's photo if provided
+        if ($request->hasFile('photo')) {
+            $this->uploadPhoto();
+        }
     }
 
+    /**
+     * Update users password by admin.
+     *
+     * Laravel automatically logouts user from other devices, while user is updating his own password.
+     * Thats why manually logout user from all devices, if not own password is being updated.
+     */
+    public function updatePassword($request): void
+    {
+        // Update the user's password with the new hashed password
+        $this->update([
+            'password' => bcrypt($request->password),
+        ]);
+
+        // Manually logout from all devices
+        if (Auth::user()->id != $this->id) {
+            $this->logoutFromAllSessions();
+        }
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -529,6 +560,35 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * Logout user manually from all devices, by clearing sessions and remember_token.
+     *
+     * Laravel automatically logouts user from other devices, while user is updating his own password.
+     * Used only while updating users by admin!
+     */
+    private function logoutFromAllSessions(): void
+    {
+        // Delete all sessions for the current user
+        DB::table('sessions')->where('user_id', $this->id)->delete();
+
+        // Delete users remember_token.
+        $this->refresh();
+        $this->remember_token = null;
+        $this->save();
+    }
+
+    /**
+     * Upload users photo.
+     */
+    public function uploadPhoto()
+    {
+        $this->uploadFile('photo', public_path(self::PHOTO_PATH), $this->name);
+        FileHelper::resizeImage($this->photo_file_path, self::PHOTO_WIDTH, self::PHOTO_HEIGHT);
+    }
+
+    /**
+     * Detect users home page, based on permissions.
+     */
     public function detectHomeRouteName()
     {
         $homepageRoutes = [
@@ -549,6 +609,9 @@ class User extends Authenticatable
         return route('profile.edit');
     }
 
+    /**
+     * Notify required users on process update to contract stage.
+     */
     public static function notifyProcessOnContractStageToAll($notification)
     {
         self::withBasicRelationsToNotify()->each(function ($user) use ($notification) {

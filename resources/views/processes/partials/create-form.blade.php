@@ -18,7 +18,7 @@
             <x-form.selects.selectize.id-based-multiple-select.default-select
                 labelText="Search country"
                 inputName="country_ids[]"
-                :options="$countriesOrderedByUsageCount"
+                :options="$countriesOrderedByProcessesCount"
                 optionCaptionField="code"
                 :isRequired="true" />
 

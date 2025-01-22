@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserPasswordUpdateRequest;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
@@ -41,9 +42,16 @@ class UserController extends Controller
         return view('users.edit', compact('record'));
     }
 
-    public function update(UserUpdateRequest $request, $record)
+    public function update(UserUpdateRequest $request, User $record)
     {
         $record->updateFromRequest($request);
+
+        return redirect()->back();
+    }
+
+    public function updatePassword(UserPasswordUpdateRequest $request, User $record)
+    {
+        $record->updatePassword($request);
 
         return redirect()->back();
     }

@@ -8,7 +8,7 @@
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Search country"
         inputName="country_id[]"
-        :options="$countriesOrderedByUsageCount"
+        :options="$countriesOrderedByProcessesCount"
         optionCaptionField="code" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select

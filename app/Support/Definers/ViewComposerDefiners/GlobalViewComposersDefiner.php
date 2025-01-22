@@ -79,7 +79,7 @@ class GlobalViewComposersDefiner
             'permissions' => Permission::orderByName()->get(),
             'roles' => Role::orderByName()->get(),
             'departments' => Department::orderByName()->get(),
-            'countriesOrderedByUsageCount' => Country::orderByUsageCount()->get(),
+            'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
         ];
     }
 }

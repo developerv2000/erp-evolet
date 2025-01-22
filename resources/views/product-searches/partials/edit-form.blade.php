@@ -5,7 +5,7 @@
                 labelText="Country"
                 field="country_id"
                 :model="$record"
-                :options="$countriesOrderedByUsageCount"
+                :options="$countriesOrderedByProcessesCount"
                 optionCaptionField="code"
                 :isRequired="true" />
 
@@ -82,7 +82,7 @@
                 labelText="Additional search countries"
                 inputName="additionalSearchCountries[]"
                 :model="$record"
-                :options="$countriesOrderedByUsageCount"
+                :options="$countriesOrderedByProcessesCount"
                 optionCaptionField="code" />
         </div>
 

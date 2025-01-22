@@ -2,7 +2,7 @@
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Country"
         inputName="country_id[]"
-        :options="$countriesOrderedByUsageCount"
+        :options="$countriesOrderedByProcessesCount"
         optionCaptionField="code" />
 
     <x-form.selects.selectize.boolean-select.request-based-select

@@ -1,6 +1,7 @@
 Global:
     Country and CountryCodes united in Country
     Comments text improoved to simditor. Requires surrounding all comments with tag <p>
+    Added 'database_processes_count' to countries. All 'database_processes_count' must be recalculated
 
     Tables:
         attachments:
