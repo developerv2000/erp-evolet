@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => __('Trash') . ' — ' . __('IVP'),
-    'pageName' => 'products-trash',
+    'pageTitle' => __('Trash') . ' — ' . __('VPS'),
+    'pageName' => 'processes-trash',
     'mainAutoOverflowed' => true,
 ])
 
@@ -11,8 +11,8 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('products.index'), 'text' => __('IVP')],
-                    ['link' => route('products.trash'), 'text' => __('Trash')],
+                    ['link' => route('processes.index'), 'text' => __('VPS')],
+                    ['link' => route('processes.trash'), 'text' => __('Trash')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -32,7 +32,7 @@
                     </x-misc.button>
                 @endcan
 
-                @can('edit-MAD-IVP')
+                @can('edit-MAD-VPS')
                     <x-misc.button
                         class="toolbar__button"
                         style="shadowed"
@@ -53,24 +53,24 @@
         </div>
 
         {{-- Table --}}
-        @include('products.table.layout', ['trashedRecords' => true])
+        @include('processes.table.layout', ['trashedRecords' => true])
     </div>
 
     {{-- Modals --}}
     @can('delete-from-trash')
         <x-modals.multiple-delete
-            form-action="{{ route('products.destroy') }}"
+            form-action="{{ route('processes.destroy') }}"
             :forceDelete="true" />
     @endcan
 
-    @can('edit-MAD-IVP')
+    @can('edit-MAD-VPS')
         <x-modals.multiple-restore
-            form-action="{{ route('products.restore') }}" />
+            form-action="{{ route('processes.restore') }}" />
 
         <x-modals.target-restore />
     @endcan
 @endsection
 
 @section('rightbar')
-    @include('products.partials.filter')
+    @include('processes.partials.filter')
 @endsection
