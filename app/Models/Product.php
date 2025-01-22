@@ -270,7 +270,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             $this->manufacturer->analyst->name,
             $this->created_at,
             $this->updated_at,
-            'Matched KVPPs', // $this->matched_product_searches->count(), Not done yet
+            $this->matched_product_searches->count(),
         ];
     }
 

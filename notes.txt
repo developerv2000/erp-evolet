@@ -48,9 +48,6 @@ MAD:
 --------------------------- Not done yet (what left) ------------------------------
 Products selection export
 
-Country:
-    recalculateUsageCount() => Requires KVPP + VPS
-
 Manufacturers:
     tbody Meetings
     EVENTS => Requires Meetings
