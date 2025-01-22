@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @author Bobur Nuridinov <developerv2000@gmail.com>
- */
-
 namespace App\Support\Generators;
 
 use Illuminate\Support\Facades\Route;
