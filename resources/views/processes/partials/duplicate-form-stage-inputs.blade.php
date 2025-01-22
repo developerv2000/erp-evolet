@@ -55,7 +55,7 @@
                 labelText="MOQ"
                 field="moq"
                 type="number"
-                min="1"
+                min="0"
                 :model="$product"
                 :isRequired="true" />
 

@@ -57,7 +57,7 @@
                 field="moq"
                 :model="$record"
                 type="number"
-                min="1" />
+                min="0" />
 
             <x-form.selects.selectize.id-based-single-select.record-field-select
                 labelText="Shelf life"

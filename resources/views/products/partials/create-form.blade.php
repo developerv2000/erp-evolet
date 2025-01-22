@@ -53,7 +53,7 @@
                 labelText="MOQ"
                 inputName="moq"
                 type="number"
-                min="1" />
+                min="0" />
 
             <x-form.selects.selectize.id-based-single-select.default-select
                 labelText="Shelf life"
