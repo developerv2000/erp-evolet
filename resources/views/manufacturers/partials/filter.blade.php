@@ -61,5 +61,5 @@
         :options="$blacklists" />
 
     {{-- Default filter inputs --}}
-    <x-filter.partials.default-inputs exclude="['id']" />
+    <x-filter.partials.default-inputs :exclude="['id']" />
 </x-filter.layout>
