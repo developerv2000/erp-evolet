@@ -42,6 +42,9 @@
     "Filter": "Фильтр",
     "Reset": "Сбросить",
 
+    "Error": "Ошибка",
+    "Please fix the errors and try again": "Пожалуйста, исправьте ошибки и попробуйте заново",
+
     "Edit": "Редактировать",
     "Update": "Обновить",
     "Store": "Сохранить",
@@ -97,6 +100,11 @@
     "Filename": "Название файла",
     "File size": "Размер файла",
     "Attach files": "Добавить вложения",
+
+    "Status history": "История статусов",
+    "Start date": "Начало",
+    "End date": "Конец",
+    "Duration days": "Продолжительность дней",
 
     "Notifications": "Уведомления",
     "Mark selected as read": "Пометить отмеченные как прочитанное",

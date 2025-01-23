@@ -1394,5 +1394,24 @@ a {
 /* ------------ /end Secondary table ------------ */
 
 
+/* ------------ Errors ------------ */
+.errors {
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.errors__title {
+    color: var(--theme-danger-color);
+    margin-bottom: 8px;
+}
+
+.errors__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+/* ------------ /end Errors ------------ */
+
+
 
 

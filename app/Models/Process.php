@@ -92,10 +92,10 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
     public function statusHistory()
     {
-        return $this->hasMany(ProcessStatusHistory::class)->orderBy('id', 'asc');
+        return $this->hasMany(ProcessStatusHistory::class)->orderBy('start_date', 'asc');
     }
 
-    public function currentStatusHistory()
+    public function activeStatusHistory()
     {
         return $this->hasOne(ProcessStatusHistory::class)
             ->whereNull('end_date');
@@ -297,6 +297,52 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         ]);
     }
 
+    /**
+     * Scope the query to include basic relation for process status history pages.
+     */
+    public function scopeWitRelationsForHistoryPage($query)
+    {
+        return $query->with([
+            'statusHistory' => function ($historyQuery) {
+                $historyQuery->with([
+                    'status' => function ($statusQuery) {
+                        $statusQuery->with('generalStatus');
+                    },
+                ]);
+            },
+
+            'product' => function ($productQuery) {
+                $productQuery->select(
+                    'id',
+                    'manufacturer_id',
+                    'inn_id',
+                    'form_id',
+                    'dosage',
+                    'pack',
+                )
+                    ->with([
+                        'inn',
+                        'form',
+
+                        'manufacturer' => function ($manufQuery) {
+                            $manufQuery->select(
+                                'id',
+                                'name',
+                                'country_id',
+                                'bdm_user_id',
+                                'analyst_user_id'
+                            )
+                                ->with([
+                                    'country',
+                                    'analyst:id,name,photo',
+                                    'bdm:id,name,photo',
+                                ]);
+                        },
+                    ]);
+            },
+        ]);
+    }
+
     public function scopeWithBasicRelationCounts($query)
     {
         return $query->withCount([
@@ -446,7 +492,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             return $query;
         }
 
-        $query->whereHas('currentStatusHistory', function ($historyQuery) use ($request) {
+        $query->whereHas('activeStatusHistory', function ($historyQuery) use ($request) {
             QueryFilterHelper::filterDateRange($request, $historyQuery, ['start_date']);
         });
     }
@@ -738,7 +784,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         // Check if the 'status_id' attribute has been modified
         if ($this->isDirty('status_id')) {
             // Close the current status history entry
-            $this->currentStatusHistory->close();
+            $this->activeStatusHistory->close();
 
             // Create a new status history entry
             $this->addStatusHistory();

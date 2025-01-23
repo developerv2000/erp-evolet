@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Support\Traits\Model\FormatsAttributeForDateTimeInput;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
 
 class ProcessStatusHistory extends Model
 {
+    use FormatsAttributeForDateTimeInput;
+
     /*
     |--------------------------------------------------------------------------
     | Properties
@@ -40,14 +43,32 @@ class ProcessStatusHistory extends Model
         return $this->belongsTo(ProcessStatus::class);
     }
 
-    public function processes()
+    public function process()
     {
-        return $this->hasMany(Process::class);
+        return $this->belongsTo(Process::class)->withTrashed();
     }
 
     /*
     |--------------------------------------------------------------------------
-    | Update & destroy
+    | Events
+    |--------------------------------------------------------------------------
+    */
+
+    protected static function booted(): void
+    {
+        static::deleting(function ($record) {
+            // Active status history cannot be deleted
+            if ($record->isActiveStatusHistory()) {
+                throw ValidationException::withMessages([
+                    'process_status_history_deletion' => trans('validation.custom.process_status_history.is_active_history'),
+                ]);
+            }
+        });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Update
     |--------------------------------------------------------------------------
     */
 
@@ -70,25 +91,6 @@ class ProcessStatusHistory extends Model
         }
 
         $this->save();
-    }
-
-    /**
-     * Delete the model if it is not the active status history of the process.
-     *
-     * @return void
-     * @throws \Illuminate\Validation\ValidationException if the status history is active and cannot be deleted.
-     */
-    public function destroyFromRequest()
-    {
-        // Active status history cannot be deleted
-        if ($this->isActiveStatusHistory()) {
-            throw ValidationException::withMessages([
-                'process_status_history_deletion' => trans('validation.custom.process_status_history.is_active_history'),
-            ]);
-        }
-
-        // Delete the status history record
-        $this->delete();
     }
 
     /*
@@ -114,20 +116,9 @@ class ProcessStatusHistory extends Model
 
     /**
      * Determine if this status history is the active history of the associated process.
-     *
-     * @return bool True if this is the active status history of the process, false otherwise.
      */
     public function isActiveStatusHistory()
     {
-        // Retrieve the process associated with the current process_id
-        $process = Process::find($this->process_id);
-
-        // Return false if the process is not found
-        if (!$process) {
-            return false;
-        }
-
-        // Check if this 'status_id' matches the process's 'status_id' and 'end_date' is null
-        return $process->status_id == $this->status_id && is_null($this->end_date);
+        return $this->end_date ? false : true;
     }
 }
