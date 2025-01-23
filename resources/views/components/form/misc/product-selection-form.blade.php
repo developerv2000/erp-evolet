@@ -1,17 +1,18 @@
-@props(['action'])
+@props(['model'])
 
 <form
-    class="export-as-excel-form"
-    action="{{ $action }}"
+    class="product-selection-form"
+    action="{{ route('product-selection.export-as-excel') }}"
     method="POST"
     data-on-submit="disable-form-submit-button">
 
     @csrf
+    <input type="hidden" name="model" value="{{ $model }}">
 
     <x-misc.button
         class="toolbar__button"
         style="shadowed"
         icon="download"
-        type="submit">{{ __('Export') }}
+        type="submit">ВП
     </x-misc.button>
 </form>

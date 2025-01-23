@@ -5,6 +5,7 @@ use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProcessStatusHistoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductSearchController;
+use App\Http\Controllers\ProductSelectionController;
 use App\Support\Generators\CRUDRouteGenerator;
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +58,11 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
         Route::post('/get-similar-records', 'getSimilarRecordsForRequest');  // AJAX request on create form for uniqness
+    });
+
+    // VP
+    Route::prefix('product-selection')->controller(ProductSelectionController::class)->name('product-selection.')->group(function () {
+        Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });
 
     // Meetings

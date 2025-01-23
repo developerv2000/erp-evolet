@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\CanExportRecordsAsExcel;
+use App\Support\Contracts\Model\ExportsProductSelection;
 use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\GeneralHelper;
 use App\Support\Helpers\QueryFilterHelper;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Gate;
 
-class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
+class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, ExportsProductSelection
 {
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory;
@@ -105,6 +106,9 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         ]);
     }
 
+    /**
+     * Also used while exporting product selection.
+     */
     public function getMatchedProductSearchesAttribute()
     {
         return ProductSearch::where([
@@ -113,7 +117,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             'dosage' => $this->dosage,
             'pack' => $this->pack,
         ])
-            ->select('id', 'country_id')
+            ->select('id', 'country_id', 'status_id')
             ->withOnly('country')
             ->get();
     }
@@ -237,6 +241,29 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $query->withBasicRelations()
             ->withBasicRelationCounts()
             ->with(['comments']);
+    }
+
+    /**
+     * Implement method declared in ExportsProductSelection Interface.
+     */
+    public function scopeWithRelationsForProductSelection($query)
+    {
+        // Select only required fields
+        return $query
+            ->with([
+                'inn',
+                'form',
+                'shelfLife',
+            ])
+            ->select([
+                'id',
+                'inn_id',
+                'form_id',
+                'shelf_life_id',
+                'dosage',
+                'pack',
+                'moq',
+            ]);
     }
 
     // Implement method declared in CanExportRecordsAsExcel Interface

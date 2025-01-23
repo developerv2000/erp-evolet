@@ -39,4 +39,9 @@ class ProductSearchStatus extends Model
     {
         return self::where('name', 'Поиск')->value('id');
     }
+
+    public static function getCanceledStatusID()
+    {
+        return self::where('name', 'Отменено')->value('id');
+    }
 }

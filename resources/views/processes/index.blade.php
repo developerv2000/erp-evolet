@@ -33,6 +33,7 @@
 
                 @can('export-records-as-excel')
                     <x-form.misc.export-as-excel-form action="{{ route('processes.export-as-excel') }}" />
+                    <x-form.misc.product-selection-form model="Process" />
                 @endcan
 
                 <x-misc.buttoned-link

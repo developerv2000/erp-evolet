@@ -192,10 +192,8 @@ export function displayLocalImage(evt) {
     }
 }
 
-export function disableExportAsExcelFormSubmitButton(evt) {
-    const form = evt.target;
-    const submitButton = form.querySelector('button[type="submit"]');
-    submitButton.disabled = true;
+export function disableFormSubmitButton(form) {
+    form.querySelector('button[type="submit"]').disabled = true;
 }
 
 /**

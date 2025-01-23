@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Notifications\ProcessStageUpdatedToContract;
 use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\CanExportRecordsAsExcel;
+use App\Support\Contracts\Model\ExportsProductSelection;
 use App\Support\Contracts\Model\HasTitle;
 use App\Support\Contracts\Model\PreparesFetchedRecordsForExport;
 use App\Support\Helpers\GeneralHelper;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Gate;
 
-class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, PreparesFetchedRecordsForExport
+class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, PreparesFetchedRecordsForExport, ExportsProductSelection
 {
     /** @use HasFactory<\Database\Factories\ProcessFactory> */
     use HasFactory;
@@ -136,6 +137,21 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     | Additional attributes
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Also used while exporting product selection.
+     */
+    public function getMatchedProductSearchesAttribute()
+    {
+        return ProductSearch::where([
+            'inn_id' => $this->product->inn_id,
+            'form_id' => $this->product->form_id,
+            'dosage' => $this->product->dosage,
+            'country_id' => $this->country_id,
+        ])
+            ->select('id', 'country_id', 'status_id')
+            ->get();
+    }
 
     /**
      * Get the number of days past since the 'responsible_people_update_date'.
@@ -390,6 +406,25 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     public static function prepareFetchedRecordsForExport($records)
     {
         self::addGeneralStatusPeriodsForRecords($records);
+    }
+
+    /**
+     * Implement method declared in ExportsProductSelection Interface.
+     *
+     * No eager loads are required for the product selection export.
+     */
+    public function scopeWithRelationsForProductSelection($query)
+    {
+        return $query->with([
+            'product' => function ($productQuery) {
+                $productQuery->withRelationsForProductSelection();
+            },
+        ])
+            ->select(
+                'id',
+                'product_id',
+                'country_id',
+            );
     }
 
     // Implement method declared in CanExportRecordsAsExcel Interface

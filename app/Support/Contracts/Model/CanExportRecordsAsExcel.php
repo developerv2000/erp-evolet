@@ -5,7 +5,7 @@ namespace App\Support\Contracts\Model;
 interface CanExportRecordsAsExcel
 {
     /**
-     * Add model query scoping with eager loaded relations and relations count  for export.
+     * Add model query scoping with eager loaded relations and relations count for export.
      *
      * @return void
      */

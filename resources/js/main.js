@@ -34,6 +34,7 @@ const targetRestoreModalButtons = document.querySelectorAll('[data-click-action=
 const filterForm = document.querySelector('.filter-form');
 const appendsInputsBeforeSubmitForms = document.querySelectorAll('[data-before-submit="appends-inputs"]');
 const showsSpinnerOnSubmitForms = document.querySelectorAll('[data-on-submit="show-spinner"]');
+const disableSubmitButtonOnSubmitForms = document.querySelectorAll('[data-on-submit="disable-form-submit-button"]');
 const exportAsExcelForm = document.querySelector('.export-as-excel-form');
 const editTableColumnsForm = document.querySelector('.edit-table-columns-form');
 const productsCreateForm = document.querySelector('.products-create-form');
@@ -108,7 +109,9 @@ imageInputsWithPreview.forEach((input) => {
     input.addEventListener('change', (evt) => functions.displayLocalImage(evt));
 });
 
-exportAsExcelForm?.addEventListener('submit', (evt) => functions.disableExportAsExcelFormSubmitButton(evt));
+disableSubmitButtonOnSubmitForms.forEach((form) => {
+    form.addEventListener('submit', (evt) => functions.disableFormSubmitButton(evt.target));
+});
 
 // Validate specific input ('dosage', 'pack', 'INN', etc) values.
 specificFormatableInputs.forEach((input) => {
