@@ -58,4 +58,9 @@ class ProcessStatus extends Model
 
         return $records;
     }
+
+    public static function getDefaultSelectedIDValue()
+    {
+        return self::where('name', 'Вб')->value('id');
+    }
 }

@@ -13,6 +13,7 @@
                 labelText="Status"
                 inputName="status_id"
                 :options="$restrictedStatuses"
+                :initialValue="$defaultSelectedStatusIDs"
                 :isRequired="true" />
 
             <x-form.selects.selectize.id-based-multiple-select.default-select

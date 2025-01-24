@@ -66,6 +66,7 @@ class MADViewComposersDefiner
 
         self::defineViewComposer('products.partials.create-form', array_merge($defaultShareData, [
             'defaultSelectedClassID' => ProductClass::getDefaultSelectedIDValue(),
+            'defaultSelectedShelfLifeID' => ProductShelfLife::getDefaultSelectedIDValue(),
             'defaultSelectedZoneIDs' => Zone::getRelatedDefaultSelectedIDValues(),
         ]));
 
@@ -85,6 +86,7 @@ class MADViewComposersDefiner
         ], [
             'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
             'responsiblePeople' => ProcessResponsiblePerson::orderByName()->get(),
+            'defaultSelectedStatusIDs' => ProcessStatus::getDefaultSelectedIDValue(),
         ]);
 
         self::defineViewComposer('processes.partials.edit-product-form-block', [

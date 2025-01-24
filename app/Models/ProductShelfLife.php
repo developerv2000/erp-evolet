@@ -25,4 +25,15 @@ class ProductShelfLife extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Misc
+    |--------------------------------------------------------------------------
+    */
+
+    public static function getDefaultSelectedIDValue()
+    {
+        return self::where('name', 'TBC')->value('id');
+    }
 }

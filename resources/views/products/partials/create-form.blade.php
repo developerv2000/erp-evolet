@@ -59,6 +59,7 @@
                 labelText="Shelf life"
                 inputName="shelf_life_id"
                 :options="$shelfLifes"
+                :initialValue="$defaultSelectedShelfLifeID"
                 :isRequired="true" />
         </div>
     </div>
