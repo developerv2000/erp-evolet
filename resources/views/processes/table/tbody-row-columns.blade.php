@@ -217,9 +217,7 @@
     @break
 
     @case('Responsible')
-        @foreach ($record->responsiblePeople as $person)
-            {{ $person->name }} <br>
-        @endforeach
+        {{ $record->responsiblePerson->name }}
     @break
 
     @case('Responsible update date')

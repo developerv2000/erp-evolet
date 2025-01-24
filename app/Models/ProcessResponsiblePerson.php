@@ -26,6 +26,6 @@ class ProcessResponsiblePerson extends Model
 
     public function processes()
     {
-        return $this->belongsToMany(Process::class, 'process_process_responsible_people', 'responsible_person_id', 'process_id');
+        return $this->hasMany(Process::class, 'responsible_person_id');
     }
 }

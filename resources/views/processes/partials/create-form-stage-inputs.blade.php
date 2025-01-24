@@ -99,6 +99,7 @@
                 labelText="MAH"
                 inputName="marketing_authorization_holder_id"
                 :options="$MAHs"
+                :initialValue="$defaultSelectedMAHID"
                 :isRequired="$stage >= 5" />
         </div>
 

@@ -61,9 +61,9 @@
         inputName="bdm_user_id"
         :options="$bdmUsers" />
 
-    <x-form.selects.selectize.id-based-multiple-select.request-based-select
+    <x-form.selects.selectize.id-based-single-select.request-based-select
         labelText="Responsible"
-        inputName="responsiblePeople[]"
+        inputName="responsible_person_id"
         :options="$responsiblePeople" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select

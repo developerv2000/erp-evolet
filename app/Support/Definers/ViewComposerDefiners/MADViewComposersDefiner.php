@@ -103,6 +103,7 @@ class MADViewComposersDefiner
             'countriesOrderedByName' => Country::orderByName()->get(),
             'currencies' => Currency::orderByName()->get(),
             'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
+            'defaultSelectedMAHID' => MarketingAuthorizationHolder::getDefaultSelectedIDValue(),
         ]);
 
         self::defineViewComposer('processes.partials.filter', [

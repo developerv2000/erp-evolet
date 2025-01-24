@@ -33,4 +33,15 @@ class MarketingAuthorizationHolder extends Model
     {
         return $this->hasMany(ProductSearch::class);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Misc
+    |--------------------------------------------------------------------------
+    */
+
+    public static function getDefaultSelectedIDValue()
+    {
+        return self::where('name', 'Обсуждается')->value('id');
+    }
 }

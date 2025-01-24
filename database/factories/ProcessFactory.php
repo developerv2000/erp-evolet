@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Country;
+use App\Models\ProcessResponsiblePerson;
 use App\Models\ProcessStatus;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,14 +24,7 @@ class ProcessFactory extends Factory
             'product_id' => rand(1, Product::count()),
             'status_id' => rand(1, ProcessStatus::count()),
             'country_id' => rand(1, Country::count()),
+            'responsible_person_id' => rand(1, ProcessResponsiblePerson::count()),
         ];
-    }
-
-    public function configure()
-    {
-        return $this->afterCreating(function ($record) {
-            $record->responsiblePeople()->attach(rand(1, 10));
-            $record->responsiblePeople()->attach(rand(11, 20));
-        });
     }
 }

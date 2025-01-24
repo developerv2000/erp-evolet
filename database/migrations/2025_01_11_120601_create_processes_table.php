@@ -32,7 +32,14 @@ return new class extends Migration
                 ->on('process_statuses');
 
             // auto
-            $table->date('responsible_people_update_date');
+            $table->date('responsible_person_update_date');
+
+            // required
+            $table->unsignedSmallInteger('responsible_person_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('process_responsible_people');
 
             // Stage 1 (ВП)
             // required and immutable after stage 1

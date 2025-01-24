@@ -117,19 +117,14 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         return $this->belongsTo(MarketingAuthorizationHolder::class, 'marketing_authorization_holder_id');
     }
 
+    public function responsiblePerson()
+    {
+        return $this->belongsTo(ProcessResponsiblePerson::class, 'responsible_person_id');
+    }
+
     public function clinicalTrialCountries()
     {
         return $this->belongsToMany(Country::class, 'clinical_trial_country_process');
-    }
-
-    public function responsiblePeople()
-    {
-        return $this->belongsToMany(
-            ProcessResponsiblePerson::class,
-            'process_process_responsible_people',
-            'process_id',
-            'responsible_person_id'
-        );
     }
 
     /*
@@ -214,6 +209,10 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
     protected static function booted(): void
     {
+        static::creating(function ($record) {
+            $record->responsible_person_update_date = now();
+        });
+
         static::created(function ($record) {
             $record->addStatusHistory();
         });
@@ -221,6 +220,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         static::updating(function ($record) {
             $record->updateStatusHistory();
             $record->notifyUsersOnContractStage();
+            $record->handleResponsiblePersonUpdateDate();
         });
 
         static::saving(function ($record) {
@@ -230,7 +230,6 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             $record->syncRelatedProductUpdates();
             $record->handleForecastUpdateDate();
             $record->handleIncreasedPriceDate();
-            $record->handleResponsiblePeopleUpdateDate();
         });
 
         static::restoring(function ($record) {
@@ -240,7 +239,6 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         });
 
         static::forceDeleting(function ($record) {
-            $record->responsiblePeople()->detach();
             $record->clinicalTrialCountries()->detach();
 
             foreach ($record->statusHistory as $history) {
@@ -262,7 +260,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             'currency',
             'MAH',
             'clinicalTrialCountries',
-            'responsiblePeople',
+            'responsiblePerson',
             'lastComment',
 
             'statusHistory' => function ($historyQuery) {
@@ -473,7 +471,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             $this->forecast_year_1,
             $this->forecast_year_2,
             $this->forecast_year_3,
-            $this->responsiblePeople->pluck('name')->implode(' '),
+            $this->responsiblePerson->name,
             $this->responsible_people_update_date,
             $this->days_past,
             $this->trademark_en,
@@ -585,10 +583,9 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     private static function getFilterConfig(): array
     {
         return [
-            'whereEqual' => ['contracted', 'registered'],
+            'whereEqual' => ['contracted', 'registered', 'responsible_person_id'],
             'whereIn' => ['id', 'country_id', 'status_id', 'marketing_authorization_holder_id'],
             'like' => ['trademark_en', 'trademark_ru'],
-            'belongsToMany' => ['responsiblePeople'],
             'dateRange' => ['created_at', 'updated_at'],
 
             'relationEqual' => [
@@ -702,7 +699,6 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
             // BelongsToMany relations
             $record->clinicalTrialCountries()->attach($request->input('clinicalTrialCountries'));
-            $record->responsiblePeople()->attach($request->input('responsiblePeople'));
 
             // HasMany relations
             $record->storeCommentFromRequest($request);
@@ -715,7 +711,6 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
         // BelongsToMany relations
         $this->clinicalTrialCountries()->sync($request->input('clinicalTrialCountries'));
-        $this->responsiblePeople()->sync($request->input('responsiblePeople'));
 
         // HasMany relations
         $this->storeCommentFromRequest($request);
@@ -727,7 +722,6 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
         // BelongsToMany relations
         $record->clinicalTrialCountries()->attach($request->input('clinicalTrialCountries'));
-        $record->responsiblePeople()->attach($request->input('responsiblePeople'));
 
         // HasMany relations
         $record->storeCommentFromRequest($request);
@@ -773,29 +767,17 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     }
 
     /**
-     * Handle validation and automatic updates for the 'responsible_people_update_date' attribute.
+     * Handle updates for the 'responsible_person_update_date' attribute.
      *
-     * This method validates and updates the 'responsible_people_update_date'
-     * attribute whenever the 'responsiblePeople' relationship is modified during
-     * the saving event. It ensures the date is updated only when there are changes
-     * to the responsible people list.
+     * This method updates the 'responsible_person_update_date'
+     * attribute whenever the 'responsible_person_id' attribute is modified during
+     * the updating event.
      */
-    private function handleResponsiblePeopleUpdateDate()
+    private function handleResponsiblePersonUpdateDate()
     {
         // Set the timestamp to the current date when the model is created
-        if (!$this->responsible_people_update_date) {
-            $this->responsible_people_update_date = now();
-            return;
-        }
-
-        // Retrieve the requested and existing responsible people IDs
-        $requestedIDs = request()->input('responsiblePeople', []); // IDs from the request
-        $currentIDs = $this->responsiblePeople->pluck('id')->toArray(); // Current IDs in the model
-
-        // Check for differences between the requested and current responsible people IDs
-        if (count(array_diff($requestedIDs, $currentIDs)) || count(array_diff($currentIDs, $requestedIDs))) {
-            // Update the timestamp if there are any changes
-            $this->responsible_people_update_date = now();
+        if ($this->isDirty('responsible_person_id')) {
+            $this->responsible_person_update_date = now();
         }
     }
 

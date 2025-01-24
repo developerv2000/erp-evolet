@@ -15,20 +15,6 @@ return new class extends Migration
             $table->unsignedSmallInteger('id')->autoIncrement();
             $table->string('name')->unique();
         });
-
-        Schema::create('process_process_responsible_people', function (Blueprint $table) {
-            $table->unsignedInteger('process_id')
-                ->foreign()
-                ->references('id')
-                ->on('processes');
-
-            $table->unsignedSmallInteger('responsible_person_id')
-                ->foreign()
-                ->references('id')
-                ->on('process_responsible_people');
-
-            $table->primary(['process_id', 'responsible_person_id']);
-        });
     }
 
     /**
@@ -37,6 +23,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('process_responsible_people');
-        Schema::dropIfExists('process_process_responsible_people');
     }
 };

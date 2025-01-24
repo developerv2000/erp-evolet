@@ -23,9 +23,9 @@
                 optionCaptionField="code"
                 :isRequired="true" />
 
-            <x-form.selects.selectize.id-based-multiple-select.default-select
+            <x-form.selects.selectize.id-based-single-select.default-select
                 labelText="Responsible"
-                inputName="responsiblePeople[]"
+                inputName="responsible_person_id"
                 :options="$responsiblePeople"
                 :isRequired="true" />
         </div>

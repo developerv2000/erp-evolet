@@ -43,9 +43,9 @@
                     readonly />
             @endif
 
-            <x-form.selects.selectize.id-based-multiple-select.record-relation-select
+            <x-form.selects.selectize.id-based-single-select.record-field-select
                 labelText="Responsible"
-                inputName="responsiblePeople[]"
+                field="responsible_person_id"
                 :model="$record"
                 :options="$responsiblePeople"
                 :isRequired="true" />
