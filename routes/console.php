@@ -18,7 +18,7 @@ Artisan::command('users:reset-settings', function () {
 })->purpose("Reset all user settings");
 
 
-Artisan::command('users:reset-settings', function () {
+Artisan::command('vps:validate-responsible-people', function () {
     $kpg = [18, 23, 16, 15, 19, 17, 20];
     $kpgID = 38;
     $bdmID = 39;
