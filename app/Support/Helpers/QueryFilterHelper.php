@@ -24,6 +24,7 @@ class QueryFilterHelper
         $query = self::filterDate($request, $query, $config['date'] ?? []);
         $query = self::filterLike($request, $query, $config['like'] ?? []);
         $query = self::filterDateRange($request, $query, $config['dateRange'] ?? []);
+        $query = self::filterWhereRelationDateRangeAmbiguous($request, $query, $config['relationDateRangeAmbiguous'] ?? []);
         $query = self::filterBelongsToMany($request, $query, $config['belongsToMany'] ?? []);
         $query = self::filterRelationEqual($request, $query, $config['relationEqual'] ?? []);
         $query = self::filterRelationIn($request, $query, $config['relationIn'] ?? []);
@@ -100,6 +101,26 @@ class QueryFilterHelper
         }
         return $query;
     }
+
+    public static function filterWhereRelationDateRangeAmbiguous(Request $request, Builder $query, array $relations): Builder
+    {
+        foreach ($relations as $relation) {
+            if ($request->filled($relation['attribute'])) {
+                [$fromDate, $toDate] = explode(' - ', $request->input($relation['attribute']));
+
+                // Parse dates to match valid timestamp format
+                $fromDate = Carbon::createFromFormat('d/m/Y', $fromDate)->format('Y-m-d');
+                $toDate = Carbon::createFromFormat('d/m/Y', $toDate)->format('Y-m-d');
+
+                $query->whereHas($relation['name'], function ($q) use ($fromDate, $toDate, $relation) {
+                    $q->whereDate($relation['ambiguousAttribute'], '>=', $fromDate)
+                        ->whereDate($relation['ambiguousAttribute'], '<', $toDate);
+                });
+            }
+        }
+        return $query;
+    }
+
 
     public static function filterBelongsToMany(Request $request, Builder $query, array $relationNames): Builder
     {

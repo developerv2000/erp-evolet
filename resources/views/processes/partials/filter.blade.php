@@ -1,7 +1,7 @@
 <x-filter.layout>
     <x-form.inputs.request-based-input
         labelText="Status date"
-        inputName="current_status_start_date"
+        inputName="active_status_start_range_date"
         class="date-range-picker-input"
         autocomplete="off" />
 

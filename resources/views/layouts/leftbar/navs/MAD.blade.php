@@ -72,6 +72,20 @@
                     <span class="leftbar__nav-link-text">{{ __('Meetings') }}</span>
                 </a>
             @endcan
+
+            {{-- KPI --}}
+            @can('view-MAD-KPI')
+                <a
+                    @class([
+                        'leftbar__nav-link',
+                        'leftbar__nav-link--active' => request()->routeIs('mad-kpi.index'),
+                    ])
+                    href="{{ route('mad-kpi.index') }}">
+
+                    <x-misc.material-symbol class="leftbar__nav-link-icon" icon="bar_chart" />
+                    <span class="leftbar__nav-link-text">{{ __('KPI') }}</span>
+                </a>
+            @endcan
         </nav>
     </div>
 @endcanany

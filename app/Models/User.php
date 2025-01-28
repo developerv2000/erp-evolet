@@ -251,6 +251,11 @@ class User extends Authenticatable
             || $this->isMADAdministrator();
     }
 
+    public function isMADAnalyst()
+    {
+        return $this->hasRole(Role::MAD_ANALYST_NAME);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Permissions

@@ -67,6 +67,9 @@
     <script src="{{ asset('plugins/simditor/uploader.js') }}"></script>
     <script src="{{ asset('plugins/simditor/simditor.js') }}"></script>
 
+    {{-- Pushable scripts --}}
+    @stack('scripts')
+
     @vite('resources/js/main.js')
 </body>
 

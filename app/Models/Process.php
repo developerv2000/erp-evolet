@@ -504,30 +504,13 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         $query = QueryFilterHelper::applyFilters($query, $request, self::getFilterConfig());
 
         // Additional filters
-        self::applyCurrentStatusDateFilter($query, $request);
         self::applyPermissionsFilter($query, $request);
         self::applyManufacturerRegionFilter($query, $request);
+        self::applyActiveStatusDateRangeFilter($query, $request);
+        self::applyContractedOnSpecificMonthFilter($query, $request); // if redirected from KPI/ASP pages
+        self::applyRegisteredOnSpecificMonthFilter($query, $request); // if redirected from KPI/ASP pages
 
         return $query;
-    }
-
-    /**
-     * Apply filtering based on the current status start date.
-     */
-    public static function applyCurrentStatusDateFilter($query, $request)
-    {
-        // If the date filter is not provided, return the query without modification.
-        if ($request->filled('current_status_start_date')) {
-            $request->merge([
-                'start_date' => $request->input('current_status_start_date')
-            ]);
-        } else {
-            return $query;
-        }
-
-        $query->whereHas('activeStatusHistory', function ($historyQuery) use ($request) {
-            QueryFilterHelper::filterDateRange($request, $historyQuery, ['start_date']);
-        });
     }
 
     /**
@@ -578,6 +561,78 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         $query->whereHas('manufacturer', function ($manufacturersQuery) use ($request) {
             return Manufacturer::applyRegionFilter($manufacturersQuery, $request);
         });
+    }
+
+    /**
+     * Apply data range filtering based on the active status start date.
+     */
+    public static function applyActiveStatusDateRangeFilter($query, $request)
+    {
+        $filterConfig = [
+            'relationDateRangeAmbiguous' => [
+                [
+                    'name' => 'activeStatusHistory',
+                    'attribute' => 'active_status_start_range_date',
+                    'ambiguousAttribute' => 'start_date',
+                ]
+            ],
+        ];
+
+        $query = QueryFilterHelper::applyFilters($query, $request, $filterConfig);
+    }
+
+    /**
+     * Filter only processes which have been contracted,
+     * for the requested month and year.
+     *
+     * IMPORTANT: Only 'Kk' ignore 'SKk' and 'Nkk'.
+     */
+    public static function applyContractedOnSpecificMonthFilter($query, $request)
+    {
+        if ($request->filled('contracted_on_specific_month')) {
+            return $query->whereHas('statusHistory', function ($historyQuery) use ($request) {
+                $historyQuery
+                    ->whereYear('start_date', $request->input('contracted_on_year'))
+                    ->whereMonth('start_date', $request->input('contracted_on_month'))
+                    ->where('status_id', ProcessStatus::CONTACTED_RECORD_ID);
+            });
+        }
+    }
+
+    /**
+     * Filter only processes which have been registered,
+     * for the requested month and year.
+     *
+     * IMPORTANT: Only 'Пцр' ignore 'SПцр'.
+     */
+    public static function applyRegisteredOnSpecificMonthFilter($query, $request)
+    {
+        if ($request->filled('registered_on_specific_month')) {
+            return $query->whereHas('statusHistory', function ($historyQuery) use ($request) {
+                $historyQuery
+                    ->whereYear('start_date', $request->input('registered_on_year'))
+                    ->whereMonth('start_date', $request->input('registered_on_month'))
+                    ->where('status_id', ProcessStatus::REGISTERED_RECORD_ID);
+            });
+        }
+    }
+
+    /**
+     * Filter only processes which have specific general status history,
+     * for the requested month and year.
+     */
+    public static function applyGeneralStatusHistoryFilter($query, $request)
+    {
+        if ($request->filled('has_general_status_history')) {
+            return $query->whereHas('statusHistory', function ($historyQuery) use ($request) {
+                $historyQuery
+                    ->whereYear('start_date', $request->input('has_general_status_for_year'))
+                    ->whereMonth('start_date', $request->input('has_general_status_for_month'))
+                    ->whereHas('status.generalStatus', function ($statusQuery) use ($request) {
+                        $statusQuery->where('id', $request->input('has_general_status_id'));
+                    });
+            });
+        }
     }
 
     private static function getFilterConfig(): array

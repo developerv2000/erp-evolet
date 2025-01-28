@@ -247,5 +247,5 @@ MYANMAR (BURMA) => Myanmar => done
         });
 
 
-
-sudo rm -rf /path/to/directory
+--------------------------------------- After new version
+Foreign key must be added into processes table => 'responsible_person_id'

@@ -35,7 +35,7 @@ class ProductSearch extends BaseModel implements HasTitle, CanExportRecordsAsExc
     const DEFAULT_ORDER_TYPE = 'desc';
     const DEFAULT_PAGINATION_LIMIT = 50;
 
-    const LIMITED_EXCEL_RECORDS_COUNT_FOR_EXPORT = 15;
+    const LIMITED_EXCEL_RECORDS_COUNT_FOR_EXPORT = 400;
     const STORAGE_PATH_OF_EXCEL_TEMPLATE_FILE_FOR_EXPORT = 'app/excel/export-templates/kvpp.xlsx';
     const STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES = 'app/excel/exports/kvpp';
 
