@@ -34,6 +34,7 @@ class MADViewComposersDefiner
         self::defineProductComposers();
         self::defineProcessComposers();
         self::defineProductSearchComposers();
+        self::defineKPIComposers();
     }
 
     /*
@@ -139,6 +140,17 @@ class MADViewComposersDefiner
             'product-searches.partials.edit-form',
             'product-searches.partials.filter'
         ], $defaultShareData);
+    }
+
+    private static function defineKPIComposers()
+    {
+        self::defineViewComposer('mad-kpi.partials.filter',  [
+            'analystUsers' => User::getMADAnalystsMinified(),
+            'bdmUsers' => User::getBDMsMinifed(),
+            'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+            'regions' => Country::getRegionOptions(),
+            'months' => GeneralHelper::collectCalendarMonths(),
+        ]);
     }
 
     /*

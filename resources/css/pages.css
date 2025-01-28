@@ -119,3 +119,25 @@
     border-radius: 50%;
 }
 /* ------------ /end User pages ------------ */
+
+
+/* ------------ MAD KPI pages ------------ */
+.mad-kpi .main-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.mad-kpi__pies-wrapper {
+    display: flex;
+    gap: 20px;
+}
+
+.mad-kpi__current-processes-pie,
+.mad-kpi__maximum-processes-pie {
+    width: 50%;
+    display: flex;
+    height: 380px;
+}
+
+/* ------------ /MAD KPI pages ------------ */

@@ -1,26 +1,14 @@
 @extends('layouts.app', [
     'pageTitle' => __('KPI'),
-    'pageName' => 'mad-kpi-index',
+    'pageName' => 'mad-kpi',
     'mainAutoOverflowed' => false,
 ])
 
 @section('content')
     <div class="main-box">
-        {{-- Toolbar --}}
-        <div class="toolbar toolbar--joined">
-            {{-- blade-formatter-disable --}}
-            @php
-                $crumbs = [
-                    ['link' => route('mad-kpi.index'), 'text' => __('KPI')]
-                ];
-            @endphp
-            {{-- blade-formatter-enable --}}
-
-            <x-layouts.breadcrumbs :crumbs="$crumbs" />
-        </div>
-
-        {{-- Charts and tables --}}
-        {{-- @include('mad-kpi.partials.current-processes.pie') --}}
+        @include('mad-kpi.partials.process-pies')
+        @include('mad-kpi.partials.current-processes.table')
+        @include('mad-kpi.partials.current-processes.chart')
     </div>
 @endsection
 

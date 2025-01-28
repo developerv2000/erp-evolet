@@ -56,8 +56,6 @@ class MADKPIController extends Controller
             'yearlyMaximumProcesses' => $yearlyMaximumProcesses,
         ];
 
-        dd($kpi);
-
         return view('mad-kpi.index', compact('request', 'kpi'));
     }
 
@@ -103,7 +101,7 @@ class MADKPIController extends Controller
 
         // Get only request months
         if ($request->input('months')) {
-            $months = $months->whereIn('number', $request->input('months'))
+            $months = $months->whereIn('name', $request->input('months'))
                 ->sortBy('number');
         }
 
@@ -284,7 +282,7 @@ class MADKPIController extends Controller
                     // Default query
                 } else {
                     $queryParamsCopy['general_status_id[]'] = $status->id;
-                    $queryParamsCopy['active_status_start_range_date'] = $this->generateMonthRangeForDate($request->year, $month['number']);
+                    $queryParamsCopy['active_status_start_date_range'] = $this->generateMonthRangeForDate($request->year, $month['number']);
                 }
 
                 $link = route('processes.index', $queryParamsCopy);

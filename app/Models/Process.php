@@ -506,9 +506,10 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         // Additional filters
         self::applyPermissionsFilter($query, $request);
         self::applyManufacturerRegionFilter($query, $request);
-        self::applyActiveStatusDateRangeFilter($query, $request);
+        self::applyActiveStatusStartDateRangeFilter($query, $request);
         self::applyContractedOnSpecificMonthFilter($query, $request); // if redirected from KPI/ASP pages
         self::applyRegisteredOnSpecificMonthFilter($query, $request); // if redirected from KPI/ASP pages
+        self::applyGeneralStatusHistoryFilter($query, $request); // if redirected from KPI/ASP pages
 
         return $query;
     }
@@ -564,15 +565,15 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     }
 
     /**
-     * Apply data range filtering based on the active status start date.
+     * Apply date range filtering based on the active status start date.
      */
-    public static function applyActiveStatusDateRangeFilter($query, $request)
+    public static function applyActiveStatusStartDateRangeFilter($query, $request)
     {
         $filterConfig = [
             'relationDateRangeAmbiguous' => [
                 [
                     'name' => 'activeStatusHistory',
-                    'attribute' => 'active_status_start_range_date',
+                    'attribute' => 'active_status_start_date_range',
                     'ambiguousAttribute' => 'start_date',
                 ]
             ],

@@ -1,9 +1,59 @@
 <x-filter.layout>
     <x-form.inputs.request-based-input
         labelText="Status date"
-        inputName="active_status_start_range_date"
+        inputName="active_status_start_date_range"
         class="date-range-picker-input"
         autocomplete="off" />
+
+    {{-- Readonly 'contracted' inputs --}}
+    @if ($request->has('contracted_on_specific_month'))
+        <input type="hidden" name="contracted_on_specific_month" value="1">
+
+        <x-form.inputs.request-based-input
+            labelText="Contracted on year"
+            inputName="contracted_on_year"
+            readonly />
+
+        <x-form.inputs.request-based-input
+            labelText="Contracted on month"
+            inputName="contracted_on_month"
+            readonly />
+    @endif
+
+    {{-- Readonly 'registered' inputs --}}
+    @if ($request->has('registered_on_specific_month'))
+        <input type="hidden" name="registered_on_specific_month" value="1">
+
+        <x-form.inputs.request-based-input
+            labelText="Registered on year"
+            inputName="registered_on_year"
+            readonly />
+
+        <x-form.inputs.request-based-input
+            labelText="Registered on month"
+            inputName="registered_on_month"
+            readonly />
+    @endif
+
+    {{-- Readonly 'general status history' inputs --}}
+    @if ($request->has('has_general_status_history'))
+        <input type="hidden" name="has_general_status_history" value="1">
+
+        <x-form.inputs.request-based-input
+            labelText="Has general status history for year"
+            inputName="has_general_status_for_year"
+            readonly />
+
+        <x-form.inputs.request-based-input
+            labelText="Has general status history for month"
+            inputName="has_general_status_for_month"
+            readonly />
+
+        <x-form.inputs.request-based-input
+            labelText="Has general status history of ID"
+            inputName="has_general_status_id"
+            readonly />
+    @endif
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Search country"
