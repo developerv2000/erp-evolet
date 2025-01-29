@@ -6,9 +6,16 @@
 
 @section('content')
     <div class="main-box">
-        @include('mad-kpi.partials.process-pies')
+        <div class="mad-kpi__pies-wrapper">
+            @include('mad-kpi.partials.current-processes.pie')
+            @include('mad-kpi.partials.maximum-processes.pie')
+        </div>
+
         @include('mad-kpi.partials.current-processes.table')
-        @include('mad-kpi.partials.current-processes.chart')
+        @include('mad-kpi.partials.current-processes.graph')
+
+        @include('mad-kpi.partials.maximum-processes.table')
+        @include('mad-kpi.partials.maximum-processes.graph')
     </div>
 @endsection
 

@@ -2,12 +2,12 @@
     {{-- Toolbar --}}
     <div class="toolbar toolbar--joined toolbar--for-table">
         {{-- blade-formatter-disable --}}
-    @php
-        $crumbs = [
-            ['link' => null, 'text' => 'Ключевые показатели по тщательной обработке продуктов по месяцам']
-        ];
-    @endphp
-    {{-- blade-formatter-enable --}}
+        @php
+            $crumbs = [
+                ['link' => null, 'text' => 'Ключевые показатели по тщательной обработке продуктов по месяцам (уникальный показатель по этапам)']
+            ];
+        @endphp
+        {{-- blade-formatter-enable --}}
 
         <x-layouts.breadcrumbs :crumbs="$crumbs" />
     </div>
