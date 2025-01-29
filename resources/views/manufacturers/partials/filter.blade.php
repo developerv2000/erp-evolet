@@ -1,4 +1,19 @@
 <x-filter.layout>
+    {{-- Readonly 'active' inputs --}}
+    @if ($request->has('has_active_processes_for_specific_month'))
+        <input type="hidden" name="has_active_processes_for_specific_month" value="1">
+
+        <x-form.inputs.request-based-input
+            labelText="Has active processes for year"
+            inputName="has_active_processes_for_year"
+            readonly />
+
+        <x-form.inputs.request-based-input
+            labelText="Has active processes for month"
+            inputName="has_active_processes_for_month"
+            readonly />
+    @endif
+
     <x-form.selects.selectize.id-based-single-select.request-based-select
         labelText="Analyst"
         inputName="analyst_user_id"

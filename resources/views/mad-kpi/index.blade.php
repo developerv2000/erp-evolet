@@ -16,6 +16,9 @@
 
         @include('mad-kpi.partials.maximum-processes.table')
         @include('mad-kpi.partials.maximum-processes.graph')
+
+        @include('mad-kpi.partials.active-manufacturers.table')
+        @include('mad-kpi.partials.active-manufacturers.graph')
     </div>
 @endsection
 

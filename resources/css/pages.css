@@ -142,8 +142,9 @@
 }
 
 .mad-kpi__current-processes-graph,
-.mad-kpi__maximum-processes-graph {
-    height: 600px;
+.mad-kpi__maximum-processes-graph,
+.mad-kpi__active-manufacturers-graph {
+    height: 480px;
 }
 
 /* ------------ /MAD KPI pages ------------ */

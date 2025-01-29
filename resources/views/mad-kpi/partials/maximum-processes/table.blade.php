@@ -1,4 +1,4 @@
-<div class="mad-kpi__current-processes-table-wrapper">
+<div class="mad-kpi__maximum-processes-table-wrapper">
     {{-- Toolbar --}}
     <div class="toolbar toolbar--joined toolbar--for-table">
         {{-- blade-formatter-disable --}}

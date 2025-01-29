@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Manufacturer;
 use App\Models\Process;
 use App\Models\ProcessGeneralStatus;
 use App\Support\Helpers\GeneralHelper;
@@ -44,16 +45,22 @@ class MADKPIController extends Controller
         // Calculate 'sum_of_all_status_processes' of months
         $this->addSumOfAllStatusesForMonths($generalStatuses, $months);
 
+        // Calculate 'active manufacturers' of months and add links
+        $this->addActiveManufacturersCountsForMonths($months, $request);
+        $this->addActiveManufacturersLinksForMonths($months, $request);
+
         // Calculate yearly counts
         $yearlyCurrentProcesses = $generalStatuses->sum('sum_of_monthly_current_processes');
         $yearlyMaximumProcesses = $generalStatuses->sum('sum_of_monthly_maximum_processes');
+        $yearlyActiveManufacturers = $months->sum('active_manufacturers_count');
 
         // Compact all in single variable
         $kpi = [
-            'months' => $months,
+            'months' => array_values($months->toArray()), // Important: convert into array to avoid JS errors
             'generalStatuses' => $generalStatuses,
             'yearlyCurrentProcesses' => $yearlyCurrentProcesses,
             'yearlyMaximumProcesses' => $yearlyMaximumProcesses,
+            'yearlyActiveManufacturers' => $yearlyActiveManufacturers,
         ];
 
         return view('mad-kpi.index', compact('request', 'kpi'));
@@ -105,6 +112,7 @@ class MADKPIController extends Controller
                 ->sortBy('number');
         }
 
+        // Translate months
         GeneralHelper::translateMonthNames($months);
 
         return $months;
@@ -165,12 +173,12 @@ class MADKPIController extends Controller
     }
 
     /**
-     * Get only required filter query parameters from the request.
+     * Get only required filter query parameters from the request for Process model.
      *
      * @param Illuminate\Http\Request $request
      * @return array
      */
-    private function getRequiredFilterQueryParameters($request)
+    private function getFilterQueryParametersForProcesses($request)
     {
         return $request->only([
             'analyst_user_id',
@@ -178,6 +186,27 @@ class MADKPIController extends Controller
             'country_id',
             'region',
         ]);
+    }
+
+    /**
+     * Get only required filter query parameters from the request for Process model.
+     *
+     * @param Illuminate\Http\Request $request
+     * @return array
+     */
+    private function getFilterQueryParametersForManufacturers($request)
+    {
+        $query = $request->only([
+            'analyst_user_id',
+            'bdm_user_id',
+            'region',
+        ]);
+
+        if ($request->has('country_id')) {
+            $query['process_country_id'] = $request->country_id;
+        }
+
+        return $query;
     }
 
     /**
@@ -261,7 +290,7 @@ class MADKPIController extends Controller
     private function addCurrentProcessLinksForStatusMonths($generalStatuses, $request)
     {
         // Get required filter query parameters from request
-        $queryParams = $this->getRequiredFilterQueryParameters($request);
+        $queryParams = $this->getFilterQueryParametersForProcesses($request);
 
         foreach ($generalStatuses as $status) {
             foreach ($status->months as $month) {
@@ -362,7 +391,7 @@ class MADKPIController extends Controller
     private function addMaximumProcessLinksForStatusMonths($generalStatuses, $request)
     {
         // Get required filter query parameters from request
-        $queryParams = $this->getRequiredFilterQueryParameters($request);
+        $queryParams = $this->getFilterQueryParametersForProcesses($request);
 
         foreach ($generalStatuses as $status) {
             foreach ($status->months as $month) {
@@ -439,6 +468,58 @@ class MADKPIController extends Controller
 
             $month['sum_of_all_current_process'] = $sumOfCurrentProcesses;
             $month['sum_of_all_maximum_process'] = $sumOfMaximumProcesses;
+        }
+    }
+
+    /*
+    |-----------------------------------------
+    | Active manufacturers counts & links
+    |-----------------------------------------
+    */
+
+    private function addActiveManufacturersCountsForMonths($months, $request)
+    {
+        foreach ($months as $month) {
+            $query = Manufacturer::query();
+            $clonedRequest = $request->duplicate();
+
+            // Validate 'country_code' from request
+            if ($clonedRequest->has('country_id')) {
+                $clonedRequest->merge([
+                    'process_country_id' => $clonedRequest->country_id,
+                    'country_id' => null,
+                ]);
+            }
+
+            // Add required parameters for querying active manufacturers
+            $clonedRequest->merge([
+                'has_active_processes_for_specific_month' => true,
+                'has_active_processes_for_year' => $request->year,
+                'has_active_processes_for_month' => $month['number'],
+            ]);
+
+            // Apply base filters
+            $query = Manufacturer::filterQueryForRequest($query, $clonedRequest);
+
+            // Set active manufacturers for month
+            $month['active_manufacturers_count'] = $query->count();;
+        }
+    }
+
+    private function addActiveManufacturersLinksForMonths($months, $request)
+    {
+        // Get required filter query parameters from request
+        $queryParams = $this->getFilterQueryParametersForManufacturers($request);
+
+        foreach ($months as $month) {
+            $queryParamsCopy = $queryParams;
+
+            $queryParamsCopy['has_active_processes_for_specific_month'] = true;
+            $queryParamsCopy['has_active_processes_for_year'] = $request->year;
+            $queryParamsCopy['has_active_processes_for_month'] = $month['number'];
+
+            $link = route('manufacturers.index', $queryParamsCopy);
+            $month['active_manufacturers_link'] = $link;
         }
     }
 }

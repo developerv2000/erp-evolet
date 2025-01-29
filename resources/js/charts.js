@@ -213,7 +213,8 @@ const graphLineTypeSeriesLabelOptions = {
 let currentProcessesPie,
     maximumProcessesPie,
     currentProcessesGraph,
-    maximumProcessesGraph;
+    maximumProcessesGraph,
+    activeManufacturersGraph;
 
 /*
 |--------------------------------------------------------------------------
@@ -382,6 +383,46 @@ function initializeMADMaximumProcessesGraph() {
     maximumProcessesGraph.setOption(options);
 }
 
+function initializeMADActiveManufacturersGraph() {
+    const container = document.querySelector('.mad-kpi__active-manufacturers-graph');
+    activeManufacturersGraph = echarts.init(container, theme, chartOptions);
+
+    const series = [
+        {
+            type: 'bar',
+            data: Object.keys(kpi.months).map(key => ({
+                value: kpi.months[key].active_manufacturers_count,
+                label: graphBarTypeSeriesLabelOptions,
+            })),
+        }
+    ];
+
+    let options = {
+        ...graphOptions,
+        title: {
+            ...chartTitleOptions,
+            text: 'Количество активных производителей по месяцам',
+        },
+        series: series,
+        xAxis: [
+            {
+                ...graphXAxisItemOptions,
+                data: kpi.months.map(month => month.name),
+            }
+        ],
+        yAxis: [
+            {
+                ...graphYAxisItemOptions,
+            },
+        ],
+    };
+
+    // Minimize gap between title and chart because of no legend
+    options.grid.top = '72px';
+
+    activeManufacturersGraph.setOption(options);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Initializations
@@ -397,6 +438,7 @@ function init() {
         initializeMADMaximumProcessesPie();
         initializeMADCurrentProcessesGraph();
         initializeMADMaximumProcessesGraph();
+        initializeMADActiveManufacturersGraph();
 
         addResizeListenersToMADCharts();
     }

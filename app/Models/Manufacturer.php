@@ -287,6 +287,7 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
         // Additional filters
         self::applyRegionFilter($query, $request);
         self::applyProcessCountriesFilter($query, $request);
+        self::applyHasActiveProcessesForMonthFilter($query, $request);
 
         return $query;
     }
@@ -337,6 +338,27 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
         ];
 
         QueryFilterHelper::filterRelationInAmbiguous($request, $query, $relationInAmbiguous);
+    }
+
+    /**
+     * Filter only manufacturers which have active processes fot specific month.
+     *
+     * This function filters the query to include only records that have
+     * associated processes with status history starting in the specified month and year
+     * and have stage <= 5.
+     */
+    public static function applyHasActiveProcessesForMonthFilter($query, $request)
+    {
+        if ($request->filled('has_active_processes_for_specific_month')) {
+            return $query->whereHas('processes.statusHistory', function ($historyQuery) use ($request) {
+                $historyQuery
+                    ->whereYear('start_date', $request->input('has_active_processes_for_year'))
+                    ->whereMonth('start_date', $request->input('has_active_processes_for_month'))
+                    ->whereHas('status.generalStatus', function ($statusQuery) {
+                        $statusQuery->where('stage', '<=', 5);
+                    });
+            });
+        }
     }
 
     private static function getFilterConfig(): array

@@ -211,5 +211,32 @@
     "Additional search countries": "Доп стран для поиска",
     "Portfolio manager": "Менеджер",
 
+    "Year": "Год",
+    "Months": "Месяцы",
+    "Total": "Всего",
+    "Extensive version": "Обширная версия",
+    "January": "Январь",
+    "February": "Февраль",
+    "March": "Март",
+    "April": "Апрель",
+    "May": "Май",
+    "June": "Июнь",
+    "July": "Июль",
+    "August": "Август",
+    "September": "Сентябрь",
+    "October": "Октябрь",
+    "November": "Ноябрь",
+    "December": "Декабрь",
+
+    "Contracted on year": "Контракт в году",
+    "Contracted on month": "Контракт в месяце",
+    "Registered on year": "Зарегистрирован в году",
+    "Registered on month": "Зарегистрирован в месяце",
+    "Has general status history for year": "Имеет общую историю статуса в году",
+    "Has general status history for month": "Имеет общую историю статуса в месяце",
+    "Has general status history of ID": "Имеет общую историю статуса ID",
+    "Has active processes for year": "Имеет активные процессы в году",
+    "Has active processes for month": "Имеет активные процессы в месяце",
+    
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }
