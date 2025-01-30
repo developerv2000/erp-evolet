@@ -34,6 +34,17 @@ class MarketingAuthorizationHolder extends Model
         return $this->hasMany(ProductSearch::class);
     }
 
+    public function madAsps()
+    {
+        return $this->belongsToMany(MadAsp::class, 'mad_asp_country_marketing_authorization_holder');
+    }
+
+    public function madAspCountries()
+    {
+        return $this->belongsToMany(Country::class, 'mad_asp_country_marketing_authorization_holder')
+            ->withPivot(MadAsp::getPivotColumnNamesForMAHRelation());
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Misc

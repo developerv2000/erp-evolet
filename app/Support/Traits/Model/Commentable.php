@@ -5,6 +5,7 @@ namespace App\Support\Traits\Model;
 use App\Models\Comment;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 trait Commentable
 {
@@ -33,9 +34,13 @@ trait Commentable
      */
     public static function bootCommentable()
     {
-        static::forceDeleting(function ($model) {
-            foreach ($model->comments as $comment) {
-                $comment->delete();
+        static::deleting(function ($model) {
+            // Check if the model uses SoftDeletes
+            $isSoftDeleting = in_array(SoftDeletes::class, class_uses_recursive($model));
+
+            if (!$isSoftDeleting || $model->forceDeleting) {
+                // Only delete comments if it's a permanent delete
+                $model->comments()->each(fn($comment) => $comment->delete());
             }
         });
     }

@@ -86,6 +86,20 @@
                     <span class="leftbar__nav-link-text">{{ __('KPI') }}</span>
                 </a>
             @endcan
+
+            {{-- ASP --}}
+            @can('view-MAD-ASP')
+                <a
+                    @class([
+                        'leftbar__nav-link',
+                        'leftbar__nav-link--active' => request()->routeIs('mad-asp.index'),
+                    ])
+                    href="{{ route('mad-asp.index') }}">
+
+                    <x-misc.material-symbol class="leftbar__nav-link-icon" icon="pie_chart" />
+                    <span class="leftbar__nav-link-text">{{ __('ASP') }}</span>
+                </a>
+            @endcan
         </nav>
     </div>
 @endcanany

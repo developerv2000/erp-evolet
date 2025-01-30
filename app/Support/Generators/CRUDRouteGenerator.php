@@ -55,7 +55,7 @@ class CRUDRouteGenerator
                 Route::get('/create', 'create')->name('create')->middleware($editMiddleware);
                 break;
             case 'show':
-                Route::get('/{record:' . $identifierAttribute . '}', 'show')->name('show')->middleware($viewMiddleware);
+                Route::get('/view/{record:' . $identifierAttribute . '}', 'show')->name('show')->middleware($viewMiddleware);
                 break;
             case 'edit':
                 Route::get('/edit/{record:' . $identifierAttribute . '}', 'edit')->name('edit')->middleware($editMiddleware);

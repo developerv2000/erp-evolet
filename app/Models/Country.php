@@ -58,6 +58,26 @@ class Country extends Model implements UsageCountable
         return $this->belongsToMany(ProductSearch::class, 'additional_search_country_product_search');
     }
 
+    public function madAsps()
+    {
+        return $this->belongsToMany(MadAsp::class, 'mad_asp_country_marketing_authorization_holder');
+    }
+
+    public function madAspMAHs()
+    {
+        return $this->belongsToMany(MarketingAuthorizationHolder::class, 'mad_asp_country_marketing_authorization_holder')
+            ->withPivot(MadAsp::getPivotColumnNamesForMAHRelation());
+    }
+
+    /**
+     * Return marketing authorization holders for specific MAD ASP
+     */
+    public function MAHsOfSpecificMadAsp($asp)
+    {
+        return $this->madAspMAHs()
+            ->wherePivot('mad_asp_id', $asp->id);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Scopes
