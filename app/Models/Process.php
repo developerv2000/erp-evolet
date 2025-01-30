@@ -933,11 +933,19 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     }
 
     /**
-     * CHeck whether process can be added to ASP (СПГ)
+     * CHeck whether process can be added to ASP (СПГ) as contracted
      */
-    public function isReadyForASP()
+    public function isReadyForASPContract()
     {
         return $this->status->generalStatus->stage >= 5;
+    }
+
+    /**
+     * CHeck whether process can be added to ASP (СПГ) as registered
+     */
+    public function isReadyForASPRegistration()
+    {
+        return $this->status->generalStatus->stage >= 7;
     }
 
     /**
