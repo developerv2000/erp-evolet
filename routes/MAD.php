@@ -35,8 +35,8 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::post('/duplicate', 'duplicate')->name('duplicate')->middleware('can:edit-MAD-VPS');
 
         // Ajax requests on checkbox toggle
-        Route::post('/update-contracted-value', 'updateContractedValue')->middleware('can:control-MAD-ASP-processes');
-        Route::post('/update-registered-value', 'updateRegisteredValue')->middleware('can:control-MAD-ASP-processes');
+        Route::post('/update-contracted-in-asp-value', 'updateContractedInAspValue')->middleware('can:control-MAD-ASP-processes');
+        Route::post('/update-registered-in-asp-value', 'updateRegisteredInAspValue')->middleware('can:control-MAD-ASP-processes');
 
         // Ajax request for getting create/edit stage inputs
         Route::post('/get-create-form-stage-inputs', 'getCreateFormStageInputs');

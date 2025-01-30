@@ -45,8 +45,8 @@ const specificFormatableInputs = document.querySelectorAll('.specific-formatable
 const imageInputsWithPreview = document.querySelectorAll('.image-input-group-with-preview__input');
 
 // VPS checkboxes
-const toggleProcessContractedValueChbs = document.querySelectorAll('[data-on-toggle="toggle-process-contracted-boolean"]');
-const toggleProcessRegisteredValueChbs = document.querySelectorAll('[data-on-toggle="toggle-process-registered-boolean"]');
+const toggleProcessContractedValueChbs = document.querySelectorAll('[data-on-toggle="toggle-process-contracted-in-asp-boolean"]');
+const toggleProcessRegisteredValueChbs = document.querySelectorAll('[data-on-toggle="toggle-process-registered-in-asp-boolean"]');
 
 /*
 |--------------------------------------------------------------------------

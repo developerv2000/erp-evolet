@@ -639,7 +639,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     private static function getFilterConfig(): array
     {
         return [
-            'whereEqual' => ['contracted', 'registered', 'responsible_person_id'],
+            'whereEqual' => ['contracted_in_asp', 'registered_in_asp', 'responsible_person_id'],
             'whereIn' => ['id', 'country_id', 'status_id', 'marketing_authorization_holder_id'],
             'like' => ['trademark_en', 'trademark_ru'],
             'dateRange' => ['created_at', 'updated_at'],

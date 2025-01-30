@@ -19,8 +19,8 @@ const TOGGLE_LEFTBAR_PATCH_URL = '/settings/collapsed-leftbar';
 const GET_PRODUCTS_SIMILAR_RECORDS_POST_URL = '/products/get-similar-records'
 
 // VPS
-const UPDATE_PROCESSES_CONTRACTED_VALUE_POST_URL = '/processes/update-contracted-value';
-const UPDATE_PROCESSES_REGISTERED_VALUE_POST_URL = '/processes/update-registered-value';
+const UPDATE_PROCESSES_CONTRACTED_IN_ASP_VALUE_POST_URL = '/processes/update-contracted-in-asp-value';
+const UPDATE_PROCESSES_REGISTERED_IN_ASP_VALUE_POST_URL = '/processes/update-registered-in-asp-value';
 const GET_PROCESS_CREATE_STAGE_INPUTS_POST_URL = '/processes/get-create-form-stage-inputs';
 const GET_PROCESS_CREATE_FORECAST_INPUTS_POST_URL = '/processes/get-create-form-forecast-inputs';
 const GET_PROCESS_EDIT_STAGE_INPUTS_POST_URL = '/processes/get-edit-form-stage-inputs';
@@ -291,11 +291,11 @@ export function updateProcessContractedValue(evt) {
     const processID = chb.dataset.processId;
 
     const data = {
-        'contracted': chb.checked,
+        'contracted_in_asp': chb.checked,
         'process_id': processID,
     };
 
-    axios.post(UPDATE_PROCESSES_CONTRACTED_VALUE_POST_URL, data, {
+    axios.post(UPDATE_PROCESSES_CONTRACTED_IN_ASP_VALUE_POST_URL, data, {
         headers: {
             'Content-Type': 'application/json'
         }
@@ -313,11 +313,11 @@ export function updateProcessRegisteredValue(evt) {
     const processID = chb.dataset.processId;
 
     const data = {
-        'registered': chb.checked,
+        'registered_in_asp': chb.checked,
         'process_id': processID,
     };
 
-    axios.post(UPDATE_PROCESSES_REGISTERED_VALUE_POST_URL, data, {
+    axios.post(UPDATE_PROCESSES_REGISTERED_IN_ASP_VALUE_POST_URL, data, {
         headers: {
             'Content-Type': 'application/json'
         }

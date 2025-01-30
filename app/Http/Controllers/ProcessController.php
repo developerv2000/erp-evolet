@@ -210,26 +210,26 @@ class ProcessController extends Controller
     /**
      * AJAX request
      */
-    public function updateContractedValue(Request $request)
+    public function updateContractedInAspValue(Request $request)
     {
         $process = Process::find($request->process_id);
-        $process->contracted = $request->contracted ?: false;
+        $process->contracted_in_asp = $request->contracted_in_asp ?: false;
         $process->timestamps = false;
         $process->saveQuietly();
 
-        return $process;
+        return true;
     }
 
     /**
      * AJAX request
      */
-    public function updateRegisteredValue(Request $request)
+    public function updateRegisteredInAspValue(Request $request)
     {
         $process = Process::find($request->process_id);
-        $process->registered = $request->registered ?: false;
+        $process->registered_in_asp = $request->registered_in_asp ?: false;
         $process->timestamps = false;
         $process->saveQuietly();
 
-        return $process;
+        return true;
     }
 }
