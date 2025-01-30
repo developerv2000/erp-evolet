@@ -70,7 +70,7 @@ const chartTooltipOptions = {
 
 const pieToolboxOptions = {
     feature: {
-        saveAsImage: { show: true }
+        saveAsImage: { show: true, pixelRatio: 3 }
     }
 }
 
@@ -133,7 +133,7 @@ const graphToolboxOptions = {
         // dataView: { show: true, readOnly: false }, // View data in table format
         magicType: { show: true, type: ['line', 'bar'] }, // Enable switch between line and bar
         restore: { show: true },
-        saveAsImage: { show: true }
+        saveAsImage: { show: true, pixelRatio: 3 }
     }
 }
 
