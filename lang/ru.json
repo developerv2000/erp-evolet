@@ -129,6 +129,8 @@
     "Analyst": "Аналитик",
     "BDM": "БДМ",
     "Country": "Страна",
+    "Countries": "Страны",
+    "countries": "страны",
     "Manufacturer": "Производитель",
     "products": "продукта",
     "Category": "Категория",
@@ -237,6 +239,6 @@
     "Has general status history of ID": "Имеет общую историю статуса ID",
     "Has active processes for year": "Имеет активные процессы в году",
     "Has active processes for month": "Имеет активные процессы в месяце",
-    
+
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

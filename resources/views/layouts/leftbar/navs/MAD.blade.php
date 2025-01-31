@@ -92,7 +92,7 @@
                 <a
                     @class([
                         'leftbar__nav-link',
-                        'leftbar__nav-link--active' => request()->routeIs('mad-asp.index'),
+                        'leftbar__nav-link--active' => request()->routeIs('mad-asp.*'),
                     ])
                     href="{{ route('mad-asp.index') }}">
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Support\Helpers\ModelHelper;
 use App\Support\Traits\Controller\DestroysModelRecords;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -20,9 +21,14 @@ class CommentController extends Controller
         $model = ModelHelper::addFullNamespaceToModelBasename(
             $request->route('commentable_type')
         );
-        $record = $model::withTrashed()->with(['comments'])->findOrFail(
-            $request->route('commentable_id')
-        );
+
+        $recordQuery = $model::query()->with(['comments']);
+
+        if (in_array(SoftDeletes::class, class_uses_recursive($model))) {
+            $recordQuery->withTrashed();
+        }
+
+        $record = $recordQuery->findOrFail($request->route('commentable_id'));
 
         // Load comments minified users
         Comment::loadRecordsMinifiedUsers($record->comments);
@@ -42,7 +48,13 @@ class CommentController extends Controller
         $model = $request->input('commentable_type');
         $recordID = $request->input('commentable_id');
 
-        $record = $model::withTrashed()->find($recordID);
+        $recordQuery = $model::query();
+
+        if (in_array(SoftDeletes::class, class_uses_recursive($model))) {
+            $recordQuery->withTrashed();
+        }
+
+        $record = $recordQuery->find($recordID);
         $record->addComment($request->input('body'));
 
         return redirect()->back();

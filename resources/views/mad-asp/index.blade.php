@@ -49,7 +49,7 @@
         </div>
 
         {{-- Table --}}
-        {{-- @include('mad-asp.table.layout', ['trashedRecords' => false]) --}}
+        @include('mad-asp.partials.index-page-table')
     </div>
 
     {{-- Modals --}}

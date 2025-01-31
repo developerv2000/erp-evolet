@@ -35,6 +35,7 @@ class MADViewComposersDefiner
         self::defineProcessComposers();
         self::defineProductSearchComposers();
         self::defineKPIComposers();
+        self::defineASPComposers();
     }
 
     /*
@@ -150,6 +151,13 @@ class MADViewComposersDefiner
             'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
             'regions' => Country::getRegionOptions(),
             'months' => GeneralHelper::collectCalendarMonths(),
+        ]);
+    }
+
+    private static function defineASPComposers()
+    {
+        self::defineViewComposer('mad-asp.partials.create-form', [
+            'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
         ]);
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MadAspStoreRequest;
+use App\Http\Requests\MadAspUpdateRequest;
 use App\Models\MadAsp;
 use App\Support\Helpers\UrlHelper;
 use App\Support\Traits\Controller\DestroysModelRecords;
@@ -21,8 +23,33 @@ class MadAspController extends Controller
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
-        $records = MadAsp::finalizeQueryForRequest(MadAsp::query(), $request, 'paginate');
+        $query = MadAsp::withBasicRelations()->withBasicRelationCounts();
+        $records = MadAsp::finalizeQueryForRequest($query, $request, 'paginate');
 
         return view('mad-asp.index', compact('request', 'records'));
+    }
+
+    public function create()
+    {
+        return view('mad-asp.create');
+    }
+
+    public function store(MadAspStoreRequest $request)
+    {
+        MadAsp::createFromRequest($request);
+
+        return to_route('mad-asp.index');
+    }
+
+    public function edit(Request $request, MadAsp $record)
+    {
+        return view('mad-asp.edit', compact('record'));
+    }
+
+    public function update(MadAspUpdateRequest $request, MadAsp $record)
+    {
+        $record->updateFromRequest($request);
+
+        return redirect($request->input('previous_url'));
     }
 }

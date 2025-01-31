@@ -47,7 +47,7 @@ class MadAsp extends BaseModel implements HasTitle
     public function MAHs()
     {
         return $this->belongsToMany(MarketingAuthorizationHolder::class, 'mad_asp_country_marketing_authorization_holder')
-            ->withPivot(self::getPivotColumnNamesForMAHRelation());
+            ->withPivot(self::getPivotColumnNamesForMAHsRelation());
     }
 
     /**
@@ -77,6 +77,27 @@ class MadAsp extends BaseModel implements HasTitle
 
     /*
     |--------------------------------------------------------------------------
+    | Scopes
+    |--------------------------------------------------------------------------
+    */
+
+    public function scopeWithBasicRelations($query)
+    {
+        return $query->with([
+            'lastComment',
+        ]);
+    }
+
+    public function scopeWithBasicRelationCounts($query)
+    {
+        return $query->withCount([
+            'comments',
+            'countries',
+        ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Contracts
     |--------------------------------------------------------------------------
     */
@@ -94,6 +115,37 @@ class MadAsp extends BaseModel implements HasTitle
     public function getTitleAttribute(): string
     {
         return $this->year;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Create & Update
+    |--------------------------------------------------------------------------
+    */
+
+    public static function createFromRequest($request)
+    {
+        $record = self::create($request->all());
+        $record->storeCommentFromRequest($request);
+
+        // Attach countries
+        $countryIDs = $request->input('country_ids', []);
+        $defaultMAHs = self::getMAHIDsAttachedByDefaultOnCreate();
+
+        foreach ($countryIDs as $country) {
+            $record->countries()->attach($country);
+
+            // Attach MAHs for each countries
+            $record->MAHs()->attach($defaultMAHs, [
+                'country_id' => $country,
+            ]);
+        }
+    }
+
+    public function updateFromRequest($request)
+    {
+        $this->update($request->all());
+        $this->storeCommentFromRequest($request);
     }
 
     /*
@@ -118,5 +170,17 @@ class MadAsp extends BaseModel implements HasTitle
         }
 
         return $pivots;
+    }
+
+    /**
+     * Return marketing authorization holder IDs attached by default on create.
+     */
+    public static function getMAHIDsAttachedByDefaultOnCreate()
+    {
+        $names = ['S', 'B', 'V', 'L', 'N'];
+
+        return MarketingAuthorizationHolder::whereIn('name', $names)
+            ->orderByRaw("FIELD(name, '" . implode("','", $names) . "')")
+            ->pluck('id');
     }
 }
