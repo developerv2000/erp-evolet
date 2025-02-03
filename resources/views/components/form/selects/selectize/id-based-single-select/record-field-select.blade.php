@@ -5,13 +5,14 @@
     'options', // Collection of available options for selection.
     'optionCaptionField' => 'name', // Attribute used to display option text.
     'inputName' => $field, // Name for the input field.
+    'initialValue' => $model->{$field}, // Initial value of the input field.
     'validationErrorKey' => null, // Validation error bag key, if any.
     'isRequired' => false, // If true, marks the field as required.
 ])
 
 @php
     // Set the currently selected option value, preferring old input or the model's current value.
-    $selectedValue = old($inputName, $model->{$field});
+    $selectedValue = old($inputName, $initialValue);
 @endphp
 
 <x-form.groups.wrapped-label-group

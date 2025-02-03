@@ -41,13 +41,15 @@ class MadAsp extends BaseModel implements HasTitle
 
     public function countries()
     {
-        return $this->belongsToMany(Country::class, 'mad_asp_country');
+        return $this->belongsToMany(Country::class, 'mad_asp_country')
+            ->orderBy('mad_asp_country.id');
     }
 
     public function MAHs()
     {
         return $this->belongsToMany(MarketingAuthorizationHolder::class, 'mad_asp_country_marketing_authorization_holder')
-            ->withPivot(self::getPivotColumnNamesForMAHsRelation());
+            ->withPivot(self::getPivotColumnNamesForMAHsRelation())
+            ->orderBy('mad_asp_country_marketing_authorization_holder.id');
     }
 
     /**
@@ -178,13 +180,43 @@ class MadAsp extends BaseModel implements HasTitle
     /**
      * Used on mad-asp.countries.destroy route
      */
-    public function detachCountriesByID($countries)
+    public function detachCountriesByID($countryIDs)
     {
         // Detach MAHs related to the given countries
-        $this->MAHs()->wherePivotIn('country_id', $countries)->detach();
+        $this->MAHs()->wherePivotIn('country_id', $countryIDs)->detach();
 
         // Detach countries
-        $this->countries()->detach($countries);
+        $this->countries()->detach($countryIDs);
+    }
+
+    /**
+     * Used on mad-asp.mahs.store route
+     */
+    public function attachMAHOnMAHCreate($request)
+    {
+        $pivotData = $request->except(['marketing_authorization_holder_id', '_token', 'previous_url']);
+        $mahID = $request->input('marketing_authorization_holder_id');
+
+        $this->MAHs()->attach($mahID, $pivotData);
+    }
+
+    /**
+     * Used on mad-asp.mahs.update route
+     */
+    public function updateMAHFromRequest($mah, $country, $request)
+    {
+        $pivotData = $request->except('_token', 'previous_url', '_method');
+
+        $this->MAHsOfSpecificCountry($country)->updateExistingPivot($mah->id, $pivotData);
+    }
+
+    /**
+     * Used on mad-asp.mahs.destroy route
+     */
+    public function detachCountryMAHsByID($country, $mahIDs)
+    {
+        $this->MAHsOfSpecificCountry($country)
+            ->wherePivotIn('marketing_authorization_holder_id', $mahIDs)->detach();
     }
 
     /*

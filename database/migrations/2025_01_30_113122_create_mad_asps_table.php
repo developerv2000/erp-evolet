@@ -30,7 +30,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('countries');
 
-            $table->primary(['id', 'mad_asp_id', 'country_id']);
+            $table->unique(['mad_asp_id', 'country_id']);
         });
 
         Schema::create('mad_asp_country_marketing_authorization_holder', function (Blueprint $table) {
@@ -51,7 +51,10 @@ return new class extends Migration
                 ->references('id')
                 ->on('marketing_authorization_holders');
 
-            $table->primary(['id', 'mad_asp_id', 'country_id', 'marketing_authorization_holder_id']);
+            $table->unique(
+                ['mad_asp_id', 'country_id', 'marketing_authorization_holder_id'],
+                'unique_mad_asp_country_mah'
+            );
 
             // Define Europe/India contract plans
             $months = GeneralHelper::collectCalendarMonths();

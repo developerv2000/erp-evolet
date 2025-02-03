@@ -160,9 +160,23 @@ class MADViewComposersDefiner
             'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
         ]);
 
+        // Countries
         self::defineViewComposer('mad-asp.countries.partials.create-form', [
             'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
             'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
+        ]);
+
+        // MAHs
+        self::defineViewComposer('mad-asp.mahs.partials.table', [
+            'months' => GeneralHelper::collectCalendarMonths(),
+        ]);
+
+        self::defineViewComposer([
+            'mad-asp.mahs.partials.create-form',
+            'mad-asp.mahs.partials.edit-form',
+        ], [
+            'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
+            'months' => GeneralHelper::collectCalendarMonths(),
         ]);
     }
 
