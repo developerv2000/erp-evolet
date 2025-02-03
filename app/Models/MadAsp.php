@@ -59,6 +59,16 @@ class MadAsp extends BaseModel implements HasTitle
             ->wherePivot('country_id', $country->id);
     }
 
+    /**
+     * Get already loaded MAHs filtered by specific country.
+     */
+    public function getLoadedMAHsForSpecificCountry($country)
+    {
+        return $this->MAHs->filter(function ($mah) use ($country) {
+            return $mah->pivot->country_id == $country->id;
+        });
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Events
@@ -107,7 +117,7 @@ class MadAsp extends BaseModel implements HasTitle
     {
         return [
             ['link' => route('mad-asp.index'), 'text' => __('SPG')],
-            ['link' => route('mad-asp.edit', $this->id), 'text' => $this->title],
+            ['link' => route('mad-asp.edit', $this->year), 'text' => $this->title],
         ];
     }
 
@@ -148,6 +158,35 @@ class MadAsp extends BaseModel implements HasTitle
         $this->storeCommentFromRequest($request);
     }
 
+    /**
+     * Used on mad-asp.countries.store route
+     */
+    public function attachCountryOnCountryCreate($request)
+    {
+        // Attach country
+        $countryID = $request->input('country_id');
+        $this->countries()->attach($countryID);
+
+        // Attach MAHs
+        $mahIDs = $request->input('marketing_authorization_holder_ids');
+
+        foreach ($mahIDs as $mah) {
+            $this->MAHs()->attach($mah, ['country_id' => $countryID]);
+        }
+    }
+
+    /**
+     * Used on mad-asp.countries.destroy route
+     */
+    public function detachCountriesByID($countries)
+    {
+        // Detach MAHs related to the given countries
+        $this->MAHs()->wherePivotIn('country_id', $countries)->detach();
+
+        // Detach countries
+        $this->countries()->detach($countries);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Misc
@@ -182,5 +221,12 @@ class MadAsp extends BaseModel implements HasTitle
         return MarketingAuthorizationHolder::whereIn('name', $names)
             ->orderByRaw("FIELD(name, '" . implode("','", $names) . "')")
             ->pluck('id');
+    }
+
+    public function attachAllCountryMAHs()
+    {
+        foreach ($this->countries as $country) {
+            $country->MAHs = $this->getLoadedMAHsForSpecificCountry($country);
+        }
     }
 }

@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => __('ASP'),
-    'pageName' => 'mad-asp-index',
+    'pageTitle' => __('ASP') . ' ' . $record->title,
+    'pageName' => 'mad-asp-countries-index',
     'mainAutoOverflowed' => true,
 ])
 
@@ -11,8 +11,8 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('mad-asp.index'), 'text' => __('ASP')],
-                    ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
+                    ...$record->generateBreadcrumbs(),
+                    ['link' => null, 'text' => __('Countries')]
                 ];
             @endphp
             {{-- blade-formatter-enable --}}
@@ -25,7 +25,7 @@
                     <x-misc.buttoned-link
                         class="toolbar__button"
                         style="shadowed"
-                        link="{{ route('mad-asp.create') }}"
+                        link="{{ route('mad-asp.countries.create', $record->year) }}"
                         icon="add">{{ __('New') }}
                     </x-misc.buttoned-link>
 
@@ -49,13 +49,13 @@
         </div>
 
         {{-- Table --}}
-        @include('mad-asp.partials.index-page-table')
+        @include('mad-asp.countries.partials.table')
     </div>
 
     {{-- Modals --}}
     @can('edit-MAD-ASP')
         <x-modals.multiple-delete
-            form-action="{{ route('mad-asp.destroy') }}"
+            form-action="{{ route('mad-asp.countries.destroy', $record->year) }}"
             :forceDelete="false" />
     @endcan
 @endsection

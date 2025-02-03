@@ -2,7 +2,10 @@
     {{-- thead titles --}}
     <x-slot:thead-titles>
         <th width="50"><x-tables.partials.th.select-all /></th>
-        <th width="40"><x-tables.partials.th.edit /></th>
+
+        @can('edit-MAD-ASP')
+            <th width="40"><x-tables.partials.th.edit /></th>
+        @endcan
 
         <th width="40">
             <x-misc.material-symbol class="th__iconed-title unselectable" icon="visibility" title="{{ __('View') }}" />
@@ -26,7 +29,10 @@
         @foreach ($records as $record)
             <tr>
                 <td><x-tables.partials.td.checkbox :value="$record->id" /></td>
-                <td><x-tables.partials.td.edit :link="route('mad-asp.edit', $record->year)" /></td>
+
+                @can('edit-MAD-ASP')
+                    <td><x-tables.partials.td.edit :link="route('mad-asp.edit', $record->year)" /></td>
+                @endcan
 
                 <td><x-tables.partials.td.view :link="route('mad-asp.show', $record->id)" /></td>
 
@@ -38,7 +44,7 @@
                 <td>{{ $record->year_register_fact_percentage }} %</td>
 
                 <td>
-                    <a class="main-link" href="#">{{ $record->countries_count }} {{ __('countries') }}</a>
+                    <a class="main-link" href="{{ route('mad-asp.countries.index', $record->year) }}">{{ $record->countries_count }} {{ __('countries') }}</a>
                 </td>
 
                 <td>

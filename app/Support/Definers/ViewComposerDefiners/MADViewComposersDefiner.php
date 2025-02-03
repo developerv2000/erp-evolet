@@ -159,6 +159,11 @@ class MADViewComposersDefiner
         self::defineViewComposer('mad-asp.partials.create-form', [
             'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
         ]);
+
+        self::defineViewComposer('mad-asp.countries.partials.create-form', [
+            'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+            'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
+        ]);
     }
 
     /*

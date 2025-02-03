@@ -126,11 +126,13 @@
     "Similar records": "Похожие записи",
     "No similar records found": "Похожих записей не найдено",
 
-    "Analyst": "Аналитик",
-    "BDM": "БДМ",
     "Country": "Страна",
+    "country": "страна",
     "Countries": "Страны",
     "countries": "страны",
+
+    "Analyst": "Аналитик",
+    "BDM": "БДМ",
     "Manufacturer": "Производитель",
     "products": "продукта",
     "Category": "Категория",

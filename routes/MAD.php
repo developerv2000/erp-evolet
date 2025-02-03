@@ -80,7 +80,27 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
     // ASP
     Route::prefix('mad-asp')->controller(MadAspController::class)->name('mad-asp.')->group(function () {
-        CRUDRouteGenerator::defineDefaultRoutesExcept([ 'trash', 'restore'], 'year', 'can:view-MAD-ASP', 'can:edit-MAD-ASP');
+        CRUDRouteGenerator::defineDefaultRoutesExcept(['trash', 'restore'], 'year', 'can:view-MAD-ASP', 'can:edit-MAD-ASP');
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
+
+        // Countries
+        Route::prefix('/{record:year}/countries')->name('countries.')->middleware('can:edit-MAD-ASP')->group(function () {
+            Route::get('/', 'countriesIndex')->name('index');
+            Route::get('/create', 'countriesCreate')->name('create');
+
+            Route::post('/store', 'countriesStore')->name('store');
+            Route::delete('/destroy', 'countriesDestroy')->name('destroy');
+        });
+
+        // MAHs
+        Route::prefix('/{record:year}/countries/{country}/mahs')->name('mahs.')->middleware('can:edit-MAD-ASP')->group(function () {
+            Route::get('/', 'MAHsIndex')->name('index');
+            Route::get('/create', 'MAHsCreate')->name('create');
+            Route::get('/edit/{mah}', 'MAHsEdit')->name('edit');
+
+            Route::post('/store', 'MAHsStore')->name('store');
+            Route::patch('/update/{mah}', 'MAHsUpdate')->name('update');
+            Route::delete('/destroy', 'MAHsDestroy')->name('destroy');
+        });
     });
 });
