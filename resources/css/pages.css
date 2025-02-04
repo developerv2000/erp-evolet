@@ -158,7 +158,7 @@
 
 .mad-asp-table {
     --th-country-name-width: 64px;
-    --th-mah-name-width: 102px;
+    --th-mah-name-width: 50px;
 }
 
 .mad-asp-table thead {

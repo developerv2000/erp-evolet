@@ -72,6 +72,11 @@ class MadAspController extends Controller
         return redirect($request->input('previous_url'));
     }
 
+    public function exportAsExcel(Request $request, MadAsp $record)
+    {
+        return $record->exportAsExcel($request);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Countries

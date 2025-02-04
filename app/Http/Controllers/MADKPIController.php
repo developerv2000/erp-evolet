@@ -265,7 +265,7 @@ class MADKPIController extends Controller
                 }
 
                 // Apply base filters
-                $query = Process::filterQueryForRequest($query, $clonedRequest);
+                $query = Process::filterQueryForRequest($query, $clonedRequest, applyPermissionsFilter: false);
 
                 // Get current processes count of the month for the status
                 $processesCount = $query->count();
@@ -366,7 +366,7 @@ class MADKPIController extends Controller
                 }
 
                 // Apply base filters
-                $query = Process::filterQueryForRequest($query, $clonedRequest);
+                $query = Process::filterQueryForRequest($query, $clonedRequest, applyPermissionsFilter: false);
 
                 // Get maxmimum processes count of the month for the status
                 $processesCount = $query->count();

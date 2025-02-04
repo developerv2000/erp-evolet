@@ -81,7 +81,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     // ASP
     Route::prefix('mad-asp')->controller(MadAspController::class)->name('mad-asp.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['trash', 'restore'], 'year', 'can:view-MAD-ASP', 'can:edit-MAD-ASP');
-        Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
+        Route::post('/{record:year}/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
 
         // Countries
         Route::prefix('/{record:year}/countries')->name('countries.')->middleware('can:edit-MAD-ASP')->group(function () {

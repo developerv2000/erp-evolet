@@ -16,6 +16,14 @@ class MarketingAuthorizationHolder extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | Constants
+    |--------------------------------------------------------------------------
+    */
+
+    const UNDER_DISCUSSION_SHORT_NAME = 'Обс.'; // used in MAD ASP show page
+
+    /*
+    |--------------------------------------------------------------------------
     | Properties
     |--------------------------------------------------------------------------
     */
@@ -197,14 +205,10 @@ class MarketingAuthorizationHolder extends Model
             ]);
 
             // Apply filtering and count
-            $contractedQuery = QueryFilterHelper::applyFilters(Process::query(), $contractedRequest, Process::getFilterConfig());
-            Process::applyManufacturerRegionFilter($contractedQuery, $contractedRequest);
-            Process::applyContractedOnSpecificMonthFilter($contractedQuery, $contractedRequest);
+            $contractedQuery = Process::filterQueryForRequest(Process::query(), $contractedRequest, applyPermissionsFilter: false);
             $this->{$month['name'] . '_contract_fact'} = $contractedQuery->count();
 
-            $registeredQuery = QueryFilterHelper::applyFilters(Process::query(), $registeredRequest, Process::getFilterConfig());
-            Process::applyManufacturerRegionFilter($registeredQuery, $registeredRequest);
-            Process::applyRegisteredOnSpecificMonthFilter($registeredQuery, $registeredRequest);
+            $registeredQuery = Process::filterQueryForRequest(Process::query(), $registeredRequest, applyPermissionsFilter: false);;
             $this->{$month['name'] . '_register_fact'} = $registeredQuery->count();
         }
     }

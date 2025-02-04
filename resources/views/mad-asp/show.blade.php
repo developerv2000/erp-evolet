@@ -13,7 +13,7 @@
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
                 @can('export-records-as-excel')
-                    <x-form.misc.export-as-excel-form action="{{ route('mad-asp.export-as-excel') }}" />
+                    <x-form.misc.export-as-excel-form action="{{ route('mad-asp.export-as-excel', $record->year) }}" />
                 @endcan
 
                 <x-misc.button

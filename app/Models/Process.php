@@ -498,13 +498,16 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     |--------------------------------------------------------------------------
     */
 
-    public static function filterQueryForRequest($query, $request)
+    public static function filterQueryForRequest($query, $request, $applyPermissionsFilter = true)
     {
         // Apply base filters using helper
         $query = QueryFilterHelper::applyFilters($query, $request, self::getFilterConfig());
 
         // Additional filters
-        self::applyPermissionsFilter($query, $request);
+        if ($applyPermissionsFilter) {
+            self::applyPermissionsFilter($query, $request);
+        }
+
         self::applyManufacturerRegionFilter($query, $request);
         self::applyActiveStatusStartDateRangeFilter($query, $request);
         self::applyContractedOnSpecificMonthFilter($query, $request); // if redirected from KPI/ASP pages
@@ -528,7 +531,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     public static function applyPermissionsFilter($query, $request)
     {
         // Get the authenticated user
-        $user = $request->user();
+        $user = auth()->user();
 
         // Retrieve the list of country IDs the user is responsible for
         $responsibleCountryIDs = $user->responsibleCountries->pluck('id');
