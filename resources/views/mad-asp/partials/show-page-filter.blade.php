@@ -1,7 +1,7 @@
 <x-filter.layout>
     <x-form.selects.selectize.single-select.request-based-select
         labelText="Plan for"
-        inputName="plan_for"
+        inputName="region"
         :options="$regions" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select

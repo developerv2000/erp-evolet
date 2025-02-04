@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Support\Contracts\Model\UsageCountable;
+use App\Support\Helpers\GeneralHelper;
+use App\Support\Traits\Model\CalculatesAspQuarterAndYearCounts;
 use App\Support\Traits\Model\RecalculatesAllUsageCounts;
 use App\Support\Traits\Model\ScopesOrderingByName;
 use App\Support\Traits\Model\ScopesOrderingByUsageCount;
@@ -12,6 +14,7 @@ class Country extends Model implements UsageCountable
 {
     use ScopesOrderingByName;
     use RecalculatesAllUsageCounts;
+    use CalculatesAspQuarterAndYearCounts;
 
     /*
     |--------------------------------------------------------------------------
@@ -142,5 +145,72 @@ class Country extends Model implements UsageCountable
             $record->database_processes_count = $record->processes_count;
             $record->save();
         }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | MAD ASP calculations
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Perform all necessary MAD ASP calculations.
+     *
+     * @param MadAsp $asp The $asp model associated with the MAH
+     * @param \Illuminate\Http\Request $request The request object containing user inputs
+     */
+    public function makeAllMadAspCalculations($asp, $request)
+    {
+        // Step 1: Prepare contract plan calculations based on the provided request and plan
+        $this->calculateAspMonthlyProcessCounts();
+
+        // Step 2: Calculate quarterly process counts from monthly data (CalculatesAspQuarterAndYearCounts trait)
+        $this->calculateAspQuartersProcessCounts();
+
+        // Step 3: Calculate yearly process counts from monthly and quarterly data (CalculatesAspQuarterAndYearCounts trait)
+        $this->calculateAspYearProcessCounts();
+
+        // Step 4: Calculate percentages for yearly process counts (e.g., success rates) (CalculatesAspQuarterAndYearCounts trait)
+        $this->calculateAspYearPercentages();
+    }
+
+    private function calculateAspMonthlyProcessCounts()
+    {
+        $months = GeneralHelper::collectCalendarMonths();
+
+        foreach ($months as $month) {
+            $monthName = $month['name'];
+
+            // Calculate the totals for the current month
+            [$contractPlanCount, $contractFactCount, $registerFactCount] = $this->sumMonthlyCountsOfMAHs($monthName);
+
+            // Assign totals to the current model instance
+            $this->{$monthName . '_contract_plan'} = $contractPlanCount;
+            $this->{$monthName . '_contract_fact'} = $contractFactCount;
+            $this->{$monthName . '_register_fact'} = $registerFactCount;
+        }
+    }
+
+    /**
+     * Sum the 'contract_plan', 'contract_fact', and 'register_fact' counts for a specific month
+     * across all related Marketing Authorization Holders (MAHs).
+     *
+     * @param  string  $monthName
+     * @return array  [contractPlanCount, contractFactCount, registerFactCount]
+     */
+    private function sumMonthlyCountsOfMAHs($monthName)
+    {
+        $contractPlanCount = 0;
+        $contractFactCount = 0;
+        $registerFactCount = 0;
+
+        // Iterate through all marketing authorization holders
+        foreach ($this->MAHs as $mah) {
+            $contractPlanCount += $mah->{$monthName . '_contract_plan'} ?? 0;
+            $contractFactCount += $mah->{$monthName . '_contract_fact'} ?? 0;
+            $registerFactCount += $mah->{$monthName . '_register_fact'} ?? 0;
+        }
+
+        return [$contractPlanCount, $contractFactCount, $registerFactCount];
     }
 }

@@ -152,9 +152,13 @@
 
 
 /* ------------ MAD ASP pages ------------ */
+.mad-asp-show .main {
+    padding-bottom: 40px;
+}
+
 .mad-asp-table {
     --th-country-name-width: 64px;
-    --th-mah-name-width: 60px;
+    --th-mah-name-width: 102px;
 }
 
 .mad-asp-table thead {

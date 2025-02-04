@@ -5,12 +5,14 @@ namespace App\Models;
 use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\GeneralHelper;
+use App\Support\Traits\Model\CalculatesAspQuarterAndYearCounts;
 use App\Support\Traits\Model\Commentable;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class MadAsp extends BaseModel implements HasTitle
 {
     use Commentable;
+    use CalculatesAspQuarterAndYearCounts;
 
     /*
     |--------------------------------------------------------------------------
@@ -313,9 +315,67 @@ class MadAsp extends BaseModel implements HasTitle
         $this->summarizeSelfCalculations($request);
     }
 
+    /**
+     * Summarize se;f calculations after finishing all MAH and Country calculations
+     */
     private function summarizeSelfCalculations($request)
     {
-        
+        // Perform monthly, quarterly, and yearly calculations
+        $this->calculateSelfMonthlyProcessCounts();
+        $this->calculateAspQuartersProcessCounts(); // CalculatesAspQuarterAndYearCounts trait
+        $this->calculateAspYearProcessCounts(); // CalculatesAspQuarterAndYearCounts trait
+        $this->calculateAspYearPercentages(); // CalculatesAspQuarterAndYearCounts trait
+    }
+
+    /**
+     * Calculate the total 'contract_plan', 'contract_fact', and 'register_fact'
+     * counts for each month based on related Countryies.
+     *
+     * This method sets the following properties for each month:
+     * - 'month_contract_plan'
+     * - 'month_contract_fact'
+     * - 'month_register_fact'
+     *
+     * @return void
+     */
+    public function calculateSelfMonthlyProcessCounts()
+    {
+        $months = GeneralHelper::collectCalendarMonths();
+
+        foreach ($months as $month) {
+            $monthName = $month['name'];
+
+            // Calculate totals for the current month based on Country codes
+            [$contractPlanCount, $contractFactCount, $registerFactCount] = $this->sumMonthlyCountsOfCountries($monthName);
+
+            // Assign totals to the current model instance
+            $this->{$monthName . '_contract_plan'} = $contractPlanCount;
+            $this->{$monthName . '_contract_fact'} = $contractFactCount;
+            $this->{$monthName . '_register_fact'} = $registerFactCount;
+        }
+    }
+
+    /**
+     * Sum the 'contract_plan', 'contract_fact', and 'register_fact' counts for a specific month
+     * across all related Countryies.
+     *
+     * @param  string  $monthName
+     * @return array  [contractPlanCount, contractFactCount, registerFactCount]
+     */
+    private function sumMonthlyCountsOfCountries($monthName)
+    {
+        $contractPlanCount = 0;
+        $contractFactCount = 0;
+        $registerFactCount = 0;
+
+        // Iterate through related Countries to accumulate monthly counts
+        foreach ($this->countries as $country) {
+            $contractPlanCount += $country->{$monthName . '_contract_plan'} ?? 0;
+            $contractFactCount += $country->{$monthName . '_contract_fact'} ?? 0;
+            $registerFactCount += $country->{$monthName . '_register_fact'} ?? 0;
+        }
+
+        return [$contractPlanCount, $contractFactCount, $registerFactCount];
     }
 
     /*

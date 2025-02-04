@@ -83,7 +83,6 @@ class MadAspController extends Controller
         $record->load(['countries', 'MAHs']);
         $record->attachAllCountryMAHs();
 
-
         return view('mad-asp.countries.index', compact('record'));
     }
 

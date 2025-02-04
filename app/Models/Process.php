@@ -509,7 +509,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         self::applyActiveStatusStartDateRangeFilter($query, $request);
         self::applyContractedOnSpecificMonthFilter($query, $request); // if redirected from KPI/ASP pages
         self::applyRegisteredOnSpecificMonthFilter($query, $request); // if redirected from KPI/ASP pages
-        self::applyGeneralStatusHistoryFilter($query, $request); // if redirected from KPI/ASP pages
+        self::applyGeneralStatusHistoryFilter($query, $request); // if redirected from KPI page
 
         return $query;
     }
@@ -636,7 +636,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         }
     }
 
-    private static function getFilterConfig(): array
+    public static function getFilterConfig(): array
     {
         return [
             'whereEqual' => ['contracted_in_asp', 'registered_in_asp', 'responsible_person_id'],
