@@ -15,15 +15,17 @@
     {{-- Table --}}
     <x-tables.template.main-template :records="null" :includePagination="false">
         {{-- thead titles --}}
-        <x-slot:thead-titles>
-            <th>{{ __('Status') }}</th>
+        <x-slot:thead-rows>
+            <tr>
+                <th>{{ __('Status') }}</th>
 
-            @foreach ($kpi['months'] as $month)
-                <th>{{ __($month['name']) }}</th>
-            @endforeach
+                @foreach ($kpi['months'] as $month)
+                    <th>{{ __($month['name']) }}</th>
+                @endforeach
 
-            <th>{{ __('Total') }}</th>
-        </x-slot:thead-titles>
+                <th>{{ __('Total') }}</th>
+            </tr>
+        </x-slot:thead-rows>
 
         {{-- tbody rows --}}
         <x-slot:tbody-rows>

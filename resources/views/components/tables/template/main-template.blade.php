@@ -3,9 +3,7 @@
 <div class="main-table-wrapper thin-scrollbar @if (!$includePagination || ($records && !$records->hasPages())) main-table-wrapper--without-pagination @endif">
     <table {{ $attributes->merge(['class' => 'main-table']) }}>
         <thead>
-            <tr>
-                {{ $theadTitles }}
-            </tr>
+            {{ $theadRows }}
         </thead>
 
         <tbody>

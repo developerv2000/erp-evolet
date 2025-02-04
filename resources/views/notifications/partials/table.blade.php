@@ -1,12 +1,14 @@
 <x-tables.template.main-template :records="$records" :includePagination="true">
     {{-- thead titles --}}
-    <x-slot:thead-titles>
-        <th width="50"><x-tables.partials.th.select-all /></th>
+    <x-slot:thead-rows>
+        <tr>
+            <th width="50"><x-tables.partials.th.select-all /></th>
 
-        <th width="200">{{ __('Date') }}</th>
-        <th width="140">{{ __('Status') }}</th>
-        <th>{{ __('Text') }}</th>
-    </x-slot:thead-titles>
+            <th width="200">{{ __('Date') }}</th>
+            <th width="140">{{ __('Status') }}</th>
+            <th>{{ __('Text') }}</th>
+        </tr>
+    </x-slot:thead-rows>
 
     {{-- tbody rows --}}
     <x-slot:tbody-rows>

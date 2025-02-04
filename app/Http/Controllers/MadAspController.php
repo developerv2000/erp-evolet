@@ -7,6 +7,7 @@ use App\Http\Requests\MadAspUpdateRequest;
 use App\Models\Country;
 use App\Models\MadAsp;
 use App\Models\MarketingAuthorizationHolder;
+use App\Support\Helpers\GeneralHelper;
 use App\Support\Helpers\UrlHelper;
 use App\Support\Traits\Controller\DestroysModelRecords;
 use Illuminate\Http\Request;
@@ -29,6 +30,22 @@ class MadAspController extends Controller
         $records = MadAsp::finalizeQueryForRequest($query, $request, 'paginate');
 
         return view('mad-asp.index', compact('request', 'records'));
+    }
+
+    public function show(Request $request, MadAsp $record)
+    {
+        // Get display options
+        $displayOptions = $request->input('display_options', MadAsp::getFilterDisplayOptions());
+        $displayQuarters = in_array('Quarters', $displayOptions);
+        $displayMonths = in_array('Months', $displayOptions);
+
+        // Make all calculations
+        $record->makeAllCalculations($request);
+
+        // Collect months
+        $months = GeneralHelper::collectCalendarMonths();
+
+        return view('mad-asp.show', compact('record', 'months', 'displayQuarters', 'displayMonths'));
     }
 
     public function create()

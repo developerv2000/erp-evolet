@@ -118,6 +118,7 @@
 .users-index__photo {
     border-radius: 50%;
 }
+
 /* ------------ /end User pages ------------ */
 
 
@@ -148,3 +149,65 @@
 }
 
 /* ------------ /MAD KPI pages ------------ */
+
+
+/* ------------ MAD ASP pages ------------ */
+.mad-asp-table {
+    --th-country-name-width: 64px;
+    --th-mah-name-width: 60px;
+}
+
+.mad-asp-table thead {
+    height: auto;
+    z-index: 2;
+}
+
+.mad-asp-table thead tr:first-child {
+    text-align: center;
+}
+
+.mad-asp-table tbody {
+    z-index: 1;
+}
+
+.mad-asp-table th,
+.mad-asp-table td {
+    border: var(--form-input-border);
+}
+
+.mad-asp-table a {
+    text-decoration: none;
+}
+
+.mad-asp-table__divider {
+    height: 32px;
+}
+
+.mad-asp-table__th--country-name {
+    width: var(--th-country-name-width);
+}
+
+.mad-asp-table__th--mah-name {
+    width: var(--th-mah-name-width);
+}
+
+.mad-asp-table__td--year {
+    color: var(--theme-main-color);
+    position: sticky;
+    left: 0;
+    background-color: var(--theme-box-background-color);
+}
+
+.mad-asp-table__td--country-name {
+    position: sticky;
+    left: 0;
+    background-color: var(--theme-box-background-color);
+}
+
+.mad-asp-table__td--mah-name {
+    position: sticky;
+    left: var(--th-country-name-width);
+    background-color: var(--theme-box-background-color);
+}
+
+/* ------------ /MAD ASP pages ------------ */

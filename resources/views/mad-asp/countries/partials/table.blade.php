@@ -1,12 +1,14 @@
 <x-tables.template.main-template :records="$record->countries" :includePagination="false">
     {{-- thead titles --}}
-    <x-slot:thead-titles>
-        <th width="50"><x-tables.partials.th.select-all /></th>
+    <x-slot:thead-rows>
+        <tr>
+            <th width="50"><x-tables.partials.th.select-all /></th>
 
-        <th>{{ __('Name') }}</th>
-        <th>{{ __('MAH') }}</th>
-        <th>{{ __('Edit') }} {{ __('MAH') }}</th>
-    </x-slot:thead-titles>
+            <th>{{ __('Name') }}</th>
+            <th>{{ __('MAH') }}</th>
+            <th>{{ __('Edit') }} {{ __('MAH') }}</th>
+        </tr>
+    </x-slot:thead-rows>
 
     {{-- tbody rows --}}
     <x-slot:tbody-rows>

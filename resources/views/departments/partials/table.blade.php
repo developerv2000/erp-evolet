@@ -1,12 +1,14 @@
 <x-tables.template.main-template :records="$records" :includePagination="true">
     {{-- thead titles --}}
-    <x-slot:thead-titles>
-        <th width="270">{{ __('Name') }}</th>
-        <th width="110">{{ __('Abbreviation') }}</th>
-        <th width="160">{{ __('Roles') }}</th>
-        <th width="110">{{ __('Users') }}</th>
-        <th>{{ __('Permissions') }}</th>
-    </x-slot:thead-titles>
+    <x-slot:thead-rows>
+        <tr>
+            <th width="270">{{ __('Name') }}</th>
+            <th width="110">{{ __('Abbreviation') }}</th>
+            <th width="160">{{ __('Roles') }}</th>
+            <th width="110">{{ __('Users') }}</th>
+            <th>{{ __('Permissions') }}</th>
+        </tr>
+    </x-slot:thead-rows>
 
     {{-- tbody rows --}}
     <x-slot:tbody-rows>

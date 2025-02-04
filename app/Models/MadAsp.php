@@ -6,6 +6,7 @@ use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\GeneralHelper;
 use App\Support\Traits\Model\Commentable;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class MadAsp extends BaseModel implements HasTitle
 {
@@ -260,5 +261,148 @@ class MadAsp extends BaseModel implements HasTitle
         foreach ($this->countries as $country) {
             $country->MAHs = $this->getLoadedMAHsForSpecificCountry($country);
         }
+    }
+
+    /**
+     * Return an array of display options for filter.
+     *
+     * Used on show pages filter.
+     *
+     * @return array
+     */
+    public static function getFilterDisplayOptions()
+    {
+        return [
+            'Months',
+            'Quarters',
+        ];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Calculation functions
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Calculate and load all calculations based on year.
+     * Calculations must be done in below proper order to avoid errors:
+     *
+     * 1. Marketing authorization holders calculations of each countries.
+     * 2. Country calculations.
+     * 3. ASP summary calculations.
+     */
+    public function makeAllCalculations($request)
+    {
+        // Preapare record for calculations
+        $this->loadRequestedCountriesForCalculations($request);
+        $this->loadMAHsForCalculations();
+        $this->addUnderDiscussionMAHForCountries();
+
+        foreach ($this->countries as $country) {
+            // Step 1: Marketing authorization holders calculations of each countries.
+            foreach ($country->MAHs as $mah) {
+                $mah->makeAllMadAspCalculations($this, $request);
+            }
+
+            // Step 2: Country calculations.
+            $country->makeAllMadAspCalculations($this, $request);
+        }
+
+        // Step 3: ASP summary calculations.
+        $this->summarizeSelfCalculations($request);
+    }
+
+    private function summarizeSelfCalculations($request)
+    {
+        
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Preaparation for calculation functions
+    |--------------------------------------------------------------------------
+    */
+
+    private function loadRequestedCountriesForCalculations($request)
+    {
+        $countryIDs = $request->input('country_ids');
+
+        $this->load([
+            'countries' => function ($query) use ($countryIDs) {
+                if ($countryIDs) {
+                    $query->whereIn('countries.id', $countryIDs);
+                }
+            }
+        ]);
+    }
+
+    private function loadMAHsForCalculations()
+    {
+        $this->load(['MAHs']);
+        $this->attachAllCountryMAHs();
+    }
+
+    private function addUnderDiscussionMAHForCountries()
+    {
+        $underDiscussionNamedMAH = self::getUnderDiscussionMAHForCalculations();
+
+        foreach ($this->countries as $country) {
+            // Clone the pivot data for each country
+            $pivotData = array_merge($underDiscussionNamedMAH->pivot->toArray(), [
+                'country_id' => $country->id,
+            ]);
+
+            // Create a new Pivot instance
+            $underDiscussionNamedMAHWithPivot = clone $underDiscussionNamedMAH;
+            $underDiscussionNamedMAHWithPivot->setRelation(
+                'pivot',
+                new Pivot($pivotData, 'mad_asp_country_marketing_authorization_holder', true)
+            );
+
+            $country->MAHs->push($underDiscussionNamedMAHWithPivot);
+        }
+    }
+
+    private function getUnderDiscussionMAHForCalculations()
+    {
+        $mah = MarketingAuthorizationHolder::getUnderDiscussionNamedRecord();
+
+        $pivotData = [
+            'marketing_authorization_holder_id' => $mah->id,
+            'country_id' => 0, // Placeholder
+            "January_europe_contract_plan" => 0,
+            "January_india_contract_plan" => 0,
+            "February_europe_contract_plan" => 0,
+            "February_india_contract_plan" => 0,
+            "March_europe_contract_plan" => 0,
+            "March_india_contract_plan" => 0,
+            "April_europe_contract_plan" => 0,
+            "April_india_contract_plan" => 0,
+            "May_europe_contract_plan" => 0,
+            "May_india_contract_plan" => 0,
+            "June_europe_contract_plan" => 0,
+            "June_india_contract_plan" => 0,
+            "July_europe_contract_plan" => 0,
+            "July_india_contract_plan" => 0,
+            "August_europe_contract_plan" => 0,
+            "August_india_contract_plan" => 0,
+            "September_europe_contract_plan" => 0,
+            "September_india_contract_plan" => 0,
+            "October_europe_contract_plan" => 0,
+            "October_india_contract_plan" => 0,
+            "November_europe_contract_plan" => 0,
+            "November_india_contract_plan" => 0,
+            "December_europe_contract_plan" => 0,
+            "December_india_contract_plan" => 0,
+        ];
+
+        // Return an instance of the MAH with pivot data
+        $mah->setRelation(
+            'pivot',
+            new Pivot($pivotData, 'mad_asp_country_marketing_authorization_holder', true)
+        );
+
+        return $mah;
     }
 }

@@ -55,4 +55,23 @@ class MarketingAuthorizationHolder extends Model
     {
         return self::where('name', 'Обсуждается')->value('id');
     }
+
+    /**
+     * Used on MAD ASP show page.
+     */
+    public static function getUnderDiscussionNamedRecord()
+    {
+        return self::where('name', 'Обсуждается')->first();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | MAD ASP calculations
+    |--------------------------------------------------------------------------
+    */
+
+    public function makeAllMadAspCalculations($this, $request)
+    {
+        
+    }
 }

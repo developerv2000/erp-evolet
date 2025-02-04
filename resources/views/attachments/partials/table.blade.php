@@ -1,13 +1,15 @@
 <x-tables.template.main-template :records="null" :includePagination="false">
-    {{-- thead titles --}}
-    <x-slot:thead-titles>
-        <th width="50"><x-tables.partials.th.select-all /></th>
-        <th width="40"><x-tables.partials.th.delete /></th>
+    {{-- thead rows --}}
+    <x-slot:thead-rows>
+        <tr>
+            <th width="50"><x-tables.partials.th.select-all /></th>
+            <th width="40"><x-tables.partials.th.delete /></th>
 
-        <th>{{ __('Filename') }}</th>
-        <th>{{ __('File size') }}</th>
-        <th>{{ __('Date') }}</th>
-    </x-slot:thead-titles>
+            <th>{{ __('Filename') }}</th>
+            <th>{{ __('File size') }}</th>
+            <th>{{ __('Date') }}</th>
+        </tr>
+    </x-slot:thead-rows>
 
     {{-- tbody rows --}}
     <x-slot:tbody-rows>

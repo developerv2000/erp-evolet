@@ -1,19 +1,21 @@
 <x-tables.template.main-template :records="$records">
     {{-- thead titles --}}
-    <x-slot:thead-titles>
-        <th width="50"><x-tables.partials.th.select-all /></th>
+    <x-slot:thead-rows>
+        <tr>
+            <th width="50"><x-tables.partials.th.select-all /></th>
 
-        @if ($trashedRecords)
-            <th width="130"><x-tables.partials.th.deleted-at /></th>
-            <th width="40"><x-tables.partials.th.restore /></th>
-        @endif
+            @if ($trashedRecords)
+                <th width="130"><x-tables.partials.th.deleted-at /></th>
+                <th width="40"><x-tables.partials.th.restore /></th>
+            @endif
 
-        @foreach ($visibleTableColumns as $column)
-            <th width="{{ $column['width'] }}">
-                @include('products.table.thead-columns')
-            </th>
-        @endforeach
-    </x-slot:thead-titles>
+            @foreach ($visibleTableColumns as $column)
+                <th width="{{ $column['width'] }}">
+                    @include('products.table.thead-columns')
+                </th>
+            @endforeach
+        </tr>
+    </x-slot:thead-rows>
 
     {{-- tbody rows --}}
     <x-slot:tbody-rows>

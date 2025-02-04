@@ -1,15 +1,17 @@
 <x-tables.template.main-template :records="null" :includePagination="false">
     {{-- thead titles --}}
-    <x-slot:thead-titles>
-        <th width="50"><x-tables.partials.th.select-all /></th>
-        <th width="40"><x-tables.partials.th.edit /></th>
+    <x-slot:thead-rows>
+        <tr>
+            <th width="50"><x-tables.partials.th.select-all /></th>
+            <th width="40"><x-tables.partials.th.edit /></th>
 
-        <th>{{ __('Status') }}</th>
-        <th>{{ __('General status') }}</th>
-        <th>{{ __('Start date') }}</th>
-        <th>{{ __('End date') }}</th>
-        <th>{{ __('Duration days') }}</th>
-    </x-slot:thead-titles>
+            <th>{{ __('Status') }}</th>
+            <th>{{ __('General status') }}</th>
+            <th>{{ __('Start date') }}</th>
+            <th>{{ __('End date') }}</th>
+            <th>{{ __('Duration days') }}</th>
+        </tr>
+    </x-slot:thead-rows>
 
     {{-- tbody rows --}}
     <x-slot:tbody-rows>

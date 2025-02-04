@@ -5,6 +5,7 @@ namespace App\Support\Definers\ViewComposerDefiners;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Inn;
+use App\Models\MadAsp;
 use App\Models\Manufacturer;
 use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
@@ -158,6 +159,12 @@ class MADViewComposersDefiner
     {
         self::defineViewComposer('mad-asp.partials.create-form', [
             'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+        ]);
+
+        self::defineViewComposer('mad-asp.partials.show-page-filter', [
+            'regions' => Country::getRegionOptions(),
+            'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+            'displayOptions' => MadAsp::getFilterDisplayOptions(),
         ]);
 
         // Countries
