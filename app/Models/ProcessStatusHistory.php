@@ -57,8 +57,11 @@ class ProcessStatusHistory extends Model
     protected static function booted(): void
     {
         static::deleting(function ($record) {
+            // Escape errors on processes.destroy route
+            $currentRouteName = request()->route()->getName();
+
             // Active status history cannot be deleted
-            if ($record->isActiveStatusHistory()) {
+            if ($record->isActiveStatusHistory() && $currentRouteName == 'processes.status-history.destroy') {
                 throw ValidationException::withMessages([
                     'process_status_history_deletion' => trans('validation.custom.process_status_history.is_active_history'),
                 ]);

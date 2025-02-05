@@ -211,10 +211,11 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     {
         static::creating(function ($record) {
             $record->responsible_person_update_date = now();
+            $record->created_at = $record->created_at ?: now();
         });
 
         static::created(function ($record) {
-            $record->addStatusHistory();
+            $record->addStatusHistoryForCurrentStatus($record->created_at);
         });
 
         static::updating(function ($record) {
@@ -863,25 +864,34 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             $this->activeStatusHistory->close();
 
             // Create a new status history entry
-            $this->addStatusHistory();
+            $this->addStatusHistoryForCurrentStatus();
         }
     }
 
     /**
-     * Create a new status history record for the process.
+     * Add a new status history record for the current process status.
      *
-     * This method adds a new entry in the status history with the current
-     * 'status_id' and sets the 'start_date' to the current timestamp.
+     * This method creates a new entry in the status history table, storing the
+     * current 'status_id'. If no specific start date is provided, it defaults
+     * to the current timestamp.
      *
-     * Used during created event of the model.
+     * This function is typically used during the creation or update of the model,
+     * but it can be called elsewhere when needed.
+     *
+     * @param string|null $startDate Optional start date for the status history.
      */
-    private function addStatusHistory()
+    private function addStatusHistoryForCurrentStatus($startDate = null)
     {
+        // If no start date is provided, use the current timestamp.
+        $startDate = $startDate ?? now();
+
+        // Create a new status history entry with the current status.
         $this->statusHistory()->create([
             'status_id' => $this->status_id,
-            'start_date' => now(),
+            'start_date' => $startDate,
         ]);
     }
+
 
     /*
     |--------------------------------------------------------------------------

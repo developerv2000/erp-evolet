@@ -29,6 +29,16 @@
                 :options="$responsiblePeople"
                 :isRequired="true" />
         </div>
+
+        <div class="form__row">
+            <x-form.inputs.default-input
+                labelText="Historical date"
+                inputName="created_at"
+                type="datetime-local" />
+
+            <div class="form-group"></div>
+            <div class="form-group"></div>
+        </div>
     </div>
 
     {{-- Forecast inputs wrapper hidden initially  --}}

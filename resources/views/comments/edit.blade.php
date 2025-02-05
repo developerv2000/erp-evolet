@@ -32,6 +32,8 @@
                 labelText="Date of creation"
                 field="created_at"
                 :model="$record"
+                type="datetime-local"
+                :initialValue="$record->formatForDateTimeInput('created_at')"
                 :isRequired="true" />
         </div>
     </x-form-templates.edit-template>
