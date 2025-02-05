@@ -108,7 +108,7 @@ class ProcessController extends Controller
     {
         Process::createMultipleRecordsFromRequest($request);
 
-        return to_route('processes.index');
+        return redirect($request->input('previous_url'));
     }
 
     /**

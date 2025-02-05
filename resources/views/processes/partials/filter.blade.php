@@ -155,12 +155,12 @@
         :options="$manufacturerCategories" />
 
     <x-form.selects.selectize.boolean-select.request-based-select
-        labelText="Contracted on ASP"
-        inputName="contracted" />
+        labelText="Contracted in ASP"
+        inputName="contracted_in_asp" />
 
     <x-form.selects.selectize.boolean-select.request-based-select
-        labelText="Registered on ASP"
-        inputName="registered" />
+        labelText="Registered in ASP"
+        inputName="registered_in_asp" />
 
     {{-- Default filter inputs --}}
     <x-filter.partials.default-inputs />
