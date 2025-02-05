@@ -29,6 +29,10 @@ class MadAspController extends Controller
         $query = MadAsp::withBasicRelations()->withBasicRelationCounts();
         $records = MadAsp::finalizeQueryForRequest($query, $request, 'paginate');
 
+        foreach ($records as $record) {
+            $record->makeAllCalculations($request);
+        }
+
         return view('mad-asp.index', compact('request', 'records'));
     }
 
