@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use App\Support\Contracts\Model\UsageCountable;
+use App\Support\Contracts\Model\TracksUsageCount;
 use App\Support\Helpers\GeneralHelper;
 use App\Support\Traits\Model\CalculatesAspQuarterAndYearCounts;
 use App\Support\Traits\Model\RecalculatesAllUsageCounts;
 use App\Support\Traits\Model\ScopesOrderingByName;
-use App\Support\Traits\Model\ScopesOrderingByUsageCount;
 use Illuminate\Database\Eloquent\Model;
 
-class Country extends Model implements UsageCountable
+class Country extends Model implements TracksUsageCount
 {
     use ScopesOrderingByName;
     use RecalculatesAllUsageCounts;
@@ -112,15 +111,30 @@ class Country extends Model implements UsageCountable
     |--------------------------------------------------------------------------
     */
 
-    // Implement method declared in UsageCountable interface.
-    public static function recalculateAllUsageCounts(): void {}
-
-    // Implement method declared in UsageCountable interface.
-    public function recalculateUsageCount(): void
+    //Implement method declared in 'TracksUsageCount' interface.
+    public function scopeWithRelatedUsageCounts($query)
     {
-        // $this->update([
-        //     'usage_count' => $this->processes_count + $this->product_searches_count,
-        // ]);
+        return $query->withCount([
+            'manufacturers',
+            'processes',
+            'responsibleUsers',
+            'clinicalTrialProcesses',
+            'productSearches',
+            'additionalProductSearches',
+            'madAsps',
+        ]);
+    }
+
+    //Implement method declared in 'TracksUsageCount' interface.
+    public function getUsageCountAttribute()
+    {
+        return $this->manufacturers_count +
+            $this->processes_count +
+            $this->responsible_users_count +
+            $this->clinical_trial_processes_count +
+            $this->product_searches_count +
+            $this->additional_product_searches_count +
+            $this->mad_asps_count;
     }
 
     /*

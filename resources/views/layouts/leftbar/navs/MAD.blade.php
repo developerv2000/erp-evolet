@@ -100,6 +100,20 @@
                     <span class="leftbar__nav-link-text">{{ __('ASP') }}</span>
                 </a>
             @endcan
+
+            {{-- Misc --}}
+            @can('view-MAD-Misc')
+                <a
+                    @class([
+                        'leftbar__nav-link',
+                        'leftbar__nav-link--active' => (request()->routeIs('misc-models.department-models') && request()->route('department') == 'MAD'),
+                    ])
+                    href="{{ route('misc-models.department-models', 'MAD') }}">
+
+                    <x-misc.material-symbol class="leftbar__nav-link-icon" icon="dataset" />
+                    <span class="leftbar__nav-link-text">{{ __('Misc') }}</span>
+                </a>
+            @endcan
         </nav>
     </div>
 @endcanany

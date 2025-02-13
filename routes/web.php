@@ -4,6 +4,7 @@ use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\MiscModelController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
@@ -51,6 +52,17 @@ Route::middleware('auth', 'auth.session')->group(function () {
     Route::prefix('model-attachments')->controller(AttachmentController::class)->name('attachments.')->group(function () {
         Route::get('/view/{attachable_type}/{attachable_id}', 'index')->name('index');
         Route::delete('/destroy', 'destroy')->name('destroy');
+    });
+
+    Route::prefix('misc-models')->controller(MiscModelController::class)->name('misc-models.')->group(function () {
+        Route::get('/department/{department}/models', 'departmentModels')->name('department-models');
+        Route::get('/model/{model}', 'index')->name('index');
+        Route::get('/model/{model}/create', 'create')->name('create');
+        Route::get('/model/{model}/edit/{id}', 'edit')->name('edit');
+
+        Route::post('/model/{model}/store', 'store')->name('store');
+        Route::patch('/model/{model}/update/{id}', 'update')->name('update');
+        Route::delete('/model/{model}/destroy', 'destroy')->name('destroy');
     });
 });
 

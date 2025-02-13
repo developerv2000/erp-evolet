@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Support\Contracts\Model\TracksUsageCount;
 use App\Support\Traits\Model\FindsRecordByName;
 use App\Support\Traits\Model\ScopesOrderingByName;
 use Illuminate\Database\Eloquent\Model;
 
-class Zone extends Model
+class Zone extends Model implements TracksUsageCount
 {
     use ScopesOrderingByName;
     use FindsRecordByName;
@@ -34,6 +35,28 @@ class Zone extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Contracts
+    |--------------------------------------------------------------------------
+    */
+
+    //Implement method declared in 'TracksUsageCount' interface.
+    public function scopeWithRelatedUsageCounts($query)
+    {
+        return $query->withCount([
+            'manufacturers',
+            'products',
+        ]);
+    }
+
+    //Implement method declared in 'TracksUsageCount' interface.
+    public function getUsageCountAttribute()
+    {
+        return $this->manufacturers_count +
+            $this->products_count;
     }
 
     /*

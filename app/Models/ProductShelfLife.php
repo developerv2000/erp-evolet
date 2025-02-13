@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Support\Contracts\Model\TracksUsageCount;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductShelfLife extends Model
+class ProductShelfLife extends Model implements TracksUsageCount
 {
     /*
     |--------------------------------------------------------------------------
@@ -23,7 +24,27 @@ class ProductShelfLife extends Model
 
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'shelf_life_id');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Contracts
+    |--------------------------------------------------------------------------
+    */
+
+    //Implement method declared in 'TracksUsageCount' interface.
+    public function scopeWithRelatedUsageCounts($query)
+    {
+        return $query->withCount([
+            'products',
+        ]);
+    }
+
+    //Implement method declared in 'TracksUsageCount' interface.
+    public function getUsageCountAttribute()
+    {
+        return $this->products_count;
     }
 
     /*

@@ -514,7 +514,7 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Meetings', 'order' => $order++, 'width' => 106, 'visible' => 1],
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
-            ['name' => 'Attachments', 'order' => $order++, 'width' => 220, 'visible' => 1],
+            ['name' => 'Attachments', 'order' => $order++, 'width' => 260, 'visible' => 1],
         );
 
         return $columns;

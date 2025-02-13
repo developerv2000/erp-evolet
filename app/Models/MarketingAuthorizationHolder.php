@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Contracts\Model\TracksUsageCount;
 use App\Support\Helpers\GeneralHelper;
 use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\CalculatesAspQuarterAndYearCounts;
@@ -9,7 +10,7 @@ use App\Support\Traits\Model\ScopesOrderingByName;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class MarketingAuthorizationHolder extends Model
+class MarketingAuthorizationHolder extends Model implements TracksUsageCount
 {
     use ScopesOrderingByName;
     use CalculatesAspQuarterAndYearCounts;
@@ -56,6 +57,30 @@ class MarketingAuthorizationHolder extends Model
     {
         return $this->belongsToMany(Country::class, 'mad_asp_country_marketing_authorization_holder')
             ->withPivot(MadAsp::getPivotColumnNamesForMAHRelation());
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Contracts
+    |--------------------------------------------------------------------------
+    */
+
+    //Implement method declared in 'TracksUsageCount' interface.
+    public function scopeWithRelatedUsageCounts($query)
+    {
+        return $query->withCount([
+            'processes',
+            'productSearches',
+            'madAsps',
+        ]);
+    }
+
+    //Implement method declared in 'TracksUsageCount' interface.
+    public function getUsageCountAttribute()
+    {
+        return $this->processes_count +
+            $this->product_searches_count;
+            $this->mad_asps_count;
     }
 
     /*
