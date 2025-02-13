@@ -3,7 +3,10 @@
     <x-slot:thead-rows>
         <tr>
             <th width="50"><x-tables.partials.th.select-all /></th>
-            <th width="40"><x-tables.partials.th.edit /></th>
+
+            @can('edit-MAD-Misc')
+                <th width="40"><x-tables.partials.th.edit /></th>
+            @endcan
 
             <th>{{ __('Name') }}</th>
 
@@ -27,9 +30,11 @@
             <tr>
                 <td><x-tables.partials.td.checkbox :value="$record->id" /></td>
 
-                <td>
-                    <x-tables.partials.td.edit :link="route('misc-models.edit', ['model' => $model['name'], 'id' => $record->id])" />
-                </td>
+                @can('edit-MAD-Misc')
+                    <td>
+                        <x-tables.partials.td.edit :link="route('misc-models.edit', ['model' => $model['name'], 'id' => $record->id])" />
+                    </td>
+                @endcan
 
                 <td>{{ $record->name }}</td>
 

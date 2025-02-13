@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 
 /**
  * Important: All defined models must have 'name' attribute!
+ *
  * Important: All defined models must implement 'TracksUsageCount' interface!
+ * Important: All defined models must use 'PreventsDeletionIfInUse' trait!
  */
 class MiscModelController extends Controller
 {
@@ -35,6 +37,47 @@ class MiscModelController extends Controller
         $records = $this->getModelRecordsFilteredAndPaginated($model, $request);
 
         return view('misc-models.index', compact('model', 'records'));
+    }
+
+    public function create(Request $request, $modelName)
+    {
+        // Find model and initialize it
+        $model = $this->findModelByName($modelName);
+        $this->addFullNamespaceToSpecificModelDefinition($model);
+
+        // Get all parent records, if model attributes contains 'parent_id'
+        $parentRecords = $this->getAllParentRecordsOfModel($model);
+
+        return view('misc-models.create', compact('model', 'parentRecords'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(TemplatedModelStoreRequest $request, $modelName)
+    {
+        $model = self::findModelByName($modelName);
+
+        $fullNamespace = $model['full_namespace'];
+        $fullNamespace::create($request->all());
+
+        return to_route('templated-models.show', $modelName);
+    }
+
+    public function destroy(Request $request, $modelName)
+    {
+        // Find model and initialize it
+        $model = $this->findModelByName($modelName);
+        $this->addFullNamespaceToSpecificModelDefinition($model);
+
+        // Delete selected records
+        $ids = $request->input('ids');
+
+        foreach ($ids as $id) {
+            $model['full_namespace']::find($id)->delete();
+        }
+
+        return redirect()->back();
     }
 
     /*
@@ -172,7 +215,7 @@ class MiscModelController extends Controller
      *
      * Used on CRUD pages of specific model.
      */
-    private static function getAllParentRecordsOfModel($model)
+    private function getAllParentRecordsOfModel($model)
     {
         $modelAttributes = $model['attributes'];
         $parents = null;

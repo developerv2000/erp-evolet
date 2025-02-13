@@ -6,6 +6,7 @@ use App\Support\Contracts\Model\TracksUsageCount;
 use App\Support\Helpers\GeneralHelper;
 use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\CalculatesAspQuarterAndYearCounts;
+use App\Support\Traits\Model\PreventsDeletionIfInUse;
 use App\Support\Traits\Model\ScopesOrderingByName;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
 {
     use ScopesOrderingByName;
     use CalculatesAspQuarterAndYearCounts;
+    use PreventsDeletionIfInUse;
 
     /*
     |--------------------------------------------------------------------------

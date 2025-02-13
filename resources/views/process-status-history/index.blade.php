@@ -39,9 +39,9 @@
 
         {{-- Table --}}
         @include('process-status-history.partials.table')
-
-        {{-- Modals --}}
-        <x-modals.multiple-delete form-action="{{ route('processes.status-history.destroy', $process->id) }}" :forceDelete="false" />
-        <x-modals.target-delete :forceDelete="false" />
     </div>
+
+    {{-- Modals --}}
+    <x-modals.multiple-delete form-action="{{ route('processes.status-history.destroy', $process->id) }}" :forceDelete="false" />
+    <x-modals.target-delete :forceDelete="false" />
 @endsection

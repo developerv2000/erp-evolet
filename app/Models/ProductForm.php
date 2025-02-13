@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\Contracts\Model\TracksUsageCount;
 use App\Support\Traits\Model\GetsMinifiedRecordsWithName;
+use App\Support\Traits\Model\PreventsDeletionIfInUse;
 use App\Support\Traits\Model\ScopesOrderingByName;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +12,7 @@ class ProductForm extends Model implements TracksUsageCount
 {
     use ScopesOrderingByName;
     use GetsMinifiedRecordsWithName;
+    use PreventsDeletionIfInUse;
 
     /*
     |--------------------------------------------------------------------------

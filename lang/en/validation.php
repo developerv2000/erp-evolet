@@ -191,8 +191,8 @@ return [
             'is_active_history' => 'Active status history can not be deleted.',
         ],
 
-        'templated_models' => [
-            'is_in_use' => 'The ":name" cannot be removed because it is used by other tables.',
+        'misc_models' => [
+            'record_is_in_use' => 'The ":name" cannot be removed because it is used by other tables.',
         ],
     ],
 

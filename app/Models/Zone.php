@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\Contracts\Model\TracksUsageCount;
 use App\Support\Traits\Model\FindsRecordByName;
+use App\Support\Traits\Model\PreventsDeletionIfInUse;
 use App\Support\Traits\Model\ScopesOrderingByName;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +12,7 @@ class Zone extends Model implements TracksUsageCount
 {
     use ScopesOrderingByName;
     use FindsRecordByName;
+    use PreventsDeletionIfInUse;
 
     /*
     |--------------------------------------------------------------------------
