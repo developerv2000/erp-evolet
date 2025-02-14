@@ -1,7 +1,9 @@
 <x-form-templates.create-template :action="route('misc-models.store', $model['name'])">
     <div class="form__block">
         <div class="form__row">
+            {{-- Special formatter for Inn name input --}}
             <x-form.inputs.default-input
+                :class="$model['name'] == 'Inn' ? 'specific-formatable-input' : null"
                 labelText="Name"
                 inputName="name"
                 :isRequired="true" />

@@ -12,7 +12,7 @@
             @php
                 $crumbs = [
                     ['link' => null, 'text' => __('Misc')],
-                    ['link' => null, 'text' => $model['caption']],
+                    ['link' => route('misc-models.index', $model['name']), 'text' => $model['caption']],
                     ['link' => null, 'text' => $record->name]
                 ];
             @endphp

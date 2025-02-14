@@ -1,7 +1,9 @@
 <x-form-templates.edit-template :action="route('misc-models.update', ['model' => $model['name'], 'id' => $record->id])">
     <div class="form__block">
         <div class="form__row">
+            {{-- Special formatter for Inn name input --}}
             <x-form.inputs.record-field-input
+                :class="$model['name'] == 'Inn' ? 'specific-formatable-input' : null"
                 labelText="Name"
                 field="name"
                 :model="$record"
