@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => __('Create new') . ' — ' . $model['caption'],
-    'pageName' => 'misc-modals-create',
+    'pageTitle' => $record->name . ' — ' . $model['caption'],
+    'pageName' => 'misc-models-edit',
     'mainAutoOverflowed' => false,
 ])
 
@@ -13,7 +13,7 @@
                 $crumbs = [
                     ['link' => null, 'text' => __('Misc')],
                     ['link' => null, 'text' => $model['caption']],
-                    ['link' => null, 'text' => __('Create new record')]
+                    ['link' => null, 'text' => $record->name]
                 ];
             @endphp
             {{-- blade-formatter-enable --}}
@@ -26,14 +26,14 @@
                     class="toolbar__button"
                     style="shadowed"
                     type="submit"
-                    form="create-form"
-                    icon="done_all">{{ __('Store') }}
+                    form="edit-form"
+                    icon="done_all">{{ __('Update') }}
                 </x-misc.button>
             </div>
         </div>
 
-        {{-- Create form --}}
-        @include('misc-models.partials.create-form')
+        {{-- Edit form --}}
+        @include('misc-models.partials.edit-form')
     </div>
 
 @endsection

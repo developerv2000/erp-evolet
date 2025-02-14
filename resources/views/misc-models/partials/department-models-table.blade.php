@@ -15,7 +15,7 @@
                     <a class="main-link" href="{{ route('misc-models.index', $model['name']) }}">{{ $model['caption'] }}</a>
                 </td>
 
-                <td>{{ $model['record_count'] }}</td>
+                <td>{{ $model['records_count'] }}</td>
             </tr>
         @endforeach
     </x-slot:tbody-rows>

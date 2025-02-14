@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MiscModelStoreRequest;
+use App\Http\Requests\MiscModelUpdateRequest;
 use App\Support\Helpers\ModelHelper;
 use App\Support\Helpers\QueryFilterHelper;
 use Illuminate\Http\Request;
@@ -36,7 +38,11 @@ class MiscModelController extends Controller
         // Get model records fitlered and paginated
         $records = $this->getModelRecordsFilteredAndPaginated($model, $request);
 
-        return view('misc-models.index', compact('model', 'records'));
+        // Get records for filtering
+        $allRecords = $model['full_namespace']::all();
+        $parentRecords = $this->getAllParentRecordsOfModel($model);
+
+        return view('misc-models.index', compact('model', 'records', 'allRecords', 'parentRecords'));
     }
 
     public function create(Request $request, $modelName)
@@ -54,14 +60,43 @@ class MiscModelController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(TemplatedModelStoreRequest $request, $modelName)
+    public function store(MiscModelStoreRequest $request, $modelName)
     {
+        // Find model and initialize it
         $model = self::findModelByName($modelName);
+        $this->addFullNamespaceToSpecificModelDefinition($model);
 
-        $fullNamespace = $model['full_namespace'];
-        $fullNamespace::create($request->all());
+        $model['full_namespace']::create($request->all());
 
-        return to_route('templated-models.show', $modelName);
+        return to_route('misc-models.index', $modelName);
+    }
+
+    public function edit(Request $request, $modelName, $id)
+    {
+        // Find model and initialize it
+        $model = self::findModelByName($modelName);
+        $this->addFullNamespaceToSpecificModelDefinition($model);
+
+        // Find model record
+        $record = $model['full_namespace']::Find($id);
+
+        // Get all parent records, if model attributes contains 'parent_id'
+        $parentRecords = $this->getAllParentRecordsOfModel($model);
+
+        return view('misc-models.edit', compact('model', 'record', 'parentRecords'));
+    }
+
+    public function update(MiscModelUpdateRequest $request, $modelName, $id)
+    {
+        // Find model and initialize it
+        $model = self::findModelByName($modelName);
+        $this->addFullNamespaceToSpecificModelDefinition($model);
+
+        // Find model record and update it
+        $record = $model['full_namespace']::Find($id);
+        $record->update($request->all());
+
+        return redirect($request->input('previous_url'));
     }
 
     public function destroy(Request $request, $modelName)
@@ -171,7 +206,7 @@ class MiscModelController extends Controller
     private function addRecordsCountToSpecificModelDefinition($model)
     {
         $fullNamespace = $model['full_namespace'];
-        $model['record_count'] = $fullNamespace::count();
+        $model['records_count'] = $fullNamespace::count();
 
         return $model;
     }
@@ -196,7 +231,7 @@ class MiscModelController extends Controller
 
         // Filter query
         $filterConfig = [
-            'whereEqual' => ['id', 'parent_id'],
+            'whereIn' => ['id', 'parent_id'],
         ];
         $filteredQuery = QueryFilterHelper::applyFilters($query, $request, $filterConfig);
 
@@ -221,7 +256,7 @@ class MiscModelController extends Controller
         $parents = null;
 
         if (in_array('parent_id', $modelAttributes)) {
-            $parents = $model['full_namespace']::onlyParents();
+            $parents = $model['full_namespace']::onlyParents()->get();
         }
 
         return $parents;

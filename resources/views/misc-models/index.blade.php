@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-    'pageTitle' => $model['caption'] . ' — ERP',
+    'pageTitle' => $model['caption'] . ' — ' . __('Misc'),
     'pageName' => 'misc-models-index',
     'mainAutoOverflowed' => true,
 ])
@@ -61,4 +61,8 @@
     @can('edit-MAD-Misc')
         <x-modals.multiple-delete form-action="{{ route('misc-models.destroy', $model['name']) }}" :forceDelete="false" />
     @endcan
+@endsection
+
+@section('rightbar')
+    @include('misc-models.partials.filter')
 @endsection

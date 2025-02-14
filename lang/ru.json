@@ -15,6 +15,7 @@
     "Meetings": "Встречи",
     "KPI": "КПЭ",
     "ASP": "СПГ",
+    "Misc": "Разное",
 
     "Departments": "Отделы",
     "Department": "Отдел",
@@ -122,6 +123,10 @@
     "Active": "Активный",
     "Stopped": "Остановлен",
     "Important": "Важный",
+    "Parent": "Родитель",
+    "Usage count": "Счетчик использования",
+    "Code": "Код",
+    "Records count": "Количество записей",
 
     "Similar records": "Похожие записи",
     "No similar records found": "Похожих записей не найдено",
