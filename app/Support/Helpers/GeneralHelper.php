@@ -66,7 +66,7 @@ class GeneralHelper
     /**
      * Get plain text from string without HTML tags.
      */
-    public function getPlainTextFromStr($string)
+    public static function getPlainTextFromStr($string)
     {
         if (empty($string)) {
             return '';
@@ -77,8 +77,8 @@ class GeneralHelper
             ->replaceMatches('/>(?!\s)/', '> ')
             // Strip HTML tags
             ->stripTags()
-            // Decode HTML entities
-            ->htmlspecialcharsDecode()
+            // Decode HTML entities using PHP's htmlspecialchars_decode()
+            ->pipe(fn($str) => htmlspecialchars_decode($str))
             // Replace multiple spaces with a single space
             ->replaceMatches('/\s+/', ' ')
             // Remove spaces before commas and dots

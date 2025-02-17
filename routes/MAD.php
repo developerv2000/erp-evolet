@@ -3,6 +3,7 @@
 use App\Http\Controllers\MadAspController;
 use App\Http\Controllers\MADKPIController;
 use App\Http\Controllers\ManufacturerController;
+use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\ProcessController;
 use App\Http\Controllers\ProcessStatusHistoryController;
 use App\Http\Controllers\ProductController;
@@ -68,7 +69,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     // Meetings
-    Route::prefix('meetings')->controller(ManufacturerController::class)->name('meetings.')->group(function () {
+    Route::prefix('meetings')->controller(MeetingController::class)->name('meetings.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-MAD-Meetings', 'can:edit-MAD-Meetings');
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });

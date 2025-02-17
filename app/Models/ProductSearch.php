@@ -395,7 +395,7 @@ class ProductSearch extends BaseModel implements HasTitle, CanExportRecordsAsExc
             ['name' => 'ID', 'order' => $order++, 'width' => 60, 'visible' => 1],
             ['name' => 'Source EU', 'order' => $order++, 'width' => 118, 'visible' => 1],
             ['name' => 'Source IN', 'order' => $order++, 'width' => 118, 'visible' => 1],
-            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Portfolio manager', 'order' => $order++, 'width' => 104, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 80, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 92, 'visible' => 1],

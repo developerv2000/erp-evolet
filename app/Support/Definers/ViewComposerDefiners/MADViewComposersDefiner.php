@@ -37,6 +37,7 @@ class MADViewComposersDefiner
         self::defineProductSearchComposers();
         self::defineKPIComposers();
         self::defineASPComposers();
+        self::defineMeetingComposers();
     }
 
     /*
@@ -144,6 +145,17 @@ class MADViewComposersDefiner
         ], $defaultShareData);
     }
 
+    private static function defineMeetingComposers()
+    {
+        $defaultShareData = self::getDefaultMeetingsShareData();
+
+        self::defineViewComposer([
+            'meetings.partials.filter',
+            'meetings.partials.create-form',
+            'meetings.partials.edit-form'
+        ], $defaultShareData);
+    }
+
     private static function defineKPIComposers()
     {
         self::defineViewComposer('mad-kpi.partials.filter',  [
@@ -238,6 +250,16 @@ class MADViewComposersDefiner
             'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
             'portfolioManagers' => PortfolioManager::orderByName()->get(),
             'analystUsers' => User::getMADAnalystsMinified(),
+        ];
+    }
+
+    private static function getDefaultMeetingsShareData()
+    {
+        return [
+            'manufacturers' => Manufacturer::getMinifiedRecordsWithName(),
+            'analystUsers' => User::getMADAnalystsMinified(),
+            'bdmUsers' => User::getBDMsMinifed(),
+            'countriesOrderedByName' => Country::orderByName()->get(),
         ];
     }
 }

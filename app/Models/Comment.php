@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Helpers\GeneralHelper;
 use App\Support\Traits\Model\FormatsAttributeForDateTimeInput;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -74,24 +75,12 @@ class Comment extends Model
 
     /**
      * Get plain text without HTML tags.
+     *
      * Used on displaying last comment.
      */
     public function getPlainTextAttribute()
     {
-        // Add a space after each closing tag to prevent text from joining
-        $withSpaces = preg_replace('/>(?!\s)/', '> ', $this->body);
-
-        // Strip HTML tags
-        $plainText = strip_tags($withSpaces);
-
-        // Normalize by decoding HTML entities
-        $decodedText = htmlspecialchars_decode($plainText);
-
-        // Replace multiple spaces with a single space
-        $normalizedText = preg_replace('/\s+/', ' ', $decodedText);
-
-        // Trim the result
-        return Str::of($normalizedText)->trim();
+        return GeneralHelper::getPlainTextFromStr($this->body);
     }
 
     /*

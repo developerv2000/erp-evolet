@@ -468,7 +468,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Matched KVPP', 'order' => $order++, 'width' => 146, 'visible' => 1],
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],

@@ -71,6 +71,11 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
         );
     }
 
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
+    }
+
     public function category()
     {
         return $this->belongsTo(ManufacturerCategory::class);
@@ -142,9 +147,9 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
                 $product->delete();
             }
 
-            // foreach ($record->meetings as $meeting) {
-            //     $meeting->delete();
-            // }
+            foreach ($record->meetings as $meeting) {
+                $meeting->delete();
+            }
         });
 
         static::restored(function ($record) {
@@ -152,9 +157,9 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
                 $product->restore();
             }
 
-            // foreach ($record->meetings()->onlyTrashed()->get() as $meeting) {
-            //     $meeting->restore();
-            // }
+            foreach ($record->meetings()->onlyTrashed()->get() as $meeting) {
+                $meeting->restore();
+            }
         });
 
         static::forceDeleting(function ($record) {
@@ -170,9 +175,9 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
                 $product->forceDelete();
             }
 
-            // foreach ($record->meetings()->withTrashed()->get() as $meeting) {
-            //     $meeting->forceDelete();
-            // }
+            foreach ($record->meetings()->withTrashed()->get() as $meeting) {
+                $meeting->forceDelete();
+            }
         });
     }
 
@@ -205,7 +210,7 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
             'comments',
             'attachments',
             'products',
-            // 'meetings', // Not done yet
+            'meetings',
         ]);
     }
 
@@ -510,9 +515,9 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
-            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Meetings', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'Meetings', 'order' => $order++, 'width' => 86, 'visible' => 1],
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Attachments', 'order' => $order++, 'width' => 260, 'visible' => 1],
         );

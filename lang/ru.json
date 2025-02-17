@@ -150,6 +150,7 @@
     "Relationship": "Отношения",
     "Has VPS for country": "Имеет ВПЦ для страны",
     "Region": "Регион",
+    "meetings": "встреч",
 
     "Processes": "Процессы",
     "processes": "процесса",
@@ -220,6 +221,11 @@
     "Additional search info": "Доп инфо для поиска",
     "Additional search countries": "Доп стран для поиска",
     "Portfolio manager": "Менеджер",
+
+    "Who met": "Кто встретил",
+    "Topic": "Тема",
+    "Result": "Итог",
+    "Outside the exhibition": "За пределами выставки",
 
     "Year": "Год",
     "Months": "Месяцы",

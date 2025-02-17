@@ -1145,7 +1145,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             ['name' => 'Responsible update date', 'order' => $order++, 'width' => 250, 'visible' => 1],
             ['name' => 'Days have passed', 'order' => $order++, 'width' => 110, 'visible' => 1],
 
-            ['name' => 'Date of creation', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
 
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],

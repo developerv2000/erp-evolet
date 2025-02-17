@@ -110,7 +110,9 @@
     @break
 
     @case('Meetings')
-        Meetings
+        <a class="main-link" href="{{ route('meetings.index', ['manufacturer_id[]' => $record->id]) }}">
+            {{ $record->meetings_count }} {{ __('meetings') }}
+        </a>
     @break
 
     @case('ID')
