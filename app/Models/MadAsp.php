@@ -260,10 +260,20 @@ class MadAsp extends BaseModel implements HasTitle
             ->pluck('id');
     }
 
-    public function attachAllCountryMAHs()
+    public function attachAllCountryRequestedMAHs($request)
     {
+        $requestedMAHIDs = $request->input('marketing_authorization_holder_id', []);
+
         foreach ($this->countries as $country) {
-            $country->MAHs = $this->getLoadedMAHsForSpecificCountry($country);
+            // Get all MAHs
+            $MAHs = $this->getLoadedMAHsForSpecificCountry($country);
+
+            // Filter requested MAHs
+            if (count($requestedMAHIDs)) {
+                $MAHs = $MAHs->whereIn('id', $requestedMAHIDs);
+            }
+
+            $country->MAHs = $MAHs;
         }
     }
 
@@ -300,8 +310,8 @@ class MadAsp extends BaseModel implements HasTitle
     {
         // Preapare record for calculations
         $this->loadRequestedCountriesForCalculations($request);
-        $this->loadMAHsForCalculations();
-        $this->addUnderDiscussionMAHForCountries();
+        $this->loadMAHsForCalculations($request);
+        $this->addUnderDiscussionMAHForCountries($request);
 
         foreach ($this->countries as $country) {
             // Step 1: Marketing authorization holders calculations of each countries.
@@ -399,15 +409,21 @@ class MadAsp extends BaseModel implements HasTitle
         ]);
     }
 
-    private function loadMAHsForCalculations()
+    private function loadMAHsForCalculations($request)
     {
         $this->load(['MAHs']);
-        $this->attachAllCountryMAHs();
+        $this->attachAllCountryRequestedMAHs($request);
     }
 
-    private function addUnderDiscussionMAHForCountries()
+    private function addUnderDiscussionMAHForCountries($request)
     {
         $underDiscussionNamedMAH = self::getUnderDiscussionMAHForCalculations();
+
+        // Return if underDiscussionMAH is absent in requested MAHs
+        $requestedMAHIDs = $request->input('marketing_authorization_holder_id', []);
+        if (count($requestedMAHIDs) && !in_array($underDiscussionNamedMAH->id, $requestedMAHIDs)) {
+            return;
+        }
 
         foreach ($this->countries as $country) {
             // Clone the pivot data for each country

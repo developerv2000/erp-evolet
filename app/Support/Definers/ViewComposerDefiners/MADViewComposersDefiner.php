@@ -177,6 +177,7 @@ class MADViewComposersDefiner
             'regions' => Country::getRegionOptions(),
             'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
             'displayOptions' => MadAsp::getFilterDisplayOptions(),
+            'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
         ]);
 
         // Countries

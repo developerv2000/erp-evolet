@@ -202,13 +202,19 @@
     background-color: var(--theme-box-background-color);
 }
 
-.mad-asp-table__td--country-name {
+.mad-asp-table__tbody-main-country-row {
+    font-weight: 600;
+    text-align: center;
+}
+
+.mad-asp-table__tbody-td--country-name {
     position: sticky;
     left: 0;
     background-color: var(--theme-box-background-color);
+    text-align: left;
 }
 
-.mad-asp-table__td--mah-name {
+.mad-asp-table__tbody-td--mah-name {
     position: sticky;
     left: var(--th-country-name-width);
     background-color: var(--theme-box-background-color);

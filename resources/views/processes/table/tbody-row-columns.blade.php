@@ -17,13 +17,13 @@
     @break
 
     @case('5Кк')
-        @if ($record->isReadyForASPContract())
+        @if ($record->isReadyForASPContract() || $record->contracted_in_asp)
             <input class="checkbox td__checkbox" type="checkbox" data-on-toggle="toggle-process-contracted-in-asp-boolean" data-process-id={{ $record->id }} @checked($record->contracted_in_asp)>
         @endif
     @break
 
     @case('7НПР')
-        @if ($record->isReadyForASPRegistration())
+        @if ($record->isReadyForASPRegistration() || $record->registered_in_asp)
             <input class="checkbox td__checkbox" type="checkbox" data-on-toggle="toggle-process-registered-in-asp-boolean" data-process-id={{ $record->id }} @checked($record->registered_in_asp)>
         @endif
     @break

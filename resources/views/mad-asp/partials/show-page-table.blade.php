@@ -16,7 +16,7 @@
                 {{-- Monthes 1-12 --}}
                 @if ($displayMonths)
                     @for ($quarterMonths = 1; $quarterMonths <= 3; $quarterMonths++)
-                        <th width="240" colspan="3">{{ __($months[$monthIndex++]['name']) }}</th>
+                        <th width="246" colspan="3">{{ __($months[$monthIndex++]['name']) }}</th>
                     @endfor
                 @endif
             @endfor
@@ -28,18 +28,18 @@
             <th class="mad-asp-table__th--mah-name"></th>
 
             {{-- Plan for the year --}}
-            <th>Кк {{ __('plan') }}</th>
-            <th>Кк {{ __('fact') }}</th>
-            <th>Кк %</th>
-            <th>НПР {{ __('fact') }}</th>
-            <th>НПР %</th>
+            <th style="text-align: center">Кк {{ __('plan') }}</th>
+            <th style="text-align: center">Кк {{ __('fact') }}</th>
+            <th style="text-align: center">Кк %</th>
+            <th style="text-align: center">НПР {{ __('fact') }}</th>
+            <th style="text-align: center">НПР %</th>
 
             @for ($quarter = 1; $quarter <= 4; $quarter++)
                 {{-- Quarters 1 - 4 --}}
                 @if ($displayQuarters)
-                    <th>Кк {{ __('plan') }}</th>
-                    <th>Кк {{ __('fact') }}</th>
-                    <th>НПР {{ __('fact') }}</th>
+                    <th style="text-align: right">Кк {{ __('plan') }}</th>
+                    <th style="text-align: right">Кк {{ __('fact') }}</th>
+                    <th style="text-align: right">НПР {{ __('fact') }}</th>
                 @endif
 
                 {{-- Monthes 1 - 12 --}}
@@ -92,8 +92,8 @@
         @foreach ($record->countries as $country)
             <tr class="mad-asp-table__divider"></tr> {{-- Empty space as divider --}}
 
-            <tr>
-                <td class="mad-asp-table__td--country-name"><strong>{{ $country->code }}</strong></td>
+            <tr class="mad-asp-table__tbody-main-country-row">
+                <td class="mad-asp-table__tbody-td--country-name"><strong>{{ $country->code }}</strong></td>
                 <td class="mad-asp-table__td--mah-name"></td>
 
                 {{-- Country year --}}
@@ -129,18 +129,18 @@
                     <td class="mad-asp-table__td--mah-name">{{ $mah->name }}</td>
 
                     {{-- MAH year --}}
-                    <td>{{ $mah->year_contract_plan }}</td>
-                    <td>{{ $mah->year_contract_fact }}</td>
-                    <td>{{ $mah->year_contract_fact_percentage }} %</td>
-                    <td>{{ $mah->year_register_fact }}</td>
-                    <td>{{ $mah->year_register_fact_percentage }} %</td>
+                    <td style="text-align: center">{{ $mah->year_contract_plan }}</td>
+                    <td style="text-align: center">{{ $mah->year_contract_fact }}</td>
+                    <td style="text-align: center">{{ $mah->year_contract_fact_percentage }} %</td>
+                    <td style="text-align: center">{{ $mah->year_register_fact }}</td>
+                    <td style="text-align: center">{{ $mah->year_register_fact_percentage }} %</td>
 
                     {{-- MAH Quarters 1 - 4 --}}
                     @for ($quarter = 1, $monthIndex = 0; $quarter <= 4; $quarter++)
                         @if ($displayQuarters)
-                            <td>{{ $mah->{'quarter_' . $quarter . '_contract_plan'} }}</td>
-                            <td>{{ $mah->{'quarter_' . $quarter . '_contract_fact'} }}</td>
-                            <td>{{ $mah->{'quarter_' . $quarter . '_register_fact'} }}</td>
+                            <td style="text-align: right">{{ $mah->{'quarter_' . $quarter . '_contract_plan'} }}</td>
+                            <td style="text-align: right">{{ $mah->{'quarter_' . $quarter . '_contract_fact'} }}</td>
+                            <td style="text-align: right">{{ $mah->{'quarter_' . $quarter . '_register_fact'} }}</td>
                         @endif
 
                         {{-- MAH Monthes 1 - 12 --}}

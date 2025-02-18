@@ -10,6 +10,11 @@
         optionCaptionField="code"
         :options="$countriesOrderedByProcessesCount" />
 
+    <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        labelText="MAH"
+        inputName="marketing_authorization_holder_id[]"
+        :options="$MAHs" />
+
     <x-form.selects.selectize.multiple-select.request-based-select
         labelText="Display"
         inputName="display_options[]"
