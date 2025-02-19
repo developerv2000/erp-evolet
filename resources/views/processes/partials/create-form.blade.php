@@ -34,7 +34,7 @@
             <x-form.inputs.default-input
                 labelText="Historical date"
                 inputName="created_at"
-                type="datetime-local" />
+                type="date" />
 
             <div class="form-group"></div>
             <div class="form-group"></div>
