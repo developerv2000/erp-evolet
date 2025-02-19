@@ -161,13 +161,13 @@
                                 <td>{{ $mah->{$months[$monthIndex]['name'] . '_contract_plan'} }}</td>
 
                                 <td>
-                                    <a href="{{ $mah->{$months[$monthIndex]['name'] . '_contract_fact_link'} }}">
+                                    <a class="main-link" href="{{ $mah->{$months[$monthIndex]['name'] . '_contract_fact_link'} }}">
                                         {{ $mah->{$months[$monthIndex]['name'] . '_contract_fact'} }}
                                     </a>
                                 </td>
 
                                 <td>
-                                    <a href="{{ $mah->{$months[$monthIndex]['name'] . '_register_fact_link'} }}">
+                                    <a class="main-link" href="{{ $mah->{$months[$monthIndex]['name'] . '_register_fact_link'} }}">
                                         {{ $mah->{$months[$monthIndex]['name'] . '_register_fact'} }}
                                     </a>
                                 </td>
