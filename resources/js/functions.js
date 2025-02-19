@@ -44,6 +44,9 @@ const similarRecordsWrapper = document.querySelector('.similar-records-wrapper')
 const processesForecastInputsWrapper = document.querySelector('.processes-create__forecast-inputs-wrapper');
 const processesStageInputsWrapper = document.querySelector('.processes-stage-inputs-wrapper');
 
+// MAD ASP table
+const madAspTable = document.querySelector('.mad-asp-table');
+
 /*
 |--------------------------------------------------------------------------
 | Export functions
@@ -482,6 +485,22 @@ export function displayProductSearchesSimilarRecords() {
         .finally(function () {
             hideSpinner();
         });
+}
+
+export function toggleMadAspTableCountryMAHs(event) {
+    const toggler = event.target;
+    const isOpened = toggler.dataset.opened === "true";
+
+    // Toggle button 'opened'
+    toggler.dataset.opened = !isOpened;
+    toggler.textContent = isOpened ? 'visibility_off' : 'visibility';
+
+    // Toggle MAH rowss visibility
+    const countryCode = toggler.dataset.countryCode;
+    const mahRows = madAspTable.querySelectorAll('tr[data-country-code="' + countryCode + '"]');
+    mahRows.forEach(mahRow => {
+        mahRow.style.display = isOpened ? 'none' : 'table-row';
+    });
 }
 
 /*

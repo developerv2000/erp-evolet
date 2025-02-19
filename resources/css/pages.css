@@ -161,6 +161,16 @@
     --th-mah-name-width: 50px;
 }
 
+.mad-asp-table th,
+.mad-asp-table td {
+    border: var(--form-input-border);
+}
+
+.mad-asp-table__divider {
+    height: 20px;
+}
+
+/* thead */
 .mad-asp-table thead {
     height: auto;
     z-index: 2;
@@ -168,23 +178,6 @@
 
 .mad-asp-table thead tr:first-child {
     text-align: center;
-}
-
-.mad-asp-table tbody {
-    z-index: 1;
-}
-
-.mad-asp-table th,
-.mad-asp-table td {
-    border: var(--form-input-border);
-}
-
-.mad-asp-table a {
-    text-decoration: none;
-}
-
-.mad-asp-table__divider {
-    height: 32px;
 }
 
 .mad-asp-table__th--country-name {
@@ -195,7 +188,17 @@
     width: var(--th-mah-name-width);
 }
 
-.mad-asp-table__td--year {
+/* tbody */
+.mad-asp-table tbody {
+    z-index: 1;
+    text-align: right;
+}
+
+.mad-asp-table tbody a {
+    text-decoration: none;
+}
+
+.mad-asp-table__tbody-td--year {
     color: var(--theme-main-color);
     position: sticky;
     left: 0;
@@ -207,16 +210,24 @@
     text-align: center;
 }
 
+.mad-asp-table__tbody-country-mahs-toggler {
+    font-size: 22px;
+    color: var(--theme-lightest-text-color);
+    cursor: pointer;
+    user-select: none;
+}
+
 .mad-asp-table__tbody-td--country-name {
     position: sticky;
     left: 0;
-    background-color: var(--theme-box-background-color);
     text-align: left;
+    background-color: var(--theme-box-background-color);
 }
 
 .mad-asp-table__tbody-td--mah-name {
     position: sticky;
     left: var(--th-country-name-width);
+    text-align: center;
     background-color: var(--theme-box-background-color);
 }
 

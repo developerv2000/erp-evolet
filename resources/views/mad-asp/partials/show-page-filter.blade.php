@@ -11,7 +11,7 @@
         :options="$countriesOrderedByProcessesCount" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="MAH"
+        labelText="PC"
         inputName="marketing_authorization_holder_id[]"
         :options="$MAHs" />
 

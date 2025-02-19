@@ -16,7 +16,7 @@ import './charts';
 |--------------------------------------------------------------------------
 */
 
-// Tables
+// Main table
 const mainTable = document.querySelector('.main-table');
 
 // Different action buttons
@@ -30,7 +30,6 @@ const filterForm = document.querySelector('.filter-form');
 const appendsInputsBeforeSubmitForms = document.querySelectorAll('[data-before-submit="appends-inputs"]');
 const showsSpinnerOnSubmitForms = document.querySelectorAll('[data-on-submit="show-spinner"]');
 const disableSubmitButtonOnSubmitForms = document.querySelectorAll('[data-on-submit="disable-form-submit-button"]');
-const exportAsExcelForm = document.querySelector('.export-as-excel-form');
 const editTableColumnsForm = document.querySelector('.edit-table-columns-form');
 const productsCreateForm = document.querySelector('.products-create-form');
 const productSearchesCreateForm = document.querySelector('.product-searches-create-form');
@@ -47,6 +46,9 @@ const imageInputsWithPreview = document.querySelectorAll('.image-input-group-wit
 // VPS checkboxes
 const toggleProcessContractedValueChbs = document.querySelectorAll('[data-on-toggle="toggle-process-contracted-in-asp-boolean"]');
 const toggleProcessRegisteredValueChbs = document.querySelectorAll('[data-on-toggle="toggle-process-registered-in-asp-boolean"]');
+
+// MAD ASP table
+const madAspTableCountryMAHsToggler = document.querySelectorAll('.mad-asp-table__tbody-country-mahs-toggler');
 
 /*
 |--------------------------------------------------------------------------
@@ -119,6 +121,10 @@ toggleProcessContractedValueChbs.forEach((cbexkbox) => {
 
 toggleProcessRegisteredValueChbs.forEach((cbexkbox) => {
     cbexkbox.addEventListener('change', (evt) => functions.updateProcessRegisteredValue(evt));
+});
+
+madAspTableCountryMAHsToggler.forEach((toggler) => {
+    toggler.addEventListener('click', (evt) => functions.toggleMadAspTableCountryMAHs(evt));
 });
 
 /*

@@ -37,9 +37,9 @@
             @for ($quarter = 1; $quarter <= 4; $quarter++)
                 {{-- Quarters 1 - 4 --}}
                 @if ($displayQuarters)
-                    <th style="text-align: right">Кк {{ __('plan') }}</th>
-                    <th style="text-align: right">Кк {{ __('fact') }}</th>
-                    <th style="text-align: right">НПР {{ __('fact') }}</th>
+                    <th>Кк {{ __('plan') }}</th>
+                    <th>Кк {{ __('fact') }}</th>
+                    <th>НПР {{ __('fact') }}</th>
                 @endif
 
                 {{-- Monthes 1 - 12 --}}
@@ -59,15 +59,15 @@
     <x-slot:tbody-rows>
         {{-- Summary row --}}
         <tr>
-            <td class="mad-asp-table__td--year"><strong>{{ $record->year }}</strong></td>
-            <td class="mad-asp-table__td--mah-name"></td>
+            <td class="mad-asp-table__tbody-td--year"><strong>{{ $record->year }}</strong></td>
+            <td class="mad-asp-table__tbody-td--mah-name"></td>
 
             {{-- Summary year --}}
-            <td>{{ $record->year_contract_plan }}</td>
-            <td>{{ $record->year_contract_fact }}</td>
-            <td>{{ $record->year_contract_fact_percentage }} %</td>
-            <td>{{ $record->year_register_fact }}</td>
-            <td>{{ $record->year_register_fact_percentage }} %</td>
+            <td style="text-align: center">{{ $record->year_contract_plan }}</td>
+            <td style="text-align: center">{{ $record->year_contract_fact }}</td>
+            <td style="text-align: center">{{ $record->year_contract_fact_percentage }} %</td>
+            <td style="text-align: center">{{ $record->year_register_fact }}</td>
+            <td style="text-align: center">{{ $record->year_register_fact_percentage }} %</td>
 
             {{-- Summary Quarters 1 - 4 --}}
             @for ($quarter = 1, $monthIndex = 0; $quarter <= 4; $quarter++)
@@ -93,8 +93,20 @@
             <tr class="mad-asp-table__divider"></tr> {{-- Empty space as divider --}}
 
             <tr class="mad-asp-table__tbody-main-country-row">
-                <td class="mad-asp-table__tbody-td--country-name"><strong>{{ $country->code }}</strong></td>
-                <td class="mad-asp-table__td--mah-name"></td>
+                <td class="mad-asp-table__tbody-td--country-name" style="text-align: left">
+                    <strong>{{ $country->code }}</strong>
+                </td>
+
+                {{-- MAHs visibility toggler --}}
+                <td class="mad-asp-table__tbody-td--mah-name">
+                    <x-misc.material-symbol
+                        class="mad-asp-table__tbody-country-mahs-toggler"
+                        icon="visibility_off"
+                        :filled="true"
+                        title="{{ __('Toggle MAHs visibility') }}"
+                        :data-country-code="$country->code"
+                        data-opened="false" />
+                </td>
 
                 {{-- Country year --}}
                 <td>{{ $country->year_contract_plan }}</td>
@@ -124,9 +136,9 @@
 
             {{-- MAH rows --}}
             @foreach ($country->MAHs as $mah)
-                <tr>
-                    <td class="mad-asp-table__td--country-name">{{ $country->code }}</td>
-                    <td class="mad-asp-table__td--mah-name">{{ $mah->name }}</td>
+                <tr data-country-code="{{ $country->code }}" style="display: none">
+                    <td class="mad-asp-table__tbody-td--country-name">{{ $country->code }}</td>
+                    <td class="mad-asp-table__tbody-td--mah-name">{{ $mah->name }}</td>
 
                     {{-- MAH year --}}
                     <td style="text-align: center">{{ $mah->year_contract_plan }}</td>
@@ -138,9 +150,9 @@
                     {{-- MAH Quarters 1 - 4 --}}
                     @for ($quarter = 1, $monthIndex = 0; $quarter <= 4; $quarter++)
                         @if ($displayQuarters)
-                            <td style="text-align: right">{{ $mah->{'quarter_' . $quarter . '_contract_plan'} }}</td>
-                            <td style="text-align: right">{{ $mah->{'quarter_' . $quarter . '_contract_fact'} }}</td>
-                            <td style="text-align: right">{{ $mah->{'quarter_' . $quarter . '_register_fact'} }}</td>
+                            <td>{{ $mah->{'quarter_' . $quarter . '_contract_plan'} }}</td>
+                            <td>{{ $mah->{'quarter_' . $quarter . '_contract_fact'} }}</td>
+                            <td>{{ $mah->{'quarter_' . $quarter . '_register_fact'} }}</td>
                         @endif
 
                         {{-- MAH Monthes 1 - 12 --}}
