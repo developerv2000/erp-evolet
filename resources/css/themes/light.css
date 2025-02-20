@@ -40,10 +40,10 @@
     --theme-table-text-color: #475360;
     --theme-table-tr-hover-background-color: #f9fafd;
 
-    --theme-table-td-background-color-1: #AEEA94;
-    --theme-table-td-background-color-2: #FBF3B9;
-    --theme-table-td-background-color-3: #FFDCCC;
-    --theme-table-td-background-color-4: #FDB7EA;
+    --theme-table-td-background-color-1: #ffc6f0;
+    --theme-table-td-background-color-2: #AEEA94;
+    --theme-table-td-background-color-3: #FBF3B9;
+    --theme-table-td-background-color-4: #FFDCCC;
     --theme-table-td-background-color-5: #DAD2FF;
 
     /* Theme Badges */
