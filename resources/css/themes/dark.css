@@ -40,6 +40,12 @@
     --theme-table-text-color: #9da9bb;
     --theme-table-tr-hover-background-color: #0D2545;
 
+    --theme-table-td-background-color-1: #0d3546;
+    --theme-table-td-background-color-2: #0d2646;
+    --theme-table-td-background-color-3: #4c163d;
+    --theme-table-td-background-color-4: #3c0e2f;
+    --theme-table-td-background-color-5: #2a0921;
+
     /* Theme Badges */
     --theme-yellow-badge-text-color: #d7e522;
     --theme-yellow-badge-background: #333332;
