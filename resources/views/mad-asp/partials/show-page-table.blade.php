@@ -57,44 +57,60 @@
 
     {{-- tbody rows --}}
     <x-slot:tbody-rows>
+        @php
+            // Same for any filter
+            $summaryBgColor = 'var(--theme-table-td-background-color-1)';
+
+            // If months are also displayed same color for all quarters
+            $quarterBgColor = 'var(--theme-table-td-background-color-2)';
+            // Else different colors for each quarter
+            $quarterBgColors = [
+                'var(--theme-table-td-background-color-2)',
+                'var(--theme-table-td-background-color-3)',
+                'var(--theme-table-td-background-color-4)',
+                'var(--theme-table-td-background-color-5)',
+            ];
+
+            // Define the 3 repeating month background colors
+            $monthBgColors = ['var(--theme-table-td-background-color-3)', 'var(--theme-table-td-background-color-4)', 'var(--theme-table-td-background-color-5)'];
+        @endphp
+
         {{-- Summary row --}}
         <tr class="mad-asp-table__tbody-summary-row">
             <td class="mad-asp-table__tbody-td--year" colspan="2"><strong>{{ $record->year }}</strong></td>
 
             {{-- Summary year --}}
-            <td style="background-color: var(--theme-table-td-background-color-1)">{{ $record->year_contract_plan }}</td>
-            <td style="background-color: var(--theme-table-td-background-color-1)">{{ $record->year_contract_fact }}</td>
-            <td style="background-color: var(--theme-table-td-background-color-1)">{{ $record->year_contract_fact_percentage }} %</td>
-            <td style="background-color: var(--theme-table-td-background-color-1)">{{ $record->year_register_fact }}</td>
-            <td style="background-color: var(--theme-table-td-background-color-1)">{{ $record->year_register_fact_percentage }} %</td>
+            <td style="background-color: {{ $summaryBgColor }}">{{ $record->year_contract_plan }}</td>
+            <td style="background-color: {{ $summaryBgColor }}">{{ $record->year_contract_fact }}</td>
+            <td style="background-color: {{ $summaryBgColor }}">{{ $record->year_contract_fact_percentage }} %</td>
+            <td style="background-color: {{ $summaryBgColor }}">{{ $record->year_register_fact }}</td>
+            <td style="background-color: {{ $summaryBgColor }}">{{ $record->year_register_fact_percentage }} %</td>
 
             {{-- Summary Quarters 1 - 4 --}}
             @for ($quarter = 1, $monthIndex = 0; $quarter <= 4; $quarter++)
                 @if ($displayQuarters)
-                    <td style="background-color: var(--theme-table-td-background-color-2)">{{ $record->{'quarter_' . $quarter . '_contract_plan'} }}</td>
-                    <td style="background-color: var(--theme-table-td-background-color-2)">{{ $record->{'quarter_' . $quarter . '_contract_fact'} }}</td>
-                    <td style="background-color: var(--theme-table-td-background-color-2)">{{ $record->{'quarter_' . $quarter . '_register_fact'} }}</td>
+                    {{-- Change quarter bg color if months are hidden --}}
+                    @unless ($displayMonths)
+                        @php
+                            $quarterBgColor = $quarterBgColors[$quarter % 4]; // Cycle through colors
+                        @endphp
+                    @endunless
+
+                    <td style="background-color: {{ $quarterBgColor }}">{{ $record->{'quarter_' . $quarter . '_contract_plan'} }}</td>
+                    <td style="background-color: {{ $quarterBgColor }}">{{ $record->{'quarter_' . $quarter . '_contract_fact'} }}</td>
+                    <td style="background-color: {{ $quarterBgColor }}">{{ $record->{'quarter_' . $quarter . '_register_fact'} }}</td>
                 @endif
 
                 {{-- Summary months 1 - 12 --}}
                 @if ($displayMonths)
-                    @php
-                        $colors = [
-                            // Define the 3 repeating background colors
-                            'var(--theme-table-td-background-color-3)',
-                            'var(--theme-table-td-background-color-4)',
-                            'var(--theme-table-td-background-color-5)',
-                        ];
-                    @endphp
-
                     @for ($quarterMonths = 1; $quarterMonths <= 3; $quarterMonths++, $monthIndex++)
                         @php
-                            $color = $colors[$monthIndex % 3]; // Cycle through colors
+                            $monthBgColor = $monthBgColors[$monthIndex % 3]; // Cycle through colors
                         @endphp
 
-                        <td style="background-color: {{ $color }}">{{ $record->{$months[$monthIndex]['name'] . '_contract_plan'} }}</td>
-                        <td style="background-color: {{ $color }}">{{ $record->{$months[$monthIndex]['name'] . '_contract_fact'} }}</td>
-                        <td style="background-color: {{ $color }}">{{ $record->{$months[$monthIndex]['name'] . '_register_fact'} }}</td>
+                        <td style="background-color: {{ $monthBgColor }}">{{ $record->{$months[$monthIndex]['name'] . '_contract_plan'} }}</td>
+                        <td style="background-color: {{ $monthBgColor }}">{{ $record->{$months[$monthIndex]['name'] . '_contract_fact'} }}</td>
+                        <td style="background-color: {{ $monthBgColor }}">{{ $record->{$months[$monthIndex]['name'] . '_register_fact'} }}</td>
                     @endfor
                 @endif
             @endfor
@@ -117,38 +133,37 @@
                 </td>
 
                 {{-- Country year --}}
-                <td style="background-color: var(--theme-table-td-background-color-1)">{{ $country->year_contract_plan }}</td>
-                <td style="background-color: var(--theme-table-td-background-color-1)">{{ $country->year_contract_fact }}</td>
-                <td style="background-color: var(--theme-table-td-background-color-1)">{{ $country->year_contract_fact_percentage }} %</td>
-                <td style="background-color: var(--theme-table-td-background-color-1)">{{ $country->year_register_fact }}</td>
-                <td style="background-color: var(--theme-table-td-background-color-1)">{{ $country->year_register_fact_percentage }} %</td>
+                <td style="background-color: {{ $summaryBgColor }}">{{ $country->year_contract_plan }}</td>
+                <td style="background-color: {{ $summaryBgColor }}">{{ $country->year_contract_fact }}</td>
+                <td style="background-color: {{ $summaryBgColor }}">{{ $country->year_contract_fact_percentage }} %</td>
+                <td style="background-color: {{ $summaryBgColor }}">{{ $country->year_register_fact }}</td>
+                <td style="background-color: {{ $summaryBgColor }}">{{ $country->year_register_fact_percentage }} %</td>
 
                 {{-- Country Quarters 1 - 4 --}}
                 @for ($quarter = 1, $monthIndex = 0; $quarter <= 4; $quarter++)
                     @if ($displayQuarters)
-                        <td style="background-color: var(--theme-table-td-background-color-2)">{{ $country->{'quarter_' . $quarter . '_contract_plan'} }}</td>
-                        <td style="background-color: var(--theme-table-td-background-color-2)">{{ $country->{'quarter_' . $quarter . '_contract_fact'} }}</td>
-                        <td style="background-color: var(--theme-table-td-background-color-2)">{{ $country->{'quarter_' . $quarter . '_register_fact'} }}</td>
+                        {{-- Change quarter bg color if months are hidden --}}
+                        @unless ($displayMonths)
+                            @php
+                                $quarterBgColor = $quarterBgColors[$quarter % 4]; // Cycle through colors
+                            @endphp
+                        @endunless
+
+                        <td style="background-color: {{ $quarterBgColor }}">{{ $country->{'quarter_' . $quarter . '_contract_plan'} }}</td>
+                        <td style="background-color: {{ $quarterBgColor }}">{{ $country->{'quarter_' . $quarter . '_contract_fact'} }}</td>
+                        <td style="background-color: {{ $quarterBgColor }}">{{ $country->{'quarter_' . $quarter . '_register_fact'} }}</td>
                     @endif
 
                     {{-- Country Months 1 - 12 --}}
                     @if ($displayMonths)
-                        @php
-                            $colors = [
-                                // Define the 3 repeating background colors
-                                'var(--theme-table-td-background-color-3)',
-                                'var(--theme-table-td-background-color-4)',
-                                'var(--theme-table-td-background-color-5)',
-                            ];
-                        @endphp
-
                         @for ($quarterMonths = 1; $quarterMonths <= 3; $quarterMonths++, $monthIndex++)
                             @php
-                                $color = $colors[$monthIndex % 3]; // Cycle through colors
+                                $monthBgColor = $monthBgColors[$monthIndex % 3]; // Cycle through colors
                             @endphp
-                            <td style="background-color: {{ $color }}">{{ $country->{$months[$monthIndex]['name'] . '_contract_plan'} }}</td>
-                            <td style="background-color: {{ $color }}">{{ $country->{$months[$monthIndex]['name'] . '_contract_fact'} }}</td>
-                            <td style="background-color: {{ $color }}">{{ $country->{$months[$monthIndex]['name'] . '_register_fact'} }}</td>
+
+                            <td style="background-color: {{ $monthBgColor }}">{{ $country->{$months[$monthIndex]['name'] . '_contract_plan'} }}</td>
+                            <td style="background-color: {{ $monthBgColor }}">{{ $country->{$months[$monthIndex]['name'] . '_contract_fact'} }}</td>
+                            <td style="background-color: {{ $monthBgColor }}">{{ $country->{$months[$monthIndex]['name'] . '_register_fact'} }}</td>
                         @endfor
                     @endif
                 @endfor
