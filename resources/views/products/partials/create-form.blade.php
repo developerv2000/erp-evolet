@@ -24,23 +24,14 @@
     {{-- Container used to hold similar products, after AJAX request --}}
     <div class="form__block similar-records-wrapper"></div>
 
+    {{-- Multiple dosage & packs holder --}}
     <div class="form__block">
-        <div class="form__row">
-            <x-form.inputs.default-input
-                class="specific-formatable-input"
-                labelText="Dosage"
-                inputName="dosage" />
+        <x-form.misc.dynamic-rows title="{{ __('Dosage') . ' / ' . __('Pack') }}">
+            @include('products.partials.create-form-dynamic-rows-list-item')
+        </x-form.misc.dynamic-rows>
+    </div>
 
-            <x-form.inputs.default-input
-                class="specific-formatable-input"
-                labelText="Pack"
-                inputName="pack" />
-
-            <x-form.inputs.default-input
-                labelText="Brand"
-                inputName="brand" />
-        </div>
-
+    <div class="form__block">
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.default-select
                 labelText="Product class"
@@ -61,6 +52,12 @@
                 :options="$shelfLifes"
                 :initialValue="$defaultSelectedShelfLifeID"
                 :isRequired="true" />
+        </div>
+
+        <div class="form__row">
+            <x-form.inputs.default-input
+                labelText="Brand"
+                inputName="brand" />
         </div>
     </div>
 

@@ -16,7 +16,8 @@ import { hideSpinner, showModal, showSpinner } from "../custom-components/script
 const TOGGLE_LEFTBAR_PATCH_URL = '/settings/collapsed-leftbar';
 
 // IVP
-const GET_PRODUCTS_SIMILAR_RECORDS_POST_URL = '/products/get-similar-records'
+const GET_PRODUCTS_SIMILAR_RECORDS_POST_URL = '/products/get-similar-records';
+const GET_PRODUCTS_DYNAMIC_ROWS_LIST_ITEM_INPUTS_POST_URL = '/products/get-dynamic-rows-list-item-inputs';
 
 // VPS
 const UPDATE_PROCESSES_CONTRACTED_IN_ASP_VALUE_POST_URL = '/processes/update-contracted-in-asp-value';
@@ -27,7 +28,7 @@ const GET_PROCESS_EDIT_STAGE_INPUTS_POST_URL = '/processes/get-edit-form-stage-i
 const GET_PROCESS_DUPLICATE_STAGE_INPUTS_POST_URL = '/processes/get-duplicate-form-stage-inputs';
 
 // KVPP
-const GET_PRODUCT_SEARCHES_SIMILAR_RECORDS_POST_URL = '/product-searches/get-similar-records'
+const GET_PRODUCT_SEARCHES_SIMILAR_RECORDS_POST_URL = '/product-searches/get-similar-records';
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,8 @@ const leftbar = document.querySelector('.leftbar');
 const targetDeleteModal = document.querySelector('.target-delete-modal');
 const targetRestoreModal = document.querySelector('.target-restore-modal');
 const similarRecordsWrapper = document.querySelector('.similar-records-wrapper');
+const formDynamicRowsList = document.querySelector('.form__dynamic-rows-list');
+
 
 // VPS
 const processesForecastInputsWrapper = document.querySelector('.processes-create__forecast-inputs-wrapper');
@@ -257,6 +260,23 @@ export function displayProductsSimilarRecords() {
     })
         .then(response => {
             similarRecordsWrapper.innerHTML = response.data;
+        })
+        .finally(function () {
+            hideSpinner();
+        });
+}
+
+export function addDynamicRowsListItemOnProductsCreate()
+{
+    showSpinner();
+
+    axios.post(GET_PRODUCTS_DYNAMIC_ROWS_LIST_ITEM_INPUTS_POST_URL, {}, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            formDynamicRowsList.innerHTML += response.data;
         })
         .finally(function () {
             hideSpinner();

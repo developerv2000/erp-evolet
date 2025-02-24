@@ -40,7 +40,6 @@ const processesEditForm = document.querySelector('.processes-edit-form');
 const processesDuplicateForm = document.querySelector('.processes-duplicate-form');
 
 // Global inputs
-const specificFormatableInputs = document.querySelectorAll('.specific-formatable-input');
 const imageInputsWithPreview = document.querySelectorAll('.image-input-group-with-preview__input');
 
 // VPS checkboxes
@@ -110,11 +109,6 @@ disableSubmitButtonOnSubmitForms.forEach((form) => {
     form.addEventListener('submit', (evt) => functions.disableFormSubmitButton(evt.target));
 });
 
-// Validate specific input ('dosage', 'pack', 'INN', etc) values.
-specificFormatableInputs.forEach((input) => {
-    input.addEventListener('input', debounce((evt) => functions.validateSpecificFormatableInput(evt)));
-});
-
 toggleProcessContractedValueChbs.forEach((cbexkbox) => {
     cbexkbox.addEventListener('change', (evt) => functions.updateProcessContractedValue(evt));
 });
@@ -150,18 +144,31 @@ function initializeEditTableColumnsForm() {
     editTableColumnsForm.addEventListener('submit', (evt) => functions.handleEditTableColumnsSubmit(evt));
 }
 
+export function initializeSpecificFormatableInputs() {
+    // Validate specific input ('dosage', 'pack', 'INN', etc) values.
+    const specificFormatableInputs = document.querySelectorAll('.specific-formatable-input:not(.specific-formatable-input--initialized)');
+
+    specificFormatableInputs.forEach((input) => {
+        input.addEventListener('input', debounce((evt) => functions.validateSpecificFormatableInput(evt)));
+        input.classList.add('specific-formatable-input--initialized');
+    });
+}
+
 function initializeProductsCreateForm() {
     if (!productsCreateForm) {
         return;
     }
 
-    // Select the dropdowns for manufacturer, inn, and form
+    // Attach change event listeners to dropdowns, to display similar records
     const selects = productsCreateForm.querySelectorAll('select[name="manufacturer_id"], select[name="inn_id"], select[name="form_id');
 
-    // Attach change event listeners to all select dropdowns
     for (const select of selects) {
-        select.selectize.on('change', (value) => functions.displayProductsSimilarRecords());
+        select.selectize.on('change', () => functions.displayProductsSimilarRecords());
     }
+
+    // Attach click event listener to dynamic rows list add item button
+    const addRowButton = productsCreateForm.querySelector('.form__dynamic-rows-list-add-item-button');
+    addRowButton.addEventListener('click', () => functions.addDynamicRowsListItemOnProductsCreate());
 }
 
 function initializeProcessesCreateForm() {
@@ -226,9 +233,10 @@ function initializeProductSearchesCreateForm() {
 init();
 
 function init() {
-    functions.moveFilterActiveInputsToTop(filterForm);
     // Global
+    functions.moveFilterActiveInputsToTop(filterForm);
     initializeEditTableColumnsForm();
+    initializeSpecificFormatableInputs();
 
     // IVP
     initializeProductsCreateForm();
