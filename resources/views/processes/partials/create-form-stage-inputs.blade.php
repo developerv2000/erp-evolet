@@ -75,6 +75,7 @@
                 labelText="Currency"
                 inputName="currency_id"
                 :options="$currencies"
+                :initialValue="$defaultSelectedCurrencyID"
                 :isRequired="true" />
         </div>
 

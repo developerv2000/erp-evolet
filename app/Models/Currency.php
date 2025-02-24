@@ -43,6 +43,11 @@ class Currency extends Model
     |--------------------------------------------------------------------------
     */
 
+    public static function getDefaultIdValueForMADProcesses()
+    {
+        return self::where('name', 'USD')->value('id');
+    }
+
     /**
      * Update all currencies 'usd_ratio' using an external API.
      *

@@ -63,6 +63,7 @@ return new class extends Migration
 
             $table->unsignedSmallInteger('portfolio_manager_id')
                 // ->index() // non-index because already 4 indexes used for this table
+                ->nullable()
                 ->foreign()
                 ->references('id')
                 ->on('portfolio_managers');

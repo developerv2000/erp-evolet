@@ -108,6 +108,7 @@ class MADViewComposersDefiner
             'currencies' => Currency::orderByName()->get(),
             'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
             'defaultSelectedMAHID' => MarketingAuthorizationHolder::getDefaultSelectedIDValue(),
+            'defaultSelectedCurrencyID' => Currency::getDefaultIdValueForMADProcesses(),
         ]);
 
         self::defineViewComposer('processes.partials.filter', [

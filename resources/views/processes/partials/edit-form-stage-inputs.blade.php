@@ -119,6 +119,7 @@
                 field="currency_id"
                 :model="$record"
                 :options="$currencies"
+                :initialValue="$record->currency_id ?: $defaultSelectedCurrencyID"
                 :isRequired="true" />
         </div>
 
@@ -150,6 +151,7 @@
                 field="marketing_authorization_holder_id"
                 :model="$record"
                 :options="$MAHs"
+                :initialValue="$record->marketing_authorization_holder_id ?: $defaultSelectedMAHID"
                 :isRequired="$stage >= 5" />
         </div>
 
