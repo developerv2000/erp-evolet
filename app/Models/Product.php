@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Requests\ProductStoreRequest;
 use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\CanExportRecordsAsExcel;
 use App\Support\Contracts\Model\ExportsProductSelection;
@@ -368,6 +369,54 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
         // HasMany relations
         $record->storeCommentFromRequest($request);
         $record->storeAttachmentsFromRequest($request);
+    }
+
+    /**
+     * Create multiple instances of the model from the request data.
+     *
+     * This method iterates over each products,
+     * validates request for uniqueness,
+     * and creates new instances on validation success.
+     *
+     * @param \Illuminate\Http\Request $request The request containing data.
+     * @return void
+     */
+    public static function createMultipleRecordsFromRequest($request)
+    {
+        // Extract marketing authorization holder IDs from the request
+        $products = $request->input('products', []);
+
+        // Iterate over each marketing authorization holder ID
+        foreach ($products as $product) {
+            // Merge the marketing authorization holder ID into the request
+            $mergedRequest = $request->merge([
+                'dosage' => $product['dosage'],
+                'pack' => $product['pack'],
+            ]);
+
+            // Create a ProductStoreRequest instance from the merged request
+            $formRequest = ProductStoreRequest::createFrom($mergedRequest);
+
+            // Create a validator instance
+            $validator = app('validator')->make(
+                $formRequest->all(),
+                $formRequest->rules(),
+                $formRequest->messages()
+            );
+
+            // Perform validation
+            $validator->validate();
+
+            // Create an instance using the merged request data
+            $record = self::create($mergedRequest->all());
+
+            // BelongsToMany relations
+            $record->zones()->attach($request->input('zones'));
+
+            // HasMany relations
+            $record->storeCommentFromRequest($request);
+            $record->storeAttachmentsFromRequest($request);
+        }
     }
 
     public function updateFromRequest($request)

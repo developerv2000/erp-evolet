@@ -64,9 +64,6 @@ class ProductController extends Controller
      * Get similar records based on the provided request data.
      *
      * Used for AJAX requests to retrieve similar records, on the products create form.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function getSimilarRecordsForRequest(Request $request)
     {
@@ -79,18 +76,17 @@ class ProductController extends Controller
      * Get 'dosage' and 'pack' form row, for multiple records store.
      *
      * Used for AJAX requests to retrieve 'dosage' and 'pack' form row on products create form.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function getDynamicRowsListItemInputs(Request $request)
     {
-        return view('products.partials.create-form-dynamic-rows-list-item');
+        $inputsIndex = $request->input('inputs_index');
+
+        return view('products.partials.create-form-dynamic-rows-list-item', compact('inputsIndex'));
     }
 
     public function store(ProductStoreRequest $request)
     {
-        Product::createFromRequest($request);
+        Product::createMultipleRecordsFromRequest($request);
 
         return to_route('products.index');
     }

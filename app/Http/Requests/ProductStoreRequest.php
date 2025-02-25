@@ -16,7 +16,7 @@ class ProductStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'dosage' => [
+            'inn_id' => [
                 Rule::unique(Product::class)->where(function ($query) {
                     $query->where('manufacturer_id', $this->manufacturer_id)
                         ->where('inn_id', $this->inn_id)
@@ -31,7 +31,7 @@ class ProductStoreRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'dosage.unique' => trans('validation.custom.ivp.unique'),
+            'inn_id.unique' => trans('validation.custom.ivp.unique'),
         ];
     }
 }

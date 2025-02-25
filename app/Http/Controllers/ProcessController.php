@@ -13,7 +13,6 @@ use App\Support\Helpers\UrlHelper;
 use App\Support\Traits\Controller\DestroysModelRecords;
 use App\Support\Traits\Controller\RestoresModelRecords;
 use Illuminate\Http\Request;
-use mysqli;
 
 class ProcessController extends Controller
 {

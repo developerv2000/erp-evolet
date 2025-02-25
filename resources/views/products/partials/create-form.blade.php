@@ -27,7 +27,7 @@
     {{-- Multiple dosage & packs holder --}}
     <div class="form__block">
         <x-form.misc.dynamic-rows title="{{ __('Dosage') . ' / ' . __('Pack') }}">
-            @include('products.partials.create-form-dynamic-rows-list-item')
+            @include('products.partials.create-form-dynamic-rows-list-item', ['inputsIndex' => 0])
         </x-form.misc.dynamic-rows>
     </div>
 

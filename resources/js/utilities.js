@@ -24,3 +24,14 @@ export function debounce(callback, timeoutDelay = 500) {
         timeoutId = setTimeout(() => callback.apply(this, args), timeoutDelay);
     };
 }
+
+/**
+ * Creates a new DOM element from the provided HTML string.
+ * @param {string} htmlString - The HTML string to parse and create the element from.
+ * @returns {HTMLElement} The newly created DOM element.
+ */
+export function createElementFromHTML(htmlString) {
+    const template = document.createElement('template');
+    template.innerHTML = htmlString.trim(); // Trim to avoid unwanted whitespace
+    return template.content.firstElementChild; // 'firstElementChild' is more accurate
+}

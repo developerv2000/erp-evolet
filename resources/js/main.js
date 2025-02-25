@@ -26,6 +26,7 @@ const targetDeleteModalButtons = document.querySelectorAll('[data-click-action="
 const targetRestoreModalButtons = document.querySelectorAll('[data-click-action="show-target-restore-modal"]');
 
 // Global forms
+const mainForms = document.querySelectorAll('.form');
 const filterForm = document.querySelector('.filter-form');
 const appendsInputsBeforeSubmitForms = document.querySelectorAll('[data-before-submit="appends-inputs"]');
 const showsSpinnerOnSubmitForms = document.querySelectorAll('[data-on-submit="show-spinner"]');
@@ -68,10 +69,23 @@ mainTable?.addEventListener('click', (evt) => {
     }
 
     // Select all toggling
-    if (evt.target.matches('.th__select-all')) {
+    if (target.matches('.th__select-all')) {
         functions.toggleTableCheckboxes(mainTable);
         evt.stopPropagation();
     }
+});
+
+/**
+ * Handle main forms click events by delegating of some child element events
+ */
+mainForms.forEach((form) => {
+    form.addEventListener('click', (evt) => {
+        const target = evt.target;
+
+        if (target.matches('.form__remove-row-button-icon')) {
+            functions.removeFormRow(target);
+        }
+    });
 });
 
 leftbarToggler.addEventListener('click', functions.toggleLeftbar);
@@ -142,16 +156,6 @@ function initializeEditTableColumnsForm() {
 
     // Add event listener for the form submit
     editTableColumnsForm.addEventListener('submit', (evt) => functions.handleEditTableColumnsSubmit(evt));
-}
-
-export function initializeSpecificFormatableInputs() {
-    // Validate specific input ('dosage', 'pack', 'INN', etc) values.
-    const specificFormatableInputs = document.querySelectorAll('.specific-formatable-input:not(.specific-formatable-input--initialized)');
-
-    specificFormatableInputs.forEach((input) => {
-        input.addEventListener('input', debounce((evt) => functions.validateSpecificFormatableInput(evt)));
-        input.classList.add('specific-formatable-input--initialized');
-    });
 }
 
 function initializeProductsCreateForm() {
@@ -235,8 +239,8 @@ init();
 function init() {
     // Global
     functions.moveFilterActiveInputsToTop(filterForm);
+    functions.initializeSpecificFormatableInputs();
     initializeEditTableColumnsForm();
-    initializeSpecificFormatableInputs();
 
     // IVP
     initializeProductsCreateForm();

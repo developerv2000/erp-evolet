@@ -5,6 +5,8 @@
 */
 
 import { hideSpinner, showModal, showSpinner } from "../custom-components/script";
+import { debounce, createElementFromHTML } from './utilities';
+import { initializeSelectizes } from "./plugins";
 
 /*
 |--------------------------------------------------------------------------
@@ -42,13 +44,20 @@ const targetRestoreModal = document.querySelector('.target-restore-modal');
 const similarRecordsWrapper = document.querySelector('.similar-records-wrapper');
 const formDynamicRowsList = document.querySelector('.form__dynamic-rows-list');
 
-
 // VPS
 const processesForecastInputsWrapper = document.querySelector('.processes-create__forecast-inputs-wrapper');
 const processesStageInputsWrapper = document.querySelector('.processes-stage-inputs-wrapper');
 
 // MAD ASP table
 const madAspTable = document.querySelector('.mad-asp-table');
+
+/*
+|--------------------------------------------------------------------------
+| Variables
+|--------------------------------------------------------------------------
+*/
+
+let formDynamicInputsArrayIndex = 1; // Incrementable array index
 
 /*
 |--------------------------------------------------------------------------
@@ -266,45 +275,27 @@ export function displayProductsSimilarRecords() {
         });
 }
 
-export function addDynamicRowsListItemOnProductsCreate()
-{
+export function addDynamicRowsListItemOnProductsCreate() {
     showSpinner();
 
-    axios.post(GET_PRODUCTS_DYNAMIC_ROWS_LIST_ITEM_INPUTS_POST_URL, {}, {
+    const data = {
+        'inputs_index': formDynamicInputsArrayIndex,
+    };
+
+    axios.post(GET_PRODUCTS_DYNAMIC_ROWS_LIST_ITEM_INPUTS_POST_URL, data, {
         headers: {
             'Content-Type': 'application/json'
         }
     })
         .then(response => {
-            formDynamicRowsList.innerHTML += response.data;
+            const row = createElementFromHTML(response.data);
+            formDynamicRowsList.appendChild(row);
+            initializeSpecificFormatableInputs();
         })
         .finally(function () {
             hideSpinner();
+            formDynamicInputsArrayIndex++;
         });
-}
-
-/**
- * Validate specific input ('dosage', 'pack', 'INN', etc) values.
- */
-export function validateSpecificFormatableInput(evt) {
-    const target = evt.target;
-
-    target.value = target.value
-        // Add spaces before and after '*', '+', '%' and '/' symbols
-        .replace(/([+%/*])/g, ' $1 ')
-        // Replace consecutive whitespaces with a single space
-        .replace(/\s+/g, ' ')
-        // Separate letters from numbers
-        .replace(/(\d+)([a-zA-Z]+)/g, '$1 $2')
-        .replace(/([a-zA-Z]+)(\d+)/g, '$1 $2')
-        // Remove non-English characters
-        .replace(/[^a-zA-Z0-9\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g, '')
-        // Remove inner whitespaces
-        .replace(/\s+(?=\S)/g, ' ')
-        // Replace symbols ',' with '.'
-        .replace(/,/g, '.')
-        // Convert the entire string to uppercase
-        .toUpperCase();
 }
 
 export function updateProcessContractedValue(evt) {
@@ -371,7 +362,7 @@ export function updateProcessCreateStageInputs(status_id) {
             processesStageInputsWrapper.innerHTML = response.data;
 
             // Initialize new unselectized selects
-            initializeUnselectizedSelects();
+            initializeSelectizes();
 
             // Refresh forecast inputs
             const countriesSelect = document.querySelector('select[name="country_ids[]"]');
@@ -434,7 +425,7 @@ export function updateProcessEditStageInputs(status_id) {
             processesStageInputsWrapper.innerHTML = response.data;
 
             // Initialize new unselectized selects
-            initializeUnselectizedSelects();
+            initializeSelectizes();
         })
         .finally(function () {
             hideSpinner();
@@ -461,7 +452,7 @@ export function updateProcessDuplicateStageInputs(status_id) {
             processesStageInputsWrapper.innerHTML = response.data;
 
             // Initialize new unselectized selects
-            initializeUnselectizedSelects();
+            initializeSelectizes();
         })
         .finally(function () {
             hideSpinner();
@@ -523,50 +514,26 @@ export function toggleMadAspTableCountryMAHs(event) {
     });
 }
 
+export function removeFormRow(button) {
+    const row = button.closest('.form__row');
+    row.parentNode.removeChild(row);
+}
+
+export function initializeSpecificFormatableInputs() {
+    // Validate specific input ('dosage', 'pack', 'INN', etc) values.
+    const uninitializedSpecificFormatableInputs = document.querySelectorAll('.specific-formatable-input:not(.specific-formatable-input--initialized)');
+
+    uninitializedSpecificFormatableInputs.forEach((input) => {
+        input.addEventListener('input', debounce((evt) => validateSpecificFormatableInput(evt)));
+        input.classList.add('specific-formatable-input--initialized');
+    });
+}
+
 /*
 |--------------------------------------------------------------------------
 | Private functions
 |--------------------------------------------------------------------------
 */
-
-function initializeUnselectizedSelects() {
-    const SELECTIZE_CLASSES = {
-        SINGLE_UNLINKED: 'select.single-selectize:not(.single-selectize--linked):not(.single-selectize--manually-initializable):not(.selectized)',
-        SINGLE_LINKED: 'select.single-selectize--linked:not(.single-selectize--manually-initializable):not(.selectized)',
-        MULTIPLE_UNTAGGABLE: 'select.multiple-selectize:not(.multiple-selectize--taggable):not(.multiple-selectize--manually-initializable):not(.selectized)',
-        MULTIPLE_TAGGABLE: 'select.multiple-selectize--taggable:not(.multiple-selectize--manually-initializable):not(.selectized)',
-    };
-
-    // Single unlinked selectize
-    $(SELECTIZE_CLASSES.SINGLE_UNLINKED).selectize({
-        plugins: ["auto_position", "preserve_on_blur"],
-    });
-
-    // Single linked selectize
-    $(SELECTIZE_CLASSES.SINGLE_LINKED).selectize({
-        plugins: ["auto_position", "preserve_on_blur"],
-        onChange(value) {
-            window.location = value;
-        },
-    });
-
-    // Multiple untaggable selectize
-    $(SELECTIZE_CLASSES.MULTIPLE_UNTAGGABLE).selectize({
-        plugins: ["auto_position", "preserve_on_blur"],
-    });
-
-    // Multiple Taggable Selectize
-    $(SELECTIZE_CLASSES.MULTIPLE_TAGGABLE).selectize({
-        plugins: ["auto_position", "preserve_on_blur"],
-        create(input, callback) {
-            callback({
-                value: input,
-                text: input,
-            });
-        },
-        // createOnBlur: true,
-    });
-}
 
 function mapSortableTableColumnsData(item, index) {
     const column = {};
@@ -575,4 +542,28 @@ function mapSortableTableColumnsData(item, index) {
     column.width = parseInt(item.querySelector('.sortable-columns__width-input').value);
     column.visible = item.querySelector('.switch').checked ? 1 : 0;
     return column;
+}
+
+/**
+ * Validate specific input ('dosage', 'pack', 'INN', etc) values.
+ */
+function validateSpecificFormatableInput(evt) {
+    const target = evt.target;
+
+    target.value = target.value
+        // Add spaces before and after '*', '+', '%' and '/' symbols
+        .replace(/([+%/*])/g, ' $1 ')
+        // Replace consecutive whitespaces with a single space
+        .replace(/\s+/g, ' ')
+        // Separate letters from numbers
+        .replace(/(\d+)([a-zA-Z]+)/g, '$1 $2')
+        .replace(/([a-zA-Z]+)(\d+)/g, '$1 $2')
+        // Remove non-English characters
+        .replace(/[^a-zA-Z0-9\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g, '')
+        // Remove inner whitespaces
+        .replace(/\s+(?=\S)/g, ' ')
+        // Replace symbols ',' with '.'
+        .replace(/,/g, '.')
+        // Convert the entire string to uppercase
+        .toUpperCase();
 }
