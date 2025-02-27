@@ -9,6 +9,7 @@ import * as functions from './functions';
 import { showSpinner } from '../custom-components/script';
 import { debounce } from './utilities';
 import './charts';
+import { initializeAll as initializeSmartFilters } from './smart-filters';
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +85,7 @@ mainForms.forEach((form) => {
 
         if (target.matches('.form__remove-row-button-icon')) {
             functions.removeFormRow(target);
+            evt.stopPropagation();
         }
     });
 });
@@ -241,6 +243,7 @@ function init() {
     functions.moveFilterActiveInputsToTop(filterForm);
     functions.initializeSpecificFormatableInputs();
     initializeEditTableColumnsForm();
+    initializeSmartFilters();
 
     // IVP
     initializeProductsCreateForm();

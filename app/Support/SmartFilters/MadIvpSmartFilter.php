@@ -22,7 +22,7 @@ class MadIvpSmartFilter
     private static function getManufacturers($request)
     {
         $query = Manufacturer::query();
-        
+
         if ($request->filled('inn_id')) {
             $query->whereHas('products', function ($productsQuery) use ($request) {
                 $productsQuery->whereIn('inn_id', $request->input('inn_id'));

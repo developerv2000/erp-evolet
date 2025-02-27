@@ -1,19 +1,23 @@
 <x-filter.layout>
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        class="smart-filter-inputs"
         labelText="Generic"
         inputName="inn_id[]"
         :options="$smartFilterDependencies['inns']" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        class="smart-filter-inputs"
         labelText="Form"
         inputName="form_id[]"
         :options="$smartFilterDependencies['productForms']" />
 
     <x-form.inputs.request-based-input
+        class="smart-filter-inputs"
         labelText="Dosage"
         inputName="dosage" />
 
     <x-form.inputs.request-based-input
+        class="smart-filter-inputs"
         labelText="Pack"
         inputName="pack" />
 
@@ -23,7 +27,7 @@
         :options="$countriesOrderedByName" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        class="smart-filter"
+        class="smart-filter-inputs"
         labelText="Manufacturer"
         inputName="manufacturer_id[]"
         :options="$smartFilterDependencies['manufacturers']" />
