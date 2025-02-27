@@ -260,6 +260,13 @@ class MadAsp extends BaseModel implements HasTitle
             ->pluck('id');
     }
 
+    public function attachAllCountryMAHs()
+    {
+        foreach ($this->countries as $country) {
+            $country->MAHs = $this->getLoadedMAHsForSpecificCountry($country);
+        }
+    }
+
     public function attachAllCountryRequestedMAHs($request)
     {
         $requestedMAHIDs = $request->input('marketing_authorization_holder_id', []);
