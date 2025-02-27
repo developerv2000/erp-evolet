@@ -8,12 +8,10 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use App\Support\Helpers\ModelHelper;
-use App\Support\Traits\Misc\DefinesViewComposer;
+use Illuminate\Support\Facades\View;
 
 class GlobalViewComposersDefiner
 {
-    use DefinesViewComposer;
-
     public static function defineAll()
     {
         self::definePaginationLimitComposer();
@@ -30,41 +28,49 @@ class GlobalViewComposersDefiner
 
     private static function definePaginationLimitComposer()
     {
-        self::defineViewComposer('components.filter.partials.pagination-limit-input', [
-            'paginationLimitOptions' => ModelHelper::getPaginationLimitOptions(),
-        ]);
+        View::composer('components.filter.partials.pagination-limit-input', function ($view) {
+            $view->with([
+                'paginationLimitOptions' => ModelHelper::getPaginationLimitOptions(),
+            ]);
+        });
     }
 
     private static function defineRolesComposer()
     {
-        self::defineViewComposer('roles.partials.filter', [
-            'roles' => Role::orderByName()->get(),
-            'permissions' => Permission::orderByName()->get(),
-            'departments' => Department::orderByName()->get(),
-        ]);
+        View::composer('roles.partials.filter', function ($view) {
+            $view->with([
+                'roles' => Role::orderByName()->get(),
+                'permissions' => Permission::orderByName()->get(),
+                'departments' => Department::orderByName()->get(),
+            ]);
+        });
     }
 
     private static function definePermissionsComposer()
     {
-        self::defineViewComposer('permissions.partials.filter', [
-            'permissions' => Permission::orderByName()->get(),
-            'roles' => Role::orderByName()->get(),
-            'departments' => Department::orderByName()->get(),
-        ]);
+        View::composer('permissions.partials.filter', function ($view) {
+            $view->with([
+                'permissions' => Permission::orderByName()->get(),
+                'roles' => Role::orderByName()->get(),
+                'departments' => Department::orderByName()->get(),
+            ]);
+        });
     }
 
     private static function defineUsersComposer()
     {
-        $defaultShareData = self::getDefaultUsersShareData();
+        View::composer('users.partials.filter', function ($view) {
+            $view->with(array_merge(self::getDefaultUsersShareData(), [
+                'users' => User::getAllMinified(),
+            ]));
+        });
 
-        self::defineViewComposer('users.partials.filter', array_merge($defaultShareData, [
-            'users' => User::getAllMinified(),
-        ]));
-
-        self::defineViewComposer([
+        View::composer([
             'users.partials.create-form',
             'users.partials.edit-form',
-        ], $defaultShareData);
+        ], function ($view) {
+            $view->with(self::getDefaultUsersShareData());
+        });
     }
 
     /*

@@ -2,12 +2,12 @@
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Generic"
         inputName="inn_id[]"
-        :options="$inns" />
+        :options="$smartFilterDependencies['inns']" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Form"
         inputName="form_id[]"
-        :options="$productForms" />
+        :options="$smartFilterDependencies['productForms']" />
 
     <x-form.inputs.request-based-input
         labelText="Dosage"
@@ -23,9 +23,10 @@
         :options="$countriesOrderedByName" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        class="smart-filter"
         labelText="Manufacturer"
         inputName="manufacturer_id[]"
-        :options="$manufacturers" />
+        :options="$smartFilterDependencies['manufacturers']" />
 
     <x-form.selects.selectize.id-based-single-select.request-based-select
         labelText="Category"
