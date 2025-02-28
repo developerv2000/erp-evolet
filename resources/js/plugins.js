@@ -6,14 +6,21 @@ export function initializeSelectizes() {
         MULTIPLE_TAGGABLE: 'select.multiple-selectize--taggable:not(.multiple-selectize--manually-initializable):not(.selectized)',
     };
 
+    const SELECTIZE_DEFAULT_OPTIONS = {
+        valueField: 'id',
+        labelField: 'name',
+        searchField: 'name',
+        plugins: ["auto_position", "preserve_on_blur"],
+    }
+
     // Single unlinked selectize
     $(SELECTIZE_CLASSES.SINGLE_UNLINKED).selectize({
-        plugins: ["auto_position", "preserve_on_blur"],
+        ...SELECTIZE_DEFAULT_OPTIONS,
     });
 
     // Single linked selectize
     $(SELECTIZE_CLASSES.SINGLE_LINKED).selectize({
-        plugins: ["auto_position", "preserve_on_blur"],
+        ...SELECTIZE_DEFAULT_OPTIONS,
         onChange(value) {
             window.location = value;
         },
@@ -21,12 +28,12 @@ export function initializeSelectizes() {
 
     // Multiple untaggable selectize
     $(SELECTIZE_CLASSES.MULTIPLE_UNTAGGABLE).selectize({
-        plugins: ["auto_position", "preserve_on_blur"],
+        ...SELECTIZE_DEFAULT_OPTIONS,
     });
 
     // Multiple Taggable Selectize
     $(SELECTIZE_CLASSES.MULTIPLE_TAGGABLE).selectize({
-        plugins: ["auto_position", "preserve_on_blur"],
+        ...SELECTIZE_DEFAULT_OPTIONS,
         create(input, callback) {
             callback({
                 value: input,

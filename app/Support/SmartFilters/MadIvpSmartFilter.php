@@ -5,6 +5,7 @@ namespace App\Support\SmartFilters;
 use App\Models\Inn;
 use App\Models\Manufacturer;
 use App\Models\ProductForm;
+use Illuminate\Http\Request;
 
 class MadIvpSmartFilter
 {
@@ -19,7 +20,7 @@ class MadIvpSmartFilter
         ];
     }
 
-    private static function getManufacturers($request)
+    private static function getManufacturers(Request $request)
     {
         $query = Manufacturer::query();
 
@@ -56,7 +57,7 @@ class MadIvpSmartFilter
 
         if ($request->filled('manufacturer_id')) {
             $query->whereHas('products.manufacturer', function ($manufacturersQuery) use ($request) {
-                $manufacturersQuery->whereIn('id', $request->input('manufacturer_id'));
+                $manufacturersQuery->whereIn('manufacturers.id', $request->input('manufacturer_id'));
             });
         }
 
@@ -87,7 +88,7 @@ class MadIvpSmartFilter
 
         if ($request->filled('manufacturer_id')) {
             $query->whereHas('products.manufacturer', function ($manufacturersQuery) use ($request) {
-                $manufacturersQuery->whereIn('id', $request->input('manufacturer_id'));
+                $manufacturersQuery->whereIn('manufacturers.id', $request->input('manufacturer_id'));
             });
         }
 

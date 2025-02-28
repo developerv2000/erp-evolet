@@ -7,6 +7,7 @@ use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
+use App\Support\SmartFilters\MadIvpSmartFilter;
 use App\Support\Traits\Controller\DestroysModelRecords;
 use App\Support\Traits\Controller\RestoresModelRecords;
 use Illuminate\Http\Request;
@@ -35,6 +36,11 @@ class ProductController extends Controller
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
         return view('products.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+    }
+
+    public function getSmartFilterDependencies(Request $request)
+    {
+        return MadIvpSmartFilter::getAllDependencies();
     }
 
     public function trash(Request $request)

@@ -4,6 +4,7 @@
 |--------------------------------------------------------------------------
 */
 
+import { hideSpinner, showSpinner } from "../custom-components/script";
 import { debounce } from "./utilities";
 
 /*
@@ -13,11 +14,7 @@ import { debounce } from "./utilities";
 */
 
 // MAD products.index filter
-const MAD_PRODUCTS_MANUFACTURER_SELECTOR = 'select[name="manufacturer_id[]"]';
-const MAD_PRODUCTS_INN_SELECTOR = 'select[name="inn_id[]"]';
-const MAD_PRODUCTS_FORM_SELECTOR = 'select[name="form_id[]"]';
-const MAD_PRODUCTS_DOSAGE_SELECTOR = 'input[name="dosage"]';
-const MAD_PRODUCTS_PACK_SELECTOR = 'input[name="pack"]';
+const GET_DEPENDENCIES_POST_URL = '/products/get-smart-filter-dependencies';
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +24,14 @@ const MAD_PRODUCTS_PACK_SELECTOR = 'input[name="pack"]';
 
 const productsPage = document.querySelector('.products-index');
 
+if (productsPage) {
+    var manufacturersSelect = productsPage.querySelector('select[name="manufacturer_id[]"]').selectize;
+    var innsSelect = productsPage.querySelector('select[name="inn_id[]"]').selectize;
+    var formsSelect = productsPage.querySelector('select[name="form_id[]"]').selectize;
+    var dosageInput = productsPage.querySelector('input[name="dosage"]');
+    var packInput = productsPage.querySelector('input[name="pack"]');
+}
+
 /*
 |--------------------------------------------------------------------------
 | Asynchronous filter update functions
@@ -34,21 +39,53 @@ const productsPage = document.querySelector('.products-index');
 */
 
 function updateMadProductsFilterInputs() {
-    const manufacturersSelect = productsPage.querySelector(MAD_PRODUCTS_MANUFACTURER_SELECTOR).selectize;
-    const innsSelect = productsPage.querySelector(MAD_PRODUCTS_FORM_SELECTOR).selectize;
-    const formsSelect = productsPage.querySelector(MAD_PRODUCTS_INN_SELECTOR).selectize;
-    const dosageInput = productsPage.querySelector(MAD_PRODUCTS_DOSAGE_SELECTOR);
-    const packInput = productsPage.querySelector(MAD_PRODUCTS_PACK_SELECTOR);
+    showSpinner();
 
     const data = {
-        manufacturer_id: manufacturersSelect.getValue(),
-        inn_id: innsSelect.getValue(),
-        form_id: formsSelect.selectize.getValue(),
+        manufacturer_id: manufacturersSelect.getValue().length ? manufacturersSelect.getValue() : null,
+        inn_id: innsSelect.getValue().length ? innsSelect.getValue() : null,
+        form_id: formsSelect.getValue().length ? formsSelect.getValue() : null,
         dosage: dosageInput.value,
         pack: packInput.value,
-    }
+    };
 
-    console.log(data);
+    axios.post(GET_DEPENDENCIES_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            const { manufacturers, inns, productForms } = response.data;
+
+            const updateSelectize = (selectize, itemsObject, labelField = 'name', valueField = 'id') => {
+                const items = Object.values(itemsObject); // Convert object to array
+
+                const currentValues = selectize.getValue();
+
+                // Unbind change event temporarily
+                selectize.off('change');
+
+                selectize.clearOptions();
+
+                items.forEach(item => {
+                    selectize.addOption({
+                        [valueField]: item[valueField],
+                        [labelField]: item[labelField]
+                    });
+                });
+
+                const validValues = currentValues.filter(value => items.some(item => item[valueField] == value));
+                selectize.setValue(validValues, true); // true = avoid triggering 'change' event
+
+                // Rebind change event
+                selectize.on('change', () => updateMadProductsFilterInputs());
+            };
+
+            updateSelectize(manufacturersSelect, manufacturers);
+            updateSelectize(innsSelect, inns);
+            updateSelectize(formsSelect, productForms);
+        })
+        .finally(hideSpinner);
 }
 
 /*
@@ -61,19 +98,19 @@ function initializeMadProductsFilter() {
     if (!productsPage) return;
 
     // Attach change event listeners to smart select dropdowns
-    const selects = productsPage.querySelectorAll(`${MAD_PRODUCTS_MANUFACTURER_SELECTOR}, ${MAD_PRODUCTS_INN_SELECTOR}, ${MAD_PRODUCTS_FORM_SELECTOR}`);
+    const selects = [manufacturersSelect, innsSelect, formsSelect];
 
     for (const select of selects) {
-        select.selectize.on('change', () => updateMadProductsFilterInputs());
+        select.on('change', () => updateMadProductsFilterInputs());
     }
 
     // Attach change event listeners to required smart inputs
-    const inputs = productsPage.querySelectorAll(`${MAD_PRODUCTS_DOSAGE_SELECTOR}, ${MAD_PRODUCTS_PACK_SELECTOR}`);
+    const inputs = [dosageInput, packInput];
 
-    for (let input of inputs) {
+    for (const input of inputs) {
         input.addEventListener('input', debounce(() => {
             updateMadProductsFilterInputs();
-        }, 800));
+        }, 1500));
     }
 }
 
