@@ -9,7 +9,7 @@ import * as functions from './functions';
 import { showSpinner } from '../custom-components/script';
 import { debounce } from './utilities';
 import './charts';
-import { initializeAll as initializeSmartFilters } from './smart-filters';
+import initializeSmartFilters from './smart-filters';
 
 /*
 |--------------------------------------------------------------------------

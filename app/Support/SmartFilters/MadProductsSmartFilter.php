@@ -7,7 +7,7 @@ use App\Models\Manufacturer;
 use App\Models\ProductForm;
 use Illuminate\Http\Request;
 
-class MadIvpSmartFilter
+class MadProductsSmartFilter
 {
     public static function getAllDependencies()
     {
@@ -48,7 +48,9 @@ class MadIvpSmartFilter
             });
         }
 
-        return $query->select('name', 'id')->get();
+        return $query->select('name', 'id')
+            ->orderBy('name')
+            ->get();
     }
 
     private static function getInns($request)
@@ -79,7 +81,9 @@ class MadIvpSmartFilter
             });
         }
 
-        return $query->select('name', 'id')->get();
+        return $query->select('name', 'id')
+            ->orderBy('name')
+            ->get();
     }
 
     private static function getForms($request)
@@ -110,6 +114,8 @@ class MadIvpSmartFilter
             });
         }
 
-        return $query->select('name', 'id')->get();
+        return $query->select('name', 'id')
+            ->orderBy('name')
+            ->get();
     }
 }

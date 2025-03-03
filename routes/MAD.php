@@ -38,6 +38,9 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::get('/duplication/{record}', 'duplication')->name('duplication')->middleware('can:edit-MAD-VPS');
         Route::post('/duplicate', 'duplicate')->name('duplicate')->middleware('can:edit-MAD-VPS');
 
+        // AJAX request on smart filter
+        Route::post('/get-smart-filter-dependencies', 'getSmartFilterDependencies');
+
         // Ajax requests on checkbox toggle
         Route::post('/update-contracted-in-asp-value', 'updateContractedInAspValue')->middleware('can:control-MAD-ASP-processes');
         Route::post('/update-registered-in-asp-value', 'updateRegisteredInAspValue')->middleware('can:control-MAD-ASP-processes');

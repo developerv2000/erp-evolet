@@ -23,7 +23,9 @@ use App\Models\ProductShelfLife;
 use App\Models\User;
 use App\Models\Zone;
 use App\Support\Helpers\GeneralHelper;
-use App\Support\SmartFilters\MadIvpSmartFilter;
+use App\Support\SmartFilters\MadProcessesSmartFilter;
+use App\Support\SmartFilters\MadProductsSmartFilter;
+use App\Support\SmartFilters\MadVpsSmartFilter;
 use Illuminate\Support\Facades\View;
 
 class MADViewComposersDefiner
@@ -92,7 +94,7 @@ class MADViewComposersDefiner
                 'manufacturerCategories' => ManufacturerCategory::orderByName()->get(),
                 'booleanOptions' => GeneralHelper::getBooleanOptionsArray(),
                 'brands' => Product::getAllUniqueBrands(),
-                'smartFilterDependencies' => MadIvpSmartFilter::getAllDependencies(),
+                'smartFilterDependencies' => MadProductsSmartFilter::getAllDependencies(),
             ]);
         });
     }
@@ -136,10 +138,6 @@ class MADViewComposersDefiner
         View::composer('processes.partials.filter', function ($view) {
             $view->with([
                 'countriesOrderedByName' => Country::orderByName()->get(),
-                'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
-                'manufacturers' => Manufacturer::getMinifiedRecordsWithName(),
-                'inns' => Inn::orderByName()->get(),
-                'productForms' => ProductForm::getMinifiedRecordsWithName(),
                 'analystUsers' => User::getMADAnalystsMinified(),
                 'bdmUsers' => User::getBDMsMinifed(),
                 'responsiblePeople' => ProcessResponsiblePerson::orderByName()->get(),
@@ -151,6 +149,7 @@ class MADViewComposersDefiner
                 'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueNamesForAnalysts(),
                 'regions' => Country::getRegionOptions(),
                 'brands' => Product::getAllUniqueBrands(),
+                'smartFilterDependencies' => MadProcessesSmartFilter::getAllDependencies(),
             ]);
         });
     }

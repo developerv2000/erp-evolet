@@ -56,15 +56,29 @@
     @endif
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="Search country"
-        inputName="country_id[]"
-        :options="$countriesOrderedByProcessesCount"
-        optionCaptionField="code" />
+        class="smart-filter-select"
+        labelText="Generic"
+        inputName="inn_id[]"
+        :options="$smartFilterDependencies['inns']" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        class="smart-filter-select"
         labelText="Manufacturer"
         inputName="manufacturer_id[]"
-        :options="$manufacturers" />
+        :options="$smartFilterDependencies['manufacturers']" />
+
+    <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        class="smart-filter-select"
+        labelText="Form"
+        inputName="form_id[]"
+        :options="$smartFilterDependencies['productForms']" />
+
+    <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        class="smart-filter-select"
+        labelText="Search country"
+        inputName="country_id[]"
+        :options="$smartFilterDependencies['countriesOrderedByProcessesCount']"
+        optionCaptionField="code" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Status"
@@ -81,17 +95,8 @@
         inputName="general_status_id[]"
         :options="$generalStatuses" />
 
-    <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="Generic"
-        inputName="inn_id[]"
-        :options="$inns" />
-
-    <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="Form"
-        inputName="form_id[]"
-        :options="$productForms" />
-
     <x-form.inputs.request-based-input
+        class="smart-filter-input"
         labelText="Dosage"
         inputName="dosage" />
 

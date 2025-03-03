@@ -1,3 +1,10 @@
+export const SELECTIZE_DEFAULT_OPTIONS = {
+    valueField: 'id',
+    labelField: 'caption',
+    searchField: 'caption',
+    plugins: ["auto_position", "preserve_on_blur"],
+}
+
 export function initializeSelectizes() {
     const SELECTIZE_CLASSES = {
         SINGLE_UNLINKED: 'select.single-selectize:not(.single-selectize--linked):not(.single-selectize--manually-initializable):not(.selectized)',
@@ -5,13 +12,6 @@ export function initializeSelectizes() {
         MULTIPLE_UNTAGGABLE: 'select.multiple-selectize:not(.multiple-selectize--taggable):not(.multiple-selectize--manually-initializable):not(.selectized)',
         MULTIPLE_TAGGABLE: 'select.multiple-selectize--taggable:not(.multiple-selectize--manually-initializable):not(.selectized)',
     };
-
-    const SELECTIZE_DEFAULT_OPTIONS = {
-        valueField: 'id',
-        labelField: 'name',
-        searchField: 'name',
-        plugins: ["auto_position", "preserve_on_blur"],
-    }
 
     // Single unlinked selectize
     $(SELECTIZE_CLASSES.SINGLE_UNLINKED).selectize({
@@ -102,7 +102,7 @@ export function initializeDateRangerPickers() {
     });
 }
 
-export function initializeAll() {
+export default function initializeAll() {
     initializeSelectizes();
     initializeSimditors();
     initializeDateRangerPickers();
