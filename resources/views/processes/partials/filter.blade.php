@@ -1,10 +1,4 @@
 <x-filter.layout>
-    <x-form.inputs.request-based-input
-        labelText="Status date"
-        inputName="active_status_start_date_range"
-        class="date-range-picker-input"
-        autocomplete="off" />
-
     {{-- Readonly 'contracted' inputs --}}
     @if ($request->has('contracted_on_specific_month'))
         <input type="hidden" name="contracted_on_specific_month" value="1">
@@ -95,6 +89,12 @@
         labelText="General status"
         inputName="general_status_id[]"
         :options="$generalStatuses" />
+
+    <x-form.inputs.request-based-input
+        labelText="Status date"
+        inputName="active_status_start_date_range"
+        class="date-range-picker-input"
+        autocomplete="off" />
 
     <x-form.inputs.request-based-input
         class="smart-filter-input"
