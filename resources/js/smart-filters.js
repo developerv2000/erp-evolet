@@ -71,9 +71,9 @@ function updateMadProductsFilterInputs() {
         .then(response => {
             const { manufacturers, inns, productForms } = response.data;
 
-            updateSelectize(manufacturersSelect, manufacturers);
-            updateSelectize(innsSelect, inns);
-            updateSelectize(formsSelect, productForms);
+            updateSelectize(manufacturersSelect, manufacturers, updateMadProductsFilterInputs);
+            updateSelectize(innsSelect, inns, updateMadProductsFilterInputs);
+            updateSelectize(formsSelect, productForms, updateMadProductsFilterInputs);
         })
         .finally(hideSpinner);
 }
@@ -98,11 +98,11 @@ function updateMadProcessesFilterInputs() {
         .then(response => {
             const { manufacturers, inns, productForms, countriesOrderedByProcessesCount, statuses } = response.data;
 
-            updateSelectize(manufacturersSelect, manufacturers);
-            updateSelectize(innsSelect, inns);
-            updateSelectize(formsSelect, productForms);
-            updateSelectize(countriesSelect, countriesOrderedByProcessesCount, 'code');
-            updateSelectize(statusesSelect, statuses);
+            updateSelectize(manufacturersSelect, manufacturers, updateMadProcessesFilterInputs);
+            updateSelectize(innsSelect, inns, updateMadProcessesFilterInputs);
+            updateSelectize(formsSelect, productForms, updateMadProcessesFilterInputs);
+            updateSelectize(countriesSelect, countriesOrderedByProcessesCount, updateMadProcessesFilterInputs, 'code');
+            updateSelectize(statusesSelect, statuses, updateMadProcessesFilterInputs);
         })
         .finally(hideSpinner);
 }
@@ -113,7 +113,7 @@ function updateMadProcessesFilterInputs() {
 |--------------------------------------------------------------------------
 */
 
-function updateSelectize(selectize, itemsObject, labelField = 'name', valueField = 'id') {
+function updateSelectize(selectize, itemsObject, onChangeCallback, labelField = 'name', valueField = 'id') {
     const items = Object.values(itemsObject); // Convert object to array
     const currentValues = selectize.getValue();
 
@@ -133,7 +133,7 @@ function updateSelectize(selectize, itemsObject, labelField = 'name', valueField
     selectize.setValue(validValues, true); // true = avoid triggering 'change' event
 
     // Rebind change event
-    selectize.on('change', () => updateMadProcessesFilterInputs());
+    selectize.on('change', onChangeCallback);
 };
 
 /*
