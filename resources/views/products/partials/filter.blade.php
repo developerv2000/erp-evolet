@@ -1,30 +1,30 @@
 <x-filter.layout>
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         class="smart-filter-select"
-        labelText="Generic"
+        labelText="{{ '* ' . __('Generic') }}"
         inputName="inn_id[]"
         :options="$smartFilterDependencies['inns']" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         class="smart-filter-select"
-        labelText="Manufacturer"
+        labelText="{{ '* ' . __('Manufacturer') }}"
         inputName="manufacturer_id[]"
         :options="$smartFilterDependencies['manufacturers']" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         class="smart-filter-select"
-        labelText="Form"
+        labelText="{{ '* ' . __('Form') }}"
         inputName="form_id[]"
         :options="$smartFilterDependencies['productForms']" />
 
     <x-form.inputs.request-based-input
         class="smart-filter-input"
-        labelText="Dosage"
+        labelText="{{ '* ' . __('Dosage') }}"
         inputName="dosage" />
 
     <x-form.inputs.request-based-input
         class="smart-filter-input"
-        labelText="Pack"
+        labelText="{{ '* ' . __('Pack') }}"
         inputName="pack" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
