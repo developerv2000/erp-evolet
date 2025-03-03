@@ -42,6 +42,7 @@ if (processesPage) {
     var innsSelect = processesPage.querySelector('select[name="inn_id[]"]').selectize;
     var formsSelect = processesPage.querySelector('select[name="form_id[]"]').selectize;
     var countriesSelect = processesPage.querySelector('select[name="country_id[]"]').selectize;
+    var statusesSelect = processesPage.querySelector('select[name="status_id[]"]').selectize;
     var dosageInput = processesPage.querySelector('input[name="dosage"]');
 }
 
@@ -70,30 +71,6 @@ function updateMadProductsFilterInputs() {
         .then(response => {
             const { manufacturers, inns, productForms } = response.data;
 
-            const updateSelectize = (selectize, itemsObject, labelField = 'name', valueField = 'id') => {
-                const items = Object.values(itemsObject); // Convert object to array
-
-                const currentValues = selectize.getValue();
-
-                // Unbind change event temporarily
-                selectize.off('change');
-
-                selectize.clearOptions();
-
-                items.forEach(item => {
-                    selectize.addOption({
-                        [SELECTIZE_DEFAULT_OPTIONS.valueField]: item[valueField],
-                        [SELECTIZE_DEFAULT_OPTIONS.labelField]: item[labelField]
-                    });
-                });
-
-                const validValues = currentValues.filter(value => items.some(item => item[valueField] == value));
-                selectize.setValue(validValues, true); // true = avoid triggering 'change' event
-
-                // Rebind change event
-                selectize.on('change', () => updateMadProductsFilterInputs());
-            };
-
             updateSelectize(manufacturersSelect, manufacturers);
             updateSelectize(innsSelect, inns);
             updateSelectize(formsSelect, productForms);
@@ -109,6 +86,7 @@ function updateMadProcessesFilterInputs() {
         inn_id: innsSelect.getValue().length ? innsSelect.getValue() : null,
         form_id: formsSelect.getValue().length ? formsSelect.getValue() : null,
         country_id: countriesSelect.getValue().length ? countriesSelect.getValue() : null,
+        status_id: statusesSelect.getValue().length ? statusesSelect.getValue() : null,
         dosage: dosageInput.value,
     };
 
@@ -118,39 +96,45 @@ function updateMadProcessesFilterInputs() {
         }
     })
         .then(response => {
-            const { manufacturers, inns, productForms, countriesOrderedByProcessesCount } = response.data;
-
-            const updateSelectize = (selectize, itemsObject, labelField = 'name', valueField = 'id') => {
-                const items = Object.values(itemsObject); // Convert object to array
-
-                const currentValues = selectize.getValue();
-
-                // Unbind change event temporarily
-                selectize.off('change');
-
-                selectize.clearOptions();
-
-                items.forEach(item => {
-                    selectize.addOption({
-                        [SELECTIZE_DEFAULT_OPTIONS.valueField]: item[valueField],
-                        [SELECTIZE_DEFAULT_OPTIONS.labelField]: item[labelField]
-                    });
-                });
-
-                const validValues = currentValues.filter(value => items.some(item => item[valueField] == value));
-                selectize.setValue(validValues, true); // true = avoid triggering 'change' event
-
-                // Rebind change event
-                selectize.on('change', () => updateMadProcessesFilterInputs());
-            };
+            const { manufacturers, inns, productForms, countriesOrderedByProcessesCount, statuses } = response.data;
 
             updateSelectize(manufacturersSelect, manufacturers);
             updateSelectize(innsSelect, inns);
             updateSelectize(formsSelect, productForms);
             updateSelectize(countriesSelect, countriesOrderedByProcessesCount, 'code');
+            updateSelectize(statusesSelect, statuses);
         })
         .finally(hideSpinner);
 }
+
+/*
+|--------------------------------------------------------------------------
+| Helpers
+|--------------------------------------------------------------------------
+*/
+
+function updateSelectize(selectize, itemsObject, labelField = 'name', valueField = 'id') {
+    const items = Object.values(itemsObject); // Convert object to array
+    const currentValues = selectize.getValue();
+
+    // Unbind change event temporarily
+    selectize.off('change');
+
+    selectize.clearOptions();
+
+    items.forEach(item => {
+        selectize.addOption({
+            [SELECTIZE_DEFAULT_OPTIONS.valueField]: item[valueField],
+            [SELECTIZE_DEFAULT_OPTIONS.labelField]: item[labelField]
+        });
+    });
+
+    const validValues = currentValues.filter(value => items.some(item => item[valueField] == value));
+    selectize.setValue(validValues, true); // true = avoid triggering 'change' event
+
+    // Rebind change event
+    selectize.on('change', () => updateMadProcessesFilterInputs());
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -182,7 +166,7 @@ function initializeMadProcessesFilter() {
     if (!processesPage) return;
 
     // Attach change event listeners to smart select dropdowns
-    const selects = [manufacturersSelect, innsSelect, formsSelect, countriesSelect];
+    const selects = [manufacturersSelect, innsSelect, formsSelect, countriesSelect, statusesSelect];
 
     for (const select of selects) {
         select.on('change', () => updateMadProcessesFilterInputs());

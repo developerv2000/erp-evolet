@@ -144,7 +144,6 @@ class MADViewComposersDefiner
                 'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
                 'productClasses' => ProductClass::orderByName()->get(),
                 'manufacturerCategories' => ManufacturerCategory::orderByName()->get(),
-                'statuses' => ProcessStatus::all(),
                 'generalStatuses' => ProcessGeneralStatus::all(),
                 'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueNamesForAnalysts(),
                 'regions' => Country::getRegionOptions(),

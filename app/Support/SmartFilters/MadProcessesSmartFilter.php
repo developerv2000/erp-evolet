@@ -5,162 +5,210 @@ namespace App\Support\SmartFilters;
 use App\Models\Country;
 use App\Models\Inn;
 use App\Models\Manufacturer;
+use App\Models\ProcessStatus;
 use App\Models\ProductForm;
-use Illuminate\Http\Request;
 
 class MadProcessesSmartFilter
 {
     public static function getAllDependencies()
     {
-        $request = request();
+        $requestData = self::getRequestData();
 
         return [
-            'manufacturers' => self::getManufacturers($request),
-            'inns' => self::getInns($request),
-            'productForms' => self::getForms($request),
-            'countriesOrderedByProcessesCount' => self::getCountriesOrderedByProcessesCount($request),
+            'manufacturers' => self::getManufacturers($requestData),
+            'inns' => self::getInns($requestData),
+            'productForms' => self::getForms($requestData),
+            'countriesOrderedByProcessesCount' => self::getCountriesOrderedByProcessesCount($requestData),
+            'statuses' => self::getStatuses($requestData),
         ];
     }
 
-    private static function getManufacturers(Request $request)
+    private static function getRequestData()
+    {
+        $request = request();
+
+        return [
+            'manufacturer_id' => $request->input('manufacturer_id', []),
+            'inn_id' => $request->input('inn_id', []),
+            'form_id' => $request->input('form_id', []),
+            'country_id' => $request->input('country_id', []),
+            'status_id' => $request->input('status_id', []),
+            'dosage' => $request->input('dosage'),
+        ];
+    }
+
+    private static function getManufacturers($requestData)
     {
         $query = Manufacturer::query();
 
-        if ($request->filled('inn_id')) {
-            $query->whereHas('processes', function ($processesQuery) use ($request) {
-                $processesQuery->whereIn('inn_id', $request->input('inn_id'));
-            });
-        }
+        // Process
+        $query->whereHas('processes', function ($processesQuery) use ($requestData) {
+            if (!empty($requestData['country_id'])) {
+                $processesQuery->whereIn('country_id', $requestData['country_id']);
+            }
 
-        if ($request->filled('form_id')) {
-            $query->whereHas('processes', function ($processesQuery) use ($request) {
-                $processesQuery->whereIn('form_id', $request->input('form_id'));
-            });
-        }
+            if (!empty($requestData['status_id'])) {
+                $processesQuery->whereIn('status_id', $requestData['status_id']);
+            }
 
-        if ($request->filled('country_id')) {
-            $query->whereHas('processes', function ($processesQuery) use ($request) {
-                $processesQuery->whereIn('country_id', $request->input('country_id'));
-            });
-        }
+            // Product
+            $processesQuery->whereHas('product', function ($productsQuery) use ($requestData) {
+                if (!empty($requestData['inn_id'])) {
+                    $productsQuery->whereIn('products.inn_id', $requestData['inn_id']);
+                }
 
-        if ($request->filled('dosage')) {
-            $query->whereHas('processes', function ($processesQuery) use ($request) {
-                $processesQuery->where('dosage', $request->input('dosage'));
+                if (!empty($requestData['form_id'])) {
+                    $productsQuery->whereIn('products.form_id', $requestData['form_id']);
+                }
+
+                if ($requestData['dosage']) {
+                    $productsQuery->where('products.dosage', $requestData['dosage']);
+                }
             });
-        }
+        });
 
         return $query->select('name', 'id')
             ->orderBy('name')
             ->get();
     }
 
-    private static function getInns($request)
+    private static function getInns($requestData)
     {
         $query = Inn::query();
 
-        if ($request->filled('manufacturer_id')) {
-            $query->whereHas('products', function ($productsQuery) use ($request) {
-                $productsQuery->whereHas('processes')
-                    ->whereHas('manufacturer', function ($manufacturersQuery) use ($request) {
-                        $manufacturersQuery->whereIn('manufacturers.id', $request->input('manufacturer_id'));
-                    });
-            });
-        }
+        // Product
+        $query->whereHas('products', function ($productsQuery) use ($requestData) {
+            if (!empty($requestData['manufacturer_id'])) {
+                $productsQuery->whereIn('products.manufacturer_id', $requestData['manufacturer_id']);
+            }
 
-        if ($request->filled('form_id')) {
-            $query->whereHas('products', function ($productsQuery) use ($request) {
-                $productsQuery->whereIn('form_id', $request->input('form_id'))
-                    ->whereHas('processes');
-            });
-        }
+            if (!empty($requestData['form_id'])) {
+                $productsQuery->whereIn('products.form_id', $requestData['form_id']);
+            }
 
-        if ($request->filled('country_id')) {
-            $query->whereHas('products.processes', function ($productsQuery) use ($request) {
-                $productsQuery->whereIn('country_id', $request->input('country_id'));
-            });
-        }
+            if ($requestData['dosage']) {
+                $productsQuery->where('products.dosage', $requestData['dosage']);
+            }
 
-        if ($request->filled('dosage')) {
-            $query->whereHas('products', function ($productsQuery) use ($request) {
-                $productsQuery->where('dosage', $request->input('dosage'))
-                    ->whereHas('processes');;
+            // Process
+            $productsQuery->whereHas('processes', function ($processesQuery) use ($requestData) {
+                if (!empty($requestData['country_id'])) {
+                    $processesQuery->whereIn('processes.country_id', $requestData['country_id']);
+                }
+
+                if (!empty($requestData['status_id'])) {
+                    $processesQuery->whereIn('processes.status_id', $requestData['status_id']);
+                }
             });
-        }
+        });
 
         return $query->select('name', 'id')
             ->orderBy('name')
             ->get();
     }
 
-    private static function getForms($request)
+    private static function getForms($requestData)
     {
         $query = ProductForm::query();
 
-        if ($request->filled('manufacturer_id')) {
-            $query->whereHas('products', function ($productsQuery) use ($request) {
-                $productsQuery->whereHas('processes')
-                    ->whereHas('manufacturer', function ($manufacturersQuery) use ($request) {
-                        $manufacturersQuery->whereIn('manufacturers.id', $request->input('manufacturer_id'));
-                    });
-            });
-        }
+        // Product
+        $query->whereHas('products', function ($productsQuery) use ($requestData) {
+            if (!empty($requestData['manufacturer_id'])) {
+                $productsQuery->whereIn('products.manufacturer_id', $requestData['manufacturer_id']);
+            }
 
-        if ($request->filled('inn_id')) {
-            $query->whereHas('products', function ($productsQuery) use ($request) {
-                $productsQuery->whereIn('inn_id', $request->input('inn_id'))
-                    ->whereHas('processes');
-            });
-        }
+            if (!empty($requestData['inn_id'])) {
+                $productsQuery->whereIn('products.inn_id', $requestData['inn_id']);
+            }
 
-        if ($request->filled('country_id')) {
-            $query->whereHas('products.processes', function ($productsQuery) use ($request) {
-                $productsQuery->whereIn('country_id', $request->input('country_id'));
-            });
-        }
+            if ($requestData['dosage']) {
+                $productsQuery->where('products.dosage', $requestData['dosage']);
+            }
 
-        if ($request->filled('dosage')) {
-            $query->whereHas('products', function ($productsQuery) use ($request) {
-                $productsQuery->where('dosage', $request->input('dosage'))
-                    ->whereHas('processes');;
+            // Process
+            $productsQuery->whereHas('processes', function ($processesQuery) use ($requestData) {
+                if (!empty($requestData['country_id'])) {
+                    $processesQuery->whereIn('processes.country_id', $requestData['country_id']);
+                }
+
+                if (!empty($requestData['status_id'])) {
+                    $processesQuery->whereIn('processes.status_id', $requestData['status_id']);
+                }
             });
-        }
+        });
 
         return $query->select('name', 'id')
             ->orderBy('name')
             ->get();
     }
 
-    private static function getCountriesOrderedByProcessesCount($request)
+    private static function getCountriesOrderedByProcessesCount($requestData)
     {
         $query = Country::query();
 
-        if ($request->filled('manufacturer_id')) {
-            $query->whereHas('processes.manufacturer', function ($manufacturersQuery) use ($request) {
-                $manufacturersQuery->whereIn('manufacturers.id', $request->input('manufacturer_id'));
-            });
-        }
+        $query->whereHas('processes', function ($processesQuery) use ($requestData) {
+            // Process
+            if (!empty($requestData['status_id'])) {
+                $processesQuery->whereIn('processes.status_id', $requestData['status_id']);
+            }
 
-        if ($request->filled('inn_id')) {
-            $query->whereHas('processes.product', function ($productsQuery) use ($request) {
-                $productsQuery->whereIn('inn_id', $request->input('inn_id'));
-            });
-        }
+            // Product
+            $processesQuery->whereHas('product', function ($productsQuery) use ($requestData) {
+                if (!empty($requestData['manufacturer_id'])) {
+                    $productsQuery->whereIn('products.manufacturer_id', $requestData['manufacturer_id']);
+                }
 
-        if ($request->filled('form_id')) {
-            $query->whereHas('processes.product', function ($productsQuery) use ($request) {
-                $productsQuery->whereIn('form_id', $request->input('form_id'));
-            });
-        }
+                if (!empty($requestData['inn_id'])) {
+                    $productsQuery->whereIn('products.inn_id', $requestData['inn_id']);
+                }
 
-        if ($request->filled('dosage')) {
-            $query->whereHas('processes.product', function ($productsQuery) use ($request) {
-                $productsQuery->where('dosage', $request->input('dosage'));
+                if (!empty($requestData['form_id'])) {
+                    $productsQuery->whereIn('products.form_id', $requestData['form_id']);
+                }
+
+                if ($requestData['dosage']) {
+                    $productsQuery->where('products.dosage', $requestData['dosage']);
+                }
             });
-        }
+        });
 
         return $query->orderByProcessesCount()
             ->select('code', 'id')
+            ->get();
+    }
+
+    private static function getStatuses($requestData)
+    {
+        $query = ProcessStatus::query();
+
+        $query->whereHas('processes', function ($processesQuery) use ($requestData) {
+            // Process
+            if (!empty($requestData['country_id'])) {
+                $processesQuery->whereIn('processes.country_id', $requestData['country_id']);
+            }
+
+            // Product
+            $processesQuery->whereHas('product', function ($productsQuery) use ($requestData) {
+                if (!empty($requestData['manufacturer_id'])) {
+                    $productsQuery->whereIn('products.manufacturer_id', $requestData['manufacturer_id']);
+                }
+
+                if (!empty($requestData['inn_id'])) {
+                    $productsQuery->whereIn('products.inn_id', $requestData['inn_id']);
+                }
+
+                if (!empty($requestData['form_id'])) {
+                    $productsQuery->whereIn('products.form_id', $requestData['form_id']);
+                }
+
+                if ($requestData['dosage']) {
+                    $productsQuery->where('products.dosage', $requestData['dosage']);
+                }
+            });
+        });
+
+        return $query->orderBy('id', 'asc')
+            ->select('name', 'id')
             ->get();
     }
 }

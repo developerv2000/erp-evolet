@@ -81,9 +81,10 @@
         optionCaptionField="code" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="Status"
+        class="smart-filter-select"
+        labelText="{{ '* ' . __('Status') }}"
         inputName="status_id[]"
-        :options="$statuses" />
+        :options="$smartFilterDependencies['statuses']" />
 
     <x-form.selects.selectize.multiple-select.request-based-select
         labelText="Status An*"

@@ -38,7 +38,7 @@ class ProcessStatus extends Model
 
     public function processes()
     {
-        return $this->hasMany(Process::class);
+        return $this->hasMany(Process::class, 'status_id');
     }
 
     /*
