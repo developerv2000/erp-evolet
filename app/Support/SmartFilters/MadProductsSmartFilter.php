@@ -79,9 +79,11 @@ class MadProductsSmartFilter
             }
 
             // Manufacturer
-            $productsQuery->whereHas('manufacturer', function ($manufacturersQuery) use ($requestData) {
-                $manufacturersQuery->whereIn('manufacturers.id', $requestData['manufacturer_id']);
-            });
+            if (!empty($requestData['manufacturer_id'])) {
+                $productsQuery->whereHas('manufacturer', function ($manufacturersQuery) use ($requestData) {
+                    $manufacturersQuery->whereIn('id', $requestData['manufacturer_id']);
+                });
+            }
         });
 
         return $query->select('name', 'id')
@@ -108,9 +110,11 @@ class MadProductsSmartFilter
             }
 
             // Manufacturer
-            $productsQuery->whereHas('manufacturer', function ($manufacturersQuery) use ($requestData) {
-                $manufacturersQuery->whereIn('manufacturers.id', $requestData['manufacturer_id']);
-            });
+            if (!empty($requestData['manufacturer_id'])) {
+                $productsQuery->whereHas('manufacturer', function ($manufacturersQuery) use ($requestData) {
+                    $manufacturersQuery->whereIn('manufacturers.id', $requestData['manufacturer_id']);
+                });
+            }
         });
 
         return $query->select('name', 'id')

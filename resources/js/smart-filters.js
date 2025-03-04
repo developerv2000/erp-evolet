@@ -149,7 +149,7 @@ function initializeMadProductsFilter() {
     const selects = [manufacturersSelect, innsSelect, formsSelect];
 
     for (const select of selects) {
-        select.on('change', () => updateMadProductsFilterInputs());
+        select.on('change', updateMadProductsFilterInputs);
     }
 
     // Attach change event listeners to required smart inputs
@@ -169,7 +169,7 @@ function initializeMadProcessesFilter() {
     const selects = [manufacturersSelect, innsSelect, formsSelect, countriesSelect, statusesSelect];
 
     for (const select of selects) {
-        select.on('change', () => updateMadProcessesFilterInputs());
+        select.on('change', updateMadProcessesFilterInputs);
     }
 
     // Attach change event listeners to required smart inputs
