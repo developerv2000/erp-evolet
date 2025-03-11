@@ -59,7 +59,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         return [
             'forecast_year_1_update_date' => 'date',
             'increased_price_date' => 'date',
-            'responsible_people_update_date' => 'date',
+            'responsible_person_update_date' => 'date',
         ];
     }
 
@@ -149,14 +149,14 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     }
 
     /**
-     * Get the number of days past since the 'responsible_people_update_date'.
+     * Get the number of days past since the 'responsible_person_update_date'.
      *
      * @return int|null Number of days past since the update date, or null if the date is not set.
      */
     public function getDaysPastAttribute()
     {
-        if ($this->responsible_people_update_date) {
-            return round($this->responsible_people_update_date->diffInDays(now(), true));
+        if ($this->responsible_person_update_date) {
+            return round($this->responsible_person_update_date->diffInDays(now(), true));
         }
 
         return null;
