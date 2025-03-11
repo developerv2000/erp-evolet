@@ -23,9 +23,9 @@ use App\Models\ProductShelfLife;
 use App\Models\User;
 use App\Models\Zone;
 use App\Support\Helpers\GeneralHelper;
+use App\Support\SmartFilters\MadManufacturersSmartFilter;
 use App\Support\SmartFilters\MadProcessesSmartFilter;
 use App\Support\SmartFilters\MadProductsSmartFilter;
-use App\Support\SmartFilters\MadVpsSmartFilter;
 use Illuminate\Support\Facades\View;
 
 class MADViewComposersDefiner
@@ -51,22 +51,29 @@ class MADViewComposersDefiner
     {
         View::composer('manufacturers.partials.create-form', function ($view) {
             $view->with(array_merge(self::getDefaultManufacturersShareData(), [
-                'statusOptions' => Manufacturer::getStatusOptions(),
                 'defaultSelectedZoneIDs' => Zone::getRelatedDefaultSelectedIDValues(),
             ]));
         });
 
         View::composer('manufacturers.partials.edit-form', function ($view) {
-            $view->with(array_merge(self::getDefaultManufacturersShareData(), [
-                'statusOptions' => Manufacturer::getStatusOptions(),
-            ]));
+            $view->with(self::getDefaultManufacturersShareData());
         });
 
         View::composer('manufacturers.partials.filter', function ($view) {
-            $view->with(array_merge(self::getDefaultManufacturersShareData(), [
+            $view->with([
+                'bdmUsers' => User::getBDMsMinifed(),
+                'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+                'categories' => ManufacturerCategory::orderByName()->get(),
+                'zones' => Zone::orderByName()->get(),
+                'productClasses' => ProductClass::orderByName()->get(),
+                'blacklists' => ManufacturerBlacklist::orderByName()->get(),
+                'booleanOptions' => GeneralHelper::getBooleanOptionsArray(),
+                'statusOptions' => Manufacturer::getStatusOptions(),
                 'regions' => Country::getRegionOptions(),
-            ]));
+                'smartFilterDependencies' => MadManufacturersSmartFilter::getAllDependencies(),
+            ]);
         });
+
     }
 
     private static function defineProductComposers()
@@ -256,6 +263,7 @@ class MADViewComposersDefiner
             'productClasses' => ProductClass::orderByName()->get(),
             'blacklists' => ManufacturerBlacklist::orderByName()->get(),
             'booleanOptions' => GeneralHelper::getBooleanOptionsArray(),
+            'statusOptions' => Manufacturer::getStatusOptions(),
         ];
     }
 

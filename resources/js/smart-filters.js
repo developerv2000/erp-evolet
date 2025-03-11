@@ -14,6 +14,7 @@ import { SELECTIZE_DEFAULT_OPTIONS } from "./plugins";
 |--------------------------------------------------------------------------
 */
 
+const GET_MAD_MANUFACTURERS_DEPENDENCIES_POST_URL = '/manufacturers/get-smart-filter-dependencies';
 const GET_MAD_PRODUCTS_DEPENDENCIES_POST_URL = '/products/get-smart-filter-dependencies';
 const GET_MAD_PROCESSES_DEPENDENCIES_POST_URL = '/processes/get-smart-filter-dependencies';
 
@@ -22,6 +23,15 @@ const GET_MAD_PROCESSES_DEPENDENCIES_POST_URL = '/processes/get-smart-filter-dep
 | DOM Elements
 |--------------------------------------------------------------------------
 */
+
+// MAD manufacturers filter
+const manufacturersPage = document.querySelector('.manufacturers-index');
+
+if (manufacturersPage) {
+    var analystSelect = manufacturersPage.querySelector('select[name="analyst_user_id"]').selectize;
+    var countriesSelect = manufacturersPage.querySelector('select[name="country_id[]"]').selectize;
+    var manufacturersSelect = manufacturersPage.querySelector('select[name="id[]"]').selectize;
+}
 
 // MAD products filter
 const productsPage = document.querySelector('.products-index');
@@ -51,6 +61,30 @@ if (processesPage) {
 | Asynchronous filter update functions
 |--------------------------------------------------------------------------
 */
+
+function updateMadManufacturersFilterInputs() {
+    showSpinner();
+
+    const data = {
+        analyst_user_id: analystSelect.getValue(),
+        country_id: countriesSelect.getValue().length ? countriesSelect.getValue() : null,
+        id: manufacturersSelect.getValue().length ? manufacturersSelect.getValue() : null,
+    };
+
+    axios.post(GET_MAD_MANUFACTURERS_DEPENDENCIES_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            const { analystUsers, countriesOrderedByName, manufacturers } = response.data;
+
+            updateSelectize(analystSelect, analystUsers, updateMadManufacturersFilterInputs, 'name', 'id', false);
+            updateSelectize(countriesSelect, countriesOrderedByName, updateMadManufacturersFilterInputs);
+            updateSelectize(manufacturersSelect, manufacturers, updateMadManufacturersFilterInputs);
+        })
+        .finally(hideSpinner);
+}
 
 function updateMadProductsFilterInputs() {
     showSpinner();
@@ -113,7 +147,7 @@ function updateMadProcessesFilterInputs() {
 |--------------------------------------------------------------------------
 */
 
-function updateSelectize(selectize, itemsObject, onChangeCallback, labelField = 'name', valueField = 'id') {
+function updateSelectize(selectize, itemsObject, onChangeCallback, labelField = 'name', valueField = 'id', isMultiple = true) {
     const items = Object.values(itemsObject); // Convert object to array
     const currentValues = selectize.getValue();
 
@@ -129,18 +163,34 @@ function updateSelectize(selectize, itemsObject, onChangeCallback, labelField = 
         });
     });
 
-    const validValues = currentValues.filter(value => items.some(item => item[valueField] == value));
-    selectize.setValue(validValues, true); // true = avoid triggering 'change' event
+    if (isMultiple) {
+        const validValues = currentValues.filter(value => items.some(item => item[valueField] == value));
+        selectize.setValue(validValues, true); // true = avoid triggering 'change' event
+    } else {
+        const validValue = items.some(item => item[valueField] == currentValues) ? currentValues : null;
+        selectize.setValue(validValue, true);
+    }
 
     // Rebind change event
     selectize.on('change', onChangeCallback);
-};
+}
 
 /*
 |--------------------------------------------------------------------------
 | Initializations
 |--------------------------------------------------------------------------
 */
+
+function initializeMadManufacturersFilter() {
+    if (!manufacturersPage) return;
+
+    // Attach change event listeners to smart select dropdowns
+    const selects = [analystSelect, countriesSelect, manufacturersSelect];
+
+    for (const select of selects) {
+        select.on('change', updateMadManufacturersFilterInputs);
+    }
+}
 
 function initializeMadProductsFilter() {
     if (!productsPage) return;
@@ -183,6 +233,7 @@ function initializeMadProcessesFilter() {
 }
 
 export default function initializeAll() {
+    initializeMadManufacturersFilter();
     initializeMadProductsFilter();
     initializeMadProcessesFilter();
 }

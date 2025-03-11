@@ -111,6 +111,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Country::class, 'responsible_country_user');
     }
 
+    public function analystManufacturers()
+    {
+        return $this->hasMany(Manufacturer::class, 'analyst_user_id');
+    }
+
     public function productSearches()
     {
         return $this->hasMany(ProductSearch::class);

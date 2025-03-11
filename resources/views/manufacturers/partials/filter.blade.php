@@ -15,29 +15,32 @@
     @endif
 
     <x-form.selects.selectize.id-based-single-select.request-based-select
-        labelText="Analyst"
+        class="smart-filter-select"
+        labelText="{{ '* ' . __('Analyst') }}"
         inputName="analyst_user_id"
-        :options="$analystUsers" />
+        :options="$smartFilterDependencies['analystUsers']" />
+
+    <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        class="smart-filter-select"
+        labelText="{{ '* ' . __('Country') }}"
+        inputName="country_id[]"
+        :options="$smartFilterDependencies['countriesOrderedByName']" />
+
+    <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        class="smart-filter-select"
+        labelText="{{ '* ' . __('Manufacturer') }}"
+        inputName="id[]"
+        :options="$smartFilterDependencies['manufacturers']" />
 
     <x-form.selects.selectize.id-based-single-select.request-based-select
         labelText="BDM"
         inputName="bdm_user_id"
         :options="$bdmUsers" />
 
-    <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="Country"
-        inputName="country_id[]"
-        :options="$countriesOrderedByName" />
-
     <x-form.selects.selectize.single-select.request-based-select
         labelText="Region"
         inputName="region"
         :options="$regions" />
-
-    <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="Manufacturer"
-        inputName="id[]"
-        :options="$manufacturers" />
 
     <x-form.selects.selectize.id-based-single-select.request-based-select
         labelText="Category"

@@ -43,7 +43,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('product_search_priorities');
 
-            $table->unsignedSmallInteger('inn_id')
+            $table->unsignedMediumInteger('inn_id')
                 ->index()
                 ->foreign()
                 ->references('id')

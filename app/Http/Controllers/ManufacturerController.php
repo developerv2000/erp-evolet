@@ -7,6 +7,7 @@ use App\Http\Requests\ManufacturerUpdateRequest;
 use App\Models\Manufacturer;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
+use App\Support\SmartFilters\MadManufacturersSmartFilter;
 use App\Support\Traits\Controller\DestroysModelRecords;
 use App\Support\Traits\Controller\RestoresModelRecords;
 use Illuminate\Http\Request;
@@ -35,6 +36,11 @@ class ManufacturerController extends Controller
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
         return view('manufacturers.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+    }
+
+    public function getSmartFilterDependencies()
+    {
+        return MadManufacturersSmartFilter::getAllDependencies();
     }
 
     public function trash(Request $request)
