@@ -237,7 +237,7 @@ const treemapSeriesOptions = {
     right: '24px',
     bottom: '32px',
     left: '24px',
-    roam: false, // Disable zoom and pan
+    // roam: false, // Disable zoom and pan
     itemStyle: {
         borderColor: borderColor,
         borderWidth: 1

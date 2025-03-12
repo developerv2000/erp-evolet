@@ -27,7 +27,7 @@
             @endif
 
             {{-- Country can`t be edited after stage 1 --}}
-            @if ($record->status->generalStatus->stage == 1)
+            @if ($record->status->generalStatus->stage == 1 || request()->user()->isAnyAdministrator())
                 <x-form.selects.selectize.id-based-single-select.record-field-select
                     labelText="Search country"
                     field="country_id"
