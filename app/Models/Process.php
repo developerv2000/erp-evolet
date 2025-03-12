@@ -15,6 +15,7 @@ use App\Support\Traits\Model\ExportsRecordsAsExcel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, PreparesFetchedRecordsForExport, ExportsProductSelection
@@ -602,6 +603,15 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                     ->where('status_id', ProcessStatus::CONTACTED_RECORD_ID);
             });
         }
+
+        if ($request->filled('contracted_on_specific_months')) {
+            return $query->whereHas('statusHistory', function ($historyQuery) use ($request) {
+                $historyQuery
+                    ->whereYear('start_date', $request->input('contracted_on_year'))
+                    ->whereIn(DB::raw('MONTH(start_date)'), $request->input('contracted_on_months'))
+                    ->where('status_id', ProcessStatus::CONTACTED_RECORD_ID);
+            });
+        }
     }
 
     /**
@@ -617,6 +627,15 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                 $historyQuery
                     ->whereYear('start_date', $request->input('registered_on_year'))
                     ->whereMonth('start_date', $request->input('registered_on_month'))
+                    ->where('status_id', ProcessStatus::REGISTERED_RECORD_ID);
+            });
+        }
+
+        if ($request->filled('registered_on_specific_months')) {
+            return $query->whereHas('statusHistory', function ($historyQuery) use ($request) {
+                $historyQuery
+                    ->whereYear('start_date', $request->input('registered_on_year'))
+                    ->whereIn(DB::raw('MONTH(start_date)'), $request->input('registered_on_months'))
                     ->where('status_id', ProcessStatus::REGISTERED_RECORD_ID);
             });
         }

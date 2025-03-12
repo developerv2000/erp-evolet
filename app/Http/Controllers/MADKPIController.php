@@ -552,51 +552,54 @@ class MADKPIController extends Controller
         // Prepare Process query for request
         $query = Process::query();
 
-        // Apply base filters
-        $query = Process::filterQueryForRequest($query, $request, applyPermissionsFilter: false);
-
         // Pluck month numbers for filtering
-        $monthNumbers = $months->pluck('number');
+        $monthNumbers = $months->pluck('number')->toArray();
 
         foreach ($countries as $country) {
-            // Calculate total process count
-            $clonedQuery = $query->clone();
+            $country->statuses = [];
 
-            $clonedQuery->where('country_id', $country->id)
-                ->whereHas('activeStatusHistory', function ($historyQuery) use ($monthNumbers, $request) {
-                    $historyQuery->whereYear('start_date', $request->year)
-                        ->whereIn(DB::raw('MONTH(start_date)'), $monthNumbers);
-                });
-
-            $totalProcesses = $clonedQuery->count();
-            $country->value = $totalProcesses; // Set total process count as 'value' attribute for echarts
-
-            if (!$totalProcesses) {
-                // Skip general status processes count
-                continue;
-            } else {
-                // Else create 'statuses' attribute
-                $country->statuses = [];
-            }
-
-            // Calculate each general status processes count separately
+            // Calculate processes count for each general statuses
             foreach ($generalStatuses as $status) {
                 $clonedQuery = $query->clone();
+                $clonedRequest = $request->duplicate();
 
-                $clonedQuery->where('country_id', $country->id)
-                    ->whereHas('activeStatusHistory', function ($historyQuery) use ($status, $monthNumbers, $request) {
+                // Filter 'country_id'
+                $clonedQuery->where('country_id', $country->id);
+
+                // Determine query modifications based on status stage
+                if ($status->stage == 5) { // Special query for stage 5(Kk)
+                    $clonedRequest->merge([
+                        'contracted_on_specific_months' => true,
+                        'contracted_on_year' => $request->year,
+                        'contracted_on_months' => $monthNumbers,
+                    ]);
+                } elseif ($status->stage == 7) { // Special query for stage 7(НПР)
+                    $clonedRequest->merge([
+                        'registered_on_specific_months' => true,
+                        'registered_on_year' => $request->year,
+                        'registered_on_months' => $monthNumbers,
+                    ]);
+                } else {
+                    $clonedQuery->whereHas('activeStatusHistory', function ($historyQuery) use ($status, $monthNumbers, $request) {
                         $historyQuery->whereYear('start_date', $request->year)
                             ->whereIn(DB::raw('MONTH(start_date)'), $monthNumbers)
                             ->whereHas('status.generalStatus', fn($statusesQuery) => $statusesQuery->where('id', $status->id));
                     });
+                }
+
+                // Apply base filters
+                Process::filterQueryForRequest($clonedQuery, $clonedRequest, applyPermissionsFilter: false);
 
                 $statuses = $country->statuses;
                 $statuses[$status->name] = $clonedQuery->count(); // set processes_count as 'status_name' for echarts
                 $country->statuses = $statuses;
             }
+
+            // Calculate country 'total_processes_count'
+            $country->value = collect($country->statuses)->sum(); // Set total process count as 'value' attribute for echarts
         }
 
-        // Filter only countries with processes
+        // Return only countries with processes
         return $countries->where('value', '>', 0);
     }
 }
