@@ -12,6 +12,7 @@
         </div>
 
         @include('mad-kpi.partials.current-processes.table')
+        @include('mad-kpi.partials.current-processes.map')
         @include('mad-kpi.partials.current-processes.graph')
 
         @include('mad-kpi.partials.maximum-processes.table')

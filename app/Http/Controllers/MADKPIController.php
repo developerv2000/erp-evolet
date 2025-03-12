@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Country;
 use App\Models\Manufacturer;
 use App\Models\Process;
 use App\Models\ProcessGeneralStatus;
 use App\Support\Helpers\GeneralHelper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class MADKPIController extends Controller
@@ -54,6 +56,10 @@ class MADKPIController extends Controller
         $yearlyMaximumProcesses = $generalStatuses->sum('sum_of_monthly_maximum_processes');
         $yearlyActiveManufacturers = $months->sum('active_manufacturers_count');
 
+        // Get all countries which has processes with processes count for each general statuses
+        $countriesWhichHasProcesses = $this->getCountriesWhichHasProcessesFromRequest($request);
+        $countries = $this->addCurrentProcessCountsForCountries($countriesWhichHasProcesses, $generalStatuses, $months, $request);
+
         // Compact all in single variable
         $kpi = [
             'months' => array_values($months->toArray()), // Important: convert into array to avoid JS errors
@@ -61,6 +67,7 @@ class MADKPIController extends Controller
             'yearlyCurrentProcesses' => $yearlyCurrentProcesses,
             'yearlyMaximumProcesses' => $yearlyMaximumProcesses,
             'yearlyActiveManufacturers' => $yearlyActiveManufacturers,
+            'countries' => array_values($countries->toArray()),
         ];
 
         return view('mad-kpi.index', compact('request', 'kpi'));
@@ -521,5 +528,75 @@ class MADKPIController extends Controller
             $link = route('manufacturers.index', $queryParamsCopy);
             $month['active_manufacturers_link'] = $link;
         }
+    }
+
+    /*
+    |-----------------------------------------
+    | Country processes count
+    |-----------------------------------------
+    */
+
+    private function getCountriesWhichHasProcessesFromRequest($request)
+    {
+        $query = Country::whereHas('processes');
+
+        if ($request->filled('country_id')) {
+            $query->whereIn('id', $request->input('country_id'));
+        }
+
+        return $query->select('id', 'name', 'code')->get();
+    }
+
+    private function addCurrentProcessCountsForCountries($countries, $generalStatuses, $months, $request)
+    {
+        // Prepare Process query for request
+        $query = Process::query();
+
+        // Apply base filters
+        $query = Process::filterQueryForRequest($query, $request, applyPermissionsFilter: false);
+
+        // Pluck month numbers for filtering
+        $monthNumbers = $months->pluck('number');
+
+        foreach ($countries as $country) {
+            // Calculate total process count
+            $clonedQuery = $query->clone();
+
+            $clonedQuery->where('country_id', $country->id)
+                ->whereHas('activeStatusHistory', function ($historyQuery) use ($monthNumbers, $request) {
+                    $historyQuery->whereYear('start_date', $request->year)
+                        ->whereIn(DB::raw('MONTH(start_date)'), $monthNumbers);
+                });
+
+            $totalProcesses = $clonedQuery->count();
+            $country->value = $totalProcesses; // Set total process count as 'value' attribute for echarts
+
+            if (!$totalProcesses) {
+                // Skip general status processes count
+                continue;
+            } else {
+                // Else create 'statuses' attribute
+                $country->statuses = [];
+            }
+
+            // Calculate each general status processes count separately
+            foreach ($generalStatuses as $status) {
+                $clonedQuery = $query->clone();
+
+                $clonedQuery->where('country_id', $country->id)
+                    ->whereHas('activeStatusHistory', function ($historyQuery) use ($status, $monthNumbers, $request) {
+                        $historyQuery->whereYear('start_date', $request->year)
+                            ->whereIn(DB::raw('MONTH(start_date)'), $monthNumbers)
+                            ->whereHas('status.generalStatus', fn($statusesQuery) => $statusesQuery->where('id', $status->id));
+                    });
+
+                $statuses = $country->statuses;
+                $statuses[$status->name] = $clonedQuery->count(); // set processes_count as 'status_name' for echarts
+                $country->statuses = $statuses;
+            }
+        }
+
+        // Filter only countries with processes
+        return $countries->where('value', '>', 0);
     }
 }

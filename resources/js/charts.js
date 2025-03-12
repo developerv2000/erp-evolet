@@ -14,7 +14,8 @@ const mainColor = rootStyles.getPropertyValue('--theme-main-color').trim();
 const buttonTextColor = rootStyles.getPropertyValue('--theme-button-text-color').trim();
 const textColor = rootStyles.getPropertyValue('--theme-text-color').trim();
 const boxBackgroundColor = rootStyles.getPropertyValue('--theme-box-background-color').trim();
-const chartSplitlinesColor = rootStyles.getPropertyValue('--theme-border-color').trim();
+const borderColor = rootStyles.getPropertyValue('--theme-border-color').trim();
+const chartSplitlinesColor = borderColor;
 
 /*
 |--------------------------------------------------------------------------
@@ -206,12 +207,52 @@ const graphLineTypeSeriesLabelOptions = {
 
 /*
 |--------------------------------------------------------------------------
+| Treemap options
+|--------------------------------------------------------------------------
+*/
+
+const treemapToolboxOptions = {
+    feature: {
+        saveAsImage: { show: true, pixelRatio: 3 }
+    }
+}
+
+const treemapTooltipOptions = {
+    ...chartTooltipOptions,
+}
+
+const treemapOptions = {
+    backgroundColor: boxBackgroundColor,
+    toolbox: treemapToolboxOptions,
+    color: chartColors,
+}
+
+const treemapSeriesOptions = {
+    type: 'treemap',
+    label: {
+        show: true,
+        formatter: '{b}: {c}'
+    },
+    top: '60px',
+    right: '24px',
+    bottom: '32px',
+    left: '24px',
+    roam: false, // Disable zoom and pan
+    itemStyle: {
+        borderColor: borderColor,
+        borderWidth: 1
+    }
+};
+
+/*
+|--------------------------------------------------------------------------
 | Globally defined charts
 |--------------------------------------------------------------------------
 */
 
 let currentProcessesPie,
     maximumProcessesPie,
+    currentProcessesMap,
     currentProcessesGraph,
     maximumProcessesGraph,
     activeManufacturersGraph;
@@ -281,6 +322,47 @@ function initializeMADMaximumProcessesPie() {
     };
 
     maximumProcessesPie.setOption(options);
+}
+
+function initializeMADCurrentProcessesMap() {
+    const container = document.querySelector('.mad-kpi__current-processes-map');
+    currentProcessesMap = echarts.init(container, theme, chartOptions);
+
+    const series = [
+        {
+            ...treemapSeriesOptions,
+            breadcrumb: {
+                show: false // Hide the breadcrumbs
+            },
+            data: kpi.countries,
+        }
+    ];
+
+    const options = {
+        ...treemapOptions,
+        tooltip: {
+            ...treemapTooltipOptions,
+            formatter: function (params) {
+                const { name, value, data } = params;
+
+                let statusesStr = '';
+
+                for (let key of Object.keys(data.statuses)) {
+                    statusesStr += `${key}: ${data.statuses[key]}<br>`;
+                }
+
+                return `<strong>${name}</strong><br>Total: ${value}<br>${statusesStr}`;
+            }
+        },
+        title: {
+            ...chartTitleOptions,
+            left: 'center',
+            text: 'Количество текущих процессов по странам',
+        },
+        series: series,
+    };
+
+    currentProcessesMap.setOption(options);
 }
 
 function initializeMADCurrentProcessesGraph() {
@@ -436,6 +518,7 @@ function init() {
     if (madKpiPage) {
         initializeMADCurrentProcessesPie();
         initializeMADMaximumProcessesPie();
+        initializeMADCurrentProcessesMap();
         initializeMADCurrentProcessesGraph();
         initializeMADMaximumProcessesGraph();
         initializeMADActiveManufacturersGraph();
