@@ -36,8 +36,8 @@ export function initializeSelectizes() {
         ...SELECTIZE_DEFAULT_OPTIONS,
         create(input, callback) {
             callback({
-                value: input,
-                text: input,
+                id: input,
+                caption: input,
             });
         },
         // createOnBlur: true,
