@@ -566,7 +566,7 @@ function initializeMadAspCountriesGraph() {
 
     let options = {
         ...graphOptions,
-        color: ['#FFC6F0', '#AEEA94'],
+        color: ['#AEEA94', '#FAC858'],
         title: {
             ...chartTitleOptions,
             text: 'План Кк на год',
