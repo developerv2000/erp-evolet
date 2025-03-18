@@ -6,6 +6,7 @@
 
 // DOM elements
 const madKpiPage = document.querySelector('.mad-kpi');
+const madAspShowPage = document.querySelector('.mad-asp-show');
 
 // Colors
 const rootStyles = getComputedStyle(document.documentElement);
@@ -255,7 +256,8 @@ let currentProcessesPie,
     currentProcessesMap,
     currentProcessesGraph,
     maximumProcessesGraph,
-    activeManufacturersGraph;
+    activeManufacturersGraph,
+    aspCountriesGraph;
 
 /*
 |--------------------------------------------------------------------------
@@ -263,7 +265,7 @@ let currentProcessesPie,
 |--------------------------------------------------------------------------
 */
 
-function addResizeListenersToMADCharts() {
+function addResizeListenersToMadKpiCharts() {
     window.addEventListener('resize', function () {
         currentProcessesPie.resize();
         maximumProcessesPie.resize();
@@ -439,9 +441,9 @@ function initializeMADMaximumProcessesGraph() {
         series.push({
             name: status.name,
             type: 'bar',
+            label: graphBarTypeSeriesLabelOptions,
             data: Object.keys(status.months).map(key => ({
                 value: status.months[key].maximum_processes_count,
-                label: graphBarTypeSeriesLabelOptions,
             })),
         });
     });
@@ -450,8 +452,8 @@ function initializeMADMaximumProcessesGraph() {
     series.push({
         ...graphLineTypeSeriesOptions,
         name: 'Total',
-        data: kpi.months.map(month => month.sum_of_all_maximum_process),
         label: graphLineTypeSeriesLabelOptions,
+        data: kpi.months.map(month => month.sum_of_all_maximum_process),
     });
 
     const options = {
@@ -486,8 +488,8 @@ function initializeMADActiveManufacturersGraph() {
             type: 'bar',
             data: Object.keys(kpi.months).map(key => ({
                 value: kpi.months[key].active_manufacturers_count,
-                label: graphBarTypeSeriesLabelOptions,
             })),
+            label: graphBarTypeSeriesLabelOptions,
         }
     ];
 
@@ -517,6 +519,75 @@ function initializeMADActiveManufacturersGraph() {
     activeManufacturersGraph.setOption(options);
 }
 
+function initializeMadAspCountriesGraph() {
+    const container = document.querySelector('.mad-asp__countries-graph');
+    aspCountriesGraph = echarts.init(container, theme, chartOptions);
+
+    const barsLabelOptions = {
+        ...graphBarTypeSeriesLabelOptions,
+        fontFamily: ['Fira Sans', 'sans-serif'],
+        fontSize: 14,
+        fontWeight: '400',
+        color: '#475360',
+        rotate: 90,
+        align: 'left',
+        verticalAlign: 'middle',
+        position: 'insideBottom',
+        distance: 12,
+    };
+
+    const series = [
+        {
+            type: 'bar',
+            name: 'План',
+            barGap: 0,
+            label: barsLabelOptions,
+            data: Object.keys(asp.countries).map(key => ({
+                value: asp.countries[key].year_contract_plan,
+            })),
+        },
+
+        {
+            type: 'bar',
+            name: 'Факт',
+            barGap: 0,
+            label: {
+                ...barsLabelOptions,
+                formatter: function (params) {
+                    return `${params.value}   (${parseInt(params.data.percentage)} %)`;
+                }
+            },
+            data: Object.keys(asp.countries).map(key => ({
+                value: asp.countries[key].year_contract_fact,
+                percentage: asp.countries[key].year_contract_fact_percentage,
+            }))
+        }
+    ];
+
+    let options = {
+        ...graphOptions,
+        color: ['#FFC6F0', '#AEEA94'],
+        title: {
+            ...chartTitleOptions,
+            text: 'План Кк на год',
+        },
+        series: series,
+        xAxis: [
+            {
+                ...graphXAxisItemOptions,
+                data: Object.keys(asp.countries).map(key => asp.countries[key].code),
+            }
+        ],
+        yAxis: [
+            {
+                ...graphYAxisItemOptions,
+            },
+        ],
+    };
+
+    aspCountriesGraph.setOption(options);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Initializations
@@ -535,7 +606,11 @@ function init() {
         initializeMADMaximumProcessesGraph();
         initializeMADActiveManufacturersGraph();
 
-        addResizeListenersToMADCharts();
+        addResizeListenersToMadKpiCharts();
+    }
+
+    if (madAspShowPage) {
+        initializeMadAspCountriesGraph();
     }
 }
 

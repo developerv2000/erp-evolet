@@ -5,7 +5,7 @@
 ])
 
 @section('content')
-    <div class="main-box styled-box">
+    <div class="main-box">
         {{-- Toolbar --}}
         <div class="toolbar toolbar--joined toolbar--for-table">
             <x-layouts.breadcrumbs :crumbs="$record->generateBreadcrumbs()" />
@@ -28,9 +28,21 @@
 
         {{-- Table --}}
         @include('mad-asp.partials.show-page-table')
+
+        {{-- Chart --}}
+        @include('mad-asp.partials.show-page-countries-graph')
     </div>
 @endsection
 
 @section('rightbar')
     @include('mad-asp.partials.show-page-filter')
 @endsection
+
+@push('scripts')
+    {{-- Apache ECharts --}}
+    <script src="{{ asset('plugins/echarts/echarts.min.js') }}"></script>
+
+    <script>
+        var asp = <?php echo json_encode($asp); ?>;
+    </script>
+@endpush

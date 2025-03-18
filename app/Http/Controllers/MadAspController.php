@@ -49,7 +49,12 @@ class MadAspController extends Controller
         // Collect months
         $months = GeneralHelper::collectCalendarMonths();
 
-        return view('mad-asp.show', compact('record', 'months', 'displayQuarters', 'displayMonths'));
+        // Compact required variables for JS charts
+        $asp = [
+            'countries' => array_values($record->countries->sortByDesc('year_contract_plan')->toArray()), // Get sorted
+        ];
+
+        return view('mad-asp.show', compact('record', 'months', 'displayQuarters', 'displayMonths', 'asp'));
     }
 
     public function create()

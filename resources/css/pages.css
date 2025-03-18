@@ -156,6 +156,7 @@
 
 
 /* ------------ MAD ASP pages ------------ */
+/* Show page */
 .mad-asp-show .main {
     padding-bottom: 40px;
 }
@@ -236,6 +237,12 @@
     left: var(--th-country-name-width);
     text-align: center;
     background-color: var(--theme-box-background-color);
+}
+
+/* Graphs */
+.mad-asp__countries-graph {
+    height: 520px;
+    margin-top: 40px;
 }
 
 /* ------------ /MAD ASP pages ------------ */
