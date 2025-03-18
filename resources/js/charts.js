@@ -569,7 +569,7 @@ function initializeMadAspCountriesGraph() {
         color: ['#AEEA94', '#FAC858'],
         title: {
             ...chartTitleOptions,
-            text: 'План Кк на год',
+            text: 'Динамика выполнения стратегического плана',
         },
         series: series,
         xAxis: [
