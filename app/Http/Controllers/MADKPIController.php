@@ -59,6 +59,7 @@ class MADKPIController extends Controller
         // Get all countries which has processes with processes count for each general statuses
         $countriesWhichHasProcesses = $this->getCountriesWhichHasProcessesFromRequest($request);
         $countries = $this->addCurrentProcessCountsForCountries($countriesWhichHasProcesses, $generalStatuses, $months, $request);
+        $this->addKpiLinksForCountries($countriesWhichHasProcesses, $request);
 
         // Compact all in single variable
         $kpi = [
@@ -601,5 +602,19 @@ class MADKPIController extends Controller
 
         // Return only countries with processes
         return $countries->where('value', '>', 0);
+    }
+
+    private function addKpiLinksForCountries($countries, $request)
+    {
+        // Get required filter query parameters from request
+        $queryParams = $request->except(['country_id']);
+
+        foreach ($countries as $country) {
+            $queryParamsCopy = $queryParams;
+            $queryParamsCopy['country_id'] = [$country->id];
+
+            $link = route('mad-kpi.index', $queryParamsCopy);
+            $country['link'] = $link;
+        }
     }
 }

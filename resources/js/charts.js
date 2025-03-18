@@ -363,6 +363,18 @@ function initializeMADCurrentProcessesMap() {
     };
 
     currentProcessesMap.setOption(options);
+
+    // Add right-click event for redirection
+    currentProcessesMap.on('contextmenu', function (params) {
+        if (!params || !params.data) return;
+
+        // Prevent default right-click menu
+        params.event.event.preventDefault();
+
+        if (params.data.link) {
+            window.open(params.data.link, '_blank');
+        }
+    });
 }
 
 function initializeMADCurrentProcessesGraph() {
