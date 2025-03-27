@@ -109,7 +109,7 @@ trait ExportsRecordsAsExcel
         // Prepare records for export if necessary
         $nterfaces = class_implements(static::class);
         if (in_array(PreparesFetchedRecordsForExport::class, $nterfaces)) {
-            static::prepareFetchedRecordsForExport($recordsChunk);
+            static::prepareFetchedRecordsForExport($limitedRecords);
         }
 
         // Write the limited records to the Excel sheet
