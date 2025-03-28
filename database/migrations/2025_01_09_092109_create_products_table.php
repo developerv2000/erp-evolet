@@ -43,6 +43,13 @@ return new class extends Migration
                 ->references('id')
                 ->on('product_forms');
 
+            $table->unsignedMediumInteger('atx_id')
+                ->nullable()
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('atxes'); // auto
+
             $table->unsignedSmallInteger('class_id')
                 ->index()
                 ->foreign()

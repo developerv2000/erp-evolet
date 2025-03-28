@@ -44,6 +44,11 @@ class ProductForm extends Model implements TracksUsageCount
         return $this->hasMany(Product::class, 'form_id');
     }
 
+    public function atxes()
+    {
+        return $this->hasMany(Atx::class);
+    }
+
     public function productSearches()
     {
         return $this->hasMany(ProductSearch::class, 'form_id');

@@ -32,6 +32,11 @@ class Inn extends Model implements TracksUsageCount
         return $this->hasMany(Product::class);
     }
 
+    public function atxes()
+    {
+        return $this->hasMany(Atx::class);
+    }
+
     public function productSearches()
     {
         return $this->hasMany(ProductSearch::class);

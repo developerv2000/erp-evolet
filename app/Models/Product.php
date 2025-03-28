@@ -75,6 +75,11 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
         return $this->belongsTo(ProductForm::class, 'form_id');
     }
 
+    public function atx()
+    {
+        return $this->belongsTo(Atx::class);
+    }
+
     public function shelfLife()
     {
         return $this->belongsTo(ProductShelfLife::class);
