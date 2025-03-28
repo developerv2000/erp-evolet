@@ -73,6 +73,14 @@
         <span class="badge badge--green">{{ $record->class->name }}</span>
     @break
 
+    @case('ATX')
+        {{ $record->atx?->name }}
+    @break
+
+    @case('Our ATX')
+        {{ $record->atx?->short_name }}
+    @break
+
     @case('Dossier')
         <x-tables.partials.td.max-lines-limited-text :text="$record->dossier" />
     @break

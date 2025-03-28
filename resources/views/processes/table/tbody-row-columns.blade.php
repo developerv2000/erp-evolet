@@ -90,6 +90,14 @@
         {{ $record->product->pack }}
     @break
 
+    @case('ATX')
+        {{ $record->product->atx?->name }}
+    @break
+
+    @case('Our ATX')
+        {{ $record->product->atx?->short_name }}
+    @break
+
     @case('MAH')
         {{ $record->MAH?->name }}
     @break

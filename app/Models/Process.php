@@ -278,6 +278,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                     'id',
                     'manufacturer_id',
                     'inn_id',
+                    'atx_id',
                     'class_id',
                     'form_id',
                     'dosage',
@@ -287,6 +288,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                 )
                     ->with([
                         'inn',
+                        'atx',
                         'shelfLife',
                         'class',
                         'form',
@@ -446,6 +448,8 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             $this->product->form->name,
             $this->product->dosage,
             $this->product->pack,
+            $this->product->atx?->name,
+            $this->product->atx?->short_name,
             $this->MAH?->name,
             $this->comments->pluck('plain_text')->implode(' / '),
             $this->lastComment?->created_at,
@@ -1142,6 +1146,8 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             ['name' => 'Increased price date', 'order' => $order++, 'width' => 146, 'visible' => 1],
 
             ['name' => 'Product class', 'order' => $order++, 'width' => 80, 'visible' => 1],
+            ['name' => 'ATX', 'order' => $order++, 'width' => 190, 'visible' => 1],
+            ['name' => 'Our ATX', 'order' => $order++, 'width' => 90, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Brand Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],

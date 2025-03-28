@@ -171,6 +171,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
     {
         return $query->with([
             'inn',
+            'atx',
             'shelfLife',
             'class',
             'zones',
@@ -289,6 +290,8 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
             $this->moq,
             $this->shelfLife?->name,
             $this->class->name,
+            $this->atx?->name,
+            $this->atx?->short_name,
             $this->dossier,
             $this->zones->pluck('name')->implode(' '),
             $this->brand,
@@ -509,6 +512,8 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
             ['name' => 'MOQ', 'order' => $order++, 'width' => 158, 'visible' => 1],
             ['name' => 'Shelf life', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Product class', 'order' => $order++, 'width' => 96, 'visible' => 1],
+            ['name' => 'ATX', 'order' => $order++, 'width' => 190, 'visible' => 1],
+            ['name' => 'Our ATX', 'order' => $order++, 'width' => 90, 'visible' => 1],
             ['name' => 'Dossier', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
             ['name' => 'Brand', 'order' => $order++, 'width' => 150, 'visible' => 1],
