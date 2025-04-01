@@ -97,6 +97,14 @@
 /* ------------ /end Comment pages ------------ */
 
 
+/* ------------ Product pages ------------ */
+.products-create .atx-inputs-wrapper:empty,
+.products-edit .atx-inputs-wrapper:empty {
+    display: none;
+}
+/* ------------ /end Product pages ------------ */
+
+
 /* ------------ Processes pages ------------ */
 /* Create & Edit pages */
 .processes-create__forecast-inputs-wrapper,

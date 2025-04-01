@@ -33,16 +33,21 @@ const appendsInputsBeforeSubmitForms = document.querySelectorAll('[data-before-s
 const showsSpinnerOnSubmitForms = document.querySelectorAll('[data-on-submit="show-spinner"]');
 const disableSubmitButtonOnSubmitForms = document.querySelectorAll('[data-on-submit="disable-form-submit-button"]');
 const editTableColumnsForm = document.querySelector('.edit-table-columns-form');
+
+// Global inputs
+const imageInputsWithPreview = document.querySelectorAll('.image-input-group-with-preview__input');
+
+// IVP forms
 const productsCreateForm = document.querySelector('.products-create-form');
+const productsEditForm = document.querySelector('.products-edit-form');
+
+// KVPP forms
 const productSearchesCreateForm = document.querySelector('.product-searches-create-form');
 
 // VPS forms
 const processesCreateForm = document.querySelector('.processes-create-form');
 const processesEditForm = document.querySelector('.processes-edit-form');
 const processesDuplicateForm = document.querySelector('.processes-duplicate-form');
-
-// Global inputs
-const imageInputsWithPreview = document.querySelectorAll('.image-input-group-with-preview__input');
 
 // VPS checkboxes
 const toggleProcessContractedValueChbs = document.querySelectorAll('[data-on-toggle="toggle-process-contracted-in-asp-boolean"]');
@@ -165,16 +170,37 @@ function initializeProductsCreateForm() {
         return;
     }
 
-    // Attach change event listeners to dropdowns, to display similar records
-    const selects = productsCreateForm.querySelectorAll('select[name="manufacturer_id"], select[name="inn_id"], select[name="form_id');
+    // Attach change event listeners to dropdowns, to display similar records & atx inputs
+    const singleFunctionalSelects = productsCreateForm.querySelectorAll('select[name="manufacturer_id"]'); // only similar products
+    const multipleFunctionalSelects = productsCreateForm.querySelectorAll('select[name="inn_id"], select[name="form_id'); // similar products & atx
 
-    for (const select of selects) {
+    for (const select of singleFunctionalSelects) {
         select.selectize.on('change', () => functions.displayProductsSimilarRecords());
+    }
+
+    for (const select of multipleFunctionalSelects) {
+        select.selectize.on('change', () => {
+            functions.displayProductsSimilarRecords();
+            functions.displayProductsATXInputs();
+        });
     }
 
     // Attach click event listener to dynamic rows list add item button
     const addRowButton = productsCreateForm.querySelector('.form__dynamic-rows-list-add-item-button');
     addRowButton.addEventListener('click', () => functions.addDynamicRowsListItemOnProductsCreate());
+}
+
+function initializeProductsEditForm() {
+    if (!productsEditForm) {
+        return;
+    }
+
+    // Attach change event listeners to dropdowns, to display atx inputs
+    const selects = productsEditForm.querySelectorAll('select[name="inn_id"], select[name="form_id');
+
+    for (const select of selects) {
+        select.selectize.on('change', () => functions.displayProductsATXInputs());
+    }
 }
 
 function initializeProcessesCreateForm() {
@@ -247,6 +273,7 @@ function init() {
 
     // IVP
     initializeProductsCreateForm();
+    initializeProductsEditForm();
 
     // VPS
     initializeProcessesCreateForm();

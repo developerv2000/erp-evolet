@@ -1,4 +1,4 @@
-<x-form-templates.edit-template :action="route('products.update', $record->id)">
+<x-form-templates.edit-template class="products-edit-form" :action="route('products.update', $record->id)">
     <div class="form__block">
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.record-field-select
@@ -23,6 +23,8 @@
                 :isRequired="true" />
         </div>
     </div>
+
+    <div class="form__block atx-inputs-wrapper">@include('products.partials.atx-inputs', ['atx' => $record->atx])</div>
 
     <div class="form__block">
         <div class="form__row">

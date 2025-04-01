@@ -391,12 +391,23 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
      */
     public static function createMultipleRecordsFromRequest($request)
     {
-        // Extract marketing authorization holder IDs from the request
+        // Get 'atx_id' for each product
+        $atxID = Atx::where([
+            'inn_id' => $request->input('inn_id'),
+            'form_id' => $request->input('form_id'),
+        ])->first()->id;
+
+        // Merge the 'atx_id' into the request
+        $request->merge([
+            'atx_id' => $atxID,
+        ]);
+
+        // Extract products from the request
         $products = $request->input('products', []);
 
-        // Iterate over each marketing authorization holder ID
+        // Iterate over each products
         foreach ($products as $product) {
-            // Merge the marketing authorization holder ID into the request
+            // Merge the product attributes into the request
             $mergedRequest = $request->merge([
                 'dosage' => $product['dosage'],
                 'pack' => $product['pack'],
@@ -431,6 +442,9 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
     {
         $this->update($request->all());
 
+        // Validate ATX
+        $this->validateATX();
+
         // BelongsToMany relations
         $this->zones()->sync($request->input('zones'));
 
@@ -444,6 +458,23 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
     | Misc
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Validate product ATX.
+     *
+     * Used on products.update route.
+     */
+    public function validateATX()
+    {
+        $atx = Atx::where([
+            'inn_id' => $this->inn_id,
+            'form_id' => $this->form_id,
+        ])->first();
+
+        $this->update([
+            'atx_id' => $atx ? $atx->id : null,
+        ]);
+    }
 
     // Used on filter
     public static function getAllUniqueBrands()

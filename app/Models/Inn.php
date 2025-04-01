@@ -32,14 +32,37 @@ class Inn extends Model implements TracksUsageCount
         return $this->hasMany(Product::class);
     }
 
+    public function productSearches()
+    {
+        return $this->hasMany(ProductSearch::class);
+    }
+
     public function atxes()
     {
         return $this->hasMany(Atx::class);
     }
 
-    public function productSearches()
+    /*
+    |--------------------------------------------------------------------------
+    | Events
+    |--------------------------------------------------------------------------
+    */
+
+    protected static function booted(): void
     {
-        return $this->hasMany(ProductSearch::class);
+        static::deleting(function ($record) {
+            foreach ($record->products()->withTrashed()->get() as $product) {
+                $product->forceDelete();
+            }
+
+            foreach ($record->productSearches()->withTrashed()->get() as $productSearch) {
+                $productSearch->forceDelete();
+            }
+
+            foreach ($record->atxes as $atx) {
+                $atx->delete();
+            }
+        });
     }
 
     /*
@@ -54,13 +77,15 @@ class Inn extends Model implements TracksUsageCount
         return $query->withCount([
             'products',
             'productSearches',
+            'atxes',
         ]);
     }
 
     //Implement method declared in 'TracksUsageCount' interface.
     public function getUsageCountAttribute()
     {
-        return $this->products_count +
-            $this->product_searches_count;
+        return $this->products_count
+            + $this->product_searches_count
+            + $this->atxes_count;
     }
 }

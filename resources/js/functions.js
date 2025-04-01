@@ -19,6 +19,7 @@ const TOGGLE_LEFTBAR_PATCH_URL = '/settings/collapsed-leftbar';
 
 // IVP
 const GET_PRODUCTS_SIMILAR_RECORDS_POST_URL = '/products/get-similar-records';
+const GET_PRODUCTS_ATX_INPUTS_POST_URL = '/products/get-atx-inputs';
 const GET_PRODUCTS_DYNAMIC_ROWS_LIST_ITEM_INPUTS_POST_URL = '/products/get-dynamic-rows-list-item-inputs';
 
 // VPS
@@ -43,6 +44,9 @@ const targetDeleteModal = document.querySelector('.target-delete-modal');
 const targetRestoreModal = document.querySelector('.target-restore-modal');
 const similarRecordsWrapper = document.querySelector('.similar-records-wrapper');
 const formDynamicRowsList = document.querySelector('.form__dynamic-rows-list');
+
+// IVP
+const ATXInputsWrapper = document.querySelector('.atx-inputs-wrapper');
 
 // VPS
 const processesForecastInputsWrapper = document.querySelector('.processes-create__forecast-inputs-wrapper');
@@ -269,6 +273,39 @@ export function displayProductsSimilarRecords() {
     })
         .then(response => {
             similarRecordsWrapper.innerHTML = response.data;
+        })
+        .finally(function () {
+            hideSpinner();
+        });
+}
+
+export function displayProductsATXInputs() {
+    // Get inn, and form ID values
+    const innID = document.querySelector('select[name="inn_id"]').value;
+    const formID = document.querySelector('select[name="form_id"]').value;
+
+    // Return if any required fields are empty
+    if (innID == '' || formID == '') {
+        ATXInputsWrapper.innerHTML = '';
+        return;
+    }
+
+    showSpinner();
+
+    // Prepare data to be sent in the AJAX request
+    const data = {
+        'inn_id': innID,
+        'form_id': formID,
+    };
+
+    // Send a POST request to the server to get atx inputs
+    axios.post(GET_PRODUCTS_ATX_INPUTS_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            ATXInputsWrapper.innerHTML = response.data;
         })
         .finally(function () {
             hideSpinner();

@@ -44,14 +44,41 @@ class ProductForm extends Model implements TracksUsageCount
         return $this->hasMany(Product::class, 'form_id');
     }
 
-    public function atxes()
-    {
-        return $this->hasMany(Atx::class);
-    }
-
     public function productSearches()
     {
         return $this->hasMany(ProductSearch::class, 'form_id');
+    }
+
+    public function atxes()
+    {
+        return $this->hasMany(Atx::class, 'form_id');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Events
+    |--------------------------------------------------------------------------
+    */
+
+    protected static function booted(): void
+    {
+        static::deleting(function ($record) {
+            foreach ($record->products()->withTrashed()->get() as $product) {
+                $product->forceDelete();
+            }
+
+            foreach ($record->productSearches()->withTrashed()->get() as $productSearch) {
+                $productSearch->forceDelete();
+            }
+
+            foreach ($record->atxes as $atx) {
+                $atx->delete();
+            }
+
+            foreach ($record->childs as $child) {
+                $child->delete();
+            }
+        });
     }
 
     /*
@@ -67,7 +94,7 @@ class ProductForm extends Model implements TracksUsageCount
 
     /*
     |--------------------------------------------------------------------------
-    | Queries
+    | Scopes
     |--------------------------------------------------------------------------
     */
 
@@ -86,18 +113,19 @@ class ProductForm extends Model implements TracksUsageCount
     public function scopeWithRelatedUsageCounts($query)
     {
         return $query->withCount([
-            'childs',
             'products',
             'productSearches',
+            'atxes',
         ]);
     }
 
     //Implement method declared in 'TracksUsageCount' interface.
     public function getUsageCountAttribute()
     {
-        return $this->childs_count +
-            $this->products_count +
-            $this->product_searches_count;
+        // childs count ignored
+        return $this->products_count
+            + $this->product_searches_count
+            + $this->atxes_count;
     }
 
     /*

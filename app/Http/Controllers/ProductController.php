@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
+use App\Models\Atx;
 use App\Models\Product;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
@@ -69,7 +70,7 @@ class ProductController extends Controller
     /**
      * Get similar records based on the provided request data.
      *
-     * Used for AJAX requests to retrieve similar records, on the products create form.
+     * Used on AJAX requests to retrieve similar records, on the products create form.
      */
     public function getSimilarRecordsForRequest(Request $request)
     {
@@ -79,9 +80,23 @@ class ProductController extends Controller
     }
 
     /**
+     * Get specific product atx inputs.
+     *
+     * Used on AJAX requests to retrieve atx inputs of product, on the products create/edit forms.
+     */
+    public function getATXInputs(Request $request)
+    {
+        $atx = Atx::where('inn_id', $request->input('inn_id'))
+            ->where('form_id', $request->input('form_id'))
+            ->first();
+
+        return view('products.partials.atx-inputs', compact('atx'));
+    }
+
+    /**
      * Get 'dosage' and 'pack' form row, for multiple records store.
      *
-     * Used for AJAX requests to retrieve 'dosage' and 'pack' form row on products create form.
+     * Used on AJAX requests to retrieve 'dosage' and 'pack' form row on products create form.
      */
     public function getDynamicRowsListItemInputs(Request $request)
     {
@@ -90,8 +105,12 @@ class ProductController extends Controller
         return view('products.partials.create-form-dynamic-rows-list-item', compact('inputsIndex'));
     }
 
-    public function store(ProductStoreRequest $request)
+    public function store(Request $request)
     {
+        // Create or update atx before storing products
+        Atx::syncAtxWithProduct($request);
+
+        // Store products
         Product::createMultipleRecordsFromRequest($request);
 
         return to_route('products.index');
@@ -114,6 +133,10 @@ class ProductController extends Controller
      */
     public function update(ProductUpdateRequest $request, $record)
     {
+        // Create or update atx before updating products
+        Atx::syncAtxWithProduct($request);
+
+        // Update product
         $record = Product::withTrashed()->findOrFail($record);
         $record->updateFromRequest($request);
 

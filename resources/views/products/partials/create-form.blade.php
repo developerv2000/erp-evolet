@@ -21,8 +21,11 @@
         </div>
     </div>
 
-    {{-- Container used to hold similar products, after AJAX request --}}
+    {{-- Container used to hold similar products, on AJAX request --}}
     <div class="form__block similar-records-wrapper"></div>
+
+    {{-- Container used to hold ATX inputs, on AJAX request --}}
+    <div class="form__block atx-inputs-wrapper"></div>
 
     {{-- Multiple dosage & packs holder --}}
     <div class="form__block">
