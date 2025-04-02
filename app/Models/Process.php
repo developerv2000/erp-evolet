@@ -1157,8 +1157,8 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
 
-            ['name' => 'Dossier status', 'order' => $order++, 'width' => 116, 'visible' => 1],
-            ['name' => 'Year Cr/Be', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Dossier status', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Year Cr/Be', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'Countries Cr/Be', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Country ich', 'order' => $order++, 'width' => 108, 'visible' => 1],
             ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],

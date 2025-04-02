@@ -171,7 +171,7 @@
     @break
 
     @case('Year Cr/Be')
-        {{ $record->clinical_trial_year }}
+        <x-tables.partials.td.max-lines-limited-text :text="$record->clinical_trial_year" />
     @break
 
     @case('Countries Cr/Be')
