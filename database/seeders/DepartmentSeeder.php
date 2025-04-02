@@ -17,16 +17,18 @@ class DepartmentSeeder extends Seeder
             Department::MANAGMENT_NAME,
             Department::MAD_NAME,
             Department::BDM_NAME,
-            Department::PPL_NAME,
-            Department::PR_NAME,
+            Department::OPPL_NAME,
+            Department::OPR_NAME,
+            Department::ORP_NAME,
         ];
 
         $abbreviation = [
             Department::MANAGMENT_ABBREVIATION,
             Department::MAD_ABBREVIATION,
             Department::BDM_ABBREVIATION,
-            Department::PPL_ABBREVIATION,
-            Department::PR_ABBREVIATION,
+            Department::OPPL_ABBREVIATION,
+            Department::OPR_ABBREVIATION,
+            Department::ORP_ABBREVIATION,
         ];
 
         for ($i = 0; $i < count($name); $i++) {

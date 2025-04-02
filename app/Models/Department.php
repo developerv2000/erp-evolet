@@ -36,11 +36,14 @@ class Department extends Model
     const BDM_NAME = 'Business Development Manager';
     const BDM_ABBREVIATION = 'BDM';
 
-    const PPL_NAME = 'Отдел планирование производство и логистики';
-    const PPL_ABBREVIATION = 'ОППЛ';
+    const OPPL_NAME = 'Отдел планирование производство и логистики';
+    const OPPL_ABBREVIATION = 'ОППЛ';
 
-    const PR_NAME = 'Отдел платежной реконсиляции';
-    const PR_ABBREVIATION = 'ОПР';
+    const OPR_NAME = 'Отдел платежной реконсиляции';
+    const OPR_ABBREVIATION = 'ОПР';
+
+    const ORP_NAME = 'Отдел развития продуктового портфеля';
+    const ORP_ABBREVIATION = 'ОРПП';
 
     /*
     |--------------------------------------------------------------------------
