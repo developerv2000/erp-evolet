@@ -15,7 +15,5 @@
         type="number"
         min="0" />
 
-    <div class="form-group">
-        <x-form.misc.remove-row-button />
-    </div>
+    <x-form.misc.remove-row-button />
 </div>

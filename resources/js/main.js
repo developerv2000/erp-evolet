@@ -88,7 +88,7 @@ mainForms.forEach((form) => {
     form.addEventListener('click', (evt) => {
         const target = evt.target;
 
-        if (target.matches('.form__remove-row-button-icon')) {
+        if (target.matches('.form__row-remove-button-icon')) {
             functions.removeFormRow(target);
             evt.stopPropagation();
         }

@@ -173,15 +173,18 @@
 }
 
 /* Remove form row button */
-.form__remove-row-button {
-    height: 100%;
+.form__row-remove-button {
     display: flex;
     align-items: flex-end;
     /* Because of input padding */
     padding-bottom: 8px;
 }
 
-.form__remove-row-button-icon {
+.form__row-remove-button--full-width {
+    flex-basis: 100%;
+}
+
+.form__row-remove-button-icon {
     color: var(--theme-danger-color);
     cursor: pointer;
 }
