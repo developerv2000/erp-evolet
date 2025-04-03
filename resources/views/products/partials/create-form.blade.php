@@ -43,21 +43,13 @@
                 :initialValue="$defaultSelectedClassID"
                 :isRequired="true" />
 
-            <x-form.inputs.default-input
-                labelText="MOQ"
-                inputName="moq"
-                type="number"
-                min="0" />
-
             <x-form.selects.selectize.id-based-single-select.default-select
                 labelText="Shelf life"
                 inputName="shelf_life_id"
                 :options="$shelfLifes"
                 :initialValue="$defaultSelectedShelfLifeID"
                 :isRequired="true" />
-        </div>
 
-        <div class="form__row">
             <x-form.inputs.default-input
                 labelText="Brand"
                 inputName="brand" />

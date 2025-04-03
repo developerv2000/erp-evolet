@@ -411,6 +411,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
             $mergedRequest = $request->merge([
                 'dosage' => $product['dosage'],
                 'pack' => $product['pack'],
+                'moq' => $product['moq'],
             ]);
 
             // Create a ProductStoreRequest instance from the merged request

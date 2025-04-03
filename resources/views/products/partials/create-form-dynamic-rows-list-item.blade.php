@@ -9,6 +9,12 @@
         labelText="Pack"
         inputName="{{ 'products[' . $inputsIndex . '][pack]' }}" />
 
+    <x-form.inputs.default-input
+        labelText="MOQ"
+        inputName="{{ 'products[' . $inputsIndex . '][moq]' }}"
+        type="number"
+        min="0" />
+
     <div class="form-group">
         <x-form.misc.remove-row-button />
     </div>
