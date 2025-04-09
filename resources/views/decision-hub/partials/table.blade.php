@@ -1,4 +1,4 @@
-<x-tables.template.main-template :records="$records" :include-pagination="false">
+<x-tables.template.main-template class="decision-hub__table" :records="$records" :include-pagination="false">
     {{-- thead titles --}}
     <x-slot:thead-rows>
         <tr>

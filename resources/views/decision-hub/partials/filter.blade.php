@@ -30,6 +30,11 @@
         inputName="status_id[]"
         :options="$smartFilterDependencies['statuses']" />
 
+    <x-form.selects.selectize.multiple-select.request-based-select
+        labelText="Status An*"
+        inputName="name_for_analysts[]"
+        :options="$generalStatusNamesForAnalysts" />
+
     <x-form.inputs.request-based-input
         labelText="Status date"
         inputName="active_status_start_date_range"

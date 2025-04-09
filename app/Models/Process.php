@@ -1223,6 +1223,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             ['name' => 'Status date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Search country', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 76, 'visible' => 1],
+            ['name' => 'Status An*', 'order' => $order++, 'width' => 80, 'visible' => 1],
 
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Manufacturer country', 'order' => $order++, 'width' => 140, 'visible' => 1],

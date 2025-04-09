@@ -260,4 +260,8 @@
 .decision-hub-index .errors {
     margin-top: 16px;
 }
+
+.decision-hub__table td {
+    border: var(--theme-border);
+}
 /* ------------ /end MAD DH pages ------------ */
