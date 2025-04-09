@@ -54,6 +54,7 @@ class Permission extends Model
     const CAN_VIEW_MAD_ASP_NAME = 'can view MAD ASP';
     const CAN_VIEW_MAD_MISC_NAME = 'can view MAD Misc';
     const CAN_VIEW_MAD_USERS_NAME = 'can view MAD Users';
+    const CAN_VIEW_MAD_DH_NAME = 'can view MAD Decision Hub';
 
     const CAN_NOT_VIEW_MAD_EPP_NAME = 'can`t view MAD EPP';
     const CAN_NOT_VIEW_MAD_KVPP_NAME = 'can`t view MAD KVPP';
@@ -64,6 +65,7 @@ class Permission extends Model
     const CAN_NOT_VIEW_MAD_ASP_NAME = 'can`t view MAD ASP';
     const CAN_NOT_VIEW_MAD_MISC_NAME = 'can`t view MAD Misc';
     const CAN_NOT_VIEW_MAD_USERS_NAME = 'can`t view MAD Users';
+    const CAN_NOT_VIEW_MAD_DH_NAME = 'can`t view MAD Decision Hub';
 
     // Edit
     const CAN_EDIT_MAD_EPP_NAME = 'can edit MAD EPP';
@@ -245,6 +247,7 @@ class Permission extends Model
             // Additional views
             self::CAN_VIEW_MAD_MISC_NAME,
             self::CAN_VIEW_MAD_USERS_NAME,
+            self::CAN_VIEW_MAD_DH_NAME,
 
             // Additional edits
             self::CAN_EDIT_MAD_MISC_NAME,

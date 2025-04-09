@@ -377,6 +377,7 @@ class User extends Authenticatable
         $settings[Process::SETTINGS_MAD_TABLE_COLUMNS_KEY] = Process::getDefaultMADTableColumnsForUser($this);
         $settings[ProductSearch::SETTINGS_MAD_TABLE_COLUMNS_KEY] = ProductSearch::getDefaultMADTableColumnsForUser($this);
         $settings[Meeting::SETTINGS_MAD_TABLE_COLUMNS_KEY] = Meeting::getDefaultMADTableColumnsForUser($this);
+        $settings[Process::SETTINGS_MAD_DH_TABLE_COLUMNS_KEY] = Process::getDefaultMADDHTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();

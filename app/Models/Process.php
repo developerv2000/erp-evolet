@@ -33,6 +33,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     */
 
     const SETTINGS_MAD_TABLE_COLUMNS_KEY = 'MAD_VPS_table_columns';
+    const SETTINGS_MAD_DH_TABLE_COLUMNS_KEY = 'MAD_DH_table_columns';
 
     const DEFAULT_ORDER_BY = 'updated_at';
     const DEFAULT_ORDER_TYPE = 'desc';
@@ -1198,6 +1199,60 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             ['name' => 'Зя', 'order' => $order++, 'width' => 174, 'visible' => 1],
             ['name' => 'Отмена', 'order' => $order++, 'width' => 174, 'visible' => 1],
         );
+
+        return $columns;
+    }
+
+    /**
+     * Provides the default MAD DH & DSS table columns along with their properties.
+     *
+     * These columns are typically used to display data in tables,
+     * such as on index and trash pages, and are iterated over in a loop.
+     *
+     * @return array
+     */
+    public static function getDefaultMADDHTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-MAD-Decision-hub')) {
+            return null;
+        }
+
+        $order = 1;
+
+        $columns = [
+            ['name' => 'Status date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'Search country', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 76, 'visible' => 1],
+
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Manufacturer country', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Analyst', 'order' => $order++, 'width' => 142, 'visible' => 1],
+
+            ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Form', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Pack', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'MOQ', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Shelf life', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+
+            ['name' => 'Manufacturer price 1', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'Manufacturer price 2', 'order' => $order++, 'width' => 106, 'visible' => 1],
+            ['name' => 'Currency', 'order' => $order++, 'width' => 86, 'visible' => 1],
+            ['name' => 'Price in USD', 'order' => $order++, 'width' => 94, 'visible' => 1],
+            ['name' => 'Agreed price', 'order' => $order++, 'width' => 104, 'visible' => 1],
+            ['name' => 'Our price 2', 'order' => $order++, 'width' => 118, 'visible' => 1],
+            ['name' => 'Our price 1', 'order' => $order++, 'width' => 118, 'visible' => 1],
+
+            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],
+
+            ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Forecast 3 year', 'order' => $order++, 'width' => 146, 'visible' => 1],
+        ];
 
         return $columns;
     }

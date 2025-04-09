@@ -51,6 +51,7 @@ class PermissionSeeder extends Seeder
             Permission::CAN_VIEW_MAD_ASP_NAME,
             Permission::CAN_VIEW_MAD_USERS_NAME,
             Permission::CAN_VIEW_MAD_MISC_NAME,
+            Permission::CAN_VIEW_MAD_DH_NAME,
 
             Permission::CAN_NOT_VIEW_MAD_EPP_NAME,
             Permission::CAN_NOT_VIEW_MAD_KVPP_NAME,
@@ -61,6 +62,7 @@ class PermissionSeeder extends Seeder
             Permission::CAN_NOT_VIEW_MAD_ASP_NAME,
             Permission::CAN_NOT_VIEW_MAD_USERS_NAME,
             Permission::CAN_NOT_VIEW_MAD_MISC_NAME,
+            Permission::CAN_NOT_VIEW_MAD_DH_NAME,
 
             Permission::CAN_EDIT_MAD_EPP_NAME,
             Permission::CAN_EDIT_MAD_KVPP_NAME,

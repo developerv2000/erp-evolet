@@ -45,6 +45,10 @@ class MADGatesDefiner
             return $user->hasPermission('can view MAD Users');
         });
 
+        Gate::define('view-MAD-Decision-hub', function ($user) {
+            return $user->hasPermission('can view MAD Decision hub');
+        });
+
         // Edit
         Gate::define('edit-MAD-EPP', function ($user) {
             return $user->hasPermission('can edit MAD EPP');

@@ -39,6 +39,7 @@ class MADViewComposersDefiner
         self::defineKPIComposers();
         self::defineASPComposers();
         self::defineMeetingComposers();
+        self::defineDHComposers();
     }
 
     /*
@@ -73,7 +74,6 @@ class MADViewComposersDefiner
                 'smartFilterDependencies' => MadManufacturersSmartFilter::getAllDependencies(),
             ]);
         });
-
     }
 
     private static function defineProductComposers()
@@ -240,6 +240,20 @@ class MADViewComposersDefiner
             $view->with([
                 'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
                 'months' => GeneralHelper::collectCalendarMonths(),
+            ]);
+        });
+    }
+
+    private static function defineDHComposers()
+    {
+        View::composer('decision-hub.partials.filter', function ($view) {
+            $view->with([
+                'countriesOrderedByName' => Country::orderByName()->get(),
+                'analystUsers' => User::getMADAnalystsMinified(),
+                'bdmUsers' => User::getBDMsMinifed(),
+                'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
+                'regions' => Country::getRegionOptions(),
+                'smartFilterDependencies' => MadProcessesSmartFilter::getAllDependencies(),
             ]);
         });
     }

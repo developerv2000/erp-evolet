@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DecisionHubController;
 use App\Http\Controllers\MadAspController;
 use App\Http\Controllers\MADKPIController;
 use App\Http\Controllers\ManufacturerController;
@@ -111,5 +112,10 @@ Route::middleware('auth', 'auth.session')->group(function () {
             Route::patch('/update/{mah}', 'MAHsUpdate')->name('update');
             Route::delete('/destroy', 'MAHsDestroy')->name('destroy');
         });
+    });
+
+    // DH
+    Route::prefix('decision-hub')->controller(DecisionHubController::class)->name('decision-hub.')->group(function () {
+        Route::get('/', 'index')->name('index')->middleware('can:view-MAD-DH');
     });
 });
