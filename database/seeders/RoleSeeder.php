@@ -70,7 +70,7 @@ class RoleSeeder extends Seeder
         // MAD Guest
         $role = new Role();
         $role->name = Role::MAD_GUEST_NAME;
-        $role->description = "Can only view 'MAD part'. Can`t create/edit/update/delete/export. Attaches role related permissions.";
+        $role->description = "Can only view 'MAD EPP/IVP/KVPP'. Can`t create/edit/update/delete/export. Attaches role related permissions.";
         $role->department_id = Department::findByName(Department::MAD_NAME)->id;
         $role->save();
 

@@ -200,8 +200,6 @@ class Permission extends Model
             self::CAN_VIEW_MAD_EPP_NAME,
             self::CAN_VIEW_MAD_KVPP_NAME,
             self::CAN_VIEW_MAD_IVP_NAME,
-            self::CAN_VIEW_MAD_MEETINGS_NAME,
-            self::CAN_VIEW_MAD_ASP_NAME,
         ];
     }
 
