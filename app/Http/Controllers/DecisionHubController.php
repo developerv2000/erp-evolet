@@ -17,20 +17,25 @@ class DecisionHubController extends Controller
         Process::addDefaultQueryParamsToRequest($request);
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
-        // Get finalized records
+        // Query finalized records
         $query = Process::withBasicRelations();
         $filteredQuery = Process::filterQueryForRequest($query, $request);
-        $records = Process::finalizeQueryForRequest($filteredQuery, $request, 'get');
+        $records = Process::finalizeQueryForRequest($filteredQuery, $request, 'query');
 
         // Get all and only visible table columns
         $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Process::SETTINGS_MAD_DH_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        // Return with errors, if too many records requested
+        // Create new errors bag
         $errors = new MessageBag();
 
+        // Return with errors, if too many records requested
         if ($records->count() > 150) {
+            $records = collect();
             $errors->add('too_many', __('Too many records to display. Please filter required products.'));
+            // Else get all records
+        } else {
+            $records = $records->get();
         }
 
         // List of table columns to be highlighted
