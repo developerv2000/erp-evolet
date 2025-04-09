@@ -33,14 +33,23 @@ class DecisionHubController extends Controller
             $errors->add('too_many', __('Too many records to display. Please filter required products.'));
         }
 
-        return view(
-            'decision-hub.index',
-            compact(
-                'request',
-                'records',
-                'allTableColumns',
-                'visibleTableColumns'
-            )
-        )->withErrors($errors);;
+        // List of table columns to be highlighted
+        $highlighedBgColumns = [
+            'Manufacturer price 1',
+            'Manufacturer price 2',
+            'Currency',
+            'Price in USD',
+            'Agreed price',
+            'Our price 2',
+            'Our price 1',
+        ];
+
+        $bolderWeightColumns = [
+            'Price in USD',
+            'Agreed price',
+        ];
+
+        return view('decision-hub.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns', 'highlighedBgColumns', 'bolderWeightColumns'))
+            ->withErrors($errors);
     }
 }

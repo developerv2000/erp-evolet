@@ -15,3 +15,15 @@ Artisan::command('users:reset-settings', function () {
     User::resetAllSettingsToDefaultForAll();
     $this->info('All user settings have been reset!');
 })->purpose("Reset all user settings");
+
+Artisan::command('users:reset-specific-table-settings-for-all {key}', function (string $key) {
+    try {
+        User::all()->each(function (User $user) use ($key) {
+            $user->resetSpecificTableColumnSettings($key);
+        });
+
+        $this->info("All users '{$key}' settings were reset successfully.");
+    } catch (Throwable $e) {
+        $this->error("Error: " . $e->getMessage());
+    }
+})->describe('Reset a specific table column setting for all users');

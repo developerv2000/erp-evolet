@@ -16,6 +16,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use InvalidArgumentException;
 
 class User extends Authenticatable
 {
@@ -400,7 +401,35 @@ class User extends Authenticatable
      *
      * Used via artisan command line
      */
-    public function resetSpecificTableColumnSettings($table) {}
+    public function resetSpecificTableColumnSettings(string $key): void
+    {
+        $this->refresh();
+
+        $defaultColumns = match ($key) {
+            'MAD_EPP_table_columns' => Manufacturer::getDefaultMADTableColumnsForUser($this),
+            'MAD_IVP_table_columns' => Product::getDefaultMADTableColumnsForUser($this),
+            'MAD_VPS_table_columns' => Process::getDefaultMADTableColumnsForUser($this),
+            'MAD_KVPP_table_columns' => ProductSearch::getDefaultMADTableColumnsForUser($this),
+            'MAD_Meetings_table_columns' => Meeting::getDefaultMADTableColumnsForUser($this),
+            'MAD_DH_table_columns' => Process::getDefaultMADDHTableColumnsForUser($this),
+            default => throw new InvalidArgumentExceptio("Unknown key: $key"),
+        };
+
+        $this->settings = array_merge($this->settings ?? [], [$key => $defaultColumns]);
+        $this->save();
+    }
+
+    /**
+     * Reset only specific table column settings for all users
+     *
+     * Used via artisan command line
+     */
+    public function resetSpecificTableColumnSettingsForAll(string $key): void
+    {
+        self::all()->each(function ($user) use ($key) {
+            $user->resetSpecificTableColumnSettings($key);
+        });
+    }
 
     /**
      * Collects all table columns for a given key from user settings.

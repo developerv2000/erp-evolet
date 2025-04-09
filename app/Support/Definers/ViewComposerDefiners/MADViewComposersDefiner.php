@@ -253,7 +253,7 @@ class MADViewComposersDefiner
                 'bdmUsers' => User::getBDMsMinifed(),
                 'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
                 'regions' => Country::getRegionOptions(),
-                'smartFilterDependencies' => MadProcessesSmartFilter::getAllDependencies(),
+                'smartFilterDependencies' => MadProcessesSmartFilter::getAllDependencies(), // Exactly same as VPS smart filter
             ]);
         });
     }

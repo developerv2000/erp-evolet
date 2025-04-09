@@ -1136,6 +1136,10 @@ a {
     gap: 8px;
 }
 
+.main-table .td--highlighted {
+    background-color: var(--theme-table-td-background-color-3);
+}
+
 /* ------------ /end Main table ------------ */
 
 

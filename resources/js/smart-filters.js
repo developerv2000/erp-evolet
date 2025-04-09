@@ -44,8 +44,8 @@ if (productsPage) {
     var packInput = productsPage.querySelector('input[name="pack"]');
 }
 
-// MAD processes filter
-const processesPage = document.querySelector('.processes-index');
+// Joined MAD processes & MAD Decision hub filters
+const processesPage = document.querySelector('.processes-index, .decision-hub-index');
 
 if (processesPage) {
     var manufacturersSelect = processesPage.querySelector('select[name="manufacturer_id[]"]').selectize;
@@ -112,6 +112,9 @@ function updateMadProductsFilterInputs() {
         .finally(hideSpinner);
 }
 
+/**
+ * Joined MAD VPS & MAD DH
+ */
 function updateMadProcessesFilterInputs() {
     showSpinner();
 
@@ -212,6 +215,9 @@ function initializeMadProductsFilter() {
     }
 }
 
+/**
+ * Joined MAD VPS & MAD DH
+ */
 function initializeMadProcessesFilter() {
     if (!processesPage) return;
 
@@ -235,5 +241,5 @@ function initializeMadProcessesFilter() {
 export default function initializeAll() {
     initializeMadManufacturersFilter();
     initializeMadProductsFilter();
-    initializeMadProcessesFilter();
+    initializeMadProcessesFilter(); // Joined MAD VPS & MAD DH
 }

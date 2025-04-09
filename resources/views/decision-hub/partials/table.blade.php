@@ -15,8 +15,14 @@
         @foreach ($records as $record)
             <tr>
                 @foreach ($visibleTableColumns as $column)
-                    <td>
-                        @include('processes.table.tbody-row-columns')
+                    <td @class([
+                        'td--highlighted' => in_array($column['name'], $highlighedBgColumns),
+                    ])>
+                        @if (in_array($column['name'], $bolderWeightColumns))
+                            <strong>@include('processes.table.tbody-row-columns')</strong>
+                        @else
+                            @include('processes.table.tbody-row-columns')
+                        @endif
                     </td>
                 @endforeach
             </tr>
