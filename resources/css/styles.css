@@ -1137,7 +1137,8 @@ a {
 }
 
 .main-table .td--highlighted {
-    background-color: var(--theme-table-td-background-color-3);
+    color: var(--theme-button-text-color);
+    background-color: var(--theme-table-td-background-color-6);
 }
 
 /* ------------ /end Main table ------------ */
