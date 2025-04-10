@@ -29,8 +29,8 @@
         {{-- Table --}}
         @include('mad-asp.partials.show-page-table')
 
-        {{-- Chart --}}
-        @include('mad-asp.partials.show-page-countries-graph')
+        {{-- Graph --}}
+        @include('mad-asp.partials.countries-graph')
     </div>
 @endsection
 

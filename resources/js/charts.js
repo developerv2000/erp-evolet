@@ -6,6 +6,7 @@
 
 // DOM elements
 const madKpiPage = document.querySelector('.mad-kpi');
+const madAspIndexPage = document.querySelector('.mad-asp-index');
 const madAspShowPage = document.querySelector('.mad-asp-show');
 
 // Colors
@@ -17,6 +18,22 @@ const textColor = rootStyles.getPropertyValue('--theme-text-color').trim();
 const boxBackgroundColor = rootStyles.getPropertyValue('--theme-box-background-color').trim();
 const borderColor = rootStyles.getPropertyValue('--theme-border-color').trim();
 const chartSplitlinesColor = borderColor;
+const backgroundedTextBgColor6 = rootStyles.getPropertyValue('--theme-backgrounded-text-bg-color-6').trim();
+const backgroundedTextBgColor7 = rootStyles.getPropertyValue('--theme-backgrounded-text-bg-color-7').trim();
+
+/*
+|--------------------------------------------------------------------------
+| Globally defined charts
+|--------------------------------------------------------------------------
+*/
+
+let currentProcessesPie,
+    maximumProcessesPie,
+    currentProcessesMap,
+    currentProcessesGraph,
+    maximumProcessesGraph,
+    activeManufacturersGraph,
+    aspCountriesGraph;
 
 /*
 |--------------------------------------------------------------------------
@@ -247,17 +264,24 @@ const treemapSeriesOptions = {
 
 /*
 |--------------------------------------------------------------------------
-| Globally defined charts
+| Helper functions
 |--------------------------------------------------------------------------
 */
 
-let currentProcessesPie,
-    maximumProcessesPie,
-    currentProcessesMap,
-    currentProcessesGraph,
-    maximumProcessesGraph,
-    activeManufacturersGraph,
-    aspCountriesGraph;
+function addFullscreenResizeListener(echartsInstance, delay = 400) {
+    const resizeChart = () => {
+        setTimeout(() => {
+            echartsInstance.resize();
+        }, delay);
+    };
+
+    const events = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'];
+    events.forEach(event => window.addEventListener(event, resizeChart));
+
+    return () => {
+        events.forEach(event => window.removeEventListener(event, resizeChart));
+    };
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -519,8 +543,15 @@ function initializeMADActiveManufacturersGraph() {
     activeManufacturersGraph.setOption(options);
 }
 
+/**
+ * This function is used to display both mad-asp.index and mad-asp.show page graphs
+ */
 function initializeMadAspCountriesGraph() {
     const container = document.querySelector('.mad-asp__countries-graph');
+
+    // Container can be absent on mad-asp.index page, if ASP doesn`t exists for current year
+    if (!container) return;
+
     aspCountriesGraph = echarts.init(container, theme, chartOptions);
 
     const barsLabelOptions = {
@@ -528,7 +559,7 @@ function initializeMadAspCountriesGraph() {
         fontFamily: ['Fira Sans', 'sans-serif'],
         fontSize: 14,
         fontWeight: '400',
-        color: '#475360',
+        color: textColor,
         rotate: 90,
         align: 'left',
         verticalAlign: 'middle',
@@ -564,12 +595,19 @@ function initializeMadAspCountriesGraph() {
         }
     ];
 
+    let graphTitle = 'Динамика выполнения стратегического плана';
+
+    // More detailed title for mad-asp.index page graph
+    if (madAspIndexPage) {
+        graphTitle += ' (' + asp.year_contract_fact_percentage + '%)';
+    }
+
     let options = {
         ...graphOptions,
-        color: ['#AEEA94', '#FAC858'],
+        color: [backgroundedTextBgColor6, backgroundedTextBgColor7],
         title: {
             ...chartTitleOptions,
-            text: 'Динамика выполнения стратегического плана',
+            text: graphTitle,
         },
         series: series,
         xAxis: [
@@ -609,8 +647,9 @@ function init() {
         addResizeListenersToMadKpiCharts();
     }
 
-    if (madAspShowPage) {
+    if (madAspIndexPage || madAspShowPage) {
         initializeMadAspCountriesGraph();
+        addFullscreenResizeListener(aspCountriesGraph);
     }
 }
 

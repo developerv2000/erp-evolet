@@ -4,7 +4,7 @@
         <tr>
             @foreach ($visibleTableColumns as $column)
                 <th width="{{ $column['width'] }}">
-                    @include('processes.table.thead-columns')
+                    @include('decision-hub.table.thead-columns')
                 </th>
             @endforeach
         </tr>
@@ -15,14 +15,8 @@
         @foreach ($records as $record)
             <tr>
                 @foreach ($visibleTableColumns as $column)
-                    <td @class([
-                        'td--highlighted' => in_array($column['name'], $highlighedBgColumns),
-                    ])>
-                        @if (in_array($column['name'], $bolderWeightColumns))
-                            <strong>@include('processes.table.tbody-row-columns')</strong>
-                        @else
-                            @include('processes.table.tbody-row-columns')
-                        @endif
+                    <td>
+                        @include('decision-hub.table.tbody-row-columns')
                     </td>
                 @endforeach
             </tr>

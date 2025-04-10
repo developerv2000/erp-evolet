@@ -43,7 +43,7 @@
         @if ($errors->any())
             @include('layouts.errors')
         @else
-            @include('decision-hub.partials.table', ['trashedRecords' => false])
+            @include('decision-hub.table.layout')
         @endif
     </div>
 

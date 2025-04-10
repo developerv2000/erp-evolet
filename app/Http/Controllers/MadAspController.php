@@ -29,11 +29,22 @@ class MadAspController extends Controller
         $query = MadAsp::withBasicRelations()->withBasicRelationCounts();
         $records = MadAsp::finalizeQueryForRequest($query, $request, 'paginate');
 
-        foreach ($records as $record) {
-            $record->makeAllCalculations($request);
+        // Check if ASP exists for current year
+        $currentYearASP = $records->where('year', date('Y'))->first();
+
+        // Make all calculations for JS graph
+        if ($currentYearASP) {
+            $currentYearASP->makeAllCalculations($request);
         }
 
-        return view('mad-asp.index', compact('request', 'records'));
+        // Compact required variables for JS graph as $asp,
+        // because single JS function is used to display graphs for both index & show pages
+        $asp = [
+            'countries' => $currentYearASP ? array_values($currentYearASP->countries->sortByDesc('year_contract_plan')->toArray()) : null, // Get sorted
+            'year_contract_fact_percentage' => $currentYearASP?->year_contract_fact_percentage,
+        ];
+
+        return view('mad-asp.index', compact('request', 'records', 'currentYearASP', 'asp'));
     }
 
     public function show(Request $request, MadAsp $record)
@@ -49,7 +60,8 @@ class MadAspController extends Controller
         // Collect months
         $months = GeneralHelper::collectCalendarMonths();
 
-        // Compact required variables for JS charts
+        // Compact required variables for JS graph as $asp,
+        // because single JS function is used to display graphs for both index & show pages
         $asp = [
             'countries' => array_values($record->countries->sortByDesc('year_contract_plan')->toArray()), // Get sorted
         ];

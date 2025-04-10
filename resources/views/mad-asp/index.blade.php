@@ -5,7 +5,7 @@
 ])
 
 @section('content')
-    <div class="main-box styled-box">
+    <div class="main-box">
         {{-- Toolbar --}}
         <div class="toolbar toolbar--joined toolbar--for-table">
             {{-- blade-formatter-disable --}}
@@ -50,6 +50,11 @@
 
         {{-- Table --}}
         @include('mad-asp.partials.index-page-table')
+
+        {{-- Graph --}}
+        @if ($currentYearASP)
+            @include('mad-asp.partials.countries-graph')
+        @endif
     </div>
 
     {{-- Modals --}}
@@ -59,3 +64,12 @@
             :forceDelete="false" />
     @endcan
 @endsection
+
+@push('scripts')
+    {{-- Apache ECharts --}}
+    <script src="{{ asset('plugins/echarts/echarts.min.js') }}"></script>
+
+    <script>
+        var asp = <?php echo json_encode($asp); ?>;
+    </script>
+@endpush

@@ -39,33 +39,49 @@
     /* Theme table  */
     --theme-table-text-color: #475360;
     --theme-table-tr-hover-background-color: #f9fafd;
-
-    --theme-table-td-background-color-1: #ffc6f0;
-    --theme-table-td-background-color-2: #AEEA94;
-    --theme-table-td-background-color-3: #FBF3B9;
-    --theme-table-td-background-color-4: #FFDCCC;
-    --theme-table-td-background-color-5: #DAD2FF;
-    --theme-table-td-background-color-6: #a95b4b;
+    --theme-colorful-table-border-color: #b1bac9;
 
     /* Theme Badges */
-    --theme-yellow-badge-text-color: #66662c;
     --theme-yellow-badge-background: #FFFFCC;
+    --theme-yellow-badge-text-color: #66662c;
 
-    --theme-pink-badge-text-color: rgb(147, 35, 56);
     --theme-pink-badge-background: rgb(250, 215, 221);
+    --theme-pink-badge-text-color: rgb(147, 35, 56);
 
-    --theme-orange-badge-text-color: rgb(157, 82, 40);
     --theme-orange-badge-background: rgb(253, 230, 216);
+    --theme-orange-badge-text-color: rgb(157, 82, 40);
 
-    --theme-blue-badge-text-color: rgb(25, 120, 162);
     --theme-blue-badge-background: rgb(212, 242, 255);
+    --theme-blue-badge-text-color: rgb(25, 120, 162);
 
-    --theme-red-badge-text-color: rgb(255, 212, 220);
     --theme-red-badge-background: rgb(230, 55, 87);
+    --theme-red-badge-text-color: rgb(255, 212, 220);
 
-    --theme-grey-badge-text-color: rgb(125, 137, 155);
     --theme-grey-badge-background: rgb(227, 230, 234);
+    --theme-grey-badge-text-color: rgb(125, 137, 155);
 
-    --theme-green-badge-text-color: rgb(0, 134, 78);
     --theme-green-badge-background: rgb(204, 246, 228);
+    --theme-green-badge-text-color: rgb(0, 134, 78);
+
+    /* Theme backgrounded texts. Especially used in tables */
+    --theme-backgrounded-text-bg-color-1: #fad3ff;
+    --theme-backgrounded-text-color-1: var(--theme-text-color);
+
+    --theme-backgrounded-text-bg-color-2: #bfffc4;
+    --theme-backgrounded-text-color-2: var(--theme-text-color);
+
+    --theme-backgrounded-text-bg-color-3: #f7ffd3;
+    --theme-backgrounded-text-color-3: var(--theme-text-color);
+
+    --theme-backgrounded-text-bg-color-4: #ffe7d7;
+    --theme-backgrounded-text-color-4: var(--theme-text-color);
+
+    --theme-backgrounded-text-bg-color-5: #DAD2FF;
+    --theme-backgrounded-text-color-5: var(--theme-text-color);
+
+    --theme-backgrounded-text-bg-color-6: #AEEA94;
+    --theme-backgrounded-text-color-6: var(--theme-text-color);
+
+    --theme-backgrounded-text-bg-color-7: #FAC858;
+    --theme-backgrounded-text-color-7: var(--theme-text-color);
 }

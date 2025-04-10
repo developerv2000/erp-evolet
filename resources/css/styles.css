@@ -267,41 +267,69 @@ a {
 }
 
 .badge--yellow {
-    color: var(--theme-yellow-badge-text-color);
     background-color: var(--theme-yellow-badge-background);
+    color: var(--theme-yellow-badge-text-color);
 }
 
 .badge--pink {
-    color: var(--theme-pink-badge-text-color);
     background-color: var(--theme-pink-badge-background);
+    color: var(--theme-pink-badge-text-color);
 }
 
 .badge--orange {
-    color: var(--theme-orange-badge-text-color);
     background-color: var(--theme-orange-badge-background);
+    color: var(--theme-orange-badge-text-color);
 }
 
 .badge--blue {
-    color: var(--theme-blue-badge-text-color);
     background-color: var(--theme-blue-badge-background);
+    color: var(--theme-blue-badge-text-color);
 }
 
 .badge--red {
-    color: var(--theme-red-badge-text-color);
     background-color: var(--theme-red-badge-background);
+    color: var(--theme-red-badge-text-color);
 }
 
 .badge--grey {
-    color: var(--theme-grey-badge-text-color);
     background-color: var(--theme-grey-badge-background);
+    color: var(--theme-grey-badge-text-color);
 }
 
 .badge--green {
-    color: var(--theme-green-badge-text-color);
     background-color: var(--theme-green-badge-background);
+    color: var(--theme-green-badge-text-color);
 }
 
 /* ------------ /end Badges ------------ */
+
+
+/* ------------ Backgrounded text ------------ */
+.backgrounded-text--1 {
+    background-color: var(--theme-backgrounded-text-bg-color-1);
+    color: var(--theme-backgrounded-text-color-1);
+}
+
+.backgrounded-text--2 {
+    background-color: var(--theme-backgrounded-text-bg-color-2);
+    color: var(--theme-backgrounded-text-color-2);
+}
+
+.backgrounded-text--3 {
+    background-color: var(--theme-backgrounded-text-bg-color-3);
+    color: var(--theme-backgrounded-text-color-3);
+}
+
+.backgrounded-text--4 {
+    background-color: var(--theme-backgrounded-text-bg-color-4);
+    color: var(--theme-backgrounded-text-color-4);
+}
+
+.backgrounded-text--5 {
+    background-color: var(--theme-backgrounded-text-bg-color-5);
+    color: var(--theme-backgrounded-text-color-5);
+}
+/* ------------ /end Backgrounded text ------------ */
 
 
 /* ------------ Pagination ------------ */
@@ -1136,9 +1164,9 @@ a {
     gap: 8px;
 }
 
-.main-table .td--highlighted {
-    color: var(--theme-button-text-color);
-    background-color: var(--theme-table-td-background-color-6);
+/* Colorful table */
+.main-table--colorful tbody tr {
+    border-color: var(--theme-colorful-table-border-color);
 }
 
 /* ------------ /end Main table ------------ */

@@ -14,11 +14,6 @@
 
             <th width="80">{{ __('Year') }}</th>
             <th width="100">{{ __('Кк план') }}</th>
-            <th width="100">{{ __('Кк факт') }}</th>
-            <th width="100">{{ __('Кк %') }}</th>
-            <th width="100">{{ __('НПР факт') }}</th>
-            <th width="100">{{ __('НПР %') }}</th>
-
             <th width="120">{{ __('Countries') }}</th>
 
             <th width="132">{{ __('Comments') }}</th>
@@ -40,10 +35,6 @@
 
                 <td>{{ $record->year }}</td>
                 <td>{{ $record->year_contract_plan }}</td>
-                <td>{{ $record->year_contract_fact }}</td>
-                <td>{{ $record->year_contract_fact_percentage }} %</td>
-                <td>{{ $record->year_register_fact }}</td>
-                <td>{{ $record->year_register_fact_percentage }} %</td>
 
                 <td>
                     <a class="main-link" href="{{ route('mad-asp.countries.index', $record->year) }}">{{ $record->countries_count }} {{ __('countries') }}</a>

@@ -164,7 +164,18 @@
 
 
 /* ------------ MAD ASP pages ------------ */
+/* Index page graph */
+.mad-asp-index .mad-asp__countries-graph {
+    margin-top: 20px;
+    height: 520px;
+}
+
 /* Show page */
+.mad-asp-show .mad-asp__countries-graph {
+    margin-top: 20px;
+    height: 520px;
+}
+
 .mad-asp-show .main {
     padding-bottom: 40px;
 }
@@ -181,7 +192,7 @@
 }
 
 .mad-asp-table thead tr {
-    border-bottom: 1px solid var(--theme-lightest-text-color);
+    border-bottom: 1px solid var(--theme-colorful-table-border-color);
 }
 
 .mad-asp-table th {
@@ -199,10 +210,6 @@
 /* tbody */
 .mad-asp-table tbody {
     z-index: 1;
-}
-
-.mad-asp-table tbody tr {
-    border-color: var(--theme-lightest-text-color);
 }
 
 .mad-asp-table td {
@@ -245,12 +252,6 @@
     left: var(--th-country-name-width);
     text-align: center;
     background-color: var(--theme-box-background-color);
-}
-
-/* Graphs */
-.mad-asp__countries-graph {
-    height: 520px;
-    margin-top: 20px;
 }
 
 /* ------------ /end MAD ASP pages ------------ */
