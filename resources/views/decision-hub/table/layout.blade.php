@@ -1,4 +1,4 @@
-<x-tables.template.main-template class="decision-hub__table" :records="$records" :include-pagination="false">
+<x-tables.template.main-template class="decision-hub__table main-table--colorful" :records="$records" :include-pagination="false">
     {{-- thead titles --}}
     <x-slot:thead-rows>
         <tr>
@@ -15,9 +15,7 @@
         @foreach ($records as $record)
             <tr>
                 @foreach ($visibleTableColumns as $column)
-                    <td>
-                        @include('decision-hub.table.tbody-row-columns')
-                    </td>
+                    @include('decision-hub.table.tbody-row-columns')
                 @endforeach
             </tr>
         @endforeach

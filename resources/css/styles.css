@@ -132,10 +132,6 @@ a {
     box-shadow: var(--theme-box-shadow);
 }
 
-.text-lowercase {
-    text-transform: lowercase;
-}
-
 .main-link {
     color: var(--theme-main-color);
 
@@ -143,6 +139,25 @@ a {
         text-decoration: underline;
     }
 }
+
+/* ------------ Text utilities ------------ */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-lowercase {
+    text-transform: lowercase;
+}
+
+/* ------------ /end Text utilities ------------ */
 
 /* ------------ Buttons ------------ */
 .button {
@@ -247,6 +262,7 @@ a {
     font-size: 20px;
     color: var(--theme-success-color);
 }
+
 /* ------------ /end Buttons ------------ */
 
 
@@ -329,6 +345,7 @@ a {
     background-color: var(--theme-backgrounded-text-bg-color-5);
     color: var(--theme-backgrounded-text-color-5);
 }
+
 /* ------------ /end Backgrounded text ------------ */
 
 
@@ -475,6 +492,7 @@ a {
     border: var(--form-input-border);
     border-radius: var(--theme-border-radius);
 }
+
 /* ------------ /end Form ------------ */
 
 
@@ -1276,6 +1294,7 @@ a {
 .product-selection-form .button:disabled {
     cursor: not-allowed;
 }
+
 /* ------------ /end Export as excel form ------------ */
 
 
@@ -1348,6 +1367,7 @@ a {
 .similar-records__empty-text-icon {
     color: var(--theme-success-color);
 }
+
 /* ------------ /end Similar records ------------ */
 
 
@@ -1361,6 +1381,7 @@ a {
     margin: 8px 0;
     border: none;
 }
+
 /* ------------ /end Process status periods ------------ */
 
 
@@ -1404,6 +1425,7 @@ a {
 .process-general-status-10 {
     background-color: #5470C6;
 }
+
 /* ------------ /end General process colors ------------ */
 
 
@@ -1413,6 +1435,7 @@ a {
     padding: 20px;
     margin-bottom: 20px;
 }
+
 /* ------------ /end About product block ------------ */
 
 
@@ -1426,6 +1449,7 @@ a {
     padding: 6px 12px;
     border: var(--form-input-border);
 }
+
 /* ------------ /end Secondary table ------------ */
 
 
@@ -1445,8 +1469,5 @@ a {
     padding: 0;
     list-style: none;
 }
+
 /* ------------ /end Errors ------------ */
-
-
-
-

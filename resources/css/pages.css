@@ -263,6 +263,17 @@
 }
 
 .decision-hub__table td {
-    border: var(--theme-border);
+    border: 1px solid var(--theme-colorful-table-border-color);
+}
+
+.decision-hub__table .td__max-lines-limited-text {
+    line-clamp: 1;
+    -webkit-line-clamp: 1;
+}
+
+.decision-hub__table .backgrounded-text--3 {
+    width: 100%;
+    height: 100%;
+    margin: -8px;
 }
 /* ------------ /end MAD DH pages ------------ */

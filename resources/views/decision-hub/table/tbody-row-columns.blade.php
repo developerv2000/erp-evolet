@@ -1,122 +1,190 @@
 @switch($column['name'])
     @case('Status date')
-        {{ $record->statusHistory->last()->start_date->isoformat('DD MMM Y') }}
+        <td>
+            {{ $record->statusHistory->last()->start_date->isoformat('DD MMM Y') }}
+        </td>
     @break
 
     @case('Search country')
-        {{ $record->searchCountry->code }}
+        <td>
+            {{ $record->searchCountry->code }}
+        </td>
     @break
 
     @case('Status')
-        {{ $record->status->name }}
+        <td>
+            {{ $record->status->name }}
+        </td>
     @break
 
     @case('Status An*')
-        {{ $record->status->generalStatus->name_for_analysts }}
+        <td>
+            {{ $record->status->generalStatus->name_for_analysts }}
+        </td>
     @break
 
     @case('Manufacturer')
-        {{ $record->product->manufacturer->name }}
+        <td>
+            <x-tables.partials.td.max-lines-limited-text :text="$record->product->manufacturer->name" />
+        </td>
     @break
 
     @case('Manufacturer country')
-        {{ $record->product->manufacturer->country->name }}
+        <td>
+            <x-tables.partials.td.max-lines-limited-text :text="$record->product->manufacturer->name" />
+        </td>
     @break
 
     @case('BDM')
-        {{ $record->product->manufacturer->bdm->name }}
+        <td>
+            <x-tables.partials.td.max-lines-limited-text :text="$record->product->manufacturer->bdm->name" />
+        </td>
     @break
 
     @case('Analyst')
-        {{ $record->product->manufacturer->analyst->name }}
+        <td>
+            <x-tables.partials.td.max-lines-limited-text :text="$record->product->manufacturer->analyst->name" />
+        </td>
     @break
 
     @case('Generic')
-        <x-tables.partials.td.max-lines-limited-text :text="$record->product->inn->name" />
+        <td>
+            <x-tables.partials.td.max-lines-limited-text :text="$record->product->inn->name" />
+        </td>
     @break
 
     @case('Form')
-        {{ $record->product->form->name }}
+        <td>
+            <x-tables.partials.td.max-lines-limited-text :text="$record->product->form->name" />
+        </td>
     @break
 
     @case('Dosage')
-        <x-tables.partials.td.max-lines-limited-text :text="$record->product->dosage" />
+        <td>
+            <x-tables.partials.td.max-lines-limited-text :text="$record->product->dosage" />
+        </td>
     @break
 
     @case('Pack')
-        {{ $record->product->pack }}
+        <td>
+            <x-tables.partials.td.max-lines-limited-text :text="$record->product->pack" />
+        </td>
     @break
 
     @case('MAH')
-        {{ $record->MAH?->name }}
+        <td>
+            <x-tables.partials.td.max-lines-limited-text :text="$record->MAH?->name" />
+        </td>
     @break
 
     @case('Last comment')
-        <x-tables.partials.td.max-lines-limited-text :text="$record->lastComment?->plain_text" />
+        <td>
+            <x-tables.partials.td.max-lines-limited-text :text="$record->lastComment?->plain_text" />
+        </td>
     @break
 
     @case('Manufacturer price 1')
-        {{ $record->manufacturer_first_offered_price }}
+        <td class="backgrounded-text--4 text-right">
+            @if ($record->manufacturer_first_offered_price)
+                {{ round($record->manufacturer_first_offered_price, 2) }}
+            @endif
+        </td>
     @break
 
     @case('Manufacturer price 2')
-        {{ $record->manufacturer_followed_offered_price }}
+        <td class="backgrounded-text--4 text-right">
+            @if ($record->manufacturer_followed_offered_price)
+                {{ round($record->manufacturer_followed_offered_price, 2) }}
+            @endif
+        </td>
     @break
 
     @case('Currency')
-        {{ $record->currency?->name }}
+        <td class="backgrounded-text--4 text-right">
+            {{ $record->currency?->name }}
+        </td>
     @break
 
     @case('Price in USD')
-        {{ $record->manufacturer_offered_price_in_usd }}
+        <td class="backgrounded-text--4 text-center">
+            @if ($record->manufacturer_offered_price_in_usd)
+                <strong>{{ round($record->manufacturer_offered_price_in_usd, 2) }}</strong>
+            @endif
+        </td>
     @break
 
     @case('Agreed price')
-        {{ $record->agreed_price }}
+        <td class="backgrounded-text--4 text-center">
+            @if ($record->agreed_price)
+                <strong>{{ round($record->agreed_price, 2) }}</strong>
+            @endif
+        </td>
     @break
 
     @case('Our price 2')
-        {{ $record->our_followed_offered_price }}
+        <td class="backgrounded-text--4 text-right">
+            @if ($record->our_followed_offered_price)
+                {{ round($record->our_followed_offered_price, 2) }}
+            @endif
+        </td>
     @break
 
     @case('Our price 1')
-        {{ $record->our_first_offered_price }}
+        <td class="backgrounded-text--4 text-right">
+            @if ($record->our_first_offered_price)
+                {{ round($record->our_first_offered_price, 2) }}
+            @endif
+        </td>
     @break
 
     @case('Shelf life')
-        {{ $record->product->shelfLife->name }}
+        <td class="text-right">
+            {{ $record->product->shelfLife->name }}
+        </td>
     @break
 
     @case('MOQ')
-        @if ($record->product->moq)
-            <x-tables.partials.td.formatted-price :price="$record->product->moq" />
-        @endif
+        <td class="text-right">
+            @if ($record->product->moq)
+                <x-tables.partials.td.formatted-price :price="$record->product->moq" />
+            @endif
+        </td>
     @break
 
     @case('Forecast 1 year')
-        @if ($record->forecast_year_1)
-            <x-tables.partials.td.formatted-price :price="$record->forecast_year_1" />
-        @endif
+        <td class="text-right">
+            @if ($record->forecast_year_1)
+                <x-tables.partials.td.formatted-price :price="$record->forecast_year_1" />
+            @endif
+        </td>
     @break
 
     @case('Forecast 2 year')
-        @if ($record->forecast_year_2)
-            <x-tables.partials.td.formatted-price :price="$record->forecast_year_2" />
-        @endif
+        <td class="text-right">
+            @if ($record->forecast_year_2)
+                <x-tables.partials.td.formatted-price :price="$record->forecast_year_2" />
+            @endif
+        </td>
     @break
 
     @case('Forecast 3 year')
-        @if ($record->forecast_year_3)
-            <x-tables.partials.td.formatted-price :price="$record->forecast_year_3" />
-        @endif
+        <td class="text-right">
+            @if ($record->forecast_year_3)
+                <x-tables.partials.td.formatted-price :price="$record->forecast_year_3" />
+            @endif
+        </td>
     @break
 
     @case('Brand Eng')
-        {{ $record->trademark_en }}
+        <td>
+            <x-tables.partials.td.max-lines-limited-text :text="$record->trademark_en" />
+        </td>
     @break
 
     @case('Brand Rus')
-        {{ $record->trademark_ru }}
+        <td>
+            <x-tables.partials.td.max-lines-limited-text :text="$record->trademark_ru" />
+        </td>
     @break
 
 @endswitch
