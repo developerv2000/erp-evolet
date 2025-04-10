@@ -1,7 +1,7 @@
 @switch($column['name'])
     @case('Status date')
         <td>
-            {{ $record->statusHistory->last()->start_date->isoformat('DD MMM Y') }}
+            <x-tables.partials.td.max-lines-limited-text :text="$record->statusHistory->last()->start_date->isoformat('DD MMM Y')" />
         </td>
     @break
 
