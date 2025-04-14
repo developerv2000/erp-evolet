@@ -31,7 +31,7 @@
 
     @case('Manufacturer country')
         <td>
-            <x-tables.partials.td.max-lines-limited-text :text="$record->product->manufacturer->name" />
+            <x-tables.partials.td.max-lines-limited-text :text="$record->product->manufacturer->country->name" />
         </td>
     @break
 

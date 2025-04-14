@@ -1148,7 +1148,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
             ['name' => 'Product class', 'order' => $order++, 'width' => 80, 'visible' => 1],
             ['name' => 'ATX', 'order' => $order++, 'width' => 190, 'visible' => 1],
-            ['name' => 'Our ATX', 'order' => $order++, 'width' => 90, 'visible' => 1],
+            ['name' => 'Our ATX', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Brand Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],

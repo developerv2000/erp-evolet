@@ -545,7 +545,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
             ['name' => 'Shelf life', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Product class', 'order' => $order++, 'width' => 96, 'visible' => 1],
             ['name' => 'ATX', 'order' => $order++, 'width' => 190, 'visible' => 1],
-            ['name' => 'Our ATX', 'order' => $order++, 'width' => 90, 'visible' => 1],
+            ['name' => 'Our ATX', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Dossier', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Zones', 'order' => $order++, 'width' => 54, 'visible' => 1],
             ['name' => 'Brand', 'order' => $order++, 'width' => 150, 'visible' => 1],
