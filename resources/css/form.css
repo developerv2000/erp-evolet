@@ -540,6 +540,13 @@
     border-color: var(--theme-cancel-color);
 }
 
+/* Month and year dropdowns */
+.daterangepicker select.monthselect, .daterangepicker select.yearselect {
+    background: var(--theme-box-background-color);
+    border: var(--form-input-border);
+    color: var(--theme-text-color);
+}
+
 /* ------------ /end Date range picker ------------ */
 
 

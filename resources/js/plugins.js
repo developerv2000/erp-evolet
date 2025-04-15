@@ -85,6 +85,7 @@ export function initializeSimditors() {
 export function initializeDateRangerPickers() {
     $('.date-range-picker-input').daterangepicker({
         autoUpdateInput: false, // Make picker nullable
+        showDropdowns: true,
         opens: 'left',
         locale: {
             format: 'DD/MM/YYYY' // Change default format
