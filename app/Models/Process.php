@@ -317,6 +317,44 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     }
 
     /**
+     * Add 'product_manufacturer_name' attribute.
+     *
+     * Used while ordering processes by 'product_manufacturer_name'
+     */
+    public function scopeWithProductsManufacturerNameAttribute($query)
+    {
+        return $query
+            ->join('products', 'products.id', '=', 'processes.product_id')
+            ->join('manufacturers', 'manufacturers.id', '=', 'products.manufacturer_id')
+            ->selectRaw('manufacturers.name as product_manufacturer_name');
+    }
+
+    /**
+     * Add 'product_form_name' attribute.
+     *
+     * Used while ordering processes by 'product_form_name'
+     */
+    public function scopeWithProductsFormNameAttribute($query)
+    {
+        return $query
+            ->join('products', 'products.id', '=', 'processes.product_id')
+            ->join('product_forms', 'product_forms.id', '=', 'products.form_id')
+            ->selectRaw('product_forms.name as product_form_name');
+    }
+
+    /**
+     * Add 'product_dosage' attribute.
+     *
+     * Used while ordering processes by 'product_dosage'
+     */
+    public function scopeWithProductsDosageAttribute($query)
+    {
+        return $query
+            ->join('products', 'products.id', '=', 'processes.product_id')
+            ->selectRaw('products.dosage as product_dosage');
+    }
+
+    /**
      * Scope the query to include basic relation for process status history pages.
      */
     public function scopeWitRelationsForHistoryPage($query)
@@ -1008,6 +1046,26 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     {
         return Gate::allows('upgrade-MAD-VPS-status-after-contract-stage')
             || !$this->status->generalStatus->requires_permission;
+    }
+
+    /**
+     * Used on processes.index page for ordering.
+     */
+    public static function addJoinsForOrdering($query, $request)
+    {
+        if ($request->input('order_by') == 'product_manufacturer_name') {
+            $query->withProductsManufacturerNameAttribute();
+        }
+
+        if ($request->input('order_by') == 'product_form_name') {
+            $query->withProductsFormNameAttribute();
+        }
+
+        if ($request->input('order_by') == 'product_dosage') {
+            $query->withProductsDosageAttribute();
+        }
+
+        return $query;
     }
 
     /**

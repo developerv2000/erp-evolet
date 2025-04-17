@@ -22,6 +22,18 @@
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="status_id" />
     @break
 
+    @case('Manufacturer')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="product_manufacturer_name" />
+    @break
+
+    @case('Form')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="product_form_name" />
+    @break
+
+    @case('Dosage')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="product_dosage" />
+    @break
+
     @case('MAH')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="marketing_authorization_holder_id" />
     @break

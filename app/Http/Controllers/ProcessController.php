@@ -32,6 +32,7 @@ class ProcessController extends Controller
         // Get finalized records paginated
         $query = Process::withBasicRelations()->withBasicRelationCounts();
         $filteredQuery = Process::filterQueryForRequest($query, $request);
+        $filteredQuery = Process::addJoinsForOrdering($query, $request); // add join if joined ordering requested
         $records = Process::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
         // Add 'general_status_periods' for records
