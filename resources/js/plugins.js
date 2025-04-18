@@ -67,6 +67,7 @@ export function initializeSimditors() {
             ...simditorConfigs,
             textarea,
             toolbar: imageToolbar,
+            pasteImage: true,
             upload: {
                 url: '/upload-simditor-image', // route url
                 fileKey: 'image', // $request->file('image')
