@@ -26,6 +26,10 @@
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="product_manufacturer_name" />
     @break
 
+    @case('Generic')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="product_inn_name" />
+    @break
+
     @case('Form')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="product_form_name" />
     @break

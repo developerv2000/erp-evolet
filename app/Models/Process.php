@@ -330,6 +330,19 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     }
 
     /**
+     * Add 'product_inn_name' attribute.
+     *
+     * Used while ordering processes by 'product_inn_name'
+     */
+    public function scopeWithProductsInnNameAttribute($query)
+    {
+        return $query
+            ->join('products', 'products.id', '=', 'processes.product_id')
+            ->join('inns', 'inns.id', '=', 'products.inn_id')
+            ->selectRaw('inns.name as product_inn_name');
+    }
+
+    /**
      * Add 'product_form_name' attribute.
      *
      * Used while ordering processes by 'product_form_name'
@@ -1055,6 +1068,10 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     {
         if ($request->input('order_by') == 'product_manufacturer_name') {
             $query->withProductsManufacturerNameAttribute();
+        }
+
+        if ($request->input('order_by') == 'product_inn_name') {
+            $query->withProductsInnNameAttribute();
         }
 
         if ($request->input('order_by') == 'product_form_name') {
