@@ -53,9 +53,5 @@
     </div>
 
     {{-- Stage inputs wrapper. Same class for create/edit/duplicate  --}}
-    <div class="processes-stage-inputs-wrapper">@include('processes.partials.edit-form-stage-inputs', ['stage' => $record->status->generalStatus->stage])</div>
-
-    <div class="form__block">
-        <x-form.misc.comment-inputs-on-model-edit :record="$record" />
-    </div>
+    <div class="processes-stage-inputs-wrapper">{!! $stageInputs !!}</div>
 </x-form-templates.edit-template>

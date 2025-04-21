@@ -128,26 +128,37 @@ class ProcessController extends Controller
         $record->ensureAuthUserHasAccessToProcess($request);
         $product = $record->product;
 
+        $stage = $record->status->generalStatus->stage;
+        $statusUpdatedToStopped = false; // Set comment input as unrequired
+        $stageInputs = view('processes.partials.edit-form-stage-inputs', compact('record', 'product', 'stage', 'statusUpdatedToStopped'));
+
         $restrictedStatuses = ProcessStatus::getAllRestrictedByPermissions(); // IMPORTANT
 
-        return view('processes.edit', compact('record', 'product', 'restrictedStatuses'));
+        return view('processes.edit', compact('record', 'product', 'stageInputs', 'restrictedStatuses'));
     }
 
     /**
      * Return required stage inputs, for each stage,
      * on status select change.
      *
+     * Also check if status has been changed to stopped,
+     * and if so, set comment input as required.
+     *
      * Ajax request on processes.edit.
      */
     public function getEditFormStageInputs(Request $request)
     {
+        // Generate view with inputs
         $record = Process::find($request->process_id);
         $product = $record->product;
 
         $status = ProcessStatus::find($request->status_id);
         $stage = $status->generalStatus->stage;
 
-        return view('processes.partials.edit-form-stage-inputs', compact('record', 'product', 'stage'));
+        // Check if status has been changed to stopped
+        $statusUpdatedToStopped = ($record->status_id != $status->id) && $status->isStopedStatus();
+
+        return view('processes.partials.edit-form-stage-inputs', compact('record', 'product', 'stage', 'statusUpdatedToStopped'));
     }
 
     /**

@@ -202,3 +202,25 @@
         </div>
     </div>
 @endif
+
+{{-- Comment inputs --}}
+<div class="form__block">
+    <div class="form__row">
+        <x-form.simditor-textareas.default-textarea
+            class="simditor--image-uploadable"
+            data-image-upload-folder="img/comments"
+            inputName="comment"
+            :labelText="$statusUpdatedToStopped ? 'Reason for stop' : 'Add new comment'"
+            :isRequired="$statusUpdatedToStopped" />
+
+        @if ($record->lastComment)
+            <div class="form-group standard-label-group">
+                <label class="label">
+                    <p class="label__text">{{ __('Last comment') }}</p>
+                </label>
+
+                <div class="simditor-text edit-form__last-comment">{!! $record->lastComment->body !!}</div>
+            </div>
+        @endif
+    </div>
+</div>

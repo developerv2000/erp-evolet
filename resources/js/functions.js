@@ -6,7 +6,7 @@
 
 import { hideSpinner, showModal, showSpinner } from "../custom-components/script";
 import { debounce, createElementFromHTML } from './utilities';
-import { initializeSelectizes } from "./plugins";
+import { initializeSelectizes, initializeSimditors } from "./plugins";
 
 /*
 |--------------------------------------------------------------------------
@@ -463,6 +463,9 @@ export function updateProcessEditStageInputs(status_id) {
 
             // Initialize new unselectized selects
             initializeSelectizes();
+
+            // Initialize new simditors
+            initializeSimditors();
         })
         .finally(function () {
             hideSpinner();

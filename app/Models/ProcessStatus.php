@@ -17,6 +17,18 @@ class ProcessStatus extends Model
     const CONTACTED_RECORD_ID = 11;
     const REGISTERED_RECORD_ID = 16;
 
+    const STOPED_IDS = [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        13,
+        15,
+        17,
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | Properties
@@ -71,5 +83,15 @@ class ProcessStatus extends Model
     public static function getDefaultSelectedIDValue()
     {
         return self::where('name', 'Вб')->value('id');
+    }
+
+    /**
+     * Check if status is stoped.
+     *
+     * Used in processes.edit page.
+     */
+    public function isStopedStatus()
+    {
+        return in_array($this->id, self::STOPED_IDS);
     }
 }
