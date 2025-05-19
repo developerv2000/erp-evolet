@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
         |--------------------------------------------------------------------------
         */
 
-        $managmentDepartmentID = Department::findByName(Department::MANAGMENT_NAME)->id;
+        $managmentDepartmentID = Department::findByName(Department::MGMT_NAME)->id;
         $globalAdminRoleID = Role::findByName(Role::GLOBAL_ADMINISTRATOR_NAME);
 
         $globalAdmins = [
@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
         |--------------------------------------------------------------------------
         */
 
-        $MADDepartmentID = Department::findByName(Department::MAD_NAME)->id;
+        $MadID = Department::findByName(Department::MAD_NAME)->id;
 
         $MADAdminRoleID = Role::findByName(Role::MAD_ADMINISTRATOR_NAME);
         $MADModeratorRoleID = Role::findByName(Role::MAD_MODERATOR_NAME);
@@ -77,7 +77,7 @@ class UserSeeder extends Seeder
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'photo' => $user['photo'],
-                'department_id' => $MADDepartmentID,
+                'department_id' => $MadID,
                 'password' => bcrypt($password),
             ]);
 
@@ -90,7 +90,7 @@ class UserSeeder extends Seeder
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'photo' => $user['photo'],
-                'department_id' => $MADDepartmentID,
+                'department_id' => $MadID,
                 'password' => bcrypt($password),
             ]);
 
@@ -103,7 +103,7 @@ class UserSeeder extends Seeder
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'photo' => $user['photo'],
-                'department_id' => $MADDepartmentID,
+                'department_id' => $MadID,
                 'password' => bcrypt($password),
             ]);
 
@@ -112,11 +112,11 @@ class UserSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | BDM users
+        | CMD users
         |--------------------------------------------------------------------------
         */
 
-        $BDMDepartmentID = Department::findByName(Department::BDM_NAME)->id;
+        $CmdID = Department::findByName(Department::CMD_NAME)->id;
         $bdmRoleID = Role::findByName(Role::BDM_NAME);
 
         $bdms = [
@@ -125,13 +125,13 @@ class UserSeeder extends Seeder
             ['name' => 'Nastya Karimova', 'email' => 'nastya@mail.com', 'photo' => 'bdm.png'],
         ];
 
-        // Create MAD guests
+        // Create CMD BDMs
         foreach ($bdms as $user) {
             $newUser = User::create([
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'photo' => $user['photo'],
-                'department_id' => $BDMDepartmentID,
+                'department_id' => $CmdID,
                 'password' => bcrypt($password),
             ]);
 

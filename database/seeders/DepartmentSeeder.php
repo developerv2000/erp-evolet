@@ -14,21 +14,27 @@ class DepartmentSeeder extends Seeder
     public function run(): void
     {
         $name = [
-            Department::MANAGMENT_NAME,
+            Department::MGMT_NAME,
             Department::MAD_NAME,
-            Department::BDM_NAME,
-            Department::OPPL_NAME,
-            Department::OPR_NAME,
-            Department::ORP_NAME,
+            Department::CMD_NAME,
+            Department::PLPD_NAME,
+            Department::PRD_NAME,
+            Department::PPDD_NAME,
+            Department::ELD_NAME,
+            Department::MSD_NAME,
+            Department::DD_NAME,
         ];
 
         $abbreviation = [
-            Department::MANAGMENT_ABBREVIATION,
+            Department::MGMT_ABBREVIATION,
             Department::MAD_ABBREVIATION,
-            Department::BDM_ABBREVIATION,
-            Department::OPPL_ABBREVIATION,
-            Department::OPR_ABBREVIATION,
-            Department::ORP_ABBREVIATION,
+            Department::CMD_ABBREVIATION,
+            Department::PLPD_ABBREVIATION,
+            Department::PRD_ABBREVIATION,
+            Department::PPDD_ABBREVIATION,
+            Department::ELD_ABBREVIATION,
+            Department::MSD_ABBREVIATION,
+            Department::DD_ABBREVIATION,
         ];
 
         for ($i = 0; $i < count($name); $i++) {

@@ -25,7 +25,7 @@ class RoleSeeder extends Seeder
         $role = new Role();
         $role->name = Role::GLOBAL_ADMINISTRATOR_NAME;
         $role->description = "Full access. Doesn`t attach any role related permissions.";
-        $role->department_id = Department::findByName(Department::MANAGMENT_NAME)->id;
+        $role->department_id = Department::findByName(Department::MGMT_NAME)->id;
         $role->save();
 
         // Inactive
@@ -102,14 +102,14 @@ class RoleSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | BDM roles
+        | CMD roles
         |--------------------------------------------------------------------------
         */
 
         $role = new Role();
         $role->name = Role::BDM_NAME;
         $role->description = "User is assosiated as 'BDM'. Doesn`t attach any role related permissions.";
-        $role->department_id = Department::findByName(Department::BDM_NAME)->id;
+        $role->department_id = Department::findByName(Department::CMD_NAME)->id;
         $role->save();
     }
 }

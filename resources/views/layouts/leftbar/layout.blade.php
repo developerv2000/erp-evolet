@@ -7,6 +7,6 @@
     ])>
     <div class="leftbar__inner thin-scrollbar">
         @include('layouts.leftbar.navs.MAD')
-        @include('layouts.leftbar.navs.managment')
+        @include('layouts.leftbar.navs.MGMT')
     </div>
 </aside>

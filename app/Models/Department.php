@@ -27,23 +27,32 @@ class Department extends Model
     const DEFAULT_PAGINATION_LIMIT = 50;
 
     // Departments
-    const MANAGMENT_NAME = 'Managment';
-    const MANAGMENT_ABBREVIATION = 'Managment';
+    const MGMT_NAME = 'Менеджмент';
+    const MGMT_ABBREVIATION = 'Менеджмент';
 
-    const MAD_NAME = 'Manufacturer Analysis Department';
-    const MAD_ABBREVIATION = 'MAD';
+    const MAD_NAME = 'Отдел анализа производителей'; // Manufacturer Analysis Department
+    const MAD_ABBREVIATION = 'ОАП';
 
-    const BDM_NAME = 'Business Development Manager';
-    const BDM_ABBREVIATION = 'BDM';
+    const CMD_NAME = 'Отдел контрактного производства'; // Contract Manufacturing Department
+    const CMD_ABBREVIATION = 'ОКП';
 
-    const OPPL_NAME = 'Отдел планирование производство и логистики';
-    const OPPL_ABBREVIATION = 'ОППЛ';
+    const PLPD_NAME = 'Отдел планирования производства и логистики'; // Production & Logistics Planning Department
+    const PLPD_ABBREVIATION = 'ОППЛ';
 
-    const OPR_NAME = 'Отдел платежной реконсиляции';
-    const OPR_ABBREVIATION = 'ОПР';
+    const PRD_NAME = 'Отдел платёжной реконсиляции'; // Payment Reconciliation Department
+    const PRD_ABBREVIATION = 'ОПР';
 
-    const ORP_NAME = 'Отдел развития продуктового портфеля';
-    const ORP_ABBREVIATION = 'ОРПП';
+    const PPDD_NAME = 'Отдел развития продуктового портфеля'; // Product Portfolio Development Department
+    const PPDD_ABBREVIATION = 'ОРПП';
+
+    const ELD_NAME = 'Отдел логистики Европы'; // European Logistics Department
+    const ELD_ABBREVIATION = 'ОЛЕ';
+
+    const MSD_NAME = 'Отдел маркировки и сериализации'; // Marking & Serialization Department
+    const MSD_ABBREVIATION = 'ОМС';
+
+    const DD_NAME = 'Отдел дизайна'; // Design Department
+    const DD_ABBREVIATION = 'ОД';
 
     /*
     |--------------------------------------------------------------------------

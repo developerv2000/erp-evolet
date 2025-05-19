@@ -61,6 +61,10 @@ class Archive
                     $product->timestamps = false;
                     $product->atx_id = $atx->id;
                     $product->saveQuietly();
+                } else {
+                    $product->timestamps = false;
+                    $product->atx_id = null;
+                    $product->saveQuietly();
                 }
             }
         });
