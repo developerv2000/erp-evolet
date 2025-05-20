@@ -50,17 +50,17 @@ class MADViewComposersDefiner
 
     private static function defineManufacturerComposers()
     {
-        View::composer('manufacturers.partials.create-form', function ($view) {
+        View::composer('MAD.manufacturers.partials.create-form', function ($view) {
             $view->with(array_merge(self::getDefaultManufacturersShareData(), [
                 'defaultSelectedZoneIDs' => Zone::getRelatedDefaultSelectedIDValues(),
             ]));
         });
 
-        View::composer('manufacturers.partials.edit-form', function ($view) {
+        View::composer('MAD.manufacturers.partials.edit-form', function ($view) {
             $view->with(self::getDefaultManufacturersShareData());
         });
 
-        View::composer('manufacturers.partials.filter', function ($view) {
+        View::composer('MAD.manufacturers.partials.filter', function ($view) {
             $view->with([
                 'bdmUsers' => User::getBDMsMinifed(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),

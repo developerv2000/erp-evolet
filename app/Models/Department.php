@@ -27,8 +27,8 @@ class Department extends Model
     const DEFAULT_PAGINATION_LIMIT = 50;
 
     // Departments
-    const MGMT_NAME = 'Менеджмент';
-    const MGMT_ABBREVIATION = 'Менеджмент';
+    const MGMT_NAME = 'Руководство'; // Managment
+    const MGMT_ABBREVIATION = 'Руководство';
 
     const MAD_NAME = 'Отдел анализа производителей'; // Manufacturer Analysis Department
     const MAD_ABBREVIATION = 'ОАП';

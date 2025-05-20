@@ -633,11 +633,11 @@ class User extends Authenticatable
     public function detectHomeRouteName()
     {
         $homepageRoutes = [
-            // MAD department
-            'manufacturers.index' => 'view-MAD-EPP',
-            'product-searches.index' => 'view-MAD-KVPP',
-            'products.index' => 'view-MAD-IVP',
-            'processes.index' => 'view-MAD-VPS',
+            // MAD
+            'mad.manufacturers.index' => 'view-MAD-EPP',
+            'mad.product-searches.index' => 'view-MAD-KVPP',
+            'mad.products.index' => 'view-MAD-IVP',
+            'mad.processes.index' => 'view-MAD-VPS',
         ];
 
         foreach ($homepageRoutes as $routeName => $gate) {

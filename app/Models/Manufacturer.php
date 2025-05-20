@@ -224,14 +224,14 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
     public function generateBreadcrumbs(): array
     {
         $breadcrumbs = [
-            ['link' => route('manufacturers.index'), 'text' => __('EPP')],
+            ['link' => route('mad.manufacturers.index'), 'text' => __('EPP')],
         ];
 
         if ($this->trashed()) {
-            $breadcrumbs[] = ['link' => route('manufacturers.trash'), 'text' => __('Trash')];
+            $breadcrumbs[] = ['link' => route('mad.manufacturers.trash'), 'text' => __('Trash')];
         }
 
-        $breadcrumbs[] = ['link' => route('manufacturers.edit', $this->id), 'text' => $this->title];
+        $breadcrumbs[] = ['link' => route('mad.manufacturers.edit', $this->id), 'text' => $this->title];
 
         return $breadcrumbs;
     }

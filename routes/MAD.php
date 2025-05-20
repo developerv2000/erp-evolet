@@ -1,21 +1,21 @@
 <?php
 
-use App\Http\Controllers\DecisionHubController;
-use App\Http\Controllers\MadAspController;
-use App\Http\Controllers\MADKPIController;
-use App\Http\Controllers\ManufacturerController;
-use App\Http\Controllers\MeetingController;
-use App\Http\Controllers\ProcessController;
-use App\Http\Controllers\ProcessStatusHistoryController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProductSearchController;
-use App\Http\Controllers\ProductSelectionController;
+use App\Http\Controllers\MAD\MADASPController;
+use App\Http\Controllers\MAD\MADDecisionHubController;
+use App\Http\Controllers\MAD\MADKPIController;
+use App\Http\Controllers\MAD\MADManufacturerController;
+use App\Http\Controllers\MAD\MADMeetingController;
+use App\Http\Controllers\MAD\MADProcessController;
+use App\Http\Controllers\MAD\MADProcessStatusHistoryController;
+use App\Http\Controllers\MAD\MADProductController;
+use App\Http\Controllers\MAD\MADProductSearchController;
+use App\Http\Controllers\MAD\MADProductSelectionController;
 use App\Support\Generators\CRUDRouteGenerator;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth', 'auth.session')->group(function () {
+Route::middleware('auth', 'auth.session')->prefix('mad')->name('mad.')->group(function () {
     // EPP
-    Route::prefix('manufacturers')->controller(ManufacturerController::class)->name('manufacturers.')->group(function () {
+    Route::prefix('/manufacturers')->controller(MADManufacturerController::class)->name('manufacturers.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-MAD-EPP', 'can:edit-MAD-EPP');
 
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
@@ -23,7 +23,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     // IVP
-    Route::prefix('products')->controller(ProductController::class)->name('products.')->group(function () {
+    Route::prefix('/products')->controller(MADProductController::class)->name('products.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-MAD-IVP', 'can:edit-MAD-IVP');
 
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
@@ -34,7 +34,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     // VPS
-    Route::prefix('processes')->controller(ProcessController::class)->name('processes.')->group(function () {
+    Route::prefix('/processes')->controller(MADProcessController::class)->name('processes.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-MAD-VPS', 'can:edit-MAD-VPS');
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
 
@@ -56,8 +56,8 @@ Route::middleware('auth', 'auth.session')->group(function () {
         Route::post('/get-duplicate-form-stage-inputs', 'getDuplicateFormStageInputs');
     });
 
-    Route::prefix('processes/{process}/status-history')
-        ->controller(ProcessStatusHistoryController::class)
+    Route::prefix('/processes/{process}/status-history')
+        ->controller(MADProcessStatusHistoryController::class)
         ->name('processes.status-history.')
         ->middleware('can:edit-MAD-VPS-status-history')
         ->group(function () {
@@ -65,7 +65,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
         });
 
     // KVPP
-    Route::prefix('product-searches')->controller(ProductSearchController::class)->name('product-searches.')->group(function () {
+    Route::prefix('/product-searches')->controller(MADProductSearchController::class)->name('product-searches.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-MAD-KVPP', 'can:edit-MAD-KVPP');
 
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
@@ -73,23 +73,23 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     // VP
-    Route::prefix('product-selection')->controller(ProductSelectionController::class)->name('product-selection.')->group(function () {
+    Route::prefix('/product-selection')->controller(MADProductSelectionController::class)->name('product-selection.')->group(function () {
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });
 
     // Meetings
-    Route::prefix('meetings')->controller(MeetingController::class)->name('meetings.')->group(function () {
+    Route::prefix('/meetings')->controller(MADMeetingController::class)->name('meetings.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-MAD-Meetings', 'can:edit-MAD-Meetings');
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });
 
     // KPI
-    Route::prefix('kpi')->controller(MADKPIController::class)->name('mad-kpi.')->group(function () {
+    Route::prefix('/kpi')->controller(MADKPIController::class)->name('kpi.')->group(function () {
         Route::get('/', 'index')->name('index')->middleware('can:view-MAD-KPI');
     });
 
     // ASP
-    Route::prefix('mad-asp')->controller(MadAspController::class)->name('mad-asp.')->group(function () {
+    Route::prefix('/asp')->controller(MADASPController::class)->name('asp.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['trash', 'restore'], 'year', 'can:view-MAD-ASP', 'can:edit-MAD-ASP');
         Route::post('/{record:year}/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
 
@@ -115,7 +115,7 @@ Route::middleware('auth', 'auth.session')->group(function () {
     });
 
     // DH
-    Route::prefix('decision-hub')->controller(DecisionHubController::class)->name('decision-hub.')->group(function () {
+    Route::prefix('/decision-hub')->controller(MADDecisionHubController::class)->name('decision-hub.')->group(function () {
         Route::get('/', 'index')->name('index')->middleware('can:view-MAD-DH');
     });
 });

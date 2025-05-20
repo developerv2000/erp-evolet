@@ -1,6 +1,6 @@
 @canany(['view-MAD-EPP', 'view-MAD-KVPP', 'view-MAD-IVP', 'view-MAD-VPS', 'view-MAD-meetings'])
     <div class="leftbar__section leftbar__section--MAD">
-        <p class="leftbar__section-title">MAD</p>
+        <p class="leftbar__section-title">{{ __('MAD') }}</p>
 
         <nav class="leftbar__nav">
             {{-- EPP --}}
@@ -8,9 +8,9 @@
                 <a
                     @class([
                         'leftbar__nav-link',
-                        'leftbar__nav-link--active' => request()->routeIs('manufacturers.*'),
+                        'leftbar__nav-link--active' => request()->routeIs('mad.manufacturers.*'),
                     ])
-                    href="{{ route('manufacturers.index') }}">
+                    href="{{ route('mad.manufacturers.index') }}">
 
                     <x-misc.material-symbol class="leftbar__nav-link-icon" icon="view_list" />
                     <span class="leftbar__nav-link-text">{{ __('EPP') }}</span>
@@ -22,9 +22,9 @@
                 <a
                     @class([
                         'leftbar__nav-link',
-                        'leftbar__nav-link--active' => request()->routeIs('product-searches.*'),
+                        'leftbar__nav-link--active' => request()->routeIs('mad.product-searches.*'),
                     ])
-                    href="{{ route('product-searches.index') }}">
+                    href="{{ route('mad.product-searches.index') }}">
 
                     <x-misc.material-symbol class="leftbar__nav-link-icon" icon="content_paste_search" />
                     <span class="leftbar__nav-link-text">{{ __('KVPP') }}</span>
@@ -36,9 +36,9 @@
                 <a
                     @class([
                         'leftbar__nav-link',
-                        'leftbar__nav-link--active' => request()->routeIs('products.*'),
+                        'leftbar__nav-link--active' => request()->routeIs('mad.products.*'),
                     ])
-                    href="{{ route('products.index') }}">
+                    href="{{ route('mad.products.index') }}">
 
                     <x-misc.material-symbol class="leftbar__nav-link-icon" icon="pill" />
                     <span class="leftbar__nav-link-text">{{ __('IVP') }}</span>
@@ -50,9 +50,9 @@
                 <a
                     @class([
                         'leftbar__nav-link',
-                        'leftbar__nav-link--active' => request()->routeIs('processes.*'),
+                        'leftbar__nav-link--active' => request()->routeIs('mad.processes.*'),
                     ])
-                    href="{{ route('processes.index') }}">
+                    href="{{ route('mad.processes.index') }}">
 
                     <x-misc.material-symbol class="leftbar__nav-link-icon" icon="stacks" />
                     <span class="leftbar__nav-link-text">{{ __('VPS') }}</span>
@@ -64,9 +64,9 @@
                 <a
                     @class([
                         'leftbar__nav-link',
-                        'leftbar__nav-link--active' => request()->routeIs('meetings.*'),
+                        'leftbar__nav-link--active' => request()->routeIs('mad.meetings.*'),
                     ])
-                    href="{{ route('meetings.index') }}">
+                    href="{{ route('mad.meetings.index') }}">
 
                     <x-misc.material-symbol class="leftbar__nav-link-icon" icon="calendar_month" />
                     <span class="leftbar__nav-link-text">{{ __('Meetings') }}</span>
@@ -78,9 +78,9 @@
                 <a
                     @class([
                         'leftbar__nav-link',
-                        'leftbar__nav-link--active' => request()->routeIs('mad-kpi.index'),
+                        'leftbar__nav-link--active' => request()->routeIs('mad.kpi.index'),
                     ])
-                    href="{{ route('mad-kpi.index') }}">
+                    href="{{ route('mad.kpi.index') }}">
 
                     <x-misc.material-symbol class="leftbar__nav-link-icon" icon="bar_chart" />
                     <span class="leftbar__nav-link-text">{{ __('KPI') }}</span>
@@ -92,9 +92,9 @@
                 <a
                     @class([
                         'leftbar__nav-link',
-                        'leftbar__nav-link--active' => request()->routeIs('mad-asp.*'),
+                        'leftbar__nav-link--active' => request()->routeIs('mad.asp.*'),
                     ])
-                    href="{{ route('mad-asp.index') }}">
+                    href="{{ route('mad.asp.index') }}">
 
                     <x-misc.material-symbol class="leftbar__nav-link-icon" icon="pie_chart" />
                     <span class="leftbar__nav-link-text">{{ __('ASP') }}</span>
@@ -106,9 +106,9 @@
                 <a
                     @class([
                         'leftbar__nav-link',
-                        'leftbar__nav-link--active' => request()->routeIs('decision-hub.index'),
+                        'leftbar__nav-link--active' => request()->routeIs('mad.decision-hub.index'),
                     ])
-                    href="{{ route('decision-hub.index') }}">
+                    href="{{ route('mad.decision-hub.index') }}">
 
                     <x-misc.material-symbol class="leftbar__nav-link-icon" icon="search" />
                     <span class="leftbar__nav-link-text">DH & DSS</span>

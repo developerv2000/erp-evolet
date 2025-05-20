@@ -1,13 +1,13 @@
 <?php
 
-use App\Http\Controllers\AttachmentController;
-use App\Http\Controllers\AuthenticatedSessionController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\MainController;
-use App\Http\Controllers\MiscModelController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SettingController;
+use App\Http\Controllers\global\AttachmentController;
+use App\Http\Controllers\global\AuthenticatedSessionController;
+use App\Http\Controllers\global\CommentController;
+use App\Http\Controllers\global\MainController;
+use App\Http\Controllers\global\MiscModelController;
+use App\Http\Controllers\global\NotificationController;
+use App\Http\Controllers\global\ProfileController;
+use App\Http\Controllers\global\SettingController;
 use App\Support\Generators\CRUDRouteGenerator;
 use Illuminate\Support\Facades\Route;
 

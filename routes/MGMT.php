@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\MGMT\DepartmentController;
+use App\Http\Controllers\MGMT\PermissionController;
+use App\Http\Controllers\MGMT\RoleController;
+use App\Http\Controllers\MGMT\UserController;
 use App\Support\Generators\CRUDRouteGenerator;
 use Illuminate\Support\Facades\Route;
 
