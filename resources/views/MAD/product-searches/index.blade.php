@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('KVPP'),
-    'pageName' => 'product-searches-index',
+    'pageName' => 'mad-product-searches-index',
     'mainAutoOverflowed' => true,
 ])
 

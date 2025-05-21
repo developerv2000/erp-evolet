@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('Trash') . ' — ' . __('IVP'),
-    'pageName' => 'products-trash',
+    'pageName' => 'mad-products-trash',
     'mainAutoOverflowed' => true,
 ])
 

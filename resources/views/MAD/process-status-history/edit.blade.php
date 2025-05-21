@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('Status history') . ' — ' . $process->title,
-    'pageName' => 'process-status-history-edit',
+    'pageName' => 'mad-process-status-history-edit',
     'mainAutoOverflowed' => false,
 ])
 

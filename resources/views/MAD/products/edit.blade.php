@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => $record->title . ' — ' . __('IVP'),
-    'pageName' => 'products-edit',
+    'pageName' => 'mad-products-edit',
     'mainAutoOverflowed' => false,
 ])
 

@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('Create new') . ' — ' . __('VPS'),
-    'pageName' => 'processes-create',
+    'pageName' => 'mad-processes-create',
     'mainAutoOverflowed' => false,
 ])
 

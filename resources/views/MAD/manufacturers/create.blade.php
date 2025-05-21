@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('Create new') . ' — ' . __('EPP'),
-    'pageName' => 'manufacturers-create',
+    'pageName' => 'mad-manufacturers-create',
     'mainAutoOverflowed' => false,
 ])
 

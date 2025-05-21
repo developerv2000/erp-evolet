@@ -1,4 +1,4 @@
-<x-form-templates.create-template class="products-create-form" :action="route('mad.products.store')">
+<x-form-templates.create-template class="mad-products-create-form" :action="route('mad.products.store')">
     <div class="form__block">
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.default-select

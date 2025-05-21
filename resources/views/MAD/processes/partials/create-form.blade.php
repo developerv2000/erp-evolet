@@ -1,4 +1,4 @@
-<x-form-templates.create-template class="processes-create-form" :action="route('mad.processes.store')">
+<x-form-templates.create-template class="mad-processes-create-form" :action="route('mad.processes.store')">
     <input type="hidden" name="product_id" value="{{ $product->id }}">
 
     {{-- Edit product block --}}
@@ -42,10 +42,10 @@
     </div>
 
     {{-- Forecast inputs wrapper hidden initially  --}}
-    <div class="processes-create__forecast-inputs-wrapper">@include('MAD.processes.partials.create-form-forecast-inputs', ['stage' => 1, 'selectedCountryCodes' => []])</div>
+    <div class="mad-processes-create__forecast-inputs-wrapper">@include('MAD.processes.partials.create-form-forecast-inputs', ['stage' => 1, 'selectedCountryCodes' => []])</div>
 
     {{-- Stage inputs wrapper. Same class for create/edit/duplicate  --}}
-    <div class="processes-stage-inputs-wrapper">@include('MAD.processes.partials.create-form-stage-inputs', ['stage' => 1])</div>
+    <div class="mad-processes-stage-inputs-wrapper">@include('MAD.processes.partials.create-form-stage-inputs', ['stage' => 1])</div>
 
     <div class="form__block">
         <x-form.misc.comment-inputs-on-model-create />

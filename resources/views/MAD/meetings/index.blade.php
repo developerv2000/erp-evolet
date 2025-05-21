@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('Meetings'),
-    'pageName' => 'meetings-index',
+    'pageName' => 'mad-meetings-index',
     'mainAutoOverflowed' => true,
 ])
 

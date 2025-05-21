@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => 'DH & DSS',
-    'pageName' => 'decision-hub-index',
+    'pageName' => 'mad-decision-hub-index',
     'mainAutoOverflowed' => true,
 ])
 

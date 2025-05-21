@@ -1,4 +1,4 @@
-<x-form-templates.edit-template class="products-edit-form" :action="route('mad.products.update', $record->id)">
+<x-form-templates.edit-template class="mad-products-edit-form" :action="route('mad.products.update', $record->id)">
     <div class="form__block">
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.record-field-select

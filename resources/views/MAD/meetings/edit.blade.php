@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => $record->title . ' — ' . __('Meetings'),
-    'pageName' => 'meetings-edit',
+    'pageName' => 'mad-meetings-edit',
     'mainAutoOverflowed' => false,
 ])
 

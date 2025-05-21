@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('EPP'),
-    'pageName' => 'manufacturers-index',
+    'pageName' => 'mad-manufacturers-index',
     'mainAutoOverflowed' => true,
 ])
 

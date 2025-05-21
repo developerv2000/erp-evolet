@@ -1,4 +1,4 @@
-<x-form-templates.edit-template class="processes-duplicate-form" :action="route('mad.processes.duplicate')" method="POST" submitText="Diplicate">
+<x-form-templates.edit-template class="mad-processes-duplicate-form" :action="route('mad.processes.duplicate')" method="POST" submitText="Diplicate">
     <input type="hidden" name="process_id" value="{{ $record->id }}">
     <input type="hidden" name="product_id" value="{{ $product->id }}">
 
@@ -35,7 +35,7 @@
     </div>
 
     {{-- Stage inputs wrapper. Same class for create/edit/duplicate  --}}
-    <div class="processes-stage-inputs-wrapper">@include('MAD.processes.partials.duplicate-form-stage-inputs', ['stage' => $record->status->generalStatus->stage])</div>
+    <div class="mad-processes-stage-inputs-wrapper">@include('MAD.processes.partials.duplicate-form-stage-inputs', ['stage' => $record->status->generalStatus->stage])</div>
 
     <div class="form__block">
         <x-form.misc.comment-inputs-on-model-create />

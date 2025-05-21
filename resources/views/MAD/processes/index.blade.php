@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('VPS'),
-    'pageName' => 'processes-index',
+    'pageName' => 'mad-processes-index',
     'mainAutoOverflowed' => true,
 ])
 

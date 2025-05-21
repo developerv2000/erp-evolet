@@ -1,4 +1,4 @@
-<x-form-templates.edit-template class="processes-edit-form" :action="route('mad.processes.update', $record->id)">
+<x-form-templates.edit-template class="mad-processes-edit-form" :action="route('mad.processes.update', $record->id)">
     <input type="hidden" name="process_id" value="{{ $record->id }}">
     <input type="hidden" name="product_id" value="{{ $product->id }}">
 
@@ -53,5 +53,5 @@
     </div>
 
     {{-- Stage inputs wrapper. Same class for create/edit/duplicate  --}}
-    <div class="processes-stage-inputs-wrapper">{!! $stageInputs !!}</div>
+    <div class="mad-processes-stage-inputs-wrapper">{!! $stageInputs !!}</div>
 </x-form-templates.edit-template>

@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('IVP'),
-    'pageName' => 'products-index',
+    'pageName' => 'mad-products-index',
     'mainAutoOverflowed' => true,
 ])
 

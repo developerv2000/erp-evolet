@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('Trash') . ' — ' . __('VPS'),
-    'pageName' => 'processes-trash',
+    'pageName' => 'mad-processes-trash',
     'mainAutoOverflowed' => true,
 ])
 

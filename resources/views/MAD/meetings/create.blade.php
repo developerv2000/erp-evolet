@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('Create new') . ' — ' . __('Meetings'),
-    'pageName' => 'meetings-create',
+    'pageName' => 'mad-meetings-create',
     'mainAutoOverflowed' => false,
 ])
 

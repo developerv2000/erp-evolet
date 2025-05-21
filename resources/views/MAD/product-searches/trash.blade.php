@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('Trash') . ' — ' . __('KVPP'),
-    'pageName' => 'product-searches-trash',
+    'pageName' => 'mad-product-searches-trash',
     'mainAutoOverflowed' => true,
 ])
 

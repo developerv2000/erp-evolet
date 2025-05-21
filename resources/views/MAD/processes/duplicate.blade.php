@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => $record->title . ' — ' . __('VPS'),
-    'pageName' => 'processes-duplicate',
+    'pageName' => 'mad-processes-duplicate',
     'mainAutoOverflowed' => false,
 ])
 

@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => $record->title . ' — ' . __('KVPP'),
-    'pageName' => 'product-searches-edit',
+    'pageName' => 'mad-product-searches-edit',
     'mainAutoOverflowed' => false,
 ])
 
