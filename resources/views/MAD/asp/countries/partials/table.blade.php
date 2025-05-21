@@ -21,14 +21,14 @@
                     @foreach ($country->MAHs as $mah)
                         <a
                             class="main-link"
-                            href="{{ route('mad-asp.mahs.edit', ['record' => $record->year, 'country' => $country->id, 'mah' => $mah->id]) }}">
+                            href="{{ route('mad.asp.mahs.edit', ['record' => $record->year, 'country' => $country->id, 'mah' => $mah->id]) }}">
                             {{ $mah->name }}
                         </a>
                     @endforeach
                 </td>
 
                 <td>
-                    <a class="main-link" href="{{ route('mad-asp.mahs.index', ['record' => $record->year, 'country' => $country->id]) }}">
+                    <a class="main-link" href="{{ route('mad.asp.mahs.index', ['record' => $record->year, 'country' => $country->id]) }}">
                         {{ $country->MAHs->count() }} {{ __('MAH') }}
                     </a>
                 </td>

@@ -23,9 +23,9 @@ use App\Models\ProductShelfLife;
 use App\Models\User;
 use App\Models\Zone;
 use App\Support\Helpers\GeneralHelper;
-use App\Support\SmartFilters\MadManufacturersSmartFilter;
-use App\Support\SmartFilters\MadProcessesSmartFilter;
-use App\Support\SmartFilters\MadProductsSmartFilter;
+use App\Support\SmartFilters\MAD\MADManufacturersSmartFilter;
+use App\Support\SmartFilters\MAD\MADProcessesSmartFilter;
+use App\Support\SmartFilters\MAD\MADProductsSmartFilter;
 use Illuminate\Support\Facades\View;
 
 class MADViewComposersDefiner
@@ -71,14 +71,14 @@ class MADViewComposersDefiner
                 'booleanOptions' => GeneralHelper::getBooleanOptionsArray(),
                 'statusOptions' => Manufacturer::getStatusOptions(),
                 'regions' => Country::getRegionOptions(),
-                'smartFilterDependencies' => MadManufacturersSmartFilter::getAllDependencies(),
+                'smartFilterDependencies' => MADManufacturersSmartFilter::getAllDependencies(),
             ]);
         });
     }
 
     private static function defineProductComposers()
     {
-        View::composer('products.partials.create-form', function ($view) {
+        View::composer('MAD.products.partials.create-form', function ($view) {
             $view->with(array_merge(self::getDefaultProductsShareData(), [
                 'defaultSelectedClassID' => ProductClass::getDefaultSelectedIDValue(),
                 'defaultSelectedShelfLifeID' => ProductShelfLife::getDefaultSelectedIDValue(),
@@ -86,11 +86,11 @@ class MADViewComposersDefiner
             ]));
         });
 
-        View::composer('products.partials.edit-form', function ($view) {
+        View::composer('MAD.products.partials.edit-form', function ($view) {
             $view->with(self::getDefaultProductsShareData());
         });
 
-        View::composer('products.partials.filter', function ($view) {
+        View::composer('MAD.products.partials.filter', function ($view) {
             $view->with([
                 'analystUsers' => User::getMADAnalystsMinified(),
                 'bdmUsers' => User::getBDMsMinifed(),
@@ -101,7 +101,7 @@ class MADViewComposersDefiner
                 'manufacturerCategories' => ManufacturerCategory::orderByName()->get(),
                 'booleanOptions' => GeneralHelper::getBooleanOptionsArray(),
                 'brands' => Product::getAllUniqueBrands(),
-                'smartFilterDependencies' => MadProductsSmartFilter::getAllDependencies(),
+                'smartFilterDependencies' => MADProductsSmartFilter::getAllDependencies(),
             ]);
         });
     }
@@ -109,9 +109,9 @@ class MADViewComposersDefiner
     private static function defineProcessComposers()
     {
         View::composer([
-            'processes.partials.create-form',
-            'processes.partials.edit-form',
-            'processes.partials.duplicate-form',
+            'MAD.processes.partials.create-form',
+            'MAD.processes.partials.edit-form',
+            'MAD.processes.partials.duplicate-form',
         ], function ($view) {
             $view->with([
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
@@ -120,7 +120,7 @@ class MADViewComposersDefiner
             ]);
         });
 
-        View::composer('processes.partials.edit-product-form-block', function ($view) {
+        View::composer('MAD.processes.partials.edit-product-form-block', function ($view) {
             $view->with([
                 'productForms' => ProductForm::getMinifiedRecordsWithName(),
                 'shelfLifes' => ProductShelfLife::all(),
@@ -129,9 +129,9 @@ class MADViewComposersDefiner
         });
 
         View::composer([
-            'processes.partials.create-form-stage-inputs',
-            'processes.partials.edit-form-stage-inputs',
-            'processes.partials.duplicate-form-stage-inputs',
+            'MAD.processes.partials.create-form-stage-inputs',
+            'MAD.processes.partials.edit-form-stage-inputs',
+            'MAD.processes.partials.duplicate-form-stage-inputs',
         ], function ($view) {
             $view->with([
                 'countriesOrderedByName' => Country::orderByName()->get(),
@@ -142,7 +142,7 @@ class MADViewComposersDefiner
             ]);
         });
 
-        View::composer('processes.partials.filter', function ($view) {
+        View::composer('MAD.processes.partials.filter', function ($view) {
             $view->with([
                 'countriesOrderedByName' => Country::orderByName()->get(),
                 'analystUsers' => User::getMADAnalystsMinified(),
@@ -155,14 +155,14 @@ class MADViewComposersDefiner
                 'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueNamesForAnalysts(),
                 'regions' => Country::getRegionOptions(),
                 'brands' => Product::getAllUniqueBrands(),
-                'smartFilterDependencies' => MadProcessesSmartFilter::getAllDependencies(),
+                'smartFilterDependencies' => MADProcessesSmartFilter::getAllDependencies(),
             ]);
         });
     }
 
     private static function defineProductSearchComposers()
     {
-        View::composer('product-searches.partials.create-form', function ($view) {
+        View::composer('MAD.product-searches.partials.create-form', function ($view) {
             $view->with(array_merge(self::getDefaultProductSearchesShareData(), [
                 'defaultSelectedStatusID' => ProductSearchStatus::getDefaultSelectedIDValue(),
                 'defaultSelectedPriorityID' => ProductSearchPriority::getDefaultSelectedIDValue(),
@@ -170,8 +170,8 @@ class MADViewComposersDefiner
         });
 
         View::composer([
-            'product-searches.partials.edit-form',
-            'product-searches.partials.filter'
+            'MAD.product-searches.partials.edit-form',
+            'MAD.product-searches.partials.filter'
         ], function ($view) {
             $view->with(self::getDefaultProductSearchesShareData());
         });
@@ -180,9 +180,9 @@ class MADViewComposersDefiner
     private static function defineMeetingComposers()
     {
         View::composer([
-            'meetings.partials.filter',
-            'meetings.partials.create-form',
-            'meetings.partials.edit-form'
+            'MAD.meetings.partials.filter',
+            'MAD.meetings.partials.create-form',
+            'MAD.meetings.partials.edit-form'
         ], function ($view) {
             $view->with(self::getDefaultMeetingsShareData());
         });
@@ -190,7 +190,7 @@ class MADViewComposersDefiner
 
     private static function defineKPIComposers()
     {
-        View::composer('mad-kpi.partials.filter', function ($view) {
+        View::composer('MAD.kpi.partials.filter', function ($view) {
             $view->with([
                 'analystUsers' => User::getMADAnalystsMinified(),
                 'bdmUsers' => User::getBDMsMinifed(),
@@ -203,13 +203,13 @@ class MADViewComposersDefiner
 
     private static function defineASPComposers()
     {
-        View::composer('mad-asp.partials.create-form', function ($view) {
+        View::composer('MAD.asp.partials.create-form', function ($view) {
             $view->with([
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
             ]);
         });
 
-        View::composer('mad-asp.partials.show-page-filter', function ($view) {
+        View::composer('MAD.asp.partials.show-page-filter', function ($view) {
             $view->with([
                 'regions' => Country::getRegionOptions(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
@@ -219,7 +219,7 @@ class MADViewComposersDefiner
         });
 
         // Countries
-        View::composer('mad-asp.countries.partials.create-form', function ($view) {
+        View::composer('MAD.asp.countries.partials.create-form', function ($view) {
             $view->with([
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
                 'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
@@ -227,15 +227,15 @@ class MADViewComposersDefiner
         });
 
         // MAHs
-        View::composer('mad-asp.mahs.partials.table', function ($view) {
+        View::composer('MAD.asp.mahs.partials.table', function ($view) {
             $view->with([
                 'months' => GeneralHelper::collectCalendarMonths(),
             ]);
         });
 
         View::composer([
-            'mad-asp.mahs.partials.create-form',
-            'mad-asp.mahs.partials.edit-form',
+            'MAD.asp.mahs.partials.create-form',
+            'MAD.asp.mahs.partials.edit-form',
         ], function ($view) {
             $view->with([
                 'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
@@ -246,7 +246,7 @@ class MADViewComposersDefiner
 
     private static function defineDHComposers()
     {
-        View::composer('decision-hub.partials.filter', function ($view) {
+        View::composer('MAD.decision-hub.partials.filter', function ($view) {
             $view->with([
                 'countriesOrderedByName' => Country::orderByName()->get(),
                 'analystUsers' => User::getMADAnalystsMinified(),
@@ -254,7 +254,7 @@ class MADViewComposersDefiner
                 'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
                 'regions' => Country::getRegionOptions(),
                 'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueNamesForAnalysts(),
-                'smartFilterDependencies' => MadProcessesSmartFilter::getAllDependencies(), // Exactly same as VPS smart filter
+                'smartFilterDependencies' => MADProcessesSmartFilter::getAllDependencies(), // Exactly same as VPS smart filter
             ]);
         });
     }

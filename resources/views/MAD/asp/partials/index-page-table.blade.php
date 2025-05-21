@@ -28,16 +28,16 @@
                 <td><x-tables.partials.td.checkbox :value="$record->id" /></td>
 
                 @can('edit-MAD-ASP')
-                    <td><x-tables.partials.td.edit :link="route('mad-asp.edit', $record->year)" /></td>
+                    <td><x-tables.partials.td.edit :link="route('mad.asp.edit', $record->year)" /></td>
                 @endcan
 
-                <td><x-tables.partials.td.view :link="route('mad-asp.show', $record->year)" /></td>
+                <td><x-tables.partials.td.view :link="route('mad.asp.show', $record->year)" /></td>
 
                 <td>{{ $record->year }}</td>
                 <td>{{ $record->year_contract_plan }}</td>
 
                 <td>
-                    <a class="main-link" href="{{ route('mad-asp.countries.index', $record->year) }}">{{ $record->countries_count }} {{ __('countries') }}</a>
+                    <a class="main-link" href="{{ route('mad.asp.countries.index', $record->year) }}">{{ $record->countries_count }} {{ __('countries') }}</a>
                 </td>
 
                 <td>

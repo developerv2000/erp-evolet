@@ -1,4 +1,4 @@
-<x-form-templates.edit-template :action="route('mad-asp.mahs.update', ['record' => $record->year, 'country' => $country->id, 'mah' => $mah->id])">
+<x-form-templates.edit-template :action="route('mad.asp.mahs.update', ['record' => $record->year, 'country' => $country->id, 'mah' => $mah->id])">
     <div class="form__block">
         {{-- Important: 'marketing_authorization_holder_id' not 'id' --}}
         <x-form.selects.selectize.id-based-single-select.record-field-select

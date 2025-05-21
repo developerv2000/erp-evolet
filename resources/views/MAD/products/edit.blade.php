@@ -23,7 +23,7 @@
         </div>
 
         {{-- Edit form --}}
-        @include('products.partials.edit-form')
+        @include('MAD.products.partials.edit-form')
     </div>
 
 @endsection

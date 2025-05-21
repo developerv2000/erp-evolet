@@ -184,14 +184,14 @@ class ProductSearch extends BaseModel implements HasTitle, CanExportRecordsAsExc
     public function generateBreadcrumbs(): array
     {
         $breadcrumbs = [
-            ['link' => route('product-searches.index'), 'text' => __('KVPP')],
+            ['link' => route('mad.product-searches.index'), 'text' => __('KVPP')],
         ];
 
         if ($this->trashed()) {
-            $breadcrumbs[] = ['link' => route('product-searches.trash'), 'text' => __('Trash')];
+            $breadcrumbs[] = ['link' => route('mad.product-searches.trash'), 'text' => __('Trash')];
         }
 
-        $breadcrumbs[] = ['link' => route('product-searches.edit', $this->id), 'text' => $this->title];
+        $breadcrumbs[] = ['link' => route('mad.product-searches.edit', $this->id), 'text' => $this->title];
 
         return $breadcrumbs;
     }

@@ -11,7 +11,7 @@ use App\Models\ProcessStatus;
 use App\Models\Product;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
-use App\Support\SmartFilters\MadProcessesSmartFilter;
+use App\Support\SmartFilters\MAD\MADProcessesSmartFilter;
 use App\Support\Traits\Controller\DestroysModelRecords;
 use App\Support\Traits\Controller\RestoresModelRecords;
 use Illuminate\Http\Request;
@@ -43,12 +43,12 @@ class MADProcessController extends Controller
         $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Process::SETTINGS_MAD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('processes.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+        return view('MAD.processes.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
     public function getSmartFilterDependencies()
     {
-        return MadProcessesSmartFilter::getAllDependencies();
+        return MADProcessesSmartFilter::getAllDependencies();
     }
 
     public function trash(Request $request)
@@ -69,7 +69,7 @@ class MADProcessController extends Controller
         $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Process::SETTINGS_MAD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('processes.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+        return view('MAD.processes.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
     public function create(Request $request)
@@ -77,7 +77,7 @@ class MADProcessController extends Controller
         $restrictedStatuses = ProcessStatus::getAllRestrictedByPermissions(); // IMPORTANT
         $product = Product::find($request->product_id);
 
-        return view('processes.create', compact('product', 'restrictedStatuses'));
+        return view('MAD.processes.create', compact('product', 'restrictedStatuses'));
     }
 
     /**
@@ -92,7 +92,7 @@ class MADProcessController extends Controller
         $status = ProcessStatus::find($request->status_id);
         $stage = $status->generalStatus->stage;
 
-        return view('processes.partials.create-form-stage-inputs', compact('product', 'stage'));
+        return view('MAD.processes.partials.create-form-stage-inputs', compact('product', 'stage'));
     }
 
     /**
@@ -109,7 +109,7 @@ class MADProcessController extends Controller
         $countryIDs = $request->input('country_ids', []);
         $selectedCountries = Country::whereIn('id', $countryIDs)->get();
 
-        return view('processes.partials.create-form-forecast-inputs', compact('stage', 'selectedCountries'));
+        return view('MAD.processes.partials.create-form-forecast-inputs', compact('stage', 'selectedCountries'));
     }
 
     public function store(ProcessStoreRequest $request)
@@ -131,11 +131,11 @@ class MADProcessController extends Controller
 
         $stage = $record->status->generalStatus->stage;
         $statusUpdatedToStopped = false; // Set comment input as unrequired
-        $stageInputs = view('processes.partials.edit-form-stage-inputs', compact('record', 'product', 'stage', 'statusUpdatedToStopped'));
+        $stageInputs = view('MAD.processes.partials.edit-form-stage-inputs', compact('record', 'product', 'stage', 'statusUpdatedToStopped'));
 
         $restrictedStatuses = ProcessStatus::getAllRestrictedByPermissions(); // IMPORTANT
 
-        return view('processes.edit', compact('record', 'product', 'stageInputs', 'restrictedStatuses'));
+        return view('MAD.processes.edit', compact('record', 'product', 'stageInputs', 'restrictedStatuses'));
     }
 
     /**
@@ -159,7 +159,7 @@ class MADProcessController extends Controller
         // Check if status has been changed to stopped
         $statusUpdatedToStopped = ($record->status_id != $status->id) && $status->isStopedStatus();
 
-        return view('processes.partials.edit-form-stage-inputs', compact('record', 'product', 'stage', 'statusUpdatedToStopped'));
+        return view('MAD.processes.partials.edit-form-stage-inputs', compact('record', 'product', 'stage', 'statusUpdatedToStopped'));
     }
 
     /**
@@ -181,7 +181,7 @@ class MADProcessController extends Controller
 
         $restrictedStatuses = ProcessStatus::getAllRestrictedByPermissions(); // IMPORTANT
 
-        return view('processes.duplicate', compact('record', 'product', 'restrictedStatuses'));
+        return view('MAD.processes.duplicate', compact('record', 'product', 'restrictedStatuses'));
     }
 
     /**
@@ -198,7 +198,7 @@ class MADProcessController extends Controller
         $status = ProcessStatus::find($request->status_id);
         $stage = $status->generalStatus->stage;
 
-        return view('processes.partials.duplicate-form-stage-inputs', compact('record', 'product', 'stage'));
+        return view('MAD.processes.partials.duplicate-form-stage-inputs', compact('record', 'product', 'stage'));
     }
 
     /**
@@ -208,7 +208,7 @@ class MADProcessController extends Controller
     {
         Process::duplicateFromRequest($request);
 
-        return redirect()->route('processes.index');
+        return redirect()->route('mad.processes.index');
     }
 
     public function exportAsExcel(Request $request)

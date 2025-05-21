@@ -1,9 +1,9 @@
-<x-form-templates.edit-template class="processes-edit-form" :action="route('processes.update', $record->id)">
+<x-form-templates.edit-template class="processes-edit-form" :action="route('mad.processes.update', $record->id)">
     <input type="hidden" name="process_id" value="{{ $record->id }}">
     <input type="hidden" name="product_id" value="{{ $product->id }}">
 
     {{-- Edit product block --}}
-    @include('processes.partials.edit-product-form-block')
+    @include('MAD.processes.partials.edit-product-form-block')
 
     {{-- Main block --}}
     <div class="form__block">

@@ -1,4 +1,4 @@
-<x-form-templates.create-template :action="route('mad-asp.mahs.store', ['record' => $record->year, 'country' => $country->id])">
+<x-form-templates.create-template :action="route('mad.asp.mahs.store', ['record' => $record->year, 'country' => $country->id])">
     <input type="hidden" name="country_id" value="{{ $country->id }}">
 
     <div class="form__block">

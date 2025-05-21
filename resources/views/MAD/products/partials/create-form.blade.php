@@ -1,4 +1,4 @@
-<x-form-templates.create-template class="products-create-form" :action="route('products.store')">
+<x-form-templates.create-template class="products-create-form" :action="route('mad.products.store')">
     <div class="form__block">
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.default-select
@@ -30,7 +30,7 @@
     {{-- Multiple dosage & packs holder --}}
     <div class="form__block">
         <x-form.misc.dynamic-rows title="{{ __('Dosage') . ' / ' . __('Pack') }}">
-            @include('products.partials.create-form-dynamic-rows-list-item', ['inputsIndex' => 0])
+            @include('MAD.products.partials.create-form-dynamic-rows-list-item', ['inputsIndex' => 0])
         </x-form.misc.dynamic-rows>
     </div>
 

@@ -6,7 +6,7 @@ use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\FileHelper;
 use App\Support\Helpers\GeneralHelper;
-use App\Support\Traits\Model\CalculatesAspQuarterAndYearCounts;
+use App\Support\Traits\Model\CalculatesMADASPQuarterAndYearCounts;
 use App\Support\Traits\Model\Commentable;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -14,7 +14,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 class MadAsp extends BaseModel implements HasTitle
 {
     use Commentable;
-    use CalculatesAspQuarterAndYearCounts;
+    use CalculatesMADASPQuarterAndYearCounts;
 
     /*
     |--------------------------------------------------------------------------
@@ -123,8 +123,8 @@ class MadAsp extends BaseModel implements HasTitle
     public function generateBreadcrumbs(): array
     {
         return [
-            ['link' => route('mad-asp.index'), 'text' => __('SPG')],
-            ['link' => route('mad-asp.edit', $this->year), 'text' => $this->title],
+            ['link' => route('mad.asp.index'), 'text' => __('SPG')],
+            ['link' => route('mad.asp.edit', $this->year), 'text' => $this->title],
         ];
     }
 
@@ -341,9 +341,9 @@ class MadAsp extends BaseModel implements HasTitle
     {
         // Perform monthly, quarterly, and yearly calculations
         $this->calculateSelfMonthlyProcessCounts();
-        $this->calculateAspQuartersProcessCounts(); // CalculatesAspQuarterAndYearCounts trait
-        $this->calculateAspYearProcessCounts(); // CalculatesAspQuarterAndYearCounts trait
-        $this->calculateAspYearPercentages(); // CalculatesAspQuarterAndYearCounts trait
+        $this->calculateAspQuartersProcessCounts(); // CalculatesMADASPQuarterAndYearCounts trait
+        $this->calculateAspYearProcessCounts(); // CalculatesMADASPQuarterAndYearCounts trait
+        $this->calculateAspYearPercentages(); // CalculatesMADASPQuarterAndYearCounts trait
     }
 
     /**

@@ -12,7 +12,7 @@
             @php
                 $crumbs = [
                     ...$record->generateBreadcrumbs(),
-                    ['link' => route('mad-asp.countries.index', $record->year), 'text' => __('Countries')],
+                    ['link' => route('mad.asp.countries.index', $record->year), 'text' => __('Countries')],
                     ['link' => null, 'text' => __('Create new record')]
                 ];
             @endphp
@@ -33,7 +33,7 @@
         </div>
 
         {{-- Create form --}}
-        @include('mad-asp.countries.partials.create-form')
+        @include('MAD.asp.countries.partials.create-form')
     </div>
 
 @endsection

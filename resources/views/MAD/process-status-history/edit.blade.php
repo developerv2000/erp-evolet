@@ -11,7 +11,7 @@
         @php
             $crumbs = [
                     ...$process->generateBreadcrumbs(),
-                    ['link' => route('processes.status-history.index', $process->id), 'text' => __('Status history')],
+                    ['link' => route('mad.processes.status-history.index', $process->id), 'text' => __('Status history')],
                     ['link' => null, 'text' => __('Edit')],
                 ];
         @endphp
@@ -30,5 +30,5 @@
         </div>
     </div>
 
-    @include('process-status-history.partials.edit-form')
+    @include('MAD.process-status-history.partials.edit-form')
 @endsection

@@ -19,7 +19,7 @@
         @foreach ($MAHs as $mah)
             <tr>
                 <td><x-tables.partials.td.checkbox :value="$mah->id" /></td>
-                <td><x-tables.partials.td.edit :link="route('mad-asp.mahs.edit', ['record' => $record->year, 'country' => $country->id, 'mah' => $mah->id])" /></td>
+                <td><x-tables.partials.td.edit :link="route('mad.asp.mahs.edit', ['record' => $record->year, 'country' => $country->id, 'mah' => $mah->id])" /></td>
                 <td>{{ $mah->name }}</td>
 
                 @foreach ($months as $month)

@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Support\Contracts\Model\TracksUsageCount;
 use App\Support\Helpers\GeneralHelper;
 use App\Support\Helpers\QueryFilterHelper;
-use App\Support\Traits\Model\CalculatesAspQuarterAndYearCounts;
+use App\Support\Traits\Model\CalculatesMADASPQuarterAndYearCounts;
 use App\Support\Traits\Model\PreventsDeletionIfInUse;
 use App\Support\Traits\Model\ScopesOrderingByName;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 class MarketingAuthorizationHolder extends Model implements TracksUsageCount
 {
     use ScopesOrderingByName;
-    use CalculatesAspQuarterAndYearCounts;
+    use CalculatesMADASPQuarterAndYearCounts;
     use PreventsDeletionIfInUse;
 
     /*
@@ -127,13 +127,13 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
         // Step 3: Add monthly process count links
         $this->addMadAspMonthlyProcessCountLinks($asp, $request);
 
-        // Step 4: Calculate quarterly process counts from monthly data (CalculatesAspQuarterAndYearCounts trait)
+        // Step 4: Calculate quarterly process counts from monthly data (CalculatesMADASPQuarterAndYearCounts trait)
         $this->calculateAspQuartersProcessCounts();
 
-        // Step 5: Calculate yearly process counts from monthly and quarterly data (CalculatesAspQuarterAndYearCounts trait)
+        // Step 5: Calculate yearly process counts from monthly and quarterly data (CalculatesMADASPQuarterAndYearCounts trait)
         $this->calculateAspYearProcessCounts();
 
-        // Step 6: Calculate percentages for yearly process counts (e.g., success rates) (CalculatesAspQuarterAndYearCounts trait)
+        // Step 6: Calculate percentages for yearly process counts (e.g., success rates) (CalculatesMADASPQuarterAndYearCounts trait)
         $this->calculateAspYearPercentages();
     }
 
@@ -273,7 +273,7 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
                 'contracted_on_year' => $asp->year,
                 'contracted_on_month' => $monthNumber,
             ]);
-            $contractedProcessesLink = route('processes.index', $contractedParams);
+            $contractedProcessesLink = route('mad.processes.index', $contractedParams);
             $this->{$month['name'] . '_contract_fact_link'} = $contractedProcessesLink;
 
             // Generate registered processes link and assign it to the model
@@ -283,7 +283,7 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
                 'registered_on_year' => $asp->year,
                 'registered_on_month' => $monthNumber,
             ]);
-            $registeredProcessesLink = route('processes.index', $registeredParams);
+            $registeredProcessesLink = route('mad.processes.index', $registeredParams);
             $this->{$month['name'] . '_register_fact_link'} = $registeredProcessesLink;
         }
     }

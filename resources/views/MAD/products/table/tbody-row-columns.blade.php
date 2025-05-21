@@ -1,6 +1,6 @@
 @switch($column['name'])
     @case('Edit')
-        <x-tables.partials.td.edit :link="route('products.edit', $record->id)" />
+        <x-tables.partials.td.edit :link="route('mad.products.edit', $record->id)" />
     @break
 
     @case('Processes')
@@ -12,7 +12,7 @@
             {{ $record->processes_count }} {{ __('processes') }}
         </x-misc.buttoned-link>
 
-        <a class="main-link" href="{{ route('processes.create', ['product_id' => $record->id]) }}">
+        <a class="main-link" href="{{ route('mad.processes.create', ['product_id' => $record->id]) }}">
             {{ __('New process') }}
         </a>
     @break
@@ -145,7 +145,7 @@
 
     @case('Matched KVPP')
         @foreach ($record->matched_product_searches as $productSearch)
-            <a class="main-link" href="{{ route('product-searches.index', ['id[]' => $productSearch->id]) }}">
+            <a class="main-link" href="{{ route('mad.product-searches.index', ['id[]' => $productSearch->id]) }}">
                 # {{ $productSearch->id }} {{ $productSearch->country->code }}
             </a><br>
         @endforeach

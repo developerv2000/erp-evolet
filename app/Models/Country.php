@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Support\Contracts\Model\TracksUsageCount;
 use App\Support\Helpers\GeneralHelper;
-use App\Support\Traits\Model\CalculatesAspQuarterAndYearCounts;
+use App\Support\Traits\Model\CalculatesMADASPQuarterAndYearCounts;
 use App\Support\Traits\Model\PreventsDeletionIfInUse;
 use App\Support\Traits\Model\RecalculatesAllUsageCounts;
 use App\Support\Traits\Model\ScopesOrderingByName;
@@ -14,7 +14,7 @@ class Country extends Model implements TracksUsageCount
 {
     use ScopesOrderingByName;
     use RecalculatesAllUsageCounts;
-    use CalculatesAspQuarterAndYearCounts;
+    use CalculatesMADASPQuarterAndYearCounts;
     use PreventsDeletionIfInUse;
 
     /*
@@ -180,13 +180,13 @@ class Country extends Model implements TracksUsageCount
         // Step 1: Prepare contract plan calculations based on the provided request and plan
         $this->calculateAspMonthlyProcessCounts();
 
-        // Step 2: Calculate quarterly process counts from monthly data (CalculatesAspQuarterAndYearCounts trait)
+        // Step 2: Calculate quarterly process counts from monthly data (CalculatesMADASPQuarterAndYearCounts trait)
         $this->calculateAspQuartersProcessCounts();
 
-        // Step 3: Calculate yearly process counts from monthly and quarterly data (CalculatesAspQuarterAndYearCounts trait)
+        // Step 3: Calculate yearly process counts from monthly and quarterly data (CalculatesMADASPQuarterAndYearCounts trait)
         $this->calculateAspYearProcessCounts();
 
-        // Step 4: Calculate percentages for yearly process counts (e.g., success rates) (CalculatesAspQuarterAndYearCounts trait)
+        // Step 4: Calculate percentages for yearly process counts (e.g., success rates) (CalculatesMADASPQuarterAndYearCounts trait)
         $this->calculateAspYearPercentages();
     }
 

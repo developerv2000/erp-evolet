@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('products.index'), 'text' => __('IVP')],
+                    ['link' => route('mad.products.index'), 'text' => __('IVP')],
                     ['link' => null, 'text' => __('Create new record')]
                 ];
             @endphp
@@ -32,7 +32,7 @@
         </div>
 
         {{-- Create form --}}
-        @include('products.partials.create-form')
+        @include('MAD.products.partials.create-form')
     </div>
 
 @endsection

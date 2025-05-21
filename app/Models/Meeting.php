@@ -112,14 +112,14 @@ class Meeting extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     public function generateBreadcrumbs(): array
     {
         $breadcrumbs = [
-            ['link' => route('meetings.index'), 'text' => __('Meetings')],
+            ['link' => route('mad.meetings.index'), 'text' => __('Meetings')],
         ];
 
         if ($this->trashed()) {
-            $breadcrumbs[] = ['link' => route('meetings.trash'), 'text' => __('Trash')];
+            $breadcrumbs[] = ['link' => route('mad.meetings.trash'), 'text' => __('Trash')];
         }
 
-        $breadcrumbs[] = ['link' => route('meetings.edit', $this->id), 'text' => $this->title];
+        $breadcrumbs[] = ['link' => route('mad.meetings.edit', $this->id), 'text' => $this->title];
 
         return $breadcrumbs;
     }

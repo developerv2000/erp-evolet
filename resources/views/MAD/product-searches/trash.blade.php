@@ -11,8 +11,8 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('product-searches.index'), 'text' => __('KVPP')],
-                    ['link' => route('product-searches.trash'), 'text' => __('Trash')],
+                    ['link' => route('mad.product-searches.index'), 'text' => __('KVPP')],
+                    ['link' => route('mad.product-searches.trash'), 'text' => __('Trash')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -53,24 +53,24 @@
         </div>
 
         {{-- Table --}}
-        @include('product-searches.table.layout', ['trashedRecords' => true])
+        @include('MAD.product-searches.table.layout', ['trashedRecords' => true])
     </div>
 
     {{-- Modals --}}
     @can('delete-from-trash')
         <x-modals.multiple-delete
-            form-action="{{ route('product-searches.destroy') }}"
+            form-action="{{ route('mad.product-searches.destroy') }}"
             :forceDelete="true" />
     @endcan
 
     @can('edit-MAD-KVPP')
         <x-modals.multiple-restore
-            form-action="{{ route('product-searches.restore') }}" />
+            form-action="{{ route('mad.product-searches.restore') }}" />
 
         <x-modals.target-restore />
     @endcan
 @endsection
 
 @section('rightbar')
-    @include('product-searches.partials.filter')
+    @include('MAD.product-searches.partials.filter')
 @endsection

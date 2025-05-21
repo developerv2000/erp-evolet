@@ -13,7 +13,7 @@
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
                 @can('export-records-as-excel')
-                    <x-form.misc.export-as-excel-form action="{{ route('mad-asp.export-as-excel', $record->year) }}" />
+                    <x-form.misc.export-as-excel-form action="{{ route('mad.asp.export-as-excel', $record->year) }}" />
                 @endcan
 
                 <x-misc.button
@@ -27,15 +27,15 @@
         </div>
 
         {{-- Table --}}
-        @include('mad-asp.partials.show-page-table')
+        @include('MAD.asp.partials.show-page-table')
 
         {{-- Graph --}}
-        @include('mad-asp.partials.countries-graph')
+        @include('MAD.asp.partials.countries-graph')
     </div>
 @endsection
 
 @section('rightbar')
-    @include('mad-asp.partials.show-page-filter')
+    @include('MAD.asp.partials.show-page-filter')
 @endsection
 
 @push('scripts')

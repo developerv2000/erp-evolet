@@ -23,7 +23,7 @@
         </div>
 
         {{-- Edit form --}}
-        @include('product-searches.partials.edit-form')
+        @include('MAD.product-searches.partials.edit-form')
     </div>
 
 @endsection

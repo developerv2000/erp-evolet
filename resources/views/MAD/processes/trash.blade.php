@@ -11,8 +11,8 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('processes.index'), 'text' => __('VPS')],
-                    ['link' => route('processes.trash'), 'text' => __('Trash')],
+                    ['link' => route('mad.processes.index'), 'text' => __('VPS')],
+                    ['link' => route('mad.processes.trash'), 'text' => __('Trash')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -53,24 +53,24 @@
         </div>
 
         {{-- Table --}}
-        @include('processes.table.layout', ['trashedRecords' => true])
+        @include('MAD.processes.table.layout', ['trashedRecords' => true])
     </div>
 
     {{-- Modals --}}
     @can('delete-from-trash')
         <x-modals.multiple-delete
-            form-action="{{ route('processes.destroy') }}"
+            form-action="{{ route('mad.processes.destroy') }}"
             :forceDelete="true" />
     @endcan
 
     @can('edit-MAD-VPS')
         <x-modals.multiple-restore
-            form-action="{{ route('processes.restore') }}" />
+            form-action="{{ route('mad.processes.restore') }}" />
 
         <x-modals.target-restore />
     @endcan
 @endsection
 
 @section('rightbar')
-    @include('processes.partials.filter')
+    @include('MAD.processes.partials.filter')
 @endsection

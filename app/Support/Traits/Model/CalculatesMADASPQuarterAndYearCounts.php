@@ -5,7 +5,7 @@ namespace App\Support\Traits\Model;
 use App\Support\Helpers\GeneralHelper;
 
 /**
- * Trait CalculatesAspQuarterAndYearCounts
+ * Trait CalculatesMADASPQuarterAndYearCounts
  *
  * Provides functionality to calculate quarterly and yearly process counts
  * for 'contract_plan', 'contract_fact', and 'register_fact'.
@@ -14,7 +14,7 @@ use App\Support\Helpers\GeneralHelper;
  *
  * @package App\Support\Traits
  */
-trait CalculatesAspQuarterAndYearCounts
+trait CalculatesMADASPQuarterAndYearCounts
 {
     /**
      * Calculate quarterly process counts ('contract_plan', 'contract_fact', and 'register_fact')

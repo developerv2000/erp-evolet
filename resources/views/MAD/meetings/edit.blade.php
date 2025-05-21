@@ -23,7 +23,7 @@
         </div>
 
         {{-- Edit form --}}
-        @include('meetings.partials.edit-form')
+        @include('MAD.meetings.partials.edit-form')
     </div>
 
 @endsection

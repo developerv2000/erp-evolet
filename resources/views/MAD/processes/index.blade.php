@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('processes.index'), 'text' => __('VPS')],
+                    ['link' => route('mad.processes.index'), 'text' => __('VPS')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -32,14 +32,14 @@
                 @endcan
 
                 @can('export-records-as-excel')
-                    <x-form.misc.export-as-excel-form action="{{ route('processes.export-as-excel') }}" />
+                    <x-form.misc.export-as-excel-form action="{{ route('mad.processes.export-as-excel') }}" />
                     <x-form.misc.product-selection-form model="Process" />
                 @endcan
 
                 <x-misc.buttoned-link
                     class="toolbar__button"
                     style="shadowed"
-                    link="{{ route('processes.trash') }}"
+                    link="{{ route('mad.processes.trash') }}"
                     icon="delete">{{ __('Trash') }}
                 </x-misc.buttoned-link>
 
@@ -62,7 +62,7 @@
         </div>
 
         {{-- Table --}}
-        @include('processes.table.layout', ['trashedRecords' => false])
+        @include('MAD.processes.table.layout', ['trashedRecords' => false])
     </div>
 
     {{-- Modals --}}
@@ -72,11 +72,11 @@
 
     @can('edit-MAD-VPS')
         <x-modals.multiple-delete
-            form-action="{{ route('processes.destroy') }}"
+            form-action="{{ route('mad.processes.destroy') }}"
             :forceDelete="false" />
     @endcan
 @endsection
 
 @section('rightbar')
-    @include('processes.partials.filter')
+    @include('MAD.processes.partials.filter')
 @endsection

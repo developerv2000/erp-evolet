@@ -20,6 +20,6 @@ class PermissionController extends Controller
         $filteredQuery = Permission::filterQueryForRequest($query, $request);
         $records = Permission::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
-        return view('permissions.index', compact('request', 'records'));
+        return view('MGMT.permissions.index', compact('request', 'records'));
     }
 }

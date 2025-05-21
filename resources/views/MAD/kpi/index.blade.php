@@ -7,24 +7,24 @@
 @section('content')
     <div class="main-box">
         <div class="mad-kpi__pies-wrapper">
-            @include('mad-kpi.partials.current-processes.pie')
-            @include('mad-kpi.partials.maximum-processes.pie')
+            @include('MAD.kpi.partials.current-processes.pie')
+            @include('MAD.kpi.partials.maximum-processes.pie')
         </div>
 
-        @include('mad-kpi.partials.current-processes.table')
-        @include('mad-kpi.partials.current-processes.graph')
-        @include('mad-kpi.partials.current-processes.map')
+        @include('MAD.kpi.partials.current-processes.table')
+        @include('MAD.kpi.partials.current-processes.graph')
+        @include('MAD.kpi.partials.current-processes.map')
 
-        @include('mad-kpi.partials.maximum-processes.table')
-        @include('mad-kpi.partials.maximum-processes.graph')
+        @include('MAD.kpi.partials.maximum-processes.table')
+        @include('MAD.kpi.partials.maximum-processes.graph')
 
-        @include('mad-kpi.partials.active-manufacturers.table')
-        @include('mad-kpi.partials.active-manufacturers.graph')
+        @include('MAD.kpi.partials.active-manufacturers.table')
+        @include('MAD.kpi.partials.active-manufacturers.graph')
     </div>
 @endsection
 
 @section('rightbar')
-    @include('mad-kpi.partials.filter')
+    @include('MAD.kpi.partials.filter')
 @endsection
 
 @push('scripts')

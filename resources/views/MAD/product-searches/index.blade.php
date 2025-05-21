@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('product-searches.index'), 'text' => __('KVPP')],
+                    ['link' => route('mad.product-searches.index'), 'text' => __('KVPP')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -25,7 +25,7 @@
                     <x-misc.buttoned-link
                         class="toolbar__button"
                         style="shadowed"
-                        link="{{ route('product-searches.create') }}"
+                        link="{{ route('mad.product-searches.create') }}"
                         icon="add">{{ __('New') }}
                     </x-misc.buttoned-link>
 
@@ -39,13 +39,13 @@
                 @endcan
 
                 @can('export-records-as-excel')
-                    <x-form.misc.export-as-excel-form action="{{ route('product-searches.export-as-excel') }}" />
+                    <x-form.misc.export-as-excel-form action="{{ route('mad.product-searches.export-as-excel') }}" />
                 @endcan
 
                 <x-misc.buttoned-link
                     class="toolbar__button"
                     style="shadowed"
-                    link="{{ route('product-searches.trash') }}"
+                    link="{{ route('mad.product-searches.trash') }}"
                     icon="delete">{{ __('Trash') }}
                 </x-misc.buttoned-link>
 
@@ -68,7 +68,7 @@
         </div>
 
         {{-- Table --}}
-        @include('product-searches.table.layout', ['trashedRecords' => false])
+        @include('MAD.product-searches.table.layout', ['trashedRecords' => false])
     </div>
 
     {{-- Modals --}}
@@ -78,11 +78,11 @@
 
     @can('edit-MAD-KVPP')
         <x-modals.multiple-delete
-            form-action="{{ route('product-searches.destroy') }}"
+            form-action="{{ route('mad.product-searches.destroy') }}"
             :forceDelete="false" />
     @endcan
 @endsection
 
 @section('rightbar')
-    @include('product-searches.partials.filter')
+    @include('MAD.product-searches.partials.filter')
 @endsection

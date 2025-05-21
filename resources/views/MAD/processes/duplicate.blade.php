@@ -32,7 +32,7 @@
         </div>
 
         {{-- Duplicate form --}}
-        @include('processes.partials.about-product')
-        @include('processes.partials.duplicate-form')
+        @include('MAD.processes.partials.about-product')
+        @include('MAD.processes.partials.duplicate-form')
     </div>
 @endsection

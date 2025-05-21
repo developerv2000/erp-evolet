@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('mad-asp.index'), 'text' => __('ASP')],
+                    ['link' => route('mad.asp.index'), 'text' => __('ASP')],
                     ['link' => null, 'text' => __('Create new record')]
                 ];
             @endphp
@@ -32,7 +32,7 @@
         </div>
 
         {{-- Create form --}}
-        @include('mad-asp.partials.create-form')
+        @include('MAD.asp.partials.create-form')
     </div>
 
 @endsection

@@ -23,12 +23,12 @@ class UserController extends Controller
         $filteredQuery = User::filterQueryForRequest($query, $request);
         $records = User::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
-        return view('users.index', compact('request', 'records'));
+        return view('MGMT.users.index', compact('request', 'records'));
     }
 
     public function create()
     {
-        return view('users.create');
+        return view('MGMT.users.create');
     }
 
     public function store(UserStoreRequest $request)
@@ -40,7 +40,7 @@ class UserController extends Controller
 
     public function edit(User $record)
     {
-        return view('users.edit', compact('record'));
+        return view('MGMT.users.edit', compact('record'));
     }
 
     public function update(UserUpdateRequest $request, User $record)

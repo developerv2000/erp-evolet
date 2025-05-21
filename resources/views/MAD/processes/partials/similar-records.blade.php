@@ -5,7 +5,7 @@
         <div class="similar-records__list">
             @foreach ($similarRecords as $product)
                 <div class="similar-records__list-item">
-                    <a class="similar-records__list-link main-link" href="{{ route('products.index', ['id[]' => $product->id]) }}" target="_blank"># {{ $product->id }}</a>
+                    <a class="similar-records__list-link main-link" href="{{ route('mad.products.index', ['id[]' => $product->id]) }}" target="_blank"># {{ $product->id }}</a>
 
                     <div class="similar-records__list-text">
                         <span>{{ __('Form') }}: {{ $product->form->name }}</span>

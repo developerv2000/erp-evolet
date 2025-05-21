@@ -2,7 +2,7 @@
 
 <form
     class="product-selection-form"
-    action="{{ route('product-selection.export-as-excel') }}"
+    action="{{ route('mad.product-selection.export-as-excel') }}"
     method="POST"
     data-on-submit="disable-form-submit-button">
 

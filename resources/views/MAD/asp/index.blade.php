@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('mad-asp.index'), 'text' => __('ASP')],
+                    ['link' => route('mad.asp.index'), 'text' => __('ASP')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -25,7 +25,7 @@
                     <x-misc.buttoned-link
                         class="toolbar__button"
                         style="shadowed"
-                        link="{{ route('mad-asp.create') }}"
+                        link="{{ route('mad.asp.create') }}"
                         icon="add">{{ __('New') }}
                     </x-misc.buttoned-link>
 
@@ -49,18 +49,18 @@
         </div>
 
         {{-- Table --}}
-        @include('mad-asp.partials.index-page-table')
+        @include('MAD.asp.partials.index-page-table')
 
         {{-- Graph --}}
         @if ($currentYearASP)
-            @include('mad-asp.partials.countries-graph')
+            @include('MAD.asp.partials.countries-graph')
         @endif
     </div>
 
     {{-- Modals --}}
     @can('edit-MAD-ASP')
         <x-modals.multiple-delete
-            form-action="{{ route('mad-asp.destroy') }}"
+            form-action="{{ route('mad.asp.destroy') }}"
             :forceDelete="false" />
     @endcan
 @endsection

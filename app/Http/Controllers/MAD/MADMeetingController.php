@@ -35,7 +35,7 @@ class MADMeetingController extends Controller
         $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Meeting::SETTINGS_MAD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('meetings.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+        return view('MAD.meetings.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
     public function trash(Request $request)
@@ -53,19 +53,19 @@ class MADMeetingController extends Controller
         $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Meeting::SETTINGS_MAD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('meetings.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+        return view('MAD.meetings.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
     public function create()
     {
-        return view('meetings.create');
+        return view('MAD.meetings.create');
     }
 
     public function store(MeetingStoreRequest $request)
     {
         Meeting::createFromRequest($request);
 
-        return to_route('meetings.index');
+        return to_route('mad.meetings.index');
     }
 
     /**
@@ -76,7 +76,7 @@ class MADMeetingController extends Controller
     {
         $record = Meeting::withTrashed()->findOrFail($record);
 
-        return view('meetings.edit', compact('record'));
+        return view('MAD.meetings.edit', compact('record'));
     }
 
     /**

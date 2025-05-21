@@ -20,6 +20,6 @@ class RoleController extends Controller
         $filteredQuery = Role::filterQueryForRequest($query, $request);
         $records = Role::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
-        return view('roles.index', compact('request', 'records'));
+        return view('MGMT.roles.index', compact('request', 'records'));
     }
 }

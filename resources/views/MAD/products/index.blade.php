@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('products.index'), 'text' => __('IVP')],
+                    ['link' => route('mad.products.index'), 'text' => __('IVP')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -25,7 +25,7 @@
                     <x-misc.buttoned-link
                         class="toolbar__button"
                         style="shadowed"
-                        link="{{ route('products.create') }}"
+                        link="{{ route('mad.products.create') }}"
                         icon="add">{{ __('New') }}
                     </x-misc.buttoned-link>
 
@@ -39,14 +39,14 @@
                 @endcan
 
                 @can('export-records-as-excel')
-                    <x-form.misc.export-as-excel-form action="{{ route('products.export-as-excel') }}" />
+                    <x-form.misc.export-as-excel-form action="{{ route('mad.products.export-as-excel') }}" />
                     <x-form.misc.product-selection-form model="Product" />
                 @endcan
 
                 <x-misc.buttoned-link
                     class="toolbar__button"
                     style="shadowed"
-                    link="{{ route('products.trash') }}"
+                    link="{{ route('mad.products.trash') }}"
                     icon="delete">{{ __('Trash') }}
                 </x-misc.buttoned-link>
 
@@ -69,7 +69,7 @@
         </div>
 
         {{-- Table --}}
-        @include('products.table.layout', ['trashedRecords' => false])
+        @include('MAD.products.table.layout', ['trashedRecords' => false])
     </div>
 
     {{-- Modals --}}
@@ -79,11 +79,11 @@
 
     @can('edit-MAD-IVP')
         <x-modals.multiple-delete
-            form-action="{{ route('products.destroy') }}"
+            form-action="{{ route('mad.products.destroy') }}"
             :forceDelete="false" />
     @endcan
 @endsection
 
 @section('rightbar')
-    @include('products.partials.filter')
+    @include('MAD.products.partials.filter')
 @endsection

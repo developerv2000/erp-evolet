@@ -4,7 +4,7 @@
         <tr>
             @foreach ($visibleTableColumns as $column)
                 <th width="{{ $column['width'] }}">
-                    @include('decision-hub.table.thead-columns')
+                    @include('MAD.decision-hub.table.thead-columns')
                 </th>
             @endforeach
         </tr>
@@ -15,7 +15,7 @@
         @foreach ($records as $record)
             <tr>
                 @foreach ($visibleTableColumns as $column)
-                    @include('decision-hub.table.tbody-row-columns')
+                    @include('MAD.decision-hub.table.tbody-row-columns')
                 @endforeach
             </tr>
         @endforeach

@@ -21,7 +21,7 @@ class MADProcessStatusHistoryController extends Controller
         $process = Process::witRelationsForHistoryPage()->find($processID);
         $product = $process->product;
 
-        return view('process-status-history.index', compact('process', 'product'));
+        return view('MAD.process-status-history.index', compact('process', 'product'));
     }
 
     public function edit($processID, ProcessStatusHistory $record)
@@ -29,7 +29,7 @@ class MADProcessStatusHistoryController extends Controller
         $process = Process::find($processID);
         $statuses = ProcessStatus::all();
 
-        return view('process-status-history.edit', compact('process', 'record', 'statuses'));
+        return view('MAD.process-status-history.edit', compact('process', 'record', 'statuses'));
     }
 
     public function update(Request $request, Process $process, ProcessStatusHistory $record)

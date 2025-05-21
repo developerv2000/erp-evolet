@@ -1,6 +1,6 @@
 @switch($column['name'])
     @case('Edit')
-        <x-tables.partials.td.edit :link="route('meetings.edit', $record->id)" />
+        <x-tables.partials.td.edit :link="route('mad.meetings.edit', $record->id)" />
     @break
 
     @case('Year')

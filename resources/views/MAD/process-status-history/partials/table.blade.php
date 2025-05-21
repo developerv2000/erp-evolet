@@ -20,7 +20,7 @@
                 <td><x-tables.partials.td.checkbox :value="$history->id" /></td>
 
                 <td>
-                    <x-tables.partials.td.edit :link="route('processes.status-history.edit', ['process' => $process->id, 'record' => $history->id])" />
+                    <x-tables.partials.td.edit :link="route('mad.processes.status-history.edit', ['process' => $process->id, 'record' => $history->id])" />
                 </td>
 
                 <td>{{ $history->status->name }}</td>

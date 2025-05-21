@@ -19,6 +19,6 @@ class DepartmentController extends Controller
         $query = Department::withBasicRelations()->withBasicRelationCounts();
         $records = Department::finalizeQueryForRequest($query, $request, 'paginate');
 
-        return view('departments.index', compact('request', 'records'));
+        return view('MGMT.departments.index', compact('request', 'records'));
     }
 }

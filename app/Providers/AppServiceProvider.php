@@ -6,6 +6,7 @@ use App\Support\Definers\GateDefiners\GlobalGatesDefiner;
 use App\Support\Definers\GateDefiners\MADGatesDefiner;
 use App\Support\Definers\ViewComposerDefiners\GlobalViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\MADViewComposersDefiner;
+use App\Support\Definers\ViewComposerDefiners\MGMTViewComposersDefiner;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
 
         // View composer definers
         GlobalViewComposersDefiner::defineAll();
+        MGMTViewComposersDefiner::defineAll();
         MADViewComposersDefiner::defineAll();
     }
 }

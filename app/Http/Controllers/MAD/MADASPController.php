@@ -45,7 +45,7 @@ class MADASPController extends Controller
             'year_contract_fact_percentage' => $currentYearASP?->year_contract_fact_percentage,
         ];
 
-        return view('mad-asp.index', compact('request', 'records', 'currentYearASP', 'asp'));
+        return view('MAD.asp.index', compact('request', 'records', 'currentYearASP', 'asp'));
     }
 
     public function show(Request $request, MadAsp $record)
@@ -67,24 +67,24 @@ class MADASPController extends Controller
             'countries' => array_values($record->countries->sortByDesc('year_contract_plan')->toArray()), // Get sorted
         ];
 
-        return view('mad-asp.show', compact('record', 'months', 'displayQuarters', 'displayMonths', 'asp'));
+        return view('MAD.asp.show', compact('record', 'months', 'displayQuarters', 'displayMonths', 'asp'));
     }
 
     public function create()
     {
-        return view('mad-asp.create');
+        return view('MAD.asp.create');
     }
 
     public function store(MadAspStoreRequest $request)
     {
         MadAsp::createFromRequest($request);
 
-        return to_route('mad-asp.index');
+        return to_route('mad.asp.index');
     }
 
     public function edit(Request $request, MadAsp $record)
     {
-        return view('mad-asp.edit', compact('record'));
+        return view('MAD.asp.edit', compact('record'));
     }
 
     public function update(MadAspUpdateRequest $request, MadAsp $record)
@@ -110,19 +110,19 @@ class MADASPController extends Controller
         $record->load(['countries', 'MAHs']);
         $record->attachAllCountryMAHs();
 
-        return view('mad-asp.countries.index', compact('record'));
+        return view('MAD.asp.countries.index', compact('record'));
     }
 
     public function countriesCreate(MadAsp $record)
     {
-        return view('mad-asp.countries.create', compact('record'));
+        return view('MAD.asp.countries.create', compact('record'));
     }
 
     public function countriesStore(Request $request, MadAsp $record)
     {
         $record->attachCountryOnCountryCreate($request);
 
-        return to_route('mad-asp.countries.index', $record->year);
+        return to_route('mad.asp.countries.index', $record->year);
     }
 
     public function countriesDestroy(Request $request, MadAsp $record)
@@ -142,19 +142,19 @@ class MADASPController extends Controller
     {
         $MAHs = $record->MAHsOfSpecificCountry($country)->get();
 
-        return view('mad-asp.mahs.index', compact('record', 'country', 'MAHs'));
+        return view('MAD.asp.mahs.index', compact('record', 'country', 'MAHs'));
     }
 
     public function MAHsCreate(MadAsp $record, Country $country)
     {
-        return view('mad-asp.mahs.create', compact('record', 'country'));
+        return view('MAD.asp.mahs.create', compact('record', 'country'));
     }
 
     public function MAHsStore(Request $request, MadAsp $record, Country $country)
     {
         $record->attachMAHOnMAHCreate($request);
 
-        return to_route('mad-asp.mahs.index', ['record' => $record->year, 'country' => $country->id]);
+        return to_route('mad.asp.mahs.index', ['record' => $record->year, 'country' => $country->id]);
     }
 
     public function MAHsEdit(MadAsp $record, Country $country, MarketingAuthorizationHolder $mah)
@@ -162,14 +162,14 @@ class MADASPController extends Controller
         $mah = $record->MAHsOfSpecificCountry($country)
             ->where('marketing_authorization_holders.id', $mah->id)->first();
 
-        return view('mad-asp.mahs.edit', compact('record', 'country', 'mah'));
+        return view('MAD.asp.mahs.edit', compact('record', 'country', 'mah'));
     }
 
     public function MAHsUpdate(Request $request, MadAsp $record, Country $country, MarketingAuthorizationHolder $mah)
     {
         $record->updateMAHFromRequest($mah, $country, $request);
 
-        return to_route('mad-asp.mahs.index', ['record' => $record->year, 'country' => $country->id]);
+        return to_route('mad.asp.mahs.index', ['record' => $record->year, 'country' => $country->id]);
     }
 
     public function MAHsDestroy(Request $request, MadAsp $record, Country $country)

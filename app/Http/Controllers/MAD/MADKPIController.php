@@ -72,7 +72,7 @@ class MADKPIController extends Controller
             'countries' => array_values($countries->toArray()),
         ];
 
-        return view('mad-kpi.index', compact('request', 'kpi'));
+        return view('MAD.kpi.index', compact('request', 'kpi'));
     }
 
     /*
@@ -323,7 +323,7 @@ class MADKPIController extends Controller
                     $queryParamsCopy['active_status_start_date_range'] = $this->generateMonthRangeForDate($request->year, $month['number']);
                 }
 
-                $link = route('processes.index', $queryParamsCopy);
+                $link = route('mad.processes.index', $queryParamsCopy);
 
                 // Update the current processes link of the month for the status
                 $statusMonths = $status->months;
@@ -426,7 +426,7 @@ class MADKPIController extends Controller
                     $queryParamsCopy['has_general_status_id'] = $status->id;
                 }
 
-                $link = route('processes.index', $queryParamsCopy);
+                $link = route('mad.processes.index', $queryParamsCopy);
 
                 // Update the maximum processes link of the month for the status
                 $statusMonths = $status->months;
@@ -527,7 +527,7 @@ class MADKPIController extends Controller
             $queryParamsCopy['has_active_processes_for_year'] = $request->year;
             $queryParamsCopy['has_active_processes_for_month'] = $month['number'];
 
-            $link = route('manufacturers.index', $queryParamsCopy);
+            $link = route('mad.manufacturers.index', $queryParamsCopy);
             $month['active_manufacturers_link'] = $link;
         }
     }
@@ -614,7 +614,7 @@ class MADKPIController extends Controller
             $queryParamsCopy = $queryParams;
             $queryParamsCopy['country_id'] = [$country->id];
 
-            $link = route('mad-kpi.index', $queryParamsCopy);
+            $link = route('mad.kpi.index', $queryParamsCopy);
             $country['link'] = $link;
         }
     }

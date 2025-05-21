@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('meetings.index'), 'text' => __('Meetings')],
+                    ['link' => route('mad.meetings.index'), 'text' => __('Meetings')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -25,7 +25,7 @@
                     <x-misc.buttoned-link
                         class="toolbar__button"
                         style="shadowed"
-                        link="{{ route('meetings.create') }}"
+                        link="{{ route('mad.meetings.create') }}"
                         icon="add">{{ __('New') }}
                     </x-misc.buttoned-link>
 
@@ -39,13 +39,13 @@
                 @endcan
 
                 @can('export-records-as-excel')
-                    <x-form.misc.export-as-excel-form action="{{ route('meetings.export-as-excel') }}" />
+                    <x-form.misc.export-as-excel-form action="{{ route('mad.meetings.export-as-excel') }}" />
                 @endcan
 
                 <x-misc.buttoned-link
                     class="toolbar__button"
                     style="shadowed"
-                    link="{{ route('meetings.trash') }}"
+                    link="{{ route('mad.meetings.trash') }}"
                     icon="delete">{{ __('Trash') }}
                 </x-misc.buttoned-link>
 
@@ -68,7 +68,7 @@
         </div>
 
         {{-- Table --}}
-        @include('meetings.table.layout', ['trashedRecords' => false])
+        @include('MAD.meetings.table.layout', ['trashedRecords' => false])
     </div>
 
     {{-- Modals --}}
@@ -78,11 +78,11 @@
 
     @can('edit-MAD-Meetings')
         <x-modals.multiple-delete
-            form-action="{{ route('meetings.destroy') }}"
+            form-action="{{ route('mad.meetings.destroy') }}"
             :forceDelete="false" />
     @endcan
 @endsection
 
 @section('rightbar')
-    @include('meetings.partials.filter')
+    @include('MAD.meetings.partials.filter')
 @endsection

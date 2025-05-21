@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('product-searches.index'), 'text' => __('KVPP')],
+                    ['link' => route('mad.product-searches.index'), 'text' => __('KVPP')],
                     ['link' => null, 'text' => __('Create new record')]
                 ];
             @endphp
@@ -32,7 +32,7 @@
         </div>
 
         {{-- Create form --}}
-        @include('product-searches.partials.create-form')
+        @include('MAD.product-searches.partials.create-form')
     </div>
 
 @endsection

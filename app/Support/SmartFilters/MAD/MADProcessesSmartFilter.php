@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\SmartFilters;
+namespace App\Support\SmartFilters\MAD;
 
 use App\Models\Country;
 use App\Models\Inn;
@@ -8,7 +8,7 @@ use App\Models\Manufacturer;
 use App\Models\ProcessStatus;
 use App\Models\ProductForm;
 
-class MadProcessesSmartFilter
+class MADProcessesSmartFilter
 {
     public static function getAllDependencies()
     {

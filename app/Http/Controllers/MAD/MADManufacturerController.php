@@ -8,7 +8,7 @@ use App\Http\Requests\ManufacturerUpdateRequest;
 use App\Models\Manufacturer;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
-use App\Support\SmartFilters\MadManufacturersSmartFilter;
+use App\Support\SmartFilters\MAD\MADManufacturersSmartFilter;
 use App\Support\Traits\Controller\DestroysModelRecords;
 use App\Support\Traits\Controller\RestoresModelRecords;
 use Illuminate\Http\Request;
@@ -41,7 +41,7 @@ class MADManufacturerController extends Controller
 
     public function getSmartFilterDependencies()
     {
-        return MadManufacturersSmartFilter::getAllDependencies();
+        return MADManufacturersSmartFilter::getAllDependencies();
     }
 
     public function trash(Request $request)

@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('decision-hub.index'), 'text' => __('DH & DSS')],
+                    ['link' => route('mad.decision-hub.index'), 'text' => __('DH & DSS')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->count()]
                 ];
             @endphp
@@ -43,7 +43,7 @@
         @if ($errors->any())
             @include('layouts.errors')
         @else
-            @include('decision-hub.table.layout')
+            @include('MAD.decision-hub.table.layout')
         @endif
     </div>
 
@@ -54,5 +54,5 @@
 @endsection
 
 @section('rightbar')
-    @include('decision-hub.partials.filter')
+    @include('MAD.decision-hub.partials.filter')
 @endsection

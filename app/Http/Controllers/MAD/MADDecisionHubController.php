@@ -54,7 +54,7 @@ class MADDecisionHubController extends Controller
             'Agreed price',
         ];
 
-        return view('decision-hub.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns', 'highlighedBgColumns', 'bolderWeightColumns'))
+        return view('MAD.decision-hub.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns', 'highlighedBgColumns', 'bolderWeightColumns'))
             ->withErrors($errors);
     }
 }

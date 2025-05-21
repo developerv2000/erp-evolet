@@ -35,7 +35,7 @@ class MADProductSearchController extends Controller
         $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(ProductSearch::SETTINGS_MAD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('product-searches.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+        return view('MAD.product-searches.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
     public function trash(Request $request)
@@ -53,12 +53,12 @@ class MADProductSearchController extends Controller
         $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(ProductSearch::SETTINGS_MAD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('product-searches.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+        return view('MAD.product-searches.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
     public function create()
     {
-        return view('product-searches.create');
+        return view('MAD.product-searches.create');
     }
 
     /**
@@ -73,14 +73,14 @@ class MADProductSearchController extends Controller
     {
         $similarRecords = ProductSearch::getSimilarRecordsForRequest($request);
 
-        return view('product-searches.partials.similar-records', compact('similarRecords'));
+        return view('MAD.product-searches.partials.similar-records', compact('similarRecords'));
     }
 
     public function store(ProductSearchStoreRequest $request)
     {
         ProductSearch::createMultipleRecordsFromRequest($request);
 
-        return to_route('product-searches.index');
+        return to_route('mad.product-searches.index');
     }
 
     /**
@@ -91,7 +91,7 @@ class MADProductSearchController extends Controller
     {
         $record = ProductSearch::withTrashed()->findOrFail($record);
 
-        return view('product-searches.edit', compact('record'));
+        return view('MAD.product-searches.edit', compact('record'));
     }
 
     /**

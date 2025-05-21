@@ -25,7 +25,7 @@
                     <x-misc.buttoned-link
                         class="toolbar__button"
                         style="shadowed"
-                        link="{{ route('mad-asp.countries.create', $record->year) }}"
+                        link="{{ route('mad.asp.countries.create', $record->year) }}"
                         icon="add">{{ __('New') }}
                     </x-misc.buttoned-link>
 
@@ -49,13 +49,13 @@
         </div>
 
         {{-- Table --}}
-        @include('mad-asp.countries.partials.table')
+        @include('MAD.asp.countries.partials.table')
     </div>
 
     {{-- Modals --}}
     @can('edit-MAD-ASP')
         <x-modals.multiple-delete
-            form-action="{{ route('mad-asp.countries.destroy', $record->year) }}"
+            form-action="{{ route('mad.asp.countries.destroy', $record->year) }}"
             :forceDelete="false" />
     @endcan
 @endsection

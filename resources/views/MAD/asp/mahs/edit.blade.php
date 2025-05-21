@@ -12,9 +12,9 @@
             @php
                 $crumbs = [
                     ...$record->generateBreadcrumbs(),
-                    ['link' => route('mad-asp.countries.index', $record->year), 'text' => __('Countries')],
+                    ['link' => route('mad.asp.countries.index', $record->year), 'text' => __('Countries')],
                     ['link' => null, 'text' => $country->code],
-                    ['link' => route('mad-asp.mahs.index', ['record' => $record->year, 'country' => $country->id]), 'text' => __('MAH')],
+                    ['link' => route('mad.asp.mahs.index', ['record' => $record->year, 'country' => $country->id]), 'text' => __('MAH')],
                     ['link' => null, 'text' => $mah->name]
                 ];
             @endphp
@@ -35,7 +35,7 @@
         </div>
 
         {{-- Edit form --}}
-        @include('mad-asp.mahs.partials.edit-form')
+        @include('MAD.asp.mahs.partials.edit-form')
     </div>
 
 @endsection

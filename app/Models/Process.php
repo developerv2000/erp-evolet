@@ -430,14 +430,14 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     public function generateBreadcrumbs(): array
     {
         $breadcrumbs = [
-            ['link' => route('processes.index'), 'text' => __('VPS')],
+            ['link' => route('mad.processes.index'), 'text' => __('VPS')],
         ];
 
         if ($this->trashed()) {
-            $breadcrumbs[] = ['link' => route('processes.trash'), 'text' => __('Trash')];
+            $breadcrumbs[] = ['link' => route('mad.processes.trash'), 'text' => __('Trash')];
         }
 
-        $breadcrumbs[] = ['link' => route('processes.edit', $this->id), 'text' => $this->title];
+        $breadcrumbs[] = ['link' => route('mad.processes.edit', $this->id), 'text' => $this->title];
 
         return $breadcrumbs;
     }

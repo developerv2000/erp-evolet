@@ -1,4 +1,4 @@
-<x-form-templates.edit-template :action="route('meetings.update', $record->id)">
+<x-form-templates.edit-template :action="route('mad.meetings.update', $record->id)">
     <div class="form__block">
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.record-field-select

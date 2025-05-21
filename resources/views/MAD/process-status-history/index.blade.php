@@ -6,7 +6,7 @@
 
 @section('content')
     {{-- About product --}}
-    @include('processes.partials.about-product')
+    @include('MAD.processes.partials.about-product')
 
     {{-- Errors --}}
     @include('layouts.errors')
@@ -38,10 +38,10 @@
         </div>
 
         {{-- Table --}}
-        @include('process-status-history.partials.table')
+        @include('MAD.process-status-history.partials.table')
     </div>
 
     {{-- Modals --}}
-    <x-modals.multiple-delete form-action="{{ route('processes.status-history.destroy', $process->id) }}" :forceDelete="false" />
+    <x-modals.multiple-delete form-action="{{ route('mad.processes.status-history.destroy', $process->id) }}" :forceDelete="false" />
     <x-modals.target-delete :forceDelete="false" />
 @endsection

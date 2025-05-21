@@ -8,7 +8,7 @@ use App\Models\Atx;
 use App\Models\Product;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
-use App\Support\SmartFilters\MadProductsSmartFilter;
+use App\Support\SmartFilters\MAD\MADProductsSmartFilter;
 use App\Support\Traits\Controller\DestroysModelRecords;
 use App\Support\Traits\Controller\RestoresModelRecords;
 use Illuminate\Http\Request;
@@ -36,12 +36,12 @@ class MADProductController extends Controller
         $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Product::SETTINGS_MAD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('products.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+        return view('MAD.products.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
     public function getSmartFilterDependencies()
     {
-        return MadProductsSmartFilter::getAllDependencies();
+        return MADProductsSmartFilter::getAllDependencies();
     }
 
     public function trash(Request $request)
@@ -59,12 +59,12 @@ class MADProductController extends Controller
         $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Product::SETTINGS_MAD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('products.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+        return view('MAD.products.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
     public function create()
     {
-        return view('products.create');
+        return view('MAD.products.create');
     }
 
     /**
@@ -76,7 +76,7 @@ class MADProductController extends Controller
     {
         $similarRecords = Product::getSimilarRecordsForRequest($request);
 
-        return view('products.partials.similar-records', compact('similarRecords'));
+        return view('MAD.products.partials.similar-records', compact('similarRecords'));
     }
 
     /**
@@ -90,7 +90,7 @@ class MADProductController extends Controller
             ->where('form_id', $request->input('form_id'))
             ->first();
 
-        return view('products.partials.atx-inputs', compact('atx'));
+        return view('MAD.products.partials.atx-inputs', compact('atx'));
     }
 
     /**
@@ -102,7 +102,7 @@ class MADProductController extends Controller
     {
         $inputsIndex = $request->input('inputs_index');
 
-        return view('products.partials.create-form-dynamic-rows-list-item', compact('inputsIndex'));
+        return view('MAD.products.partials.create-form-dynamic-rows-list-item', compact('inputsIndex'));
     }
 
     public function store(Request $request)
@@ -113,7 +113,7 @@ class MADProductController extends Controller
         // Store products
         Product::createMultipleRecordsFromRequest($request);
 
-        return to_route('products.index');
+        return to_route('mad.products.index');
     }
 
     /**
@@ -124,7 +124,7 @@ class MADProductController extends Controller
     {
         $record = Product::withTrashed()->findOrFail($record);
 
-        return view('products.edit', compact('record'));
+        return view('MAD.products.edit', compact('record'));
     }
 
     /**

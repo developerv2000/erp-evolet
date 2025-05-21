@@ -25,7 +25,7 @@
 
                 @if ($trashedRecords)
                     <td>{{ $record->deleted_at->isoFormat('DD MMM Y') }}</td>
-                    <td><x-tables.partials.td.restore :form-action="route('manufacturers.restore')" :record-id="$record->id" /></td>
+                    <td><x-tables.partials.td.restore :form-action="route('mad.manufacturers.restore')" :record-id="$record->id" /></td>
                 @endif
 
                 @foreach ($visibleTableColumns as $column)

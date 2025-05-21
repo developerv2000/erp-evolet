@@ -23,8 +23,8 @@
         </div>
 
         {{-- Edit form --}}
-        @include('processes.partials.about-product')
-        @include('processes.partials.edit-form')
+        @include('MAD.processes.partials.about-product')
+        @include('MAD.processes.partials.edit-form')
     </div>
 
 @endsection

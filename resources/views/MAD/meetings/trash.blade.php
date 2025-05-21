@@ -11,8 +11,8 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('meetings.index'), 'text' => __('Meetings')],
-                    ['link' => route('meetings.trash'), 'text' => __('Trash')],
+                    ['link' => route('mad.meetings.index'), 'text' => __('Meetings')],
+                    ['link' => route('mad.meetings.trash'), 'text' => __('Trash')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -53,24 +53,24 @@
         </div>
 
         {{-- Table --}}
-        @include('meetings.table.layout', ['trashedRecords' => true])
+        @include('MAD.meetings.table.layout', ['trashedRecords' => true])
     </div>
 
     {{-- Modals --}}
     @can('delete-from-trash')
         <x-modals.multiple-delete
-            form-action="{{ route('meetings.destroy') }}"
+            form-action="{{ route('mad.meetings.destroy') }}"
             :forceDelete="true" />
     @endcan
 
     @can('edit-MAD-Meetings')
         <x-modals.multiple-restore
-            form-action="{{ route('meetings.restore') }}" />
+            form-action="{{ route('mad.meetings.restore') }}" />
 
         <x-modals.target-restore />
     @endcan
 @endsection
 
 @section('rightbar')
-    @include('meetings.partials.filter')
+    @include('MAD.meetings.partials.filter')
 @endsection

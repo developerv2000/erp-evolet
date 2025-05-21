@@ -1,4 +1,4 @@
-<x-form-templates.edit-template :action="route('mad-asp.update', $record->id)">
+<x-form-templates.edit-template :action="route('mad.asp.update', $record->id)">
     <div class="form__block">
         <x-form.inputs.record-field-input
             labelText="Year"

@@ -11,8 +11,8 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('products.index'), 'text' => __('IVP')],
-                    ['link' => route('products.trash'), 'text' => __('Trash')],
+                    ['link' => route('mad.products.index'), 'text' => __('IVP')],
+                    ['link' => route('mad.products.trash'), 'text' => __('Trash')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -53,24 +53,24 @@
         </div>
 
         {{-- Table --}}
-        @include('products.table.layout', ['trashedRecords' => true])
+        @include('MAD.products.table.layout', ['trashedRecords' => true])
     </div>
 
     {{-- Modals --}}
     @can('delete-from-trash')
         <x-modals.multiple-delete
-            form-action="{{ route('products.destroy') }}"
+            form-action="{{ route('mad.products.destroy') }}"
             :forceDelete="true" />
     @endcan
 
     @can('edit-MAD-IVP')
         <x-modals.multiple-restore
-            form-action="{{ route('products.restore') }}" />
+            form-action="{{ route('mad.products.restore') }}" />
 
         <x-modals.target-restore />
     @endcan
 @endsection
 
 @section('rightbar')
-    @include('products.partials.filter')
+    @include('MAD.products.partials.filter')
 @endsection

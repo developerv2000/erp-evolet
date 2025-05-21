@@ -103,7 +103,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
 
     public function getProcessesIndexLinkAttribute()
     {
-        return route('processes.index', [
+        return route('mad.processes.index', [
             'manufacturer_id[]' => $this->manufacturer_id,
             'inn_id[]' => $this->inn_id,
             'form_id[]' => $this->form_id,
@@ -222,14 +222,14 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
     public function generateBreadcrumbs(): array
     {
         $breadcrumbs = [
-            ['link' => route('products.index'), 'text' => __('IVP')],
+            ['link' => route('mad.products.index'), 'text' => __('IVP')],
         ];
 
         if ($this->trashed()) {
-            $breadcrumbs[] = ['link' => route('products.trash'), 'text' => __('Trash')];
+            $breadcrumbs[] = ['link' => route('mad.products.trash'), 'text' => __('Trash')];
         }
 
-        $breadcrumbs[] = ['link' => route('products.edit', $this->id), 'text' => $this->title];
+        $breadcrumbs[] = ['link' => route('mad.products.edit', $this->id), 'text' => $this->title];
 
         return $breadcrumbs;
     }

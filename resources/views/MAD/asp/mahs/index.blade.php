@@ -12,7 +12,7 @@
             @php
                 $crumbs = [
                     ...$record->generateBreadcrumbs(),
-                    ['link' => route('mad-asp.countries.index', $record->year), 'text' => __('Countries')],
+                    ['link' => route('mad.asp.countries.index', $record->year), 'text' => __('Countries')],
                     ['link' => null, 'text' => $country->code],
                     ['link' => null, 'text' => __('MAH')],
                 ];
@@ -27,7 +27,7 @@
                     <x-misc.buttoned-link
                         class="toolbar__button"
                         style="shadowed"
-                        link="{{ route('mad-asp.mahs.create', ['record' => $record->year, 'country' => $country->id]) }}"
+                        link="{{ route('mad.asp.mahs.create', ['record' => $record->year, 'country' => $country->id]) }}"
                         icon="add">{{ __('New') }}
                     </x-misc.buttoned-link>
 
@@ -51,13 +51,13 @@
         </div>
 
         {{-- Table --}}
-        @include('mad-asp.mahs.partials.table')
+        @include('MAD.asp.mahs.partials.table')
     </div>
 
     {{-- Modals --}}
     @can('edit-MAD-ASP')
         <x-modals.multiple-delete
-            form-action="{{ route('mad-asp.mahs.destroy', ['record' => $record->year, 'country' => $country->id]) }}"
+            form-action="{{ route('mad.asp.mahs.destroy', ['record' => $record->year, 'country' => $country->id]) }}"
             :forceDelete="false" />
     @endcan
 @endsection

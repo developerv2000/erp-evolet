@@ -1,5 +1,5 @@
 <x-form-templates.edit-template
-    action="{{ route('processes.status-history.update', ['process' => $process->id, 'record' => $record->id]) }}">
+    action="{{ route('mad.processes.status-history.update', ['process' => $process->id, 'record' => $record->id]) }}">
 
     <div class="form__block">
         <div class="form__row">

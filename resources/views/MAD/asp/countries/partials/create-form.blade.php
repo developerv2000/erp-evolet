@@ -1,4 +1,4 @@
-<x-form-templates.create-template :action="route('mad-asp.countries.store', $record->year)">
+<x-form-templates.create-template :action="route('mad.asp.countries.store', $record->year)">
     <div class="form__block">
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.default-select

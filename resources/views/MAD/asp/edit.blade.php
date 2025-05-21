@@ -23,7 +23,7 @@
         </div>
 
         {{-- Edit form --}}
-        @include('mad-asp.partials.edit-form')
+        @include('MAD.asp.partials.edit-form')
     </div>
 
 @endsection

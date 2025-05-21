@@ -1,6 +1,6 @@
 @switch($column['name'])
     @case('Edit')
-        <x-tables.partials.td.edit :link="route('product-searches.edit', $record->id)" />
+        <x-tables.partials.td.edit :link="route('mad.product-searches.edit', $record->id)" />
     @break
 
     @case('Source EU')
@@ -40,14 +40,14 @@
 
     @case('Matched VPS')
         @foreach ($record->matched_processes as $process)
-            <a class="main-link" href="{{ route('processes.index', ['id[]' => $process->id]) }}">
+            <a class="main-link" href="{{ route('mad.processes.index', ['id[]' => $process->id]) }}">
                 # {{ $process->id }} - {{ $process->status->name }}
             </a><br>
         @endforeach
     @break
 
     @case('Matched IVP')
-        <a class="main-link" href="{{ route('products.index', ['inn_id[]' => $record->inn_id, 'form_id[]' => $record->form_id]) }}">
+        <a class="main-link" href="{{ route('mad.products.index', ['inn_id[]' => $record->inn_id, 'form_id[]' => $record->form_id]) }}">
             {{ $record->matched_products_count }} {{ __('products') }}
         </a><br>
     @break

@@ -1,13 +1,13 @@
 @switch($column['name'])
     @case('Edit')
-        <x-tables.partials.td.edit :link="route('processes.edit', $record->id)" />
+        <x-tables.partials.td.edit :link="route('mad.processes.edit', $record->id)" />
     @break
 
     @case('Duplicate')
         <x-misc.buttoned-link
             class="td__duplicate"
             style="transparent"
-            :link="route('processes.duplication', $record->id)"
+            :link="route('mad.processes.duplication', $record->id)"
             icon="content_copy"
             title="{{ __('Duplicate') }}" />
     @break
@@ -261,47 +261,47 @@
     @break
 
     @case('History')
-        <x-tables.partials.td.edit :link="route('processes.status-history.index', $record->id)" />
+        <x-tables.partials.td.edit :link="route('mad.processes.status-history.index', $record->id)" />
     @break
 
     @case('ВП')
-        @include('processes.table.general-status-period', ['arrayKey' => 0, 'statusStage' => 1])
+        @include('MAD.processes.table.general-status-period', ['arrayKey' => 0, 'statusStage' => 1])
     @break
 
     @case('ПО')
-        @include('processes.table.general-status-period', ['arrayKey' => 1, 'statusStage' => 2])
+        @include('MAD.processes.table.general-status-period', ['arrayKey' => 1, 'statusStage' => 2])
     @break
 
     @case('АЦ')
-        @include('processes.table.general-status-period', ['arrayKey' => 2, 'statusStage' => 3])
+        @include('MAD.processes.table.general-status-period', ['arrayKey' => 2, 'statusStage' => 3])
     @break
 
     @case('СЦ')
-        @include('processes.table.general-status-period', ['arrayKey' => 3, 'statusStage' => 4])
+        @include('MAD.processes.table.general-status-period', ['arrayKey' => 3, 'statusStage' => 4])
     @break
 
     @case('Кк')
-        @include('processes.table.general-status-period', ['arrayKey' => 4, 'statusStage' => 5])
+        @include('MAD.processes.table.general-status-period', ['arrayKey' => 4, 'statusStage' => 5])
     @break
 
     @case('КД')
-        @include('processes.table.general-status-period', ['arrayKey' => 5, 'statusStage' => 6])
+        @include('MAD.processes.table.general-status-period', ['arrayKey' => 5, 'statusStage' => 6])
     @break
 
     @case('НПР')
-        @include('processes.table.general-status-period', ['arrayKey' => 6, 'statusStage' => 7])
+        @include('MAD.processes.table.general-status-period', ['arrayKey' => 6, 'statusStage' => 7])
     @break
 
     @case('Р')
-        @include('processes.table.general-status-period', ['arrayKey' => 7, 'statusStage' => 8])
+        @include('MAD.processes.table.general-status-period', ['arrayKey' => 7, 'statusStage' => 8])
     @break
 
     @case('Зя')
-        @include('processes.table.general-status-period', ['arrayKey' => 8, 'statusStage' => 9])
+        @include('MAD.processes.table.general-status-period', ['arrayKey' => 8, 'statusStage' => 9])
     @break
 
     @case('Отмена')
-        @include('processes.table.general-status-period', ['arrayKey' => 9, 'statusStage' => 10])
+        @include('MAD.processes.table.general-status-period', ['arrayKey' => 9, 'statusStage' => 10])
     @break
 
 @endswitch

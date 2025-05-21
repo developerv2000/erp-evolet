@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('meetings.index'), 'text' => __('Meetings')],
+                    ['link' => route('mad.meetings.index'), 'text' => __('Meetings')],
                     ['link' => null, 'text' => __('Create new record')]
                 ];
             @endphp
@@ -32,7 +32,7 @@
         </div>
 
         {{-- Create form --}}
-        @include('meetings.partials.create-form')
+        @include('MAD.meetings.partials.create-form')
     </div>
 
 @endsection

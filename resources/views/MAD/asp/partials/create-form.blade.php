@@ -1,4 +1,4 @@
-<x-form-templates.create-template :action="route('mad-asp.store')">
+<x-form-templates.create-template :action="route('mad.asp.store')">
     <div class="form__block">
         <div class="form__row">
             <x-form.inputs.default-input
