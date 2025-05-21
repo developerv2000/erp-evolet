@@ -5,7 +5,7 @@
 */
 
 import axios from 'axios';
-import '../custom-components/script';
+import initializeCustomComponents from '../custom-components/script';
 import initializePlugins from './plugins';
 
 window.axios = axios;
@@ -18,7 +18,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 */
 
 function init() {
-    // Initializes all plugin components.
+    initializeCustomComponents();
     initializePlugins();
 }
 

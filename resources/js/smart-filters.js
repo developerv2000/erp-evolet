@@ -14,9 +14,9 @@ import { SELECTIZE_DEFAULT_OPTIONS } from "./plugins";
 |--------------------------------------------------------------------------
 */
 
-const GET_MAD_MANUFACTURERS_DEPENDENCIES_POST_URL = '/manufacturers/get-smart-filter-dependencies';
-const GET_MAD_PRODUCTS_DEPENDENCIES_POST_URL = '/products/get-smart-filter-dependencies';
-const GET_MAD_PROCESSES_DEPENDENCIES_POST_URL = '/processes/get-smart-filter-dependencies';
+const GET_MAD_MANUFACTURERS_DEPENDENCIES_POST_URL = '/mad/manufacturers/get-smart-filter-dependencies';
+const GET_MAD_PRODUCTS_DEPENDENCIES_POST_URL = '/mad/products/get-smart-filter-dependencies';
+const GET_MAD_PROCESSES_DEPENDENCIES_POST_URL = '/mad/processes/get-smart-filter-dependencies';
 
 /*
 |--------------------------------------------------------------------------

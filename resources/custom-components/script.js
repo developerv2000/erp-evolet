@@ -178,9 +178,9 @@ function initModals() {
 |--------------------------------------------------------------------------
 */
 
-document.addEventListener('DOMContentLoaded', () => {
+export default function initializeAll() {
     initDropdowns();
     initCollapsibles();
     initAccordions();
     initModals();
-});
+}

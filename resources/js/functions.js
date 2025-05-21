@@ -18,20 +18,20 @@ import { initializeSelectizes, initializeSimditors } from "./plugins";
 const TOGGLE_LEFTBAR_PATCH_URL = '/settings/collapsed-leftbar';
 
 // IVP
-const GET_PRODUCTS_SIMILAR_RECORDS_POST_URL = '/products/get-similar-records';
-const GET_PRODUCTS_ATX_INPUTS_POST_URL = '/products/get-atx-inputs';
-const GET_PRODUCTS_DYNAMIC_ROWS_LIST_ITEM_INPUTS_POST_URL = '/products/get-dynamic-rows-list-item-inputs';
+const GET_PRODUCTS_SIMILAR_RECORDS_POST_URL = '/mad/products/get-similar-records';
+const GET_PRODUCTS_ATX_INPUTS_POST_URL = '/mad/products/get-atx-inputs';
+const GET_PRODUCTS_DYNAMIC_ROWS_LIST_ITEM_INPUTS_POST_URL = '/mad/products/get-dynamic-rows-list-item-inputs';
 
 // VPS
-const UPDATE_PROCESSES_CONTRACTED_IN_ASP_VALUE_POST_URL = '/processes/update-contracted-in-asp-value';
-const UPDATE_PROCESSES_REGISTERED_IN_ASP_VALUE_POST_URL = '/processes/update-registered-in-asp-value';
-const GET_PROCESS_CREATE_STAGE_INPUTS_POST_URL = '/processes/get-create-form-stage-inputs';
-const GET_PROCESS_CREATE_FORECAST_INPUTS_POST_URL = '/processes/get-create-form-forecast-inputs';
-const GET_PROCESS_EDIT_STAGE_INPUTS_POST_URL = '/processes/get-edit-form-stage-inputs';
-const GET_PROCESS_DUPLICATE_STAGE_INPUTS_POST_URL = '/processes/get-duplicate-form-stage-inputs';
+const UPDATE_PROCESSES_CONTRACTED_IN_ASP_VALUE_POST_URL = '/mad/processes/update-contracted-in-asp-value';
+const UPDATE_PROCESSES_REGISTERED_IN_ASP_VALUE_POST_URL = '/mad/processes/update-registered-in-asp-value';
+const GET_PROCESS_CREATE_STAGE_INPUTS_POST_URL = '/mad/processes/get-create-form-stage-inputs';
+const GET_PROCESS_CREATE_FORECAST_INPUTS_POST_URL = '/mad/processes/get-create-form-forecast-inputs';
+const GET_PROCESS_EDIT_STAGE_INPUTS_POST_URL = '/mad/processes/get-edit-form-stage-inputs';
+const GET_PROCESS_DUPLICATE_STAGE_INPUTS_POST_URL = '/mad/processes/get-duplicate-form-stage-inputs';
 
 // KVPP
-const GET_PRODUCT_SEARCHES_SIMILAR_RECORDS_POST_URL = '/product-searches/get-similar-records';
+const GET_PRODUCT_SEARCHES_SIMILAR_RECORDS_POST_URL = '/mad/product-searches/get-similar-records';
 
 /*
 |--------------------------------------------------------------------------
