@@ -4,12 +4,12 @@
 |--------------------------------------------------------------------------
 */
 
-import './bootstrap';
-import * as functions from './functions';
+import './bootstrap'; // initialize custom components & plugins
+import * as functions from './functions/main-functions';
 import { showSpinner } from '../custom-components/script';
-import { debounce } from './utilities';
-import './charts';
-import initializeSmartFilters from './smart-filters';
+import './MAD'; // initialize MAD part
+// import './charts';
+// import initializeSmartFilters from './smart-filters';
 
 /*
 |--------------------------------------------------------------------------
@@ -36,25 +36,6 @@ const editTableColumnsForm = document.querySelector('.edit-table-columns-form');
 
 // Global inputs
 const imageInputsWithPreview = document.querySelectorAll('.image-input-group-with-preview__input');
-
-// IVP forms
-const productsCreateForm = document.querySelector('.products-create-form');
-const productsEditForm = document.querySelector('.products-edit-form');
-
-// KVPP forms
-const productSearchesCreateForm = document.querySelector('.product-searches-create-form');
-
-// VPS forms
-const processesCreateForm = document.querySelector('.processes-create-form');
-const processesEditForm = document.querySelector('.processes-edit-form');
-const processesDuplicateForm = document.querySelector('.processes-duplicate-form');
-
-// VPS checkboxes
-const toggleProcessContractedValueChbs = document.querySelectorAll('[data-on-toggle="toggle-process-contracted-in-asp-boolean"]');
-const toggleProcessRegisteredValueChbs = document.querySelectorAll('[data-on-toggle="toggle-process-registered-in-asp-boolean"]');
-
-// MAD ASP table
-const madAspTableCountryMAHsToggler = document.querySelectorAll('.mad-asp-table__tbody-country-mahs-toggler');
 
 /*
 |--------------------------------------------------------------------------
@@ -89,7 +70,7 @@ mainForms.forEach((form) => {
         const target = evt.target;
 
         if (target.matches('.form__row-remove-button-icon')) {
-            functions.removeFormRow(target);
+            functions.removeClosestFormRow(target);
             evt.stopPropagation();
         }
     });
@@ -130,18 +111,6 @@ disableSubmitButtonOnSubmitForms.forEach((form) => {
     form.addEventListener('submit', (evt) => functions.disableFormSubmitButton(evt.target));
 });
 
-toggleProcessContractedValueChbs.forEach((cbexkbox) => {
-    cbexkbox.addEventListener('change', (evt) => functions.updateProcessContractedValue(evt));
-});
-
-toggleProcessRegisteredValueChbs.forEach((cbexkbox) => {
-    cbexkbox.addEventListener('change', (evt) => functions.updateProcessRegisteredValue(evt));
-});
-
-madAspTableCountryMAHsToggler.forEach((toggler) => {
-    toggler.addEventListener('click', (evt) => functions.toggleMadAspTableCountryMAHs(evt));
-});
-
 /*
 |--------------------------------------------------------------------------
 | Initializations
@@ -165,121 +134,11 @@ function initializeEditTableColumnsForm() {
     editTableColumnsForm.addEventListener('submit', (evt) => functions.handleEditTableColumnsSubmit(evt));
 }
 
-function initializeProductsCreateForm() {
-    if (!productsCreateForm) {
-        return;
-    }
-
-    // Attach change event listeners to dropdowns, to display similar records & atx inputs
-    const singleFunctionalSelects = productsCreateForm.querySelectorAll('select[name="manufacturer_id"]'); // only similar products
-    const multipleFunctionalSelects = productsCreateForm.querySelectorAll('select[name="inn_id"], select[name="form_id'); // similar products & atx
-
-    for (const select of singleFunctionalSelects) {
-        select.selectize.on('change', () => functions.displayProductsSimilarRecords());
-    }
-
-    for (const select of multipleFunctionalSelects) {
-        select.selectize.on('change', () => {
-            functions.displayProductsSimilarRecords();
-            functions.displayProductsATXInputs();
-        });
-    }
-
-    // Attach click event listener to dynamic rows list add item button
-    const addRowButton = productsCreateForm.querySelector('.form__dynamic-rows-list-add-item-button');
-    addRowButton.addEventListener('click', () => functions.addDynamicRowsListItemOnProductsCreate());
-}
-
-function initializeProductsEditForm() {
-    if (!productsEditForm) {
-        return;
-    }
-
-    // Attach change event listeners to dropdowns, to display atx inputs
-    const selects = productsEditForm.querySelectorAll('select[name="inn_id"], select[name="form_id');
-
-    for (const select of selects) {
-        select.selectize.on('change', () => functions.displayProductsATXInputs());
-    }
-}
-
-function initializeProcessesCreateForm() {
-    if (!processesCreateForm) {
-        return;
-    }
-
-    // Select the dropdowns for status and countries
-    const statusSelect = processesCreateForm.querySelector('select[name="status_id"]');
-    const countriesSelect = processesCreateForm.querySelector('select[name="country_ids[]"]');
-
-    // Attach change event listeners to selects
-    statusSelect.selectize.on('change', (value) => functions.updateProcessCreateStageInputs(value));
-    countriesSelect.selectize.on('change', (values) => functions.updateProcessCreateForecastInputs(values));
-}
-
-function initializeProcessesEditForm() {
-    if (!processesEditForm) {
-        return;
-    }
-
-    // Select the status dropdown and attach event listener
-    const statusSelect = processesEditForm.querySelector('select[name="status_id"]');
-    statusSelect.selectize.on('change', (value) => functions.updateProcessEditStageInputs(value));
-}
-
-function initializeProcessesDuplicateForm() {
-    if (!processesDuplicateForm) {
-        return;
-    }
-
-    // Select the status dropdown and attach event listener
-    const statusSelect = processesDuplicateForm.querySelector('select[name="status_id"]');
-    statusSelect.selectize.on('change', (value) => functions.updateProcessDuplicateStageInputs(value));
-}
-
-function initializeProductSearchesCreateForm() {
-    if (!productSearchesCreateForm) {
-        return;
-    }
-
-    // Select the dropdowns for country, inn, and form
-    const selects = productSearchesCreateForm.querySelectorAll('select[name="country_id"], select[name="inn_id"], select[name="form_id');
-
-    // Attach change event listeners to all select dropdowns
-    for (const select of selects) {
-        select.selectize.on('change', (value) => functions.displayProductSearchesSimilarRecords());
-    }
-
-    // Select inputs for dosage and pack
-    const inputs = productSearchesCreateForm.querySelectorAll('input[name="dosage"], input[name="pack"]');
-
-    // Attach change event listeners to all inputs
-    for (let input of inputs) {
-        // IMPORTANT: Delay 1000 is used because input values are also formatted via debounce
-        input.addEventListener('input', debounce(() => {
-            functions.displayProductSearchesSimilarRecords();
-        }, 1000));
-    }
-}
-
-init();
-
 function init() {
-    // Global
     functions.moveFilterActiveInputsToTop(filterForm);
     functions.initializeSpecificFormatableInputs();
     initializeEditTableColumnsForm();
-    initializeSmartFilters();
-
-    // IVP
-    initializeProductsCreateForm();
-    initializeProductsEditForm();
-
-    // VPS
-    initializeProcessesCreateForm();
-    initializeProcessesEditForm();
-    initializeProcessesDuplicateForm();
-
-    // KVPP
-    initializeProductSearchesCreateForm();
+    // initializeSmartFilters();
 }
+
+init();

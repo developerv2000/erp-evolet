@@ -1,3 +1,5 @@
+// Initialized in bootstrap.js
+
 export const SELECTIZE_DEFAULT_OPTIONS = {
     valueField: 'id',
     labelField: 'caption',
