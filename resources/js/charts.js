@@ -1,117 +1,101 @@
+// Base chart configuration and shared utilities for ECharts
+
+const charts = {};
+
 /*
 |--------------------------------------------------------------------------
-| Constants
+| Theme Constants
 |--------------------------------------------------------------------------
 */
 
-// DOM elements
-const madKpiPage = document.querySelector('.mad-kpi');
-const madAspIndexPage = document.querySelector('.mad-asp-index');
-const madAspShowPage = document.querySelector('.mad-asp-show');
-
-// Colors
 const rootStyles = getComputedStyle(document.documentElement);
-const theme = rootStyles.getPropertyValue('--theme-name').trim();
-const mainColor = rootStyles.getPropertyValue('--theme-main-color').trim();
-const buttonTextColor = rootStyles.getPropertyValue('--theme-button-text-color').trim();
-const textColor = rootStyles.getPropertyValue('--theme-text-color').trim();
-const boxBackgroundColor = rootStyles.getPropertyValue('--theme-box-background-color').trim();
-const borderColor = rootStyles.getPropertyValue('--theme-border-color').trim();
-const chartSplitlinesColor = borderColor;
-const backgroundedTextBgColor6 = rootStyles.getPropertyValue('--theme-backgrounded-text-bg-color-6').trim();
-const backgroundedTextBgColor7 = rootStyles.getPropertyValue('--theme-backgrounded-text-bg-color-7').trim();
+
+charts.theme = rootStyles.getPropertyValue('--theme-name').trim();
+charts.mainColor = rootStyles.getPropertyValue('--theme-main-color').trim();
+charts.buttonTextColor = rootStyles.getPropertyValue('--theme-button-text-color').trim();
+charts.textColor = rootStyles.getPropertyValue('--theme-text-color').trim();
+charts.boxBackgroundColor = rootStyles.getPropertyValue('--theme-box-background-color').trim();
+charts.borderColor = rootStyles.getPropertyValue('--theme-border-color').trim();
+charts.backgroundedTextBgColor6 = rootStyles.getPropertyValue('--theme-backgrounded-text-bg-color-6').trim();
+charts.backgroundedTextBgColor7 = rootStyles.getPropertyValue('--theme-backgrounded-text-bg-color-7').trim();
 
 /*
 |--------------------------------------------------------------------------
-| Globally defined charts
+| Shared Chart Settings
 |--------------------------------------------------------------------------
 */
 
-let currentProcessesPie,
-    maximumProcessesPie,
-    currentProcessesMap,
-    currentProcessesGraph,
-    maximumProcessesGraph,
-    activeManufacturersGraph,
-    aspCountriesGraph;
-
-/*
-|--------------------------------------------------------------------------
-| Global chart options
-|--------------------------------------------------------------------------
-*/
-
-const chartOptions = {
+charts.chartOptions = {
     renderer: 'canvas', // Use canvas renderer for better performance
     useDirtyRect: false, // Disable dirty rectangle optimization
 };
 
-const chartColors = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#5470C6'];
+charts.chartColors = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#5470C6'];
 
-const chartTextStyle = {
+charts.chartTextStyle = {
     fontSize: 13,
     fontFamily: ['Fira Sans', 'sans-serif'],
     fontWeight: '400',
-    color: textColor
-}
+    color: charts.textColor,
+};
 
-const chartTitleOptions = {
-    padding: [24, 24, 24, 24], // Padding around the title
+charts.chartTitleOptions = {
+    padding: [24, 24, 24, 24],
     textStyle: {
-        ...chartTextStyle,
+        ...charts.chartTextStyle,
         fontSize: 14,
         fontWeight: '500',
     },
-}
+};
 
-const chartLegendOptions = {
+charts.chartLegendOptions = {
     padding: [56, 0, 24, 0],
     itemGap: 12,
     itemWidth: 20,
     itemHeight: 14,
-    textStyle: chartTextStyle,
-}
+    textStyle: charts.chartTextStyle,
+};
 
-const chartTooltipOptions = {
-    backgroundColor: boxBackgroundColor,
+charts.chartTooltipOptions = {
+    backgroundColor: charts.boxBackgroundColor,
     borderWidth: 0,
     textStyle: {
-        ...chartTextStyle,
+        ...charts.chartTextStyle,
         fontSize: 14,
     },
 };
 
 /*
 |--------------------------------------------------------------------------
-| Pie chart options
+| Pie Chart Config
 |--------------------------------------------------------------------------
 */
 
-const pieToolboxOptions = {
+charts.pieToolboxOptions = {
     feature: {
-        saveAsImage: { show: true, pixelRatio: 3 }
-    }
-}
-
-const pieLegendOptions = {
-    ...chartLegendOptions,
-    left: 'center'
-}
-
-const pieTooltipOptions = {
-    ...chartTooltipOptions,
-    trigger: 'item'
-}
-
-const pieOptions = {
-    backgroundColor: boxBackgroundColor,
-    legend: pieLegendOptions,
-    toolbox: pieToolboxOptions,
-    tooltip: pieTooltipOptions,
-    color: chartColors,
+        saveAsImage: { show: true, pixelRatio: 3 },
+    },
 };
 
-const pieSeriesOptions = {
+charts.pieLegendOptions = {
+    ...charts.chartLegendOptions,
+    left: 'center',
+};
+
+charts.pieTooltipOptions = {
+    ...charts.chartTooltipOptions,
+    trigger: 'item',
+};
+
+charts.pieOptions = {
+    backgroundColor: charts.boxBackgroundColor,
+    legend: charts.pieLegendOptions,
+    toolbox: charts.pieToolboxOptions,
+    tooltip: charts.pieTooltipOptions,
+    color: charts.chartColors,
+};
+
+charts.pieSeriesOptions = {
     type: 'pie',
     radius: ['40%', '100%'],
     center: ['50%', '340px'],
@@ -121,135 +105,121 @@ const pieSeriesOptions = {
 
 /*
 |--------------------------------------------------------------------------
-| Graph chart options (bars & lines)
+| Bar/Line (Graph) Chart Config
 |--------------------------------------------------------------------------
 */
 
-const graphGridOptions = {
+charts.graphGridOptions = {
     top: '112px',
     right: '56px',
     bottom: '40px',
     left: '56px',
-}
+};
 
-const graphTooltipOptions = {
-    ...chartTooltipOptions,
+charts.graphTooltipOptions = {
+    ...charts.chartTooltipOptions,
     trigger: 'axis', // Tooltip trigger type
     axisPointer: {
         type: 'cross', // Cross style for axis pointer
-        crossStyle: {
-            color: '#999' // Color of the cross style
-        },
+        crossStyle: { color: '#999' }, // Color of the cross style
         label: { // tooltip xAxis and yAxis labels
-            backgroundColor: mainColor,
-            color: buttonTextColor,
+            backgroundColor: charts.mainColor,
+            color: charts.buttonTextColor,
         },
-    }
-}
+    },
+};
 
-const graphToolboxOptions = {
+charts.graphToolboxOptions = {
     feature: {
-        // dataView: { show: true, readOnly: false }, // View data in table format
         magicType: { show: true, type: ['line', 'bar'] }, // Enable switch between line and bar
         restore: { show: true },
-        saveAsImage: { show: true, pixelRatio: 3 }
-    }
-}
-
-const graphOptions = {
-    backgroundColor: boxBackgroundColor,
-    legend: chartLegendOptions,
-    toolbox: graphToolboxOptions,
-    grid: graphGridOptions,
-    tooltip: graphTooltipOptions,
-    color: chartColors,
-}
-
-const graphXAxisItemOptions = {
-    type: 'category',
-    axisPointer: {
-        type: 'shadow',
+        saveAsImage: { show: true, pixelRatio: 3 },
     },
-}
+};
 
-const graphYAxisItemOptions = {
+charts.graphOptions = {
+    backgroundColor: charts.boxBackgroundColor,
+    legend: charts.chartLegendOptions,
+    toolbox: charts.graphToolboxOptions,
+    grid: charts.graphGridOptions,
+    tooltip: charts.graphTooltipOptions,
+    color: charts.chartColors,
+};
+
+charts.graphXAxisItemOptions = {
+    type: 'category',
+    axisPointer: { type: 'shadow' },
+};
+
+charts.graphYAxisItemOptions = {
     type: 'value',
     splitLine: {
-        lineStyle: {
-            color: chartSplitlinesColor,
-        }
-    }
-}
+        lineStyle: { color: charts.borderColor },
+    },
+};
 
-const graphLineTypeSeriesOptions = {
+charts.graphLineTypeSeriesOptions = {
     type: 'line',
     symbol: 'circle',
     symbolSize: 10,
-    color: mainColor,
-}
+    color: charts.mainColor,
+};
 
-const graphBarTypeSeriesLabelOptions = {
+charts.graphBarTypeSeriesLabelOptions = {
     show: true,
     position: 'top',
-    color: textColor,
-    formatter: function (params) {
-        return params.value;
-    }
-}
+    color: charts.textColor,
+    formatter: params => params.value,
+};
 
-const graphLineTypeSeriesLabelOptions = {
+charts.graphLineTypeSeriesLabelOptions = {
     show: true,
     position: 'top',
-    color: textColor,
+    color: charts.textColor,
     rich: {
         labelBox: {
-            backgroundColor: boxBackgroundColor, // Background color of the label box
-            borderRadius: 4, // Border radius
-            padding: [6, 10], // Padding inside the box
-            shadowBlur: 5, // Shadow blur radius
-            shadowOffsetX: 3, // Shadow offset X
-            shadowOffsetY: 3, // Shadow offset Y
-            shadowColor: 'rgba(0, 0, 0, 0.3)' // Shadow color
+            backgroundColor: charts.boxBackgroundColor,
+            borderRadius: 4,
+            padding: [6, 10],
+            shadowBlur: 5,
+            shadowOffsetX: 3,
+            shadowOffsetY: 3,
+            shadowColor: 'rgba(0, 0, 0, 0.3)',
         },
-        value: {
-            color: textColor
-        }
+        value: { color: charts.textColor },
     },
-    // Formatter function for customizing label content and style
-    formatter: function (params) {
-        return '{labelBox|' + params.value + '}';
-    },
+    formatter: params => `{labelBox|${params.value}}`, // Formatter function for customizing label content and style
     align: 'center',
-    verticalAlign: 'bottom'
+    verticalAlign: 'bottom',
 };
 
 /*
 |--------------------------------------------------------------------------
-| Treemap options
+| Treemap Config
 |--------------------------------------------------------------------------
 */
 
-const treemapToolboxOptions = {
+charts.treemapToolboxOptions = {
     feature: {
-        saveAsImage: { show: true, pixelRatio: 3 }
-    }
-}
+        saveAsImage: { show: true, pixelRatio: 3 },
+    },
+};
 
-const treemapTooltipOptions = {
-    ...chartTooltipOptions,
-}
+charts.treemapTooltipOptions = {
+    ...charts.chartTooltipOptions,
+};
 
-const treemapOptions = {
-    backgroundColor: boxBackgroundColor,
-    toolbox: treemapToolboxOptions,
-    color: chartColors,
-}
+charts.treemapOptions = {
+    backgroundColor: charts.boxBackgroundColor,
+    toolbox: charts.treemapToolboxOptions,
+    color: charts.chartColors,
+};
 
-const treemapSeriesOptions = {
+charts.treemapSeriesOptions = {
     type: 'treemap',
     label: {
         show: true,
-        formatter: '{b}: {c}'
+        formatter: '{b}: {c}',
     },
     top: '60px',
     right: '24px',
@@ -257,400 +227,35 @@ const treemapSeriesOptions = {
     left: '24px',
     // roam: false, // Disable zoom and pan
     itemStyle: {
-        borderColor: borderColor,
-        borderWidth: 1
-    }
+        borderColor: charts.borderColor,
+        borderWidth: 1,
+    },
 };
 
 /*
 |--------------------------------------------------------------------------
-| Helper functions
+| Utility Functions
 |--------------------------------------------------------------------------
 */
 
-function addFullscreenResizeListener(echartsInstance, delay = 400) {
+charts.addFullscreenResizeListener = function (echartsInstance, delay = 400) {
     const resizeChart = () => {
         setTimeout(() => {
             echartsInstance.resize();
         }, delay);
     };
 
-    const events = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'];
+    const events = [
+        'fullscreenchange',
+        'webkitfullscreenchange',
+        'mozfullscreenchange',
+        'MSFullscreenChange',
+    ];
     events.forEach(event => window.addEventListener(event, resizeChart));
 
     return () => {
         events.forEach(event => window.removeEventListener(event, resizeChart));
     };
-}
+};
 
-/*
-|--------------------------------------------------------------------------
-| MAD initialization functiomns
-|--------------------------------------------------------------------------
-*/
-
-function addResizeListenersToMadKpiCharts() {
-    window.addEventListener('resize', function () {
-        currentProcessesPie.resize();
-        maximumProcessesPie.resize();
-    });
-}
-
-function initializeMADCurrentProcessesPie() {
-    const container = document.querySelector('.mad-kpi__current-processes-pie');
-    currentProcessesPie = echarts.init(container, theme, chartOptions);
-
-    const series = [
-        {
-            ...pieSeriesOptions,
-            data: Object.keys(kpi.generalStatuses).map(key => ({
-                name: kpi.generalStatuses[key]['name'],
-                value: kpi.generalStatuses[key].sum_of_monthly_current_processes,
-            })),
-        }
-    ];
-
-    const options = {
-        ...pieOptions,
-        title: {
-            ...chartTitleOptions,
-            left: 'center',
-            text: 'Ключевые показатели по тщательной обработке продуктов по месяцам',
-        },
-        series: series,
-    };
-
-    currentProcessesPie.setOption(options);
-}
-
-function initializeMADMaximumProcessesPie() {
-    const container = document.querySelector('.mad-kpi__maximum-processes-pie');
-    maximumProcessesPie = echarts.init(container, theme, chartOptions);
-
-    const series = [
-        {
-            ...pieSeriesOptions,
-            data: Object.keys(kpi.generalStatuses).map(key => ({
-                value: kpi.generalStatuses[key].sum_of_monthly_maximum_processes,
-                name: kpi.generalStatuses[key]['name'],
-            })),
-        }
-    ];
-
-    const options = {
-        ...pieOptions,
-        title: {
-            ...chartTitleOptions,
-            left: 'center',
-            text: 'Ключевые показатели по количеству выполненных работ на каждом этапе по месяцам',
-        },
-        series: series,
-    };
-
-    maximumProcessesPie.setOption(options);
-}
-
-function initializeMADCurrentProcessesMap() {
-    const container = document.querySelector('.mad-kpi__current-processes-map');
-    currentProcessesMap = echarts.init(container, theme, chartOptions);
-
-    const series = [
-        {
-            ...treemapSeriesOptions,
-            breadcrumb: {
-                show: false // Hide the breadcrumbs
-            },
-            data: kpi.countries,
-        }
-    ];
-
-    const options = {
-        ...treemapOptions,
-        tooltip: {
-            ...treemapTooltipOptions,
-            formatter: function (params) {
-                const { name, value, data } = params;
-
-                let statusesStr = '';
-
-                for (let key of Object.keys(data.statuses)) {
-                    statusesStr += `${key}: ${data.statuses[key]}<br>`;
-                }
-
-                return `<strong>${name}</strong><br>Total: ${value}<br>${statusesStr}`;
-            }
-        },
-        title: {
-            ...chartTitleOptions,
-            left: 'center',
-            text: 'Количество текущих процессов по странам',
-        },
-        series: series,
-    };
-
-    currentProcessesMap.setOption(options);
-
-    // Add right-click event for redirection
-    currentProcessesMap.on('contextmenu', function (params) {
-        if (!params || !params.data) return;
-
-        // Prevent default right-click menu
-        params.event.event.preventDefault();
-
-        if (params.data.link) {
-            window.open(params.data.link, '_blank');
-        }
-    });
-}
-
-function initializeMADCurrentProcessesGraph() {
-    const container = document.querySelector('.mad-kpi__current-processes-graph');
-    currentProcessesGraph = echarts.init(container, theme, chartOptions);
-
-    // Container to hold 'bar' type and 'line' type series
-    let series = [];
-
-    // Add month 'bar' type series
-    kpi.generalStatuses.forEach(status => {
-        series.push({
-            name: status.name,
-            type: 'bar',
-            data: Object.keys(status.months).map(key => ({
-                value: status.months[key].current_processes_count,
-                label: graphBarTypeSeriesLabelOptions,
-            })),
-        });
-    });
-
-    // Add Total 'line' type series
-    series.push({
-        ...graphLineTypeSeriesOptions,
-        name: 'Total',
-        data: kpi.months.map(month => month.sum_of_all_current_process),
-        label: graphLineTypeSeriesLabelOptions,
-    });
-
-    const options = {
-        ...graphOptions,
-        title: {
-            ...chartTitleOptions,
-            text: 'Ключевые показатели по тщательной обработке продуктов по месяцам',
-        },
-        series: series,
-        xAxis: [
-            {
-                ...graphXAxisItemOptions,
-                data: kpi.months.map(month => month.name),
-            }
-        ],
-        yAxis: [
-            {
-                ...graphYAxisItemOptions,
-            },
-        ],
-    };
-
-    currentProcessesGraph.setOption(options);
-}
-
-function initializeMADMaximumProcessesGraph() {
-    const container = document.querySelector('.mad-kpi__maximum-processes-graph');
-    maximumProcessesGraph = echarts.init(container, theme, chartOptions);
-
-    // Container to hold 'bar' type and 'line' type series
-    let series = [];
-
-    // Add month 'bar' type series
-    kpi.generalStatuses.forEach(status => {
-        series.push({
-            name: status.name,
-            type: 'bar',
-            label: graphBarTypeSeriesLabelOptions,
-            data: Object.keys(status.months).map(key => ({
-                value: status.months[key].maximum_processes_count,
-            })),
-        });
-    });
-
-    // Add Total 'line' type series
-    series.push({
-        ...graphLineTypeSeriesOptions,
-        name: 'Total',
-        label: graphLineTypeSeriesLabelOptions,
-        data: kpi.months.map(month => month.sum_of_all_maximum_process),
-    });
-
-    const options = {
-        ...graphOptions,
-        title: {
-            ...chartTitleOptions,
-            text: 'Ключевые показатели по количеству выполненных работ на каждом этапе по месяцам',
-        },
-        series: series,
-        xAxis: [
-            {
-                ...graphXAxisItemOptions,
-                data: kpi.months.map(month => month.name),
-            }
-        ],
-        yAxis: [
-            {
-                ...graphYAxisItemOptions,
-            },
-        ],
-    };
-
-    maximumProcessesGraph.setOption(options);
-}
-
-function initializeMADActiveManufacturersGraph() {
-    const container = document.querySelector('.mad-kpi__active-manufacturers-graph');
-    activeManufacturersGraph = echarts.init(container, theme, chartOptions);
-
-    const series = [
-        {
-            type: 'bar',
-            data: Object.keys(kpi.months).map(key => ({
-                value: kpi.months[key].active_manufacturers_count,
-            })),
-            label: graphBarTypeSeriesLabelOptions,
-        }
-    ];
-
-    let options = {
-        ...graphOptions,
-        title: {
-            ...chartTitleOptions,
-            text: 'Количество активных производителей по месяцам',
-        },
-        series: series,
-        xAxis: [
-            {
-                ...graphXAxisItemOptions,
-                data: kpi.months.map(month => month.name),
-            }
-        ],
-        yAxis: [
-            {
-                ...graphYAxisItemOptions,
-            },
-        ],
-    };
-
-    // Minimize gap between title and chart because of no legend
-    options.grid.top = '72px';
-
-    activeManufacturersGraph.setOption(options);
-}
-
-/**
- * This function is used to display both mad-asp.index and mad-asp.show page graphs
- */
-function initializeMadAspCountriesGraph() {
-    const container = document.querySelector('.mad-asp__countries-graph');
-
-    // Container can be absent on mad-asp.index page, if ASP doesn`t exists for current year
-    if (!container) return;
-
-    aspCountriesGraph = echarts.init(container, theme, chartOptions);
-
-    const barsLabelOptions = {
-        ...graphBarTypeSeriesLabelOptions,
-        fontFamily: ['Fira Sans', 'sans-serif'],
-        fontSize: 14,
-        fontWeight: '400',
-        color: textColor,
-        rotate: 90,
-        align: 'left',
-        verticalAlign: 'middle',
-        position: 'insideBottom',
-        distance: 12,
-    };
-
-    const series = [
-        {
-            type: 'bar',
-            name: 'План',
-            barGap: 0,
-            label: barsLabelOptions,
-            data: Object.keys(asp.countries).map(key => ({
-                value: asp.countries[key].year_contract_plan,
-            })),
-        },
-
-        {
-            type: 'bar',
-            name: 'Факт',
-            barGap: 0,
-            label: {
-                ...barsLabelOptions,
-                formatter: function (params) {
-                    return `${params.value}   (${parseInt(params.data.percentage)} %)`;
-                }
-            },
-            data: Object.keys(asp.countries).map(key => ({
-                value: asp.countries[key].year_contract_fact,
-                percentage: asp.countries[key].year_contract_fact_percentage,
-            }))
-        }
-    ];
-
-    let graphTitle = 'Динамика выполнения стратегического плана';
-
-    // More detailed title for mad-asp.index page graph
-    if (madAspIndexPage) {
-        graphTitle += ' (' + asp.year_contract_fact_percentage + '%)';
-    }
-
-    let options = {
-        ...graphOptions,
-        color: [backgroundedTextBgColor6, backgroundedTextBgColor7],
-        title: {
-            ...chartTitleOptions,
-            text: graphTitle,
-        },
-        series: series,
-        xAxis: [
-            {
-                ...graphXAxisItemOptions,
-                data: Object.keys(asp.countries).map(key => asp.countries[key].code),
-            }
-        ],
-        yAxis: [
-            {
-                ...graphYAxisItemOptions,
-            },
-        ],
-    };
-
-    aspCountriesGraph.setOption(options);
-}
-
-/*
-|--------------------------------------------------------------------------
-| Initializations
-|--------------------------------------------------------------------------
-*/
-
-/**
- * Initializes all charts and resize listeners.
- */
-function init() {
-    if (madKpiPage) {
-        initializeMADCurrentProcessesPie();
-        initializeMADMaximumProcessesPie();
-        initializeMADCurrentProcessesMap();
-        initializeMADCurrentProcessesGraph();
-        initializeMADMaximumProcessesGraph();
-        initializeMADActiveManufacturersGraph();
-
-        addResizeListenersToMadKpiCharts();
-    }
-
-    if (madAspIndexPage || madAspShowPage) {
-        initializeMadAspCountriesGraph();
-        addFullscreenResizeListener(aspCountriesGraph);
-    }
-}
-
-init();
+export default charts;

@@ -4,8 +4,10 @@
 |--------------------------------------------------------------------------
 */
 
-import * as functions from './functions/MAD-functions';
-import { debounce } from './utilities';
+import * as functions from './MAD-functions';
+import { debounce } from '../utilities';
+import initializeSmartFilters from './MAD-smart-filters';
+import './MAD-charts'; // initialize echarts
 
 /*
 |--------------------------------------------------------------------------
@@ -165,6 +167,9 @@ function init() {
 
     // KVPP
     initializeProductSearchesCreateForm();
+
+    // Smart filters
+    initializeSmartFilters();
 }
 
 init();

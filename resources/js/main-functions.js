@@ -4,8 +4,8 @@
 |--------------------------------------------------------------------------
 */
 
-import { hideSpinner, showModal, showSpinner } from "../../custom-components/script";
-import { debounce } from '../utilities';
+import { hideSpinner, showModal, showSpinner } from "../custom-components/script";
+import { debounce } from './utilities';
 
 /*
 |--------------------------------------------------------------------------

@@ -5,11 +5,9 @@
 */
 
 import './bootstrap'; // initialize custom components & plugins
-import * as functions from './functions/main-functions';
+import './MAD/MAD-main'; // initialize MAD part
+import * as functions from './main-functions';
 import { showSpinner } from '../custom-components/script';
-import './MAD'; // initialize MAD part
-// import './charts';
-// import initializeSmartFilters from './smart-filters';
 
 /*
 |--------------------------------------------------------------------------
@@ -138,7 +136,6 @@ function init() {
     functions.moveFilterActiveInputsToTop(filterForm);
     functions.initializeSpecificFormatableInputs();
     initializeEditTableColumnsForm();
-    // initializeSmartFilters();
 }
 
 init();

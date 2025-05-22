@@ -4,9 +4,9 @@
 |--------------------------------------------------------------------------
 */
 
-import { hideSpinner, showSpinner } from "../custom-components/script";
-import { debounce } from "./utilities";
-import { SELECTIZE_DEFAULT_OPTIONS } from "./plugins";
+import { hideSpinner, showSpinner } from "../../custom-components/script";
+import { debounce } from "../utilities";
+import { refreshSelectizeOptions } from "../utilities";
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +14,9 @@ import { SELECTIZE_DEFAULT_OPTIONS } from "./plugins";
 |--------------------------------------------------------------------------
 */
 
-const GET_MAD_MANUFACTURERS_DEPENDENCIES_POST_URL = '/mad/manufacturers/get-smart-filter-dependencies';
-const GET_MAD_PRODUCTS_DEPENDENCIES_POST_URL = '/mad/products/get-smart-filter-dependencies';
-const GET_MAD_PROCESSES_DEPENDENCIES_POST_URL = '/mad/processes/get-smart-filter-dependencies';
+const GET_MANUFACTURERS_DEPENDENCIES_POST_URL = '/mad/manufacturers/get-smart-filter-dependencies';
+const GET_PRODUCTS_DEPENDENCIES_POST_URL = '/mad/products/get-smart-filter-dependencies';
+const GET_PROCESSES_DEPENDENCIES_POST_URL = '/mad/processes/get-smart-filter-dependencies';
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +24,8 @@ const GET_MAD_PROCESSES_DEPENDENCIES_POST_URL = '/mad/processes/get-smart-filter
 |--------------------------------------------------------------------------
 */
 
-// MAD manufacturers filter
-const manufacturersPage = document.querySelector('.manufacturers-index');
+// Manufacturers filter
+const manufacturersPage = document.querySelector('.mad-manufacturers-index');
 
 if (manufacturersPage) {
     var analystSelect = manufacturersPage.querySelector('select[name="analyst_user_id"]').selectize;
@@ -33,8 +33,8 @@ if (manufacturersPage) {
     var manufacturersSelect = manufacturersPage.querySelector('select[name="id[]"]').selectize;
 }
 
-// MAD products filter
-const productsPage = document.querySelector('.products-index');
+// Products filter
+const productsPage = document.querySelector('.mad-products-index');
 
 if (productsPage) {
     var manufacturersSelect = productsPage.querySelector('select[name="manufacturer_id[]"]').selectize;
@@ -45,7 +45,7 @@ if (productsPage) {
 }
 
 // Joined MAD processes & MAD Decision hub filters
-const processesPage = document.querySelector('.processes-index, .decision-hub-index');
+const processesPage = document.querySelector('.mad-processes-index, .mad-decision-hub-index');
 
 if (processesPage) {
     var manufacturersSelect = processesPage.querySelector('select[name="manufacturer_id[]"]').selectize;
@@ -62,7 +62,7 @@ if (processesPage) {
 |--------------------------------------------------------------------------
 */
 
-function updateMadManufacturersFilterInputs() {
+function updateManufacturersFilterInputs() {
     showSpinner();
 
     const data = {
@@ -71,7 +71,7 @@ function updateMadManufacturersFilterInputs() {
         id: manufacturersSelect.getValue().length ? manufacturersSelect.getValue() : null,
     };
 
-    axios.post(GET_MAD_MANUFACTURERS_DEPENDENCIES_POST_URL, data, {
+    axios.post(GET_MANUFACTURERS_DEPENDENCIES_POST_URL, data, {
         headers: {
             'Content-Type': 'application/json'
         }
@@ -79,14 +79,14 @@ function updateMadManufacturersFilterInputs() {
         .then(response => {
             const { analystUsers, countriesOrderedByName, manufacturers } = response.data;
 
-            updateSelectize(analystSelect, analystUsers, updateMadManufacturersFilterInputs, 'name', 'id', false);
-            updateSelectize(countriesSelect, countriesOrderedByName, updateMadManufacturersFilterInputs);
-            updateSelectize(manufacturersSelect, manufacturers, updateMadManufacturersFilterInputs);
+            refreshSelectizeOptions(analystSelect, analystUsers, updateManufacturersFilterInputs, 'name', 'id', false);
+            refreshSelectizeOptions(countriesSelect, countriesOrderedByName, updateManufacturersFilterInputs);
+            refreshSelectizeOptions(manufacturersSelect, manufacturers, updateManufacturersFilterInputs);
         })
         .finally(hideSpinner);
 }
 
-function updateMadProductsFilterInputs() {
+function updateProductsFilterInputs() {
     showSpinner();
 
     const data = {
@@ -97,7 +97,7 @@ function updateMadProductsFilterInputs() {
         pack: packInput.value,
     };
 
-    axios.post(GET_MAD_PRODUCTS_DEPENDENCIES_POST_URL, data, {
+    axios.post(GET_PRODUCTS_DEPENDENCIES_POST_URL, data, {
         headers: {
             'Content-Type': 'application/json'
         }
@@ -105,17 +105,17 @@ function updateMadProductsFilterInputs() {
         .then(response => {
             const { manufacturers, inns, productForms } = response.data;
 
-            updateSelectize(manufacturersSelect, manufacturers, updateMadProductsFilterInputs);
-            updateSelectize(innsSelect, inns, updateMadProductsFilterInputs);
-            updateSelectize(formsSelect, productForms, updateMadProductsFilterInputs);
+            refreshSelectizeOptions(manufacturersSelect, manufacturers, updateProductsFilterInputs);
+            refreshSelectizeOptions(innsSelect, inns, updateProductsFilterInputs);
+            refreshSelectizeOptions(formsSelect, productForms, updateProductsFilterInputs);
         })
         .finally(hideSpinner);
 }
 
 /**
- * Joined MAD VPS & MAD DH
+ * Joined MAD VPS & MAD DH !!!
  */
-function updateMadProcessesFilterInputs() {
+function updateProcessesFilterInputs() {
     showSpinner();
 
     const data = {
@@ -127,7 +127,7 @@ function updateMadProcessesFilterInputs() {
         dosage: dosageInput.value,
     };
 
-    axios.post(GET_MAD_PROCESSES_DEPENDENCIES_POST_URL, data, {
+    axios.post(GET_PROCESSES_DEPENDENCIES_POST_URL, data, {
         headers: {
             'Content-Type': 'application/json'
         }
@@ -135,47 +135,13 @@ function updateMadProcessesFilterInputs() {
         .then(response => {
             const { manufacturers, inns, productForms, countriesOrderedByProcessesCount, statuses } = response.data;
 
-            updateSelectize(manufacturersSelect, manufacturers, updateMadProcessesFilterInputs);
-            updateSelectize(innsSelect, inns, updateMadProcessesFilterInputs);
-            updateSelectize(formsSelect, productForms, updateMadProcessesFilterInputs);
-            updateSelectize(countriesSelect, countriesOrderedByProcessesCount, updateMadProcessesFilterInputs, 'code');
-            updateSelectize(statusesSelect, statuses, updateMadProcessesFilterInputs);
+            refreshSelectizeOptions(manufacturersSelect, manufacturers, updateProcessesFilterInputs);
+            refreshSelectizeOptions(innsSelect, inns, updateProcessesFilterInputs);
+            refreshSelectizeOptions(formsSelect, productForms, updateProcessesFilterInputs);
+            refreshSelectizeOptions(countriesSelect, countriesOrderedByProcessesCount, updateProcessesFilterInputs, 'code');
+            refreshSelectizeOptions(statusesSelect, statuses, updateProcessesFilterInputs);
         })
         .finally(hideSpinner);
-}
-
-/*
-|--------------------------------------------------------------------------
-| Helpers
-|--------------------------------------------------------------------------
-*/
-
-function updateSelectize(selectize, itemsObject, onChangeCallback, labelField = 'name', valueField = 'id', isMultiple = true) {
-    const items = Object.values(itemsObject); // Convert object to array
-    const currentValues = selectize.getValue();
-
-    // Unbind change event temporarily
-    selectize.off('change');
-
-    selectize.clearOptions();
-
-    items.forEach(item => {
-        selectize.addOption({
-            [SELECTIZE_DEFAULT_OPTIONS.valueField]: item[valueField],
-            [SELECTIZE_DEFAULT_OPTIONS.labelField]: item[labelField]
-        });
-    });
-
-    if (isMultiple) {
-        const validValues = currentValues.filter(value => items.some(item => item[valueField] == value));
-        selectize.setValue(validValues, true); // true = avoid triggering 'change' event
-    } else {
-        const validValue = items.some(item => item[valueField] == currentValues) ? currentValues : null;
-        selectize.setValue(validValue, true);
-    }
-
-    // Rebind change event
-    selectize.on('change', onChangeCallback);
 }
 
 /*
@@ -184,25 +150,25 @@ function updateSelectize(selectize, itemsObject, onChangeCallback, labelField = 
 |--------------------------------------------------------------------------
 */
 
-function initializeMadManufacturersFilter() {
+function initializeManufacturersFilter() {
     if (!manufacturersPage) return;
 
     // Attach change event listeners to smart select dropdowns
     const selects = [analystSelect, countriesSelect, manufacturersSelect];
 
     for (const select of selects) {
-        select.on('change', updateMadManufacturersFilterInputs);
+        select.on('change', updateManufacturersFilterInputs);
     }
 }
 
-function initializeMadProductsFilter() {
+function initializeProductsFilter() {
     if (!productsPage) return;
 
     // Attach change event listeners to smart select dropdowns
     const selects = [manufacturersSelect, innsSelect, formsSelect];
 
     for (const select of selects) {
-        select.on('change', updateMadProductsFilterInputs);
+        select.on('change', updateProductsFilterInputs);
     }
 
     // Attach change event listeners to required smart inputs
@@ -210,7 +176,7 @@ function initializeMadProductsFilter() {
 
     for (const input of inputs) {
         input.addEventListener('input', debounce(() => {
-            updateMadProductsFilterInputs();
+            updateProductsFilterInputs();
         }, 1500));
     }
 }
@@ -218,14 +184,14 @@ function initializeMadProductsFilter() {
 /**
  * Joined MAD VPS & MAD DH
  */
-function initializeMadProcessesFilter() {
+function initializeProcessesFilter() {
     if (!processesPage) return;
 
     // Attach change event listeners to smart select dropdowns
     const selects = [manufacturersSelect, innsSelect, formsSelect, countriesSelect, statusesSelect];
 
     for (const select of selects) {
-        select.on('change', updateMadProcessesFilterInputs);
+        select.on('change', updateProcessesFilterInputs);
     }
 
     // Attach change event listeners to required smart inputs
@@ -233,13 +199,13 @@ function initializeMadProcessesFilter() {
 
     for (const input of inputs) {
         input.addEventListener('input', debounce(() => {
-            updateMadProcessesFilterInputs();
+            updateProcessesFilterInputs();
         }, 1500));
     }
 }
 
 export default function initializeAll() {
-    initializeMadManufacturersFilter();
-    initializeMadProductsFilter();
-    initializeMadProcessesFilter(); // Joined MAD VPS & MAD DH
+    initializeManufacturersFilter();
+    initializeProductsFilter();
+    initializeProcessesFilter(); // Joined MAD VPS & MAD DH
 }
