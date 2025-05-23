@@ -148,10 +148,11 @@
     display: none;
 }
 
-/* About product on create/edit/duplicate pages */
+/* About product on create/edit/duplicate and process status history pages */
 .mad-processes-create .about-product-block,
 .mad-processes-edit .about-product-block,
-.mad-processes-duplicate .about-product-block {
+.mad-processes-duplicate .about-product-block,
+.mad-process-status-history-index .about-product-block {
     padding: 20px;
     margin-bottom: 20px;
 }

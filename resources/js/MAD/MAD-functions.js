@@ -7,6 +7,7 @@
 import { hideSpinner, showSpinner } from "../../custom-components/script";
 import { createElementFromHTML } from '../utilities';
 import { initializeSelectizes, initializeSimditors } from "../plugins";
+import { initializeSpecificFormatableInputs } from "../main-functions";
 
 /*
 |--------------------------------------------------------------------------
@@ -43,8 +44,8 @@ const GET_PRODUCT_SEARCHES_SIMILAR_RECORDS_POST_URL = '/mad/product-searches/get
 const ATXInputsWrapper = document.querySelector('.atx-inputs-wrapper');
 
 // VPS
-const processesForecastInputsWrapper = document.querySelector('.processes-create__forecast-inputs-wrapper');
-const processesStageInputsWrapper = document.querySelector('.processes-stage-inputs-wrapper');
+const processesForecastInputsWrapper = document.querySelector('.mad-processes-create__forecast-inputs-wrapper');
+const processesStageInputsWrapper = document.querySelector('.mad-processes-stage-inputs-wrapper');
 
 // ASP
 const ASPTable = document.querySelector('.mad-asp-table');

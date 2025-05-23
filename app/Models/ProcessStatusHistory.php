@@ -61,7 +61,7 @@ class ProcessStatusHistory extends Model
             $currentRouteName = request()->route()->getName();
 
             // Active status history cannot be deleted
-            if ($record->isActiveStatusHistory() && $currentRouteName == 'processes.status-history.destroy') {
+            if ($record->isActiveStatusHistory() && $currentRouteName == 'mad.processes.status-history.destroy') {
                 throw ValidationException::withMessages([
                     'process_status_history_deletion' => trans('validation.custom.process_status_history.is_active_history'),
                 ]);

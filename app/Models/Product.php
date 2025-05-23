@@ -146,7 +146,9 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
             if ($record->manufacturer->trashed()) {
                 $record->manufacturer->restore();
             }
+        });
 
+        static::restored(function ($record) {
             foreach ($record->processes()->onlyTrashed()->get() as $process) {
                 $process->restore();
             }

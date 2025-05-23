@@ -1,5 +1,5 @@
 <x-misc.similar-records :records-found="$similarRecords->isNotEmpty()">
-    @foreach ($similarRecords as $product)
+    @foreach ($similarRecords as $record)
         <div class="similar-records__list-item">
             <a class="similar-records__list-link main-link" href="{{ route('mad.products.index', ['id[]' => $record->id]) }}" target="_blank"># {{ $record->id }}</a>
 
