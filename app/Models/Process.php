@@ -1015,7 +1015,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
             if ($status->generalStatus->stage == 5) {
                 $notification = new ProcessStageUpdatedToContract($this, $status->name);
-                User::notifyProcessOnContractStageToAll($notification);
+                User::notifyMADProcessOnContractStageToAll($notification);
             }
         }
     }

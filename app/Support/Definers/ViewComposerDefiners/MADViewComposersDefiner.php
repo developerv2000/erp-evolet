@@ -62,7 +62,7 @@ class MADViewComposersDefiner
 
         View::composer('MAD.manufacturers.partials.filter', function ($view) {
             $view->with([
-                'bdmUsers' => User::getBDMsMinifed(),
+                'bdmUsers' => User::getCMDBDMsMinifed(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
                 'categories' => ManufacturerCategory::orderByName()->get(),
                 'zones' => Zone::orderByName()->get(),
@@ -93,7 +93,7 @@ class MADViewComposersDefiner
         View::composer('MAD.products.partials.filter', function ($view) {
             $view->with([
                 'analystUsers' => User::getMADAnalystsMinified(),
-                'bdmUsers' => User::getBDMsMinifed(),
+                'bdmUsers' => User::getCMDBDMsMinifed(),
                 'productClasses' => ProductClass::orderByName()->get(),
                 'shelfLifes' => ProductShelfLife::all(),
                 'zones' => Zone::orderByName()->get(),
@@ -146,7 +146,7 @@ class MADViewComposersDefiner
             $view->with([
                 'countriesOrderedByName' => Country::orderByName()->get(),
                 'analystUsers' => User::getMADAnalystsMinified(),
-                'bdmUsers' => User::getBDMsMinifed(),
+                'bdmUsers' => User::getCMDBDMsMinifed(),
                 'responsiblePeople' => ProcessResponsiblePerson::orderByName()->get(),
                 'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
                 'productClasses' => ProductClass::orderByName()->get(),
@@ -193,7 +193,7 @@ class MADViewComposersDefiner
         View::composer('MAD.kpi.partials.filter', function ($view) {
             $view->with([
                 'analystUsers' => User::getMADAnalystsMinified(),
-                'bdmUsers' => User::getBDMsMinifed(),
+                'bdmUsers' => User::getCMDBDMsMinifed(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
                 'regions' => Country::getRegionOptions(),
                 'months' => GeneralHelper::collectCalendarMonths(),
@@ -250,7 +250,7 @@ class MADViewComposersDefiner
             $view->with([
                 'countriesOrderedByName' => Country::orderByName()->get(),
                 'analystUsers' => User::getMADAnalystsMinified(),
-                'bdmUsers' => User::getBDMsMinifed(),
+                'bdmUsers' => User::getCMDBDMsMinifed(),
                 'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
                 'regions' => Country::getRegionOptions(),
                 'generalStatusNamesForAnalysts' => ProcessGeneralStatus::getUniqueNamesForAnalysts(),
@@ -269,7 +269,7 @@ class MADViewComposersDefiner
     {
         return [
             'analystUsers' => User::getMADAnalystsMinified(),
-            'bdmUsers' => User::getBDMsMinifed(),
+            'bdmUsers' => User::getCMDBDMsMinifed(),
             'countriesOrderedByName' => Country::orderByName()->get(),
             'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
             'manufacturers' => Manufacturer::getMinifiedRecordsWithName(),
@@ -287,7 +287,7 @@ class MADViewComposersDefiner
         return [
             'manufacturers' => Manufacturer::getMinifiedRecordsWithName(),
             'analystUsers' => User::getMADAnalystsMinified(),
-            'bdmUsers' => User::getBDMsMinifed(),
+            'bdmUsers' => User::getCMDBDMsMinifed(),
             'productClasses' => ProductClass::orderByName()->get(),
             'productForms' => ProductForm::getMinifiedRecordsWithName(),
             'shelfLifes' => ProductShelfLife::all(),
@@ -319,7 +319,7 @@ class MADViewComposersDefiner
         return [
             'manufacturers' => Manufacturer::getMinifiedRecordsWithName(),
             'analystUsers' => User::getMADAnalystsMinified(),
-            'bdmUsers' => User::getBDMsMinifed(),
+            'bdmUsers' => User::getCMDBDMsMinifed(),
             'countriesOrderedByName' => Country::orderByName()->get(),
         ];
     }

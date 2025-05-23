@@ -30,7 +30,7 @@ class ManufacturerFactory extends Factory
             'relationship' => fake()->sentences(2, true),
             'active' => fake()->boolean(),
             'important' => fake()->boolean(),
-            'bdm_user_id' => User::onlyBdms()->inRandomOrder()->first()->id,
+            'bdm_user_id' => User::onlyCMDBDMs()->inRandomOrder()->first()->id,
             'analyst_user_id' => User::onlyMADAnalysts()->inRandomOrder()->first()->id,
             'category_id' => rand(1, 2),
             'country_id' => rand(1, Country::count()),

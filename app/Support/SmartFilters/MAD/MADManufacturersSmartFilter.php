@@ -35,7 +35,7 @@ class MADManufacturersSmartFilter
         $query = User::onlyMADAnalysts();
 
         // Manufacturer
-        $query->whereHas('analystManufacturers', function ($manufacturersQuery) use ($requestData) {
+        $query->whereHas('manufacturersAsAnalyst', function ($manufacturersQuery) use ($requestData) {
             if (!empty($requestData['country_id'])) {
                 $manufacturersQuery->whereIn('country_id', $requestData['country_id']);
             }

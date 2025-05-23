@@ -112,7 +112,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Country::class, 'responsible_country_user');
     }
 
-    public function analystManufacturers()
+    public function manufacturersAsAnalyst()
     {
         return $this->hasMany(Manufacturer::class, 'analyst_user_id');
     }
@@ -170,7 +170,7 @@ class User extends Authenticatable
         ]);
     }
 
-    public function scopeOnlyBDMs($query)
+    public function scopeOnlyCMDBDMs($query)
     {
         return $query->whereRelation('roles', 'name', Role::BDM_NAME);
     }
@@ -208,9 +208,9 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    public static function getBDMsMinifed()
+    public static function getCMDBDMsMinifed()
     {
-        return self::onlyBdms()->select('id', 'name')->get();
+        return self::onlyCMDBDMs()->select('id', 'name')->get();
     }
 
     public static function getMADAnalystsMinified()
@@ -653,7 +653,7 @@ class User extends Authenticatable
     /**
      * Notify required users on process update to contract stage.
      */
-    public static function notifyProcessOnContractStageToAll($notification)
+    public static function notifyMADProcessOnContractStageToAll($notification)
     {
         self::withBasicRelationsToNotify()->each(function ($user) use ($notification) {
             if (Gate::forUser($user)->allows('receive-notification-on-MAD-VPS-contract')) {
