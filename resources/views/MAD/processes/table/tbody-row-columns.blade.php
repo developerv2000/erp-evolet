@@ -28,6 +28,12 @@
         @endif
     @break
 
+    @case('8Р')
+        @if ($record->canBeMarkedAsReadyForOrder() || $record->is_ready_for_order)
+            <input class="checkbox td__checkbox" type="checkbox" data-on-toggle="toggle-mad-process-is-ready-for-order-boolean" data-process-id={{ $record->id }} @checked($record->is_ready_for_order)>
+        @endif
+    @break
+
     @case('Search country')
         {{ $record->searchCountry->code }}
     @break

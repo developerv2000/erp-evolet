@@ -26,6 +26,7 @@ const GET_PRODUCTS_DYNAMIC_ROWS_LIST_ITEM_INPUTS_POST_URL = '/mad/products/get-d
 // VPS
 const UPDATE_PROCESSES_CONTRACTED_IN_ASP_VALUE_POST_URL = '/mad/processes/update-contracted-in-asp-value';
 const UPDATE_PROCESSES_REGISTERED_IN_ASP_VALUE_POST_URL = '/mad/processes/update-registered-in-asp-value';
+const UPDATE_PROCESSES_IS_READY_FOR_ORDER_VALUE_POST_URL = '/mad/processes/update-is-ready-for-order-value';
 const GET_PROCESS_CREATE_STAGE_INPUTS_POST_URL = '/mad/processes/get-create-form-stage-inputs';
 const GET_PROCESS_CREATE_FORECAST_INPUTS_POST_URL = '/mad/processes/get-create-form-forecast-inputs';
 const GET_PROCESS_EDIT_STAGE_INPUTS_POST_URL = '/mad/processes/get-edit-form-stage-inputs';
@@ -193,6 +194,39 @@ export function updateProcessRegisteredValue(evt) {
             'Content-Type': 'application/json'
         }
     })
+        .finally(function () {
+            // Hide any loading spinner after the request is complete
+            hideSpinner();
+        });
+}
+
+export function updateProcessIsReadyForOrderValue(evt) {
+    showSpinner();
+
+    const chb = evt.target;
+    const processID = chb.dataset.processId;
+
+    const data = {
+        'is_ready_for_order': chb.checked,
+        'process_id': processID,
+    };
+
+    axios.post(UPDATE_PROCESSES_IS_READY_FOR_ORDER_VALUE_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            const success = response.data.success;
+            const message = response.data.message;
+            const isReadyForOrder = response.data.is_ready_for_order;
+
+            chb.checked = isReadyForOrder;
+
+            if (!success) {
+                alert(message);
+            }
+        })
         .finally(function () {
             // Hide any loading spinner after the request is complete
             hideSpinner();

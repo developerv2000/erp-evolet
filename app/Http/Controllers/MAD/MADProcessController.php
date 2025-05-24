@@ -251,4 +251,14 @@ class MADProcessController extends Controller
 
         return true;
     }
+
+    /**
+     * AJAX request
+     */
+    public function updateIsReadyForOrderValue(Request $request)
+    {
+        $process = Process::find($request->process_id);
+
+        return $process->updateIsReadyForOrderValue($request);
+    }
 }

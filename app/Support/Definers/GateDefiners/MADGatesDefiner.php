@@ -118,5 +118,9 @@ class MADGatesDefiner
         Gate::define('receive-notification-on-MAD-VPS-contract', function ($user) {
             return $user->hasPermission('can receive notification on MAD VPS contract');
         });
+
+        Gate::define('mark-MAD-VPS-as-ready-for-order', function ($user) {
+            return $user->hasPermission('can mark MAD VPS as ready for order');
+        });
     }
 }

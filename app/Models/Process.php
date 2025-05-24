@@ -967,6 +967,62 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         ]);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Order part
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * CHeck whether process can be marked as ready for order
+     */
+    public function canBeMarkedAsReadyForOrder()
+    {
+        return $this->status->generalStatus->stage >= 8;
+    }
+
+    public function updateIsReadyForOrderValue($request)
+    {
+        if (!$this->canBeMarkedAsReadyForOrder()) {
+            return [
+                'success' => false,
+                'is_ready_for_order' => $this->is_ready_for_order,
+                'message' => 'Error!'
+            ];
+        }
+
+        // Mark as ready for order
+        if ($request->input('is_ready_for_order')) {
+            $this->is_ready_for_order = true;
+            $this->timestamps = false;
+            $this->saveQuietly();
+
+            return [
+                'success' => true,
+                'is_ready_for_order' => true,
+            ];
+        } else {
+            // Return error if process already has orders
+            // if ($this->orders()->count() > 0) {
+            //     return [
+            //         'success' => false,
+            //         'is_ready_for_order' => true,
+            //         'message' => __('Process already has orders!')
+            //     ];
+            // }
+
+            // Else remove ready for order status
+            $this->is_ready_for_order = false;
+            $this->timestamps = false;
+            $this->saveQuietly();
+
+            return [
+                'success' => true,
+                'is_ready_for_order' => false,
+            ];
+        }
+    }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -1186,6 +1242,13 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                 $columns,
                 ['name' => '5Кк', 'order' => $order++, 'width' => 40, 'visible' => 1],
                 ['name' => '7НПР', 'order' => $order++, 'width' => 50, 'visible' => 1],
+            );
+        }
+
+        if (Gate::forUser($user)->allows('mark-MAD-VPS-as-ready-for-order')) {
+            array_push(
+                $columns,
+                ['name' => '8Р', 'order' => $order++, 'width' => 40, 'visible' => 1],
             );
         }
 

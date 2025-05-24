@@ -94,6 +94,7 @@ class PermissionSeeder extends Seeder
             Permission::CAN_EDIT_MAD_VPS_STATUS_HISTORY_NAME,
             Permission::CAN_UPGRADE_MAD_VPS_STATUS_AFTER_CONTRACT_STAGE_NAME,
             Permission::CAN_RECEIVE_NOTIFICATION_ON_MAD_VPS_CONTRACT,
+            Permission::CAN_MARK_MAD_VPS_AS_READY_FOR_ORDER,
         ];
 
         foreach ($MADs as $mad) {

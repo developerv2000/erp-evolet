@@ -104,6 +104,7 @@ class Permission extends Model
     const CAN_EDIT_MAD_VPS_STATUS_HISTORY_NAME = 'can edit MAD VPS status history';
     const CAN_UPGRADE_MAD_VPS_STATUS_AFTER_CONTRACT_STAGE_NAME = 'can upgrade MAD VPS status after contract stage';
     const CAN_RECEIVE_NOTIFICATION_ON_MAD_VPS_CONTRACT = 'can receive notification on MAD VPS contract';
+    const CAN_MARK_MAD_VPS_AS_READY_FOR_ORDER = 'can mark MAD VPS as ready for order';
 
     /*
     |--------------------------------------------------------------------------
@@ -267,6 +268,7 @@ class Permission extends Model
             self::CAN_EDIT_MAD_VPS_STATUS_HISTORY_NAME,
             self::CAN_UPGRADE_MAD_VPS_STATUS_AFTER_CONTRACT_STAGE_NAME,
             self::CAN_RECEIVE_NOTIFICATION_ON_MAD_VPS_CONTRACT,
+            self::CAN_MARK_MAD_VPS_AS_READY_FOR_ORDER,
         ]);
     }
 }

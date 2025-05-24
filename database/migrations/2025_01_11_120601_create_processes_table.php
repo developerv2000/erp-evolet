@@ -92,6 +92,11 @@ return new class extends Migration
             $table->decimal('increased_price', 8, 2)->nullable(); // nullable
             $table->date('increased_price_date')->nullable(); // auto
 
+            // Order part
+            $table->boolean('is_ready_for_order')->default(false);
+            $table->timestamp('readiness_for_order_date')->nullable(); // auto
+
+            // Timestamps
             $table->timestamps();
             $table->softDeletes();
         });
