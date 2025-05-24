@@ -172,7 +172,7 @@ class User extends Authenticatable
 
     public function scopeOnlyCMDBDMs($query)
     {
-        return $query->whereRelation('roles', 'name', Role::BDM_NAME);
+        return $query->whereRelation('roles', 'name', Role::CMD_BDM_NAME);
     }
 
     public function scopeOnlyMADAnalysts($query)

@@ -107,9 +107,21 @@ class RoleSeeder extends Seeder
         */
 
         $role = new Role();
-        $role->name = Role::BDM_NAME;
-        $role->description = "User is assosiated as 'BDM'. Doesn`t attach any role related permissions.";
+        $role->name = Role::CMD_BDM_NAME;
+        $role->description = "User is assosiated as 'BDM'. Not fully implemented yet!";
         $role->department_id = Department::findByName(Department::CMD_NAME)->id;
+        $role->save();
+
+        /*
+        |--------------------------------------------------------------------------
+        | PLPD roles
+        |--------------------------------------------------------------------------
+        */
+
+        $role = new Role();
+        $role->name = Role::PLPD_LOGISTICIAN_NAME;
+        $role->description = "Not fully implemented yet!";
+        $role->department_id = Department::findByName(Department::PLPD_NAME)->id;
         $role->save();
     }
 }

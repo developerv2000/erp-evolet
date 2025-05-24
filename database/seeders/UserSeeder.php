@@ -117,7 +117,7 @@ class UserSeeder extends Seeder
         */
 
         $CmdID = Department::findByName(Department::CMD_NAME)->id;
-        $bdmRoleID = Role::findByName(Role::BDM_NAME);
+        $bdmRoleID = Role::findByName(Role::CMD_BDM_NAME);
 
         $bdms = [
             ['name' => 'Irini Kouimtzidou', 'email' => 'irini@mail.com', 'photo' => 'bdm.png'],
