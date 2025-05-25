@@ -1,5 +1,7 @@
 1) Departments & roles updated.
-2) 'is_ready_for_order' and 'readiness_for_order_date' columns added to processes table.
+2) 'is_ready_for_order' (removed!) and 'readiness_for_order_date' columns added to processes table.
 3) 'can mark MAD VPS as ready for order' permission added.
 4) 'can mark MAD VPS as ready for order' attached to 'MAD administrator' role.
 5) MAD users VPS table columns updated.
+
+6) New permissions for PLPD 'Logistician' created and attached.

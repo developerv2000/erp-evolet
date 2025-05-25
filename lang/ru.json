@@ -272,5 +272,10 @@
 
     "Too many records to display. Please filter required products.": "Слишком много записей для отображения. Пожалуйста, отфильтруйте необходимые продукты.",
 
+    "Ready for order": "Готовые к заказу",
+    "Orders": "Заказы",
+    "Order products": "Заказанные продукты",
+    "Process already has order products": "Процесс уже имеет заказанные продукты",
+
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

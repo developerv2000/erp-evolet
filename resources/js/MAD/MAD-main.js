@@ -30,7 +30,7 @@ const processesDuplicateForm = document.querySelector('.mad-processes-duplicate-
 // VPS checkboxes
 const toggleProcessContractedValueChbs = document.querySelectorAll('[data-on-toggle="toggle-mad-process-contracted-in-asp-boolean"]');
 const toggleProcessRegisteredValueChbs = document.querySelectorAll('[data-on-toggle="toggle-mad-process-registered-in-asp-boolean"]');
-const toggleProcessIsReadyForOrderValueChbs = document.querySelectorAll('[data-on-toggle="toggle-mad-process-is-ready-for-order-boolean"]');
+const toggleProcessReadyForOrderStatusChbs = document.querySelectorAll('[data-on-toggle="toggle-mad-process-ready-for-order-status"]');
 
 // ASP table
 const ASPTableCountryMAHsToggler = document.querySelectorAll('.mad-asp-table__tbody-country-mahs-toggler');
@@ -49,8 +49,8 @@ toggleProcessRegisteredValueChbs.forEach((cbexkbox) => {
     cbexkbox.addEventListener('change', (evt) => functions.updateProcessRegisteredValue(evt));
 });
 
-toggleProcessIsReadyForOrderValueChbs.forEach((cbexkbox) => {
-    cbexkbox.addEventListener('change', (evt) => functions.updateProcessIsReadyForOrderValue(evt));
+toggleProcessReadyForOrderStatusChbs.forEach((cbexkbox) => {
+    cbexkbox.addEventListener('change', (evt) => functions.toggleProcessReadyForOrderStatus(evt));
 });
 
 ASPTableCountryMAHsToggler.forEach((toggler) => {

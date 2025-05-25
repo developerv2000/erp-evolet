@@ -68,3 +68,4 @@ Route::middleware('auth', 'auth.session')->group(function () {
 
 require __DIR__ . '/MGMT.php';
 require __DIR__ . '/MAD.php';
+require __DIR__ . '/PLPD.php';

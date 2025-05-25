@@ -29,8 +29,8 @@
     @break
 
     @case('8Р')
-        @if ($record->canBeMarkedAsReadyForOrder() || $record->is_ready_for_order)
-            <input class="checkbox td__checkbox" type="checkbox" data-on-toggle="toggle-mad-process-is-ready-for-order-boolean" data-process-id={{ $record->id }} @checked($record->is_ready_for_order)>
+        @if ($record->canBeMarkedAsReadyForOrder() || $record->readiness_for_order_date)
+            <input class="checkbox td__checkbox" type="checkbox" data-on-toggle="toggle-mad-process-ready-for-order-status" data-process-id={{ $record->id }} @checked($record->readiness_for_order_date)>
         @endif
     @break
 

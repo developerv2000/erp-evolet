@@ -730,6 +730,12 @@ a {
     font-variation-settings: var(--filled-material-symbols-font-variation);
 }
 
+.leftbar__nav-link-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .leftbar__nav-link--active {
     color: var(--theme-main-color);
 }

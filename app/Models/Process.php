@@ -203,6 +203,11 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             : null;
     }
 
+    public function getIsReadyForOrderAttribute()
+    {
+        return $this->readiness_for_order_date ? true : false;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Events
@@ -255,6 +260,11 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     | Scopes
     |--------------------------------------------------------------------------
     */
+
+    public function scopeOnlyReadyForOrder($query)
+    {
+        return $query->whereNotNull('readiness_for_order_date');
+    }
 
     public function scopeWithBasicRelations($query)
     {
@@ -418,6 +428,58 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         return $query->withCount([
             'comments',
         ]);
+    }
+
+    public function scopeWithRelationsForOrder($query)
+    {
+        return $query->with([
+            'searchCountry',
+            'MAH',
+
+            'product' => function ($productQuery) {
+                $productQuery->select(
+                    'id',
+                    'manufacturer_id',
+                    'form_id',
+                    'dosage',
+                    'pack',
+                )
+                    ->with([
+                        'form',
+
+                        'manufacturer' => function ($manufQuery) {
+                            $manufQuery->select(
+                                'id',
+                                'name',
+                                'bdm_user_id',
+                            )
+                                ->with([
+                                    'bdm:id,name,photo',
+                                ]);
+                        },
+                    ]);
+            },
+        ]);
+    }
+
+    public function scopeWithRelationCountsForOrder($query)
+    {
+        return $query->withCount([
+            // 'orderedProducts',
+        ]);
+    }
+
+    public function scopeWithOnlyRequiredSelectsForOrder($query)
+    {
+        return $query->select(
+            'id',
+            'readiness_for_order_date',
+            'trademark_en',
+            'trademark_ru',
+            'product_id',
+            'country_id',
+            'marketing_authorization_holder_id',
+        );
     }
 
     /*
@@ -981,38 +1043,40 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         return $this->status->generalStatus->stage >= 8;
     }
 
-    public function updateIsReadyForOrderValue($request)
+    public function toggleReadyForOrderStatus($request)
     {
         if (!$this->canBeMarkedAsReadyForOrder()) {
             return [
                 'success' => false,
                 'is_ready_for_order' => $this->is_ready_for_order,
-                'message' => 'Error!'
+                'message' => __('Error') . '!'
             ];
         }
 
         // Mark as ready for order
-        if ($request->input('is_ready_for_order')) {
-            $this->is_ready_for_order = true;
-            $this->timestamps = false;
-            $this->saveQuietly();
+        if ($request->input('mark_as_ready_for_order')) {
+            if (!$this->is_ready_for_order) {
+                $this->readiness_for_order_date = now();
+                $this->timestamps = false;
+                $this->saveQuietly();
+            }
 
             return [
                 'success' => true,
                 'is_ready_for_order' => true,
             ];
         } else {
-            // Return error if process already has orders
-            // if ($this->orders()->count() > 0) {
+            // // Return error if process already has order products
+            // if ($this->orderProducts()->count() > 0) {
             //     return [
             //         'success' => false,
-            //         'is_ready_for_order' => true,
-            //         'message' => __('Process already has orders!')
+            //         'is_ready_for_order' => $this->is_ready_for_order,
+            //         'message' => __('Error') . '. ' . __('Process already has order products') . '!'
             //     ];
             // }
 
             // Else remove ready for order status
-            $this->is_ready_for_order = false;
+            $this->readiness_for_order_date = null;
             $this->timestamps = false;
             $this->saveQuietly();
 

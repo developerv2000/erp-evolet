@@ -255,10 +255,10 @@ class MADProcessController extends Controller
     /**
      * AJAX request
      */
-    public function updateIsReadyForOrderValue(Request $request)
+    public function toggleReadyForOrderStatus(Request $request)
     {
         $process = Process::find($request->process_id);
 
-        return $process->updateIsReadyForOrderValue($request);
+        return $process->toggleReadyForOrderStatus($request);
     }
 }

@@ -108,6 +108,21 @@ class Permission extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | PLPD permissions
+    |--------------------------------------------------------------------------
+    */
+
+    // View
+    const CAN_VIEW_PLPD_READY_FOR_ORDER_PROCESSES_NAME = 'can view PLPD ready for order processes';
+    const CAN_VIEW_PLPD_ORDERS_NAME = 'can view PLPD orders';
+    const CAN_VIEW_PLPD_ORDER_PRODUCTS_NAME = 'can view PLPD order products';
+
+    // Edit
+    const CAN_EDIT_PLPD_ORDERS_NAME = 'can edit PLPD orders';
+    const CAN_EDIT_PLPD_ORDER_PRODUCTS_NAME = 'can edit PLPD order products';
+
+    /*
+    |--------------------------------------------------------------------------
     | Properties
     |--------------------------------------------------------------------------
     */
@@ -270,5 +285,17 @@ class Permission extends Model
             self::CAN_RECEIVE_NOTIFICATION_ON_MAD_VPS_CONTRACT,
             self::CAN_MARK_MAD_VPS_AS_READY_FOR_ORDER,
         ]);
+    }
+
+    public static function getPLPDLogisticianPermissionNames()
+    {
+        return [
+            self::CAN_VIEW_PLPD_READY_FOR_ORDER_PROCESSES_NAME,
+            self::CAN_VIEW_PLPD_ORDERS_NAME,
+            self::CAN_VIEW_PLPD_ORDER_PRODUCTS_NAME,
+
+            self::CAN_EDIT_PLPD_ORDERS_NAME,
+            self::CAN_EDIT_PLPD_ORDER_PRODUCTS_NAME,
+        ];
     }
 }

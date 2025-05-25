@@ -123,5 +123,11 @@ class RoleSeeder extends Seeder
         $role->description = "Not fully implemented yet!";
         $role->department_id = Department::findByName(Department::PLPD_NAME)->id;
         $role->save();
+
+        $permissionNames = Permission::getPLPDLogisticianPermissionNames();
+
+        foreach ($permissionNames as $permissionName) {
+            $role->permissions()->attach(Permission::findByName($permissionName)->id);
+        }
     }
 }

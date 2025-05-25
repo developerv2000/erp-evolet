@@ -48,7 +48,7 @@ Route::middleware('auth', 'auth.session')->prefix('mad')->name('mad.')->group(fu
         // Ajax requests on checkbox toggle
         Route::post('/update-contracted-in-asp-value', 'updateContractedInAspValue')->middleware('can:control-MAD-ASP-processes');
         Route::post('/update-registered-in-asp-value', 'updateRegisteredInAspValue')->middleware('can:control-MAD-ASP-processes');
-        Route::post('/update-is-ready-for-order-value', 'updateIsReadyForOrderValue')->middleware('can:mark-MAD-VPS-as-ready-for-order');
+        Route::post('/toggle-ready-for-order-status', 'toggleReadyForOrderStatus')->middleware('can:mark-MAD-VPS-as-ready-for-order');
 
         // Ajax request for getting create/edit stage inputs
         Route::post('/get-create-form-stage-inputs', 'getCreateFormStageInputs');

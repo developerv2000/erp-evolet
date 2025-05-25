@@ -103,5 +103,28 @@ class PermissionSeeder extends Seeder
                 'department_id' => Department::findByName(Department::MAD_NAME)->id,
             ]);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | PLPD permissions
+        |--------------------------------------------------------------------------
+        */
+
+        $PLPDs = [
+            Permission::CAN_VIEW_PLPD_READY_FOR_ORDER_PROCESSES_NAME,
+            Permission::CAN_VIEW_PLPD_ORDERS_NAME,
+            Permission::CAN_VIEW_PLPD_ORDER_PRODUCTS_NAME,
+
+            Permission::CAN_EDIT_PLPD_ORDERS_NAME,
+            Permission::CAN_EDIT_PLPD_ORDER_PRODUCTS_NAME,
+
+        ];
+
+        foreach ($PLPDs as $plpd) {
+            Permission::create([
+                'name' => $plpd,
+                'department_id' => Department::findByName(Department::PLPD_NAME)->id,
+            ]);
+        }
     }
 }
