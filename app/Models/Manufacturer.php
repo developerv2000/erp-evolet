@@ -214,6 +214,13 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
         ]);
     }
 
+    public function scopeOnlyRecordsWithProcessesReadyForOrder($query)
+    {
+        return $query->whereHas('processes', function ($processesQuery) {
+            $processesQuery->whereNotNull('readiness_for_order_date');
+        });
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Contracts
@@ -440,6 +447,17 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
         // Delete removed presences
         $this->presences()->whereNotIn('name', $presences)->delete();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Order part
+    |--------------------------------------------------------------------------
+    */
+
+    public static function getRecordsWithProcessesReadyForOrder()
+    {
+        return self::onlyRecordsWithProcessesReadyForOrder()->minifiedRecordsWithName()->get();
     }
 
     /*

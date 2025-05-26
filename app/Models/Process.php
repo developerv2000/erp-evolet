@@ -62,6 +62,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             'forecast_year_1_update_date' => 'date',
             'increased_price_date' => 'date',
             'responsible_person_update_date' => 'date',
+            'readiness_for_order_date' => 'date',
         ];
     }
 
@@ -440,11 +441,13 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                 $productQuery->select(
                     'id',
                     'manufacturer_id',
+                    'inn_id',
                     'form_id',
                     'dosage',
                     'pack',
                 )
                     ->with([
+                        'inn',
                         'form',
 
                         'manufacturer' => function ($manufQuery) {
@@ -1087,7 +1090,6 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         }
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | Misc
@@ -1203,6 +1205,22 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         }
 
         return $query;
+    }
+
+    public static function pluckAllEnTrademarks()
+    {
+        return self::select('trademark_en')
+            ->distinct()
+            ->orderBy('trademark_en', 'asc')
+            ->pluck('trademark_en');
+    }
+
+    public static function pluckAllRuTrademarks()
+    {
+        return self::select('trademark_ru')
+            ->distinct()
+            ->orderBy('trademark_ru', 'asc')
+            ->pluck('trademark_ru');
     }
 
     /**

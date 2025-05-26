@@ -9,6 +9,14 @@ namespace App\Support\Traits\Model;
  */
 trait GetsMinifiedRecordsWithName
 {
+    public static function scopeMinifiedRecordsWithName($query)
+    {
+        return $query
+            ->select('id', 'name')
+            ->withOnly([])
+            ->orderBy('name', 'asc');
+    }
+
     /**
      * Retrieve all records with minimal fields (ID and name), ordered by name.
      *

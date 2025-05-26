@@ -8,6 +8,16 @@
     "My profile": "Мой профиль",
     "Logout": "Выход",
 
+    "Managment": "Руководство",
+    "MAD": "ОАП",
+    "CMD": "ОКП",
+    "PLPD": "ОППЛ",
+    "PRD": "ОПР",
+    "PPDD": "ОРПП",
+    "ELD": "ОЛЕ",
+    "MSD": "ОМС",
+    "DD": "ОД",
+
     "EPP": "ЕПП",
     "IVP": "ИВП",
     "VPS": "ВПЦ",
@@ -16,6 +26,9 @@
     "KPI": "КПЭ",
     "ASP": "СПГ",
     "Misc": "Разное",
+    "Ready for order": "Готовые к заказу",
+    "Orders": "Заказы",
+    "Order products": "Заказанные продукты",
 
     "Departments": "Отделы",
     "Department": "Отдел",
@@ -272,10 +285,8 @@
 
     "Too many records to display. Please filter required products.": "Слишком много записей для отображения. Пожалуйста, отфильтруйте необходимые продукты.",
 
-    "Ready for order": "Готовые к заказу",
-    "Orders": "Заказы",
-    "Order products": "Заказанные продукты",
     "Process already has order products": "Процесс уже имеет заказанные продукты",
+    "Readiness date": "Дата готовности",
 
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

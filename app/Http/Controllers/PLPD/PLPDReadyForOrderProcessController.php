@@ -31,6 +31,6 @@ class PLPDReadyForOrderProcessController extends Controller
         $filteredQuery = Process::filterQueryForRequest($query, $request);
         $records = self::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
-        return view('MAD.manufacturers.index', compact('request', 'records'));
+        return view('PLPD.ready-for-order-processes.index', compact('request', 'records'));
     }
 }

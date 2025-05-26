@@ -1,6 +1,6 @@
 @can('administrate')
     <div class="leftbar__section leftbar__section--managment">
-        <p class="leftbar__section-title">Managment</p>
+        <p class="leftbar__section-title">{{ __('Managment') }}</p>
 
         <nav class="leftbar__nav">
             {{-- Departments --}}
