@@ -28,7 +28,7 @@ class PLPDReadyForOrderProcessController extends Controller
 
         // Get finalized records paginated
         $query = Process::onlyReadyForOrder()->withRelationsForOrder()->withRelationCountsForOrder()->withOnlyRequiredSelectsForOrder();
-        $filteredQuery = Process::filterQueryForRequest($query, $request);
+        $filteredQuery = Process::filterQueryForRequest($query, $request, applyPermissionsFilter: false);
         $records = self::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
         return view('PLPD.ready-for-order-processes.index', compact('request', 'records'));

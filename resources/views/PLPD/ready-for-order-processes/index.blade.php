@@ -21,6 +21,13 @@
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
+                <x-misc.button
+                    class="toolbar__button"
+                    style="shadowed"
+                    icon="fullscreen"
+                    data-click-action="request-fullscreen"
+                    data-target-selector="{{ '.main-wrapper' }}">{{ __('Fullscreen') }}
+                </x-misc.button>
             </div>
         </div>
 

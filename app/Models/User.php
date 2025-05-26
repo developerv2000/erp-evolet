@@ -165,8 +165,7 @@ class User extends Authenticatable
             'roles' => function ($rolesQuery) {
                 $rolesQuery->with('permissions');
             },
-            'permissions',
-            'responsibleCountries',
+            'permissions'
         ]);
     }
 
@@ -597,6 +596,21 @@ class User extends Authenticatable
 
     /*
     |--------------------------------------------------------------------------
+    | Notifications
+    |--------------------------------------------------------------------------
+    */
+
+    public static function notifyUsersBasedOnPermission($notification, $permission)
+    {
+        self::withBasicRelationsToNotify()->each(function ($user) use ($notification, $permission) {
+            if (Gate::forUser($user)->allows($permission)) {
+                $user->notify($notification);
+            }
+        });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Misc
     |--------------------------------------------------------------------------
     */
@@ -648,17 +662,5 @@ class User extends Authenticatable
 
         // Default home if no pages are accessible
         return route('profile.edit');
-    }
-
-    /**
-     * Notify required users on process update to contract stage.
-     */
-    public static function notifyMADProcessOnContractStageToAll($notification)
-    {
-        self::withBasicRelationsToNotify()->each(function ($user) use ($notification) {
-            if (Gate::forUser($user)->allows('receive-notification-on-MAD-VPS-contract')) {
-                $user->notify($notification);
-            }
-        });
     }
 }

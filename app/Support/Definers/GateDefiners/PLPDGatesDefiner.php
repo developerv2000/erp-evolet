@@ -29,5 +29,10 @@ class PLPDGatesDefiner
         Gate::define('edit-PLPD-order-products', function ($user) {
             return $user->hasPermission('can edit PLPD order products');
         });
+
+        // Other gates
+        Gate::define('receive-notification-when-MAD-VPS-is-marked-as-ready-for-order', function ($user) {
+            return $user->hasPermission('can receive notification when MAD VPS is marked as ready for order');
+        });
     }
 }

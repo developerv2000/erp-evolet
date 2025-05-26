@@ -121,6 +121,9 @@ class Permission extends Model
     const CAN_EDIT_PLPD_ORDERS_NAME = 'can edit PLPD orders';
     const CAN_EDIT_PLPD_ORDER_PRODUCTS_NAME = 'can edit PLPD order products';
 
+    // Other permissions
+    const CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER = 'can receive notification when MAD VPS is marked as ready for order';
+
     /*
     |--------------------------------------------------------------------------
     | Properties
@@ -296,6 +299,8 @@ class Permission extends Model
 
             self::CAN_EDIT_PLPD_ORDERS_NAME,
             self::CAN_EDIT_PLPD_ORDER_PRODUCTS_NAME,
+
+            self::CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER,
         ];
     }
 }

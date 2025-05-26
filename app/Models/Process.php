@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Notifications\ProcessMarkedAsReadyForOrder;
 use App\Notifications\ProcessStageUpdatedToContract;
+use App\Notifications\ProcessUnmarkedAsReadyForOrder;
 use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\CanExportRecordsAsExcel;
 use App\Support\Contracts\Model\ExportsProductSelection;
@@ -207,6 +209,16 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     public function getIsReadyForOrderAttribute()
     {
         return $this->readiness_for_order_date ? true : false;
+    }
+
+    public function getFullTrademarkEnAttribute()
+    {
+        return $this->trademark_en . ' ' . $this->product->form->name . ' ' . $this->product->dosage . ' ' . $this->product->pack;
+    }
+
+    public function getFullTrademarkRuAttribute()
+    {
+        return $this->trademark_ru . ' ' . $this->product->form->name . ' ' . $this->product->dosage . ' ' . $this->product->pack;
     }
 
     /*
@@ -1062,6 +1074,10 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                 $this->readiness_for_order_date = now();
                 $this->timestamps = false;
                 $this->saveQuietly();
+
+                // Notify users
+                $notification = new ProcessMarkedAsReadyForOrder($this);
+                User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-MAD-VPS-is-marked-as-ready-for-order');
             }
 
             return [
@@ -1082,6 +1098,9 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             $this->readiness_for_order_date = null;
             $this->timestamps = false;
             $this->saveQuietly();
+
+            $notification = new ProcessUnmarkedAsReadyForOrder($this);
+            User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-MAD-VPS-is-marked-as-ready-for-order');
 
             return [
                 'success' => true,
@@ -1137,7 +1156,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
             if ($status->generalStatus->stage == 5) {
                 $notification = new ProcessStageUpdatedToContract($this, $status->name);
-                User::notifyMADProcessOnContractStageToAll($notification);
+                User::notifyUsersBasedOnPermission($notification, 'receive-notification-on-MAD-VPS-contract');
             }
         }
     }

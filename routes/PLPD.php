@@ -10,6 +10,6 @@ Route::middleware('auth', 'auth.session')->prefix('plpd')->name('plpd.')->group(
         ->controller(PLPDReadyForOrderProcessController::class)
         ->name('processes.ready-for-order.')
         ->group(function () {
-            Route::get('/', 'index')->name('index')->middleware('can:view-MAD-EPP');
+            Route::get('/', 'index')->name('index')->middleware('can:view-PLPD-ready-for-order-processes');
         });
 });
