@@ -652,6 +652,7 @@ class User extends Authenticatable
             'mad.product-searches.index' => 'view-MAD-KVPP',
             'mad.products.index' => 'view-MAD-IVP',
             'mad.processes.index' => 'view-MAD-VPS',
+            'plpd.processes.ready-for-order.index' => 'view-PLPD-ready-for-order-processes',
         ];
 
         foreach ($homepageRoutes as $routeName => $gate) {

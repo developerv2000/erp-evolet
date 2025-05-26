@@ -118,6 +118,7 @@ class PermissionSeeder extends Seeder
             Permission::CAN_EDIT_PLPD_ORDERS_NAME,
             Permission::CAN_EDIT_PLPD_ORDER_PRODUCTS_NAME,
 
+            Permission::CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER,
         ];
 
         foreach ($PLPDs as $plpd) {
