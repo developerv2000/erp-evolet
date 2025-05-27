@@ -222,13 +222,13 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     private static function getFilterConfig(): array
     {
         return [
-            'whereEqal' => ['quantity', 'price'],
+            'whereEqal' => ['quantity'],
             'whereIn' => ['id', 'order_id', 'marketing_authorization_holder_id'],
             'dateRange' => ['created_at', 'updated_at'],
 
             'relationEqual' => [
                 [
-                    'name' => 'manufacturer',
+                    'name' => 'order.manufacturer',
                     'attribute' => 'bdm_user_id',
                 ],
             ],
@@ -312,14 +312,19 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         array_push(
             $columns,
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
-            ['name' => 'Receive date', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Order', 'order' => $order++, 'width' => 72, 'visible' => 1],
+            ['name' => 'MAH', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Receive date', 'order' => $order++, 'width' => 122, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Country', 'order' => $order++, 'width' => 144, 'visible' => 1],
-            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
         );

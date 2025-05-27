@@ -91,6 +91,11 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         )->withTrashedParents()->withTrashed();
     }
 
+    public function orderProducts()
+    {
+        return $this->hasMany(OrderProduct::class);
+    }
+
     public function status()
     {
         return $this->belongsTo(ProcessStatus::class, 'status_id');
@@ -480,7 +485,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     public function scopeWithRelationCountsForOrder($query)
     {
         return $query->withCount([
-            // 'orderedProducts',
+            'orderProducts',
         ]);
     }
 
@@ -1086,13 +1091,13 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             ];
         } else {
             // // Return error if process already has order products
-            // if ($this->orderProducts()->count() > 0) {
-            //     return [
-            //         'success' => false,
-            //         'is_ready_for_order' => $this->is_ready_for_order,
-            //         'message' => __('Error') . '. ' . __('Process already has order products') . '!'
-            //     ];
-            // }
+            if ($this->orderProducts()->count() > 0) {
+                return [
+                    'success' => false,
+                    'is_ready_for_order' => $this->is_ready_for_order,
+                    'message' => __('Error') . '. ' . __('Process already has order products') . '!'
+                ];
+            }
 
             // Else remove ready for order status
             $this->readiness_for_order_date = null;

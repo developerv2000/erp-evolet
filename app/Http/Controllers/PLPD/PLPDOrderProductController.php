@@ -4,64 +4,118 @@ namespace App\Http\Controllers\PLPD;
 
 use App\Models\OrderProduct;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreOrderProductRequest;
-use App\Http\Requests\UpdateOrderProductRequest;
+use App\Http\Requests\OrderProductStoreRequest;
+use App\Http\Requests\OrderProductUpdateRequest;
+use App\Models\Order;
+use App\Models\Process;
+use App\Models\User;
+use App\Support\Helpers\UrlHelper;
+use App\Support\Traits\Controller\DestroysModelRecords;
+use App\Support\Traits\Controller\RestoresModelRecords;
+use Illuminate\Http\Request;
 
 class PLPDOrderProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    use DestroysModelRecords;
+    use RestoresModelRecords;
+
+    // used in multiple destroy/restore traits
+    public static $model = OrderProduct::class;
+
+    public function index(Request $request)
     {
-        //
+        // Preapare request for valid model querying
+        OrderProduct::addDefaultQueryParamsToRequest($request);
+        UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
+
+        // Get finalized records paginated
+        $query = OrderProduct::withBasicRelations()->withBasicRelationCounts();
+        $filteredQuery = OrderProduct::filterQueryForRequest($query, $request);
+        $records = OrderProduct::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
+
+        // Get all and only visible table columns
+        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(OrderProduct::SETTINGS_PLPD_TABLE_COLUMNS_KEY);
+        $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
+
+        return view('PLPD.order-products.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+    }
+
+    public function trash(Request $request)
+    {
+        // Preapare request for valid model querying
+        OrderProduct::addDefaultQueryParamsToRequest($request);
+        UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
+
+        // Get trashed finalized records paginated
+        $query = OrderProduct::onlyTrashed()->withBasicRelations()->withBasicRelationCounts();
+        $filteredQuery = OrderProduct::filterQueryForRequest($query, $request);
+        $records = OrderProduct::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
+
+        // Get all and only visible table columns
+        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(OrderProduct::SETTINGS_PLPD_TABLE_COLUMNS_KEY);
+        $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
+
+        return view('PLPD.order-products.trash', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+    }
+
+    public function create(Request $request)
+    {
+        $order = Order::findOrFail($request->input('order_id'));
+
+        $readyForOrderProcesses = Process::onlyReadyForOrder()
+            ->withRelationsForOrder()
+            ->withOnlyRequiredSelectsForOrder()
+            ->whereHas('product.manufacturer', function ($manufacturerQuery) use ($order) {
+                $manufacturerQuery->where('manufacturers.id', $order->manufacturer_id);
+            })
+            ->where('country_id', $order->country_id)
+            ->get();
+
+        return view('PLPD.order-products.create', compact('order', 'readyForOrderProcesses'));
+    }
+
+    public function store(OrderProductStoreRequest $request)
+    {
+        OrderProduct::createFromRequest($request);
+
+        return redirect($request->input('previous_url'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Route model binding is not used, because trashed records can also be edited.
+     * Route model binding looks only for untrashed records!
      */
-    public function create()
+    public function edit(Request $request, $record)
     {
-        //
+        $record = OrderProduct::withTrashed()->findOrFail($record);
+
+        return view('PLPD.order-products.edit', compact('record'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Route model binding is not used, because trashed records can also be edited.
+     * Route model binding looks only for untrashed records!
      */
-    public function store(StoreOrderProductRequest $request)
+    public function update(OrderProductUpdateRequest $request, $record)
     {
-        //
+        $record = OrderProduct::withTrashed()->findOrFail($record);
+        $record->updateFromRequest($request);
+
+        return redirect($request->input('previous_url'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(OrderProduct $orderProduct)
+    public function exportAsExcel(Request $request)
     {
-        //
-    }
+        // Preapare request for valid model querying
+        OrderProduct::addRefererQueryParamsToRequest($request);
+        OrderProduct::addDefaultQueryParamsToRequest($request);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(OrderProduct $orderProduct)
-    {
-        //
-    }
+        // Get finalized records query
+        $query = OrderProduct::withRelationsForExport();
+        $filteredQuery = OrderProduct::filterQueryForRequest($query, $request);
+        $records = OrderProduct::finalizeQueryForRequest($filteredQuery, $request, 'query');
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateOrderProductRequest $request, OrderProduct $orderProduct)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(OrderProduct $orderProduct)
-    {
-        //
+        // Export records
+        return OrderProduct::exportRecordsAsExcel($records);
     }
 }

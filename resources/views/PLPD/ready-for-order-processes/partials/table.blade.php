@@ -17,6 +17,7 @@
             <th width="110">{{ __('Form') }}</th>
             <th width="110">{{ __('Dosage') }}</th>
             <th width="110">{{ __('Pack') }}</th>
+            <th width="90">{{ __('Orders') }}</th>
             <th width="180">{{ __('Manufacturer') }}</th>
 
             <th width="84">
@@ -48,6 +49,13 @@
                 <td>{{ $record->product->form->name }}</td>
                 <td><x-tables.partials.td.max-lines-limited-text :text="$record->product->dosage" /></td>
                 <td>{{ $record->product->pack }}</td>
+
+                <td>
+                    <a class="main-link text-lowercase" href="{{ route('plpd.order-products.index', ['trademark_en[]' => $record->trademark_en, 'manufacturer_id[]' => $record->product->manufacturer->id, 'country_id[]' => $record->country_id]) }}">
+                        {{ $record->order_products_count }} {{ __('Orders') }}
+                    </a>
+                </td>
+
                 <td>{{ $record->product->manufacturer->name }}</td>
                 <td>{{ $record->searchCountry->code }}</td>
                 <td>{{ $record->MAH?->name }}</td>

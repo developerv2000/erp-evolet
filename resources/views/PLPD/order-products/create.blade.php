@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => __('Create new') . ' — ' . __('EPP'),
-    'pageName' => 'mad-manufacturers-create',
+    'pageTitle' => __('Create new') . ' — ' . __('Order products'),
+    'pageName' => 'plpd-order-products-create',
     'mainAutoOverflowed' => false,
 ])
 
@@ -11,7 +11,8 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('mad.manufacturers.index'), 'text' => __('EPP')],
+                    ['link' => route('plpd.orders.index', ['id[]' => $order->id]), 'text' => __('Order') . ' #' . $order->id],
+                    ['link' => route('plpd.order-products.index'), 'text' => __('Products')],
                     ['link' => null, 'text' => __('Create new record')]
                 ];
             @endphp
@@ -32,7 +33,16 @@
         </div>
 
         {{-- Create form --}}
-        @include('MAD.manufacturers.partials.create-form')
-    </div>
+        @if ($readyForOrderProcesses->isEmpty())
+            <div class="errors styled-box">
+                <p class="errors__title main-title">{{ __('Error') }}!</p>
 
+                <ol class="errors__list">
+                    <li class="errors__list-item">{{ __('There are no available products for given order') }}!</li>
+                </ol>
+            </div>
+        @else
+            @include('PLPD.order-products.partials.create-form')
+        @endif
+    </div>
 @endsection

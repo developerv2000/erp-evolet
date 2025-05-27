@@ -27,7 +27,7 @@ class PLPDReadyForOrderProcessController extends Controller
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
-        $query = Process::onlyReadyForOrder()->withRelationsForOrder()->withRelationCountsForOrder()->withOnlyRequiredSelectsForOrder();
+        $query = Process::onlyReadyForOrder()->withRelationsForOrder()->withOnlyRequiredSelectsForOrder()->withRelationCountsForOrder();
         $filteredQuery = Process::filterQueryForRequest($query, $request, applyPermissionsFilter: false);
         $records = self::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 

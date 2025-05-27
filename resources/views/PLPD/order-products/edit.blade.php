@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => $record->title . ' — ' . __('EPP'),
-    'pageName' => 'mad-manufacturers-edit',
+    'pageTitle' => $record->title . ' — ' . __('Order products'),
+    'pageName' => 'plpd-order-products-edit',
     'mainAutoOverflowed' => false,
 ])
 
@@ -23,7 +23,7 @@
         </div>
 
         {{-- Edit form --}}
-        @include('MAD.manufacturers.partials.edit-form')
+        @include('PLPD.order-products.partials.edit-form')
     </div>
 
 @endsection

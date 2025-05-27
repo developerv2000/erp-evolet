@@ -1,92 +1,46 @@
 @switch($column['name'])
     @case('Edit')
-        <x-tables.partials.td.edit :link="route('mad.manufacturers.edit', $record->id)" />
+        <x-tables.partials.td.edit :link="route('plpd.order-products.edit', $record->id)" />
     @break
 
     @case('BDM')
-        <x-misc.ava image="{{ $record->bdm->photo_asset_url }}" title="{{ $record->bdm->name }}" />
+        <x-misc.ava image="{{ $record->order->manufacturer->bdm->photo_asset_url }}" title="{{ $record->order->manufacturer->bdm->name }}" />
     @break
 
-    @case('Analyst')
-        <x-misc.ava image="{{ $record->analyst->photo_asset_url }}" title="{{ $record->analyst->name }}" />
+    @case('Brand Eng')
+        {{ $record->process->full_trademark_en }}
     @break
 
-    @case('Country')
-        {{ $record->country->name }}
+    @case('Brand Rus')
+        {{ $record->process->full_trademark_ru }}
     @break
 
-    @case('IVP')
-        <a class="main-link" href="{{ route('mad.products.index', ['manufacturer_id[]' => $record->id]) }}">
-            {{ $record->products_count }} {{ __('products') }}
-        </a>
+    @case('Order')
+        <a class="main-link" href="{{ route('plpd.orders.index', ['id[]' => $record->order_id]) }}"># {{ $record->order_id }}</a>
+    @break
+
+    @case('MAH')
+        {{ $record->MAH->name }}
+    @break
+
+    @case('Quantity')
+        <x-tables.partials.td.formatted-price :price="$record->quantity" />
+    @break
+
+    @case('Receive date')
+        {{ $record->order->receive_date->isoformat('DD MMM Y') }}
     @break
 
     @case('Manufacturer')
-        {{ $record->name }}
+        {{ $record->order->manufacturer->name }}
     @break
 
-    @case('Category')
-        <span @class([
-            'badge',
-            'badge--blue' => $record->category->name == 'УДС',
-            'badge--yellow' => $record->category->name == 'НПП',
-        ])>
-            {{ $record->category->name }}
-        </span>
+    @case('Country')
+        {{ $record->order->country->code }}
     @break
 
-    @case('Status')
-        @if ($record->active)
-            <span class="badge badge--orange">{{ __('Active') }}</span>
-        @else
-            <span class="badge badge--grey">{{ __('Stopped') }}</span>
-        @endif
-    @break
-
-    @case('Important')
-        @if ($record->important)
-            <span class="badge badge--pink">{{ __('Important') }}</span>
-        @endif
-    @break
-
-    @case('Product class')
-        <div class="td__badges-wrapper">
-            @foreach ($record->productClasses as $class)
-                <span class="badge badge--green">{{ $class->name }}</span>
-            @endforeach
-        </div>
-    @break
-
-    @case('Zones')
-        @foreach ($record->zones as $zone)
-            {{ $zone->name }} <br>
-        @endforeach
-    @break
-
-    @case('Blacklist')
-        @foreach ($record->blacklists as $list)
-            {{ $list->name }} <br>
-        @endforeach
-    @break
-
-    @case('Presence')
-        <x-tables.partials.td.max-lines-limited-text :text="$record->presences->pluck('name')->join(' ')" />
-    @break
-
-    @case('Website')
-        @if ($record->website)
-            <div class="td__max-lines-limited-text" data-on-click="toggle-td-text-max-lines">
-                <a class="main-link text-lowercase" href="{{ $record->website }}" target="_blank">{{ $record->website }}</a>
-            </div>
-        @endif
-    @break
-
-    @case('About company')
-        <x-tables.partials.td.max-lines-limited-text :text="$record->about" />
-    @break
-
-    @case('Relationship')
-        <x-tables.partials.td.max-lines-limited-text :text="$record->relationship" />
+    @case('Sent to BDM')
+        {{ $record->order->sent_to_bdm_date?->isoformat('DD MMM Y') }}
     @break
 
     @case('Comments')
@@ -101,6 +55,10 @@
         {{ $record->lastComment?->created_at->isoformat('DD MMM Y') }}
     @break
 
+    @case('ID')
+        {{ $record->id }}
+    @break
+
     @case('Date of creation')
         {{ $record->created_at->isoformat('DD MMM Y') }}
     @break
@@ -108,23 +66,4 @@
     @case('Update date')
         {{ $record->updated_at->isoformat('DD MMM Y') }}
     @break
-
-    @case('Meetings')
-        <a class="main-link" href="{{ route('mad.meetings.index', ['manufacturer_id[]' => $record->id]) }}">
-            {{ $record->meetings_count }} {{ __('meetings') }}
-        </a>
-    @break
-
-    @case('ID')
-        {{ $record->id }}
-    @break
-
-    @case('Attachments')
-        @can('edit-MAD-EPP')
-            <x-tables.partials.td.model-attachments-link :record="$record" />
-        @endcan
-
-        <x-tables.partials.td.model-attachments-list :attachments="$record->attachments" />
-    @break
-
 @endswitch

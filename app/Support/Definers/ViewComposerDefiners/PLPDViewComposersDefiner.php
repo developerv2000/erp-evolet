@@ -6,6 +6,7 @@ use App\Models\Country;
 use App\Models\Inn;
 use App\Models\Manufacturer;
 use App\Models\MarketingAuthorizationHolder;
+use App\Models\Order;
 use App\Models\Process;
 use App\Models\ProductForm;
 use App\Models\User;
@@ -17,6 +18,7 @@ class PLPDViewComposersDefiner
     {
         self::defineReadyForOrderProcessesComposers();
         self::defineOrdersComposers();
+        self::defineOrderProductsComposers();
     }
 
     /*
@@ -51,6 +53,30 @@ class PLPDViewComposersDefiner
 
         View::composer('PLPD.orders.partials.create-form', function ($view) {
             $view->with(self::getDefaultOrdersShareData());
+        });
+    }
+
+    private static function defineOrderProductsComposers()
+    {
+        View::composer('PLPD.order-products.partials.filter', function ($view) {
+            $view->with([
+                'orders' => Order::select('id')->get(),
+                'enTrademarks' => Process::pluckAllEnTrademarks(),
+                'ruTrademarks' => Process::pluckAllRuTrademarks(),
+                'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
+                'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
+                'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+                'bdmUsers' => User::getCMDBDMsMinifed(),
+            ]);
+        });
+
+        View::composer([
+            'PLPD.order-products.partials.create-form',
+            'PLPD.order-products.partials.edit-form',
+        ], function ($view) {
+            $view->with([
+                'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
+            ]);
         });
     }
 

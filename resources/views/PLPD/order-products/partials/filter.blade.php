@@ -1,83 +1,53 @@
 <x-filter.layout>
-    {{-- Readonly 'active' inputs --}}
-    @if ($request->has('has_active_processes_for_specific_month'))
-        <input type="hidden" name="has_active_processes_for_specific_month" value="1">
+    <x-form.selects.selectize.multiple-select.request-based-select
+        labelText="Brand Eng"
+        inputName="trademark_en[]"
+        :options="$enTrademarks" />
 
-        <x-form.inputs.request-based-input
-            labelText="Has active processes for year"
-            inputName="has_active_processes_for_year"
-            readonly />
-
-        <x-form.inputs.request-based-input
-            labelText="Has active processes for month"
-            inputName="has_active_processes_for_month"
-            readonly />
-    @endif
-
-    <x-form.selects.selectize.id-based-single-select.request-based-select
-        class="smart-filter-select"
-        labelText="{{ '* ' . __('Analyst') }}"
-        inputName="analyst_user_id"
-        :options="$smartFilterDependencies['analystUsers']" />
+    <x-form.selects.selectize.multiple-select.request-based-select
+        labelText="Brand Rus"
+        inputName="trademark_ru[]"
+        :options="$ruTrademarks" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        class="smart-filter-select"
-        labelText="{{ '* ' . __('Country') }}"
+        labelText="Order"
+        inputName="order_id[]"
+        :options="$orders"
+        optionCaptionField="id" />
+
+    <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        labelText="MAH"
+        inputName="marketing_authorization_holder_id[]"
+        :options="$MAHs" />
+
+    <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        labelText="Manufacturer"
+        inputName="manufacturer_id[]"
+        :options="$manufacturers" />
+
+    <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        labelText="Country"
         inputName="country_id[]"
-        :options="$smartFilterDependencies['countriesOrderedByName']" />
-
-    <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        class="smart-filter-select"
-        labelText="{{ '* ' . __('Manufacturer') }}"
-        inputName="id[]"
-        :options="$smartFilterDependencies['manufacturers']" />
+        :options="$countriesOrderedByProcessesCount"
+        optionCaptionField="code" />
 
     <x-form.selects.selectize.id-based-single-select.request-based-select
         labelText="BDM"
         inputName="bdm_user_id"
         :options="$bdmUsers" />
 
-    <x-form.selects.selectize.single-select.request-based-select
-        labelText="Region"
-        inputName="region"
-        :options="$regions" />
+    <x-form.inputs.request-based-input
+        labelText="Receive date"
+        inputName="receive_date"
+        class="date-range-picker-input"
+        autocomplete="off" />
 
-    <x-form.selects.selectize.id-based-single-select.request-based-select
-        labelText="Category"
-        inputName="category_id"
-        :options="$categories" />
-
-    <x-form.selects.selectize.boolean-select.request-based-select
-        labelText="Status"
-        inputName="active"
-        :trueOptionLabel="__('Active')"
-        :falseOptionLabel="__('Stop/pause')" />
-
-    <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="Product class"
-        inputName="productClasses[]"
-        :options="$productClasses" />
-
-    <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="Zones"
-        inputName="zones[]"
-        :options="$zones" />
-
-    <x-form.selects.selectize.boolean-select.request-based-select
-        labelText="Important"
-        inputName="important" />
-
-    <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="Has VPS for country"
-        inputName="process_country_id[]"
-        optionCaptionField="code"
-        :options="$countriesOrderedByProcessesCount" />
-
-    <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="Blacklist"
-        inputName="blacklists[]"
-        :options="$blacklists" />
+    <x-form.inputs.request-based-input
+        labelText="Sent to BDM"
+        inputName="sent_to_bdm_date"
+        class="date-range-picker-input"
+        autocomplete="off" />
 
     {{-- Default filter inputs --}}
-    <x-filter.partials.default-inputs :exclude="['id']" />
+    <x-filter.partials.default-inputs />
 </x-filter.layout>

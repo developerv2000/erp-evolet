@@ -9,32 +9,21 @@
         <x-tables.partials.th.id />
     @break
 
-    @case('BDM')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="bdm_user_id" />
+    @case('Order')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="order_id" />
     @break
 
-    @case('Analyst')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="analyst_user_id" />
+    @case('Brand Eng')
+    @case('Brand Rus')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="process_id" />
     @break
 
-    @case('Country')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="country_id" />
+    @case('MAH')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="marketing_authorization_holder_id" />
     @break
 
-    @case('Manufacturer')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="name" />
-    @break
-
-    @case('Category')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="category_id" />
-    @break
-
-    @case('Status')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="active" />
-    @break
-
-    @case('Important')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="important" />
+    @case('Quantity')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="quantity" />
     @break
 
     @case('Date of creation')

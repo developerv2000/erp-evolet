@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => __('EPP'),
-    'pageName' => 'mad-manufacturers-index',
+    'pageTitle' => __('Order products'),
+    'pageName' => 'plpd-order-products-index',
     'mainAutoOverflowed' => true,
 ])
 
@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('mad.manufacturers.index'), 'text' => __('EPP')],
+                    ['link' => route('plpd.order-products.index'), 'text' => __('Order products')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -21,14 +21,7 @@
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
-                @can('edit-MAD-EPP')
-                    <x-misc.buttoned-link
-                        class="toolbar__button"
-                        style="shadowed"
-                        link="{{ route('mad.manufacturers.create') }}"
-                        icon="add">{{ __('New') }}
-                    </x-misc.buttoned-link>
-
+                @can('edit-PLPD-order-products')
                     <x-misc.button
                         class="toolbar__button"
                         style="shadowed"
@@ -38,14 +31,14 @@
                     </x-misc.button>
                 @endcan
 
-                @can('export-records-as-excel')
-                    <x-form.misc.export-as-excel-form action="{{ route('mad.manufacturers.export-as-excel') }}" />
-                @endcan
+                {{-- @can('export-records-as-excel')
+                    <x-form.misc.export-as-excel-form action="{{ route('plpd.order-products.export-as-excel') }}" />
+                @endcan --}}
 
                 <x-misc.buttoned-link
                     class="toolbar__button"
                     style="shadowed"
-                    link="{{ route('mad.manufacturers.trash') }}"
+                    link="{{ route('plpd.order-products.trash') }}"
                     icon="delete">{{ __('Trash') }}
                 </x-misc.buttoned-link>
 
@@ -68,21 +61,21 @@
         </div>
 
         {{-- Table --}}
-        @include('MAD.manufacturers.table.layout', ['trashedRecords' => false])
+        @include('PLPD.order-products.table.layout', ['trashedRecords' => false])
     </div>
 
     {{-- Modals --}}
     <x-modals.edit-table-columns
-        form-action="{{ route('settings.update-table-columns', 'MAD_EPP_table_columns') }}"
+        form-action="{{ route('settings.update-table-columns', 'PLPD_order_products_table_columns') }}"
         :columns="$allTableColumns" />
 
-    @can('edit-MAD-EPP')
+    @can('edit-PLPD-order-products')
         <x-modals.multiple-delete
-            form-action="{{ route('mad.manufacturers.destroy') }}"
+            form-action="{{ route('plpd.order-products.destroy') }}"
             :forceDelete="false" />
     @endcan
 @endsection
 
 @section('rightbar')
-    @include('MAD.manufacturers.partials.filter')
+    @include('PLPD.order-products.partials.filter')
 @endsection
