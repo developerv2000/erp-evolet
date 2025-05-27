@@ -291,5 +291,10 @@
     "New product for order has been received": "Получен новый продукт для заказа",
     "Product for order has been removed": "Продукт для заказа был отменён",
 
+    "Receive date": "Дата получения",
+    "Sent to BDM": "Отправлено BDM-у",
+    "Products list": "Список продуктов",
+    "No products found for the given manufacturer and country": "Для указанного производителя и страны не найдено ни одного продукта",
+
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

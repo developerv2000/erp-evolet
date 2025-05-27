@@ -6,8 +6,9 @@
 
 import './bootstrap'; // initialize custom components & plugins
 import './MAD/MAD-main'; // initialize MAD part
-import * as functions from './main-functions';
+import './PLPD/PLPD-main'; // initialize PLPD part
 import { showSpinner } from '../custom-components/script';
+import * as functions from './main-functions';
 
 /*
 |--------------------------------------------------------------------------

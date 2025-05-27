@@ -16,6 +16,7 @@ class PLPDViewComposersDefiner
     public static function defineAll()
     {
         self::defineReadyForOrderProcessesComposers();
+        self::defineOrdersComposers();
     }
 
     /*
@@ -28,7 +29,7 @@ class PLPDViewComposersDefiner
     {
         View::composer('PLPD.ready-for-order-processes.partials.filter', function ($view) {
             $view->with([
-                'manufacturers' => Manufacturer::getRecordsWithProcessesReadyForOrder(),
+                'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
                 'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
                 'inns' => Inn::orderByName()->get(),
@@ -40,9 +41,28 @@ class PLPDViewComposersDefiner
         });
     }
 
+    private static function defineOrdersComposers()
+    {
+        View::composer('PLPD.orders.partials.filter', function ($view) {
+            $view->with(self::getDefaultOrdersShareData());
+        });
+
+        View::composer('PLPD.orders.partials.create-form', function ($view) {
+            $view->with(self::getDefaultOrdersShareData());
+        });
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Default shared datas
     |--------------------------------------------------------------------------
     */
+
+    private static function getDefaultOrdersShareData()
+    {
+        return [
+            'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
+            'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+        ];
+    }
 }

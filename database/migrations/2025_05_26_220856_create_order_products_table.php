@@ -32,8 +32,10 @@ return new class extends Migration
                 ->references('id')
                 ->on('marketing_authorization_holders');
 
-            $table->unsignedInteger('quantity');
+            $table->unsignedMediumInteger('quantity');
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

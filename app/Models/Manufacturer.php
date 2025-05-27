@@ -455,7 +455,7 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
     |--------------------------------------------------------------------------
     */
 
-    public static function getRecordsWithProcessesReadyForOrder()
+    public static function getMinifiedRecordsWithProcessesReadyForOrder()
     {
         return self::onlyRecordsWithProcessesReadyForOrder()->minifiedRecordsWithName()->get();
     }

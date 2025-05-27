@@ -363,6 +363,7 @@ class User extends Authenticatable
 
         // Table settings
         $this->resetMADTablesColumnSettings($settings);
+        $this->resetPLPDTablesColumnSettings($settings);
     }
 
     /**
@@ -378,6 +379,20 @@ class User extends Authenticatable
         $settings[ProductSearch::SETTINGS_MAD_TABLE_COLUMNS_KEY] = ProductSearch::getDefaultMADTableColumnsForUser($this);
         $settings[Meeting::SETTINGS_MAD_TABLE_COLUMNS_KEY] = Meeting::getDefaultMADTableColumnsForUser($this);
         $settings[Process::SETTINGS_MAD_DH_TABLE_COLUMNS_KEY] = Process::getDefaultMADDHTableColumnsForUser($this);
+
+        $this->settings = $settings;
+        $this->save();
+    }
+
+    /**
+     * Reset users PLPD tables column settings
+     */
+    public function resetPLPDTablesColumnSettings($settings)
+    {
+        $this->refresh();
+        $settings = $this->settings;
+        $settings[Order::SETTINGS_PLPD_TABLE_COLUMNS_KEY] = Order::getDefaultPLPDTableColumnsForUser($this);
+        $settings[OrderProduct::SETTINGS_PLPD_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultPLPDTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -411,6 +426,9 @@ class User extends Authenticatable
             'MAD_KVPP_table_columns' => ProductSearch::getDefaultMADTableColumnsForUser($this),
             'MAD_Meetings_table_columns' => Meeting::getDefaultMADTableColumnsForUser($this),
             'MAD_DH_table_columns' => Process::getDefaultMADDHTableColumnsForUser($this),
+
+            'PLPD_orders_table_columns' => Order::getDefaultPLPDTableColumnsForUser($this),
+            'PLPD_order_products_table_columns' => OrderProduct::getDefaultPLPDTableColumnsForUser($this),
             default => throw new InvalidArgumentExceptio("Unknown key: $key"),
         };
 

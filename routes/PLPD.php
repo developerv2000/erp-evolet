@@ -19,6 +19,7 @@ Route::middleware('auth', 'auth.session')->prefix('plpd')->name('plpd.')->group(
     Route::prefix('/orders')->controller(PLPDOrderController::class)->name('orders.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-PLPD-orders', 'can:edit-PLPD-orders');
 
+        Route::post('/create/get-dynamic-rows-list-item-inputs', 'getDynamicRowsListItemInputsOnCreate');  // AJAX request
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });
 

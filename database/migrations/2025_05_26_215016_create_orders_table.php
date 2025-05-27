@@ -28,7 +28,9 @@ return new class extends Migration
 
             $table->date('receive_date')->nullable();
             $table->date('sent_to_bdm_date')->nullable();
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -166,6 +166,10 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+
+    &:empty {
+        display: none;
+    }
 }
 
 .form__dynamic-rows-list-add-item-button {
@@ -188,6 +192,7 @@
     color: var(--theme-danger-color);
     cursor: pointer;
 }
+
 /* ------------ /end Form ------------ */
 
 
@@ -541,7 +546,8 @@
 }
 
 /* Month and year dropdowns */
-.daterangepicker select.monthselect, .daterangepicker select.yearselect {
+.daterangepicker select.monthselect,
+.daterangepicker select.yearselect {
     background: var(--theme-box-background-color);
     border: var(--form-input-border);
     color: var(--theme-text-color);

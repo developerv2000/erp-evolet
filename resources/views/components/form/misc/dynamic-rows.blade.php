@@ -5,9 +5,7 @@
         <h3 class="main-title">{{ $title }}</h3>
     @endif
 
-    <div class="form__dynamic-rows-list">
-        {{ $slot }}
-    </div>
+    <div class="form__dynamic-rows-list">{{ $slot }}</div>
 
     <x-misc.button
         class="form__dynamic-rows-list-add-item-button"

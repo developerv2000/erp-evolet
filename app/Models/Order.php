@@ -218,7 +218,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $products = $request->input('products', []);
 
         foreach ($products as $product) {
-            self::products()->save(new OrderProduct($product));
+            $record->products()->save(new OrderProduct($product));
         }
 
         // HasMany relations

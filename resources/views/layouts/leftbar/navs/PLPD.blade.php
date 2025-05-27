@@ -26,7 +26,7 @@
                         'leftbar__nav-link--active' => request()->routeIs(
                             'plpd.orders.*'),
                     ])
-                    href="{{ route('plpd.processes.ready-for-order.index') }}">
+                    href="{{ route('plpd.orders.index') }}">
 
                     <x-misc.material-symbol class="leftbar__nav-link-icon" icon="package_2" />
                     <span class="leftbar__nav-link-text">{{ __('Orders') }}</span>
@@ -41,7 +41,7 @@
                         'leftbar__nav-link--active' => request()->routeIs(
                             'plpd.order-products.*'),
                     ])
-                    href="{{ route('plpd.processes.ready-for-order.index') }}"
+                    href="{{ route('plpd.order-products.index') }}"
                     title="{{ __('Order products') }}">
 
                     <x-misc.material-symbol class="leftbar__nav-link-icon" icon="medication" />
