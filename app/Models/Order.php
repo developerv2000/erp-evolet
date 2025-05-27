@@ -201,6 +201,13 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return [
             'whereIn' => ['id', 'country_id', 'manufacturer_id'],
             'dateRange' => ['receive_date', 'sent_to_bdm_date', 'created_at', 'updated_at'],
+
+            'relationEqual' => [
+                [
+                    'name' => 'manufacturer',
+                    'attribute' => 'bdm_user_id',
+                ],
+            ],
         ];
     }
 
@@ -267,15 +274,16 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             $columns,
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
-            ['name' => 'Receive date', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Country', 'order' => $order++, 'width' => 144, 'visible' => 1],
-            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 80, 'visible' => 1],
+            ['name' => 'Products', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
         );
 
         return $columns;

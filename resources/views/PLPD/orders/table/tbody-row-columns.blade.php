@@ -20,11 +20,25 @@
     @break
 
     @case('Country')
-        {{ $record->country->name }}
+        {{ $record->country->code }}
+    @break
+
+    @case('Products')
+        <x-misc.buttoned-link
+            style="transparent"
+            class="button--arrowed-link button--margined-bottom text-lowercase"
+            icon="arrow_forward"
+            :link="route('plpd.order-products.index', ['order_id[]' => $record->id])">
+            {{ $record->products_count }} {{ __('Products') }}
+        </x-misc.buttoned-link>
+
+        <a class="main-link" href="{{ route('plpd.order-products.create', ['order_id' => $record->id]) }}">
+            {{ __('Add product') }}
+        </a>
     @break
 
     @case('Sent to BDM')
-        {{ $record->receive_date->isoformat('DD MMM Y') }}
+        {{ $record->sent_to_bdm_date?->isoformat('DD MMM Y') }}
     @break
 
     @case('Comments')

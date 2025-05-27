@@ -44,7 +44,9 @@ class PLPDViewComposersDefiner
     private static function defineOrdersComposers()
     {
         View::composer('PLPD.orders.partials.filter', function ($view) {
-            $view->with(self::getDefaultOrdersShareData());
+            $view->with(array_merge(self::getDefaultOrdersShareData(), [
+                'bdmUsers' => User::getCMDBDMsMinifed(),
+            ]));
         });
 
         View::composer('PLPD.orders.partials.create-form', function ($view) {
