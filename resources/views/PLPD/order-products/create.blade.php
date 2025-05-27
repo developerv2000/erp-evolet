@@ -12,7 +12,7 @@
             @php
                 $crumbs = [
                     ['link' => route('plpd.orders.index', ['id[]' => $order->id]), 'text' => __('Order') . ' #' . $order->id],
-                    ['link' => route('plpd.order-products.index'), 'text' => __('Products')],
+                    ['link' => route('plpd.order-products.index', ['order_id[]' => $order->id]), 'text' => __('Products')],
                     ['link' => null, 'text' => __('Create new record')]
                 ];
             @endphp
