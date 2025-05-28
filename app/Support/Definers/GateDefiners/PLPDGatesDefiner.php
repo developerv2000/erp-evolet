@@ -2,6 +2,7 @@
 
 namespace App\Support\Definers\GateDefiners;
 
+use App\Models\Permission;
 use Illuminate\Support\Facades\Gate;
 
 class PLPDGatesDefiner
@@ -9,30 +10,22 @@ class PLPDGatesDefiner
     public static function defineAll()
     {
         // View
-        Gate::define('view-PLPD-ready-for-order-processes', function ($user) {
-            return $user->hasPermission('can view PLPD ready for order processes');
-        });
+        Gate::define('view-PLPD-ready-for-order-processes', fn($user) =>
+            $user->hasPermission(Permission::CAN_VIEW_PLPD_READY_FOR_ORDER_PROCESSES_NAME)
+        );
 
-        Gate::define('view-PLPD-orders', function ($user) {
-            return $user->hasPermission('can view PLPD orders');
-        });
-
-        Gate::define('view-PLPD-order-products', function ($user) {
-            return $user->hasPermission('can view PLPD order products');
-        });
+        Gate::define('view-PLPD-orders', fn($user) =>
+            $user->hasPermission(Permission::CAN_VIEW_PLPD_ORDERS_NAME)
+        );
 
         // Edit
-        Gate::define('edit-PLPD-orders', function ($user) {
-            return $user->hasPermission('can edit PLPD orders');
-        });
-
-        Gate::define('edit-PLPD-order-products', function ($user) {
-            return $user->hasPermission('can edit PLPD order products');
-        });
+        Gate::define('edit-PLPD-orders', fn($user) =>
+            $user->hasPermission(Permission::CAN_EDIT_PLPD_ORDERS_NAME)
+        );
 
         // Other gates
-        Gate::define('receive-notification-when-MAD-VPS-is-marked-as-ready-for-order', function ($user) {
-            return $user->hasPermission('can receive notification when MAD VPS is marked as ready for order');
-        });
+        Gate::define('receive-notification-when-MAD-VPS-is-marked-as-ready-for-order', fn($user) =>
+            $user->hasPermission(Permission::CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER)
+        );
     }
 }

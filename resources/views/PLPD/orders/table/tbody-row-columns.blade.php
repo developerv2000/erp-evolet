@@ -3,12 +3,30 @@
         <x-tables.partials.td.edit :link="route('plpd.orders.edit', $record->id)" />
     @break
 
-    @case('BDM')
-        <x-misc.ava image="{{ $record->manufacturer->bdm->photo_asset_url }}" title="{{ $record->manufacturer->bdm->name }}" />
-    @break
-
     @case('ID')
         {{ $record->id }}
+    @break
+
+    @case('BDM')
+        <x-misc.ava
+            image="{{ $record->process->product->manufacturer->bdm->photo_asset_url }}"
+            title="{{ $record->process->product->manufacturer->bdm->name }}" />
+    @break
+
+    @case('Brand Eng')
+        {{ $record->process->full_trademark_en }}
+    @break
+
+    @case('Brand Rus')
+        {{ $record->process->full_trademark_ru }}
+    @break
+
+    @case('MAH')
+        {{ $record->process->MAH->name }}
+    @break
+
+    @case('Quantity')
+        <x-tables.partials.td.formatted-price :price="$record->quantity" />
     @break
 
     @case('Receive date')
@@ -16,25 +34,11 @@
     @break
 
     @case('Manufacturer')
-        {{ $record->manufacturer->name }}
+        {{ $record->process->product->manufacturer->name }}
     @break
 
     @case('Country')
-        {{ $record->country->code }}
-    @break
-
-    @case('Products')
-        <x-misc.buttoned-link
-            style="transparent"
-            class="button--arrowed-link button--margined-bottom text-lowercase"
-            icon="arrow_forward"
-            :link="route('plpd.order-products.index', ['order_id[]' => $record->id])">
-            {{ $record->products_count }} {{ __('Products') }}
-        </x-misc.buttoned-link>
-
-        <a class="main-link" href="{{ route('plpd.order-products.create', ['order_id' => $record->id]) }}">
-            {{ __('Add product') }}
-        </a>
+        {{ $record->process->searchCountry->code }}
     @break
 
     @case('Sent to BDM')

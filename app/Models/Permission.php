@@ -115,11 +115,9 @@ class Permission extends Model
     // View
     const CAN_VIEW_PLPD_READY_FOR_ORDER_PROCESSES_NAME = 'can view PLPD ready for order processes';
     const CAN_VIEW_PLPD_ORDERS_NAME = 'can view PLPD orders';
-    const CAN_VIEW_PLPD_ORDER_PRODUCTS_NAME = 'can view PLPD order products';
 
     // Edit
     const CAN_EDIT_PLPD_ORDERS_NAME = 'can edit PLPD orders';
-    const CAN_EDIT_PLPD_ORDER_PRODUCTS_NAME = 'can edit PLPD order products';
 
     // Other permissions
     const CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER = 'can receive notification when MAD VPS is marked as ready for order';
@@ -295,10 +293,8 @@ class Permission extends Model
         return [
             self::CAN_VIEW_PLPD_READY_FOR_ORDER_PROCESSES_NAME,
             self::CAN_VIEW_PLPD_ORDERS_NAME,
-            self::CAN_VIEW_PLPD_ORDER_PRODUCTS_NAME,
 
             self::CAN_EDIT_PLPD_ORDERS_NAME,
-            self::CAN_EDIT_PLPD_ORDER_PRODUCTS_NAME,
 
             self::CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER,
         ];

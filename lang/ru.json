@@ -28,7 +28,6 @@
     "Misc": "Разное",
     "Ready for order": "Готовые к заказу",
     "Orders": "Заказы",
-    "Order products": "Заказанные продукты",
 
     "Departments": "Отделы",
     "Department": "Отдел",
@@ -286,7 +285,7 @@
     "Too many records to display. Please filter required products.": "Слишком много записей для отображения. Пожалуйста, отфильтруйте необходимые продукты.",
 
     "Product": "Продукт",
-    "Process already has order products": "Процесс уже имеет заказанные продукты",
+    "Process already has orders": "Процесс уже имеет заказы",
     "Readiness date": "Дата готовности",
     "New product for order has been received": "Получен новый продукт для заказа",
     "Product for order has been removed": "Продукт для заказа был отменён",

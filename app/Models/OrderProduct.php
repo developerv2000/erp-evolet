@@ -65,18 +65,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return $this->belongsTo(MarketingAuthorizationHolder::class, 'marketing_authorization_holder_id');
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Additional attributes
-    |--------------------------------------------------------------------------
-    */
 
-    public function getTotalPriceAttribute()
-    {
-        $total = $this->quantity * $this->price;
-
-        return floor($total * 100) / 100;
-    }
 
     /*
     |--------------------------------------------------------------------------

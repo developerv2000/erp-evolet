@@ -2,6 +2,7 @@
 
 namespace App\Support\Definers\GateDefiners;
 
+use App\Models\Permission;
 use Illuminate\Support\Facades\Gate;
 
 class MADGatesDefiner
@@ -9,118 +10,37 @@ class MADGatesDefiner
     public static function defineAll()
     {
         // View
-        Gate::define('view-MAD-EPP', function ($user) {
-            return $user->hasPermission('can view MAD EPP');
-        });
-
-        Gate::define('view-MAD-KVPP', function ($user) {
-            return $user->hasPermission('can view MAD KVPP');
-        });
-
-        Gate::define('view-MAD-IVP', function ($user) {
-            return $user->hasPermission('can view MAD IVP');
-        });
-
-        Gate::define('view-MAD-VPS', function ($user) {
-            return $user->hasPermission('can view MAD VPS');
-        });
-
-        Gate::define('view-MAD-Meetings', function ($user) {
-            return $user->hasPermission('can view MAD Meetings');
-        });
-
-        Gate::define('view-MAD-KPI', function ($user) {
-            return $user->hasPermission('can view MAD KPI');
-        });
-
-        Gate::define('view-MAD-ASP', function ($user) {
-            return $user->hasPermission('can view MAD ASP');
-        });
-
-        Gate::define('view-MAD-Misc', function ($user) {
-            return $user->hasPermission('can view MAD Misc');
-        });
-
-        Gate::define('view-MAD-Users', function ($user) {
-            return $user->hasPermission('can view MAD Users');
-        });
-
-        Gate::define('view-MAD-Decision-hub', function ($user) {
-            return $user->hasPermission('can view MAD Decision hub');
-        });
+        Gate::define('view-MAD-EPP', fn($user) => $user->hasPermission(Permission::CAN_VIEW_MAD_EPP_NAME));
+        Gate::define('view-MAD-KVPP', fn($user) => $user->hasPermission(Permission::CAN_VIEW_MAD_KVPP_NAME));
+        Gate::define('view-MAD-IVP', fn($user) => $user->hasPermission(Permission::CAN_VIEW_MAD_IVP_NAME));
+        Gate::define('view-MAD-VPS', fn($user) => $user->hasPermission(Permission::CAN_VIEW_MAD_VPS_NAME));
+        Gate::define('view-MAD-Meetings', fn($user) => $user->hasPermission(Permission::CAN_VIEW_MAD_MEETINGS_NAME));
+        Gate::define('view-MAD-KPI', fn($user) => $user->hasPermission(Permission::CAN_VIEW_MAD_KPI_NAME));
+        Gate::define('view-MAD-ASP', fn($user) => $user->hasPermission(Permission::CAN_VIEW_MAD_ASP_NAME));
+        Gate::define('view-MAD-Misc', fn($user) => $user->hasPermission(Permission::CAN_VIEW_MAD_MISC_NAME));
+        Gate::define('view-MAD-Users', fn($user) => $user->hasPermission(Permission::CAN_VIEW_MAD_USERS_NAME));
+        Gate::define('view-MAD-Decision-hub', fn($user) => $user->hasPermission(Permission::CAN_VIEW_MAD_DH_NAME));
 
         // Edit
-        Gate::define('edit-MAD-EPP', function ($user) {
-            return $user->hasPermission('can edit MAD EPP');
-        });
-
-        Gate::define('edit-MAD-KVPP', function ($user) {
-            return $user->hasPermission('can edit MAD KVPP');
-        });
-
-        Gate::define('edit-MAD-IVP', function ($user) {
-            return $user->hasPermission('can edit MAD IVP');
-        });
-
-        Gate::define('edit-MAD-VPS', function ($user) {
-            return $user->hasPermission('can edit MAD VPS');
-        });
-
-        Gate::define('edit-MAD-Meetings', function ($user) {
-            return $user->hasPermission('can edit MAD Meetings');
-        });
-
-        Gate::define('edit-MAD-ASP', function ($user) {
-            return $user->hasPermission('can edit MAD ASP');
-        });
-
-        Gate::define('edit-MAD-Misc', function ($user) {
-            return $user->hasPermission('can edit MAD Misc');
-        });
-
-        Gate::define('edit-MAD-Users', function ($user) {
-            return $user->hasPermission('can edit MAD Users');
-        });
+        Gate::define('edit-MAD-EPP', fn($user) => $user->hasPermission(Permission::CAN_EDIT_MAD_EPP_NAME));
+        Gate::define('edit-MAD-KVPP', fn($user) => $user->hasPermission(Permission::CAN_EDIT_MAD_KVPP_NAME));
+        Gate::define('edit-MAD-IVP', fn($user) => $user->hasPermission(Permission::CAN_EDIT_MAD_IVP_NAME));
+        Gate::define('edit-MAD-VPS', fn($user) => $user->hasPermission(Permission::CAN_EDIT_MAD_VPS_NAME));
+        Gate::define('edit-MAD-Meetings', fn($user) => $user->hasPermission(Permission::CAN_EDIT_MAD_MEETINGS_NAME));
+        Gate::define('edit-MAD-ASP', fn($user) => $user->hasPermission(Permission::CAN_EDIT_MAD_ASP_NAME));
+        Gate::define('edit-MAD-Misc', fn($user) => $user->hasPermission(Permission::CAN_EDIT_MAD_MISC_NAME));
+        Gate::define('edit-MAD-Users', fn($user) => $user->hasPermission(Permission::CAN_EDIT_MAD_USERS_NAME));
 
         // Other permissions
-        Gate::define('view-MAD-KVPP-matching-processes', function ($user) {
-            return $user->hasPermission('can view MAD KVPP matching processes');
-        });
-
-        Gate::define('view-MAD-extended-KPI-version', function ($user) {
-            return $user->hasPermission('can view MAD extended KPI version');
-        });
-
-        Gate::define('view-MAD-KPI-of-all-analysts', function ($user) {
-            return $user->hasPermission('can view MAD KPI of all analysts');
-        });
-
-        Gate::define('control-MAD-ASP-processes', function ($user) {
-            return $user->hasPermission('can control MAD ASP processes');
-        });
-
-        Gate::define('view-MAD-VPS-of-all-analysts', function ($user) {
-            return $user->hasPermission('can view MAD VPS of all analysts');
-        });
-
-        Gate::define('edit-MAD-VPS-of-all-analysts', function ($user) {
-            return $user->hasPermission('can edit MAD VPS of all analysts');
-        });
-
-        Gate::define('edit-MAD-VPS-status-history', function ($user) {
-            return $user->hasPermission('can edit MAD VPS status history');
-        });
-
-        Gate::define('upgrade-MAD-VPS-status-after-contract-stage', function ($user) {
-            return $user->hasPermission('can upgrade MAD VPS status after contract stage');
-        });
-
-        Gate::define('receive-notification-on-MAD-VPS-contract', function ($user) {
-            return $user->hasPermission('can receive notification on MAD VPS contract');
-        });
-
-        Gate::define('mark-MAD-VPS-as-ready-for-order', function ($user) {
-            return $user->hasPermission('can mark MAD VPS as ready for order');
-        });
+        Gate::define('view-MAD-KVPP-matching-processes', fn($user) => $user->hasPermission(Permission::CAN_VIEW_MAD_KVPP_MATCHING_PROCESSES_NAME));
+        Gate::define('view-MAD-extended-KPI-version', fn($user) => $user->hasPermission(Permission::CAN_VIEW_KPI_EXTENDED_VERSION_NAME));
+        Gate::define('view-MAD-KPI-of-all-analysts', fn($user) => $user->hasPermission(Permission::CAN_VIEW_KPI_OF_ALL_ANALYSTS));
+        Gate::define('control-MAD-ASP-processes', fn($user) => $user->hasPermission(Permission::CAN_CONTROL_MAD_ASP_PROCESSES));
+        Gate::define('view-MAD-VPS-of-all-analysts', fn($user) => $user->hasPermission(Permission::CAN_VIEW_MAD_VPS_OF_ALL_ANALYSTS_NAME));
+        Gate::define('edit-MAD-VPS-of-all-analysts', fn($user) => $user->hasPermission(Permission::CAN_EDIT_MAD_VPS_OF_ALL_ANALYSTS_NAME));
+        Gate::define('edit-MAD-VPS-status-history', fn($user) => $user->hasPermission(Permission::CAN_EDIT_MAD_VPS_STATUS_HISTORY_NAME));
+        Gate::define('upgrade-MAD-VPS-status-after-contract-stage', fn($user) => $user->hasPermission(Permission::CAN_UPGRADE_MAD_VPS_STATUS_AFTER_CONTRACT_STAGE_NAME));
+        Gate::define('receive-notification-on-MAD-VPS-contract', fn($user) => $user->hasPermission(Permission::CAN_RECEIVE_NOTIFICATION_ON_MAD_VPS_CONTRACT));
+        Gate::define('mark-MAD-VPS-as-ready-for-order', fn($user) => $user->hasPermission(Permission::CAN_MARK_MAD_VPS_AS_READY_FOR_ORDER));
     }
 }

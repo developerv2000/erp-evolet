@@ -66,15 +66,12 @@ class PLPDOrderController extends Controller
     /**
      * Ajax request
      */
-    public function getDynamicRowsListItemInputsOnCreate(Request $request)
+    public function getAvailableProductsOnCreate(Request $request)
     {
-        $inputsIndex = $request->input('inputs_index');
         $manufacturerID = $request->input('manufacturer_id');
         $countryID = $request->input('country_id');
 
         $readyForOrderProcesses = Process::onlyReadyForOrder()
-            ->withRelationsForOrder()
-            ->withOnlyRequiredSelectsForOrder()
             ->whereHas('product.manufacturer', function ($manufacturerQuery) use ($manufacturerID) {
                 $manufacturerQuery->where('manufacturers.id', $manufacturerID);
             })
@@ -83,20 +80,14 @@ class PLPDOrderController extends Controller
 
         if ($readyForOrderProcesses->isEmpty()) {
             return response()->json([
-                'products_found' => false,
+                'productsFound' => false,
                 'message' => __('No products found for the given manufacturer and country') . '.',
             ]);
         }
 
-        $MAHs = MarketingAuthorizationHolder::orderByName()->get();
-
         return response()->json([
-            'products_found' => true,
-            'inputs' => view('PLPD.orders.partials.create-form-dynamic-rows-list-item', compact(
-                'readyForOrderProcesses',
-                'MAHs',
-                'inputsIndex'
-            ))->render(),
+            'productsFound' => true,
+            'readyForOrderProcesses' => $readyForOrderProcesses,
         ]);
     }
 

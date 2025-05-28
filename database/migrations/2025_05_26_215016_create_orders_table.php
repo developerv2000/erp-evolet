@@ -14,17 +14,13 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->unsignedMediumInteger('id')->autoIncrement();
 
-            $table->unsignedInteger('manufacturer_id')
+            $table->unsignedInteger('process_id')
                 ->index()
                 ->foreign()
                 ->references('id')
-                ->on('manufacturers');
+                ->on('processes');
 
-            $table->unsignedSmallInteger('country_id')
-                ->index()
-                ->foreign()
-                ->references('id')
-                ->on('countries');
+            $table->unsignedMediumInteger('quantity');
 
             $table->date('receive_date')->nullable();
             $table->date('sent_to_bdm_date')->nullable();

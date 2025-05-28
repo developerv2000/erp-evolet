@@ -2,6 +2,7 @@
 
 namespace App\Support\Definers\GateDefiners;
 
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 
@@ -23,27 +24,16 @@ class GlobalGatesDefiner
         */
 
         // Administrate
-        Gate::define('administrate', function ($user) {
-            return $user->isAnyAdministrator();
-        });
+        Gate::define('administrate', fn($user) => $user->isAnyAdministrator());
 
         // Delete from trash
-        Gate::define('delete-from-trash', function ($user) {
-            return $user->hasPermission('can delete from trash');
-        });
+        Gate::define('delete-from-trash', fn($user) => $user->hasPermission(Permission::CAN_DELETE_FROM_TRASH_NAME));
 
         // Edit comments
-        Gate::define('edit-comments', function ($user) {
-            return $user->hasPermission('can edit comments');
-        });
+        Gate::define('edit-comments', fn($user) => $user->hasPermission(Permission::CAN_EDIT_COMMENTS_NAME));
 
         // Export
-        Gate::define('export-records-as-excel', function ($user) {
-            return $user->hasPermission('can export records as excel');
-        });
-
-        Gate::define('export-unlimited-records-as-excel', function ($user) {
-            return $user->hasPermission('can export unlimited records as excel');
-        });
+        Gate::define('export-records-as-excel', fn($user) => $user->hasPermission(Permission::CAN_EXPORT_RECORDS_AS_EXCEL_NAME));
+        Gate::define('export-unlimited-records-as-excel', fn($user) => $user->hasPermission(Permission::CAN_EXPORT_UNLIMITED_RECORDS_AS_EXCEL_NAME));
     }
 }

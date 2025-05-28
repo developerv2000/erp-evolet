@@ -8,8 +8,6 @@ use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\Commentable;
 use App\Support\Traits\Model\ExportsRecordsAsExcel;
-use App\Support\Traits\Model\GetsMinifiedRecordsWithName;
-use App\Support\Traits\Model\HasAttachments;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Gate;
@@ -20,8 +18,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     use HasFactory;
     use SoftDeletes;
     use Commentable;
-    use HasAttachments;
-    use GetsMinifiedRecordsWithName;
     use ExportsRecordsAsExcel;
 
     /*
@@ -59,19 +55,34 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     |--------------------------------------------------------------------------
     */
 
-    public function products()
+    public function process()
     {
-        return $this->hasMany(OrderProduct::class);
+        return $this->belongsTo(Process::class)->withTrashed();
     }
 
-    public function manufacturer()
+    public function product()
     {
-        return $this->belongsTo(Manufacturer::class)->withTrashed();;
+        return $this->hasOneThrough(
+            Product::class,
+            Process::class,
+            'id', // Foreign key on the Processes table
+            'id', // Foreign key on the Products table
+            'process_id', // Local key on the Orders table
+            'product_id' // Local key on the Processes table
+        )->withTrashedParents()->withTrashed();
     }
 
-    public function country()
+    /*
+    |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
+
+    public function getTotalPriceAttribute()
     {
-        return $this->belongsTo(Country::class, 'country_id');
+        $total = $this->quantity * $this->price;
+
+        return floor($total * 100) / 100;
     }
 
     /*
@@ -82,25 +93,9 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     protected static function booted(): void
     {
-        static::deleting(function ($record) { // trashing
-            foreach ($record->products as $product) {
-                $product->delete();
-            }
-        });
-
-        static::restored(function ($record) {
-            foreach ($record->products()->onlyTrashed()->get() as $product) {
-                $product->restore();
-            }
-        });
-
-        static::forceDeleting(function ($record) {
-            foreach ($record->comments as $comment) {
-                $comment->delete();
-            }
-
-            foreach ($record->products()->withTrashed()->get() as $product) {
-                $product->forceDelete();
+        static::restoring(function ($record) {
+            if ($record->process->trashed()) {
+                $record->process->restore();
             }
         });
     }
@@ -114,18 +109,10 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     public function scopeWithBasicRelations($query)
     {
         return $query->with([
-            'country',
             'lastComment',
 
-            'manufacturer' => function ($manufQuery) {
-                $manufQuery->select(
-                    'id',
-                    'name',
-                    'bdm_user_id',
-                )
-                    ->with([
-                        'bdm:id,name,photo',
-                    ]);
+            'process' => function ($processQuery) {
+                $processQuery->withRelationsForOrder()->withOnlyRequiredSelectsForOrder();
             },
         ]);
     }
@@ -133,7 +120,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     public function scopeWithBasicRelationCounts($query)
     {
         return $query->withCount([
-            'products',
             'comments',
         ]);
     }
@@ -199,13 +185,36 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     private static function getFilterConfig(): array
     {
         return [
-            'whereIn' => ['id', 'country_id', 'manufacturer_id'],
+            'whereEqal' => ['process_id', 'quantity'],
+            'whereIn' => ['id'],
             'dateRange' => ['receive_date', 'sent_to_bdm_date', 'created_at', 'updated_at'],
 
             'relationEqual' => [
                 [
-                    'name' => 'manufacturer',
+                    'name' => 'process.product.manufacturer',
                     'attribute' => 'bdm_user_id',
+                ],
+            ],
+
+            'relationIn' => [
+                [
+                    'name' => 'process',
+                    'attribute' => 'country_id',
+                ],
+
+                [
+                    'name' => 'process',
+                    'attribute' => 'trademark_en',
+                ],
+
+                [
+                    'name' => 'process',
+                    'attribute' => 'trademark_ru',
+                ],
+
+                [
+                    'name' => 'process.product',
+                    'attribute' => 'manufacturer_id',
                 ],
             ],
         ];
@@ -220,13 +229,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     public static function createFromRequest($request)
     {
         $record = self::create($request->all());
-
-        // Store products
-        $products = $request->input('products', []);
-
-        foreach ($products as $product) {
-            $record->products()->save(new OrderProduct($product));
-        }
 
         // HasMany relations
         $record->storeCommentFromRequest($request);
@@ -272,13 +274,16 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
         array_push(
             $columns,
+            ['name' => 'ID', 'order' => $order++, 'width' => 72, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
-            ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
-            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Country', 'order' => $order++, 'width' => 80, 'visible' => 1],
-            ['name' => 'Products', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'MAH', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Receive date', 'order' => $order++, 'width' => 122, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
