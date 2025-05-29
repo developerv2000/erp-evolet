@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\PLPD\PLPDOrderController;
-use App\Http\Controllers\PLPD\PLPDOrderProductController;
 use App\Http\Controllers\PLPD\PLPDReadyForOrderProcessController;
 use App\Support\Generators\CRUDRouteGenerator;
 use Illuminate\Support\Facades\Route;
@@ -19,7 +18,7 @@ Route::middleware('auth', 'auth.session')->prefix('plpd')->name('plpd.')->group(
     Route::prefix('/orders')->controller(PLPDOrderController::class)->name('orders.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-PLPD-orders', 'can:edit-PLPD-orders');
 
-        Route::post('/create/get-dynamic-rows-list-item-inputs', 'getDynamicRowsListItemInputsOnCreate');  // AJAX request
+        Route::post('/get-ready-for-order-processes-of-manufacturer', 'getReadyForOrderProcessesOfManufacturer', '');  // AJAX request on create/edit
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });
 });

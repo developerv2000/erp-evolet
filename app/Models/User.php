@@ -392,7 +392,6 @@ class User extends Authenticatable
         $this->refresh();
         $settings = $this->settings;
         $settings[Order::SETTINGS_PLPD_TABLE_COLUMNS_KEY] = Order::getDefaultPLPDTableColumnsForUser($this);
-        $settings[OrderProduct::SETTINGS_PLPD_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultPLPDTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -428,7 +427,6 @@ class User extends Authenticatable
             'MAD_DH_table_columns' => Process::getDefaultMADDHTableColumnsForUser($this),
 
             'PLPD_orders_table_columns' => Order::getDefaultPLPDTableColumnsForUser($this),
-            'PLPD_order_products_table_columns' => OrderProduct::getDefaultPLPDTableColumnsForUser($this),
             default => throw new InvalidArgumentExceptio("Unknown key: $key"),
         };
 
@@ -670,7 +668,10 @@ class User extends Authenticatable
             'mad.product-searches.index' => 'view-MAD-KVPP',
             'mad.products.index' => 'view-MAD-IVP',
             'mad.processes.index' => 'view-MAD-VPS',
+
+            // PLPD
             'plpd.processes.ready-for-order.index' => 'view-PLPD-ready-for-order-processes',
+            'plpd.orders.index' => 'view-PLPD-orders',
         ];
 
         foreach ($homepageRoutes as $routeName => $gate) {

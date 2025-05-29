@@ -14,7 +14,7 @@ import { debounce } from '../utilities';
 */
 
 // Order forms
-const ordersCreateForm = document.querySelector('.plpd-orders-create-form');
+const orderCreateOrEditForm = document.querySelector('.plpd-orders-create-form, .plpd-orders-edit-form');
 
 /*
 |--------------------------------------------------------------------------
@@ -29,13 +29,15 @@ const ordersCreateForm = document.querySelector('.plpd-orders-create-form');
 */
 
 function initializeOrdersCreateForm() {
-    if (!ordersCreateForm) {
+    if (!orderCreateOrEditForm) {
         return;
     }
 
-    // Attach click event listener to dynamic rows list add item button
-    const addRowButton = ordersCreateForm.querySelector('.form__dynamic-rows-list-add-item-button');
-    addRowButton.addEventListener('click', () => functions.addDynamicRowsListItemOnOrdersCreate());
+    const selects = orderCreateOrEditForm.querySelectorAll('select[name="manufacturer_id"], select[name="country_id"]');
+
+    for (const select of selects) {
+        select.selectize.on('change', () => functions.validateOrderCreateOrEditFormOnChange());
+    }
 }
 
 function init() {

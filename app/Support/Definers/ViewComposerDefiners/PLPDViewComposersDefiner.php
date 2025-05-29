@@ -6,7 +6,6 @@ use App\Models\Country;
 use App\Models\Inn;
 use App\Models\Manufacturer;
 use App\Models\MarketingAuthorizationHolder;
-use App\Models\Order;
 use App\Models\Process;
 use App\Models\ProductForm;
 use App\Models\User;
@@ -53,7 +52,10 @@ class PLPDViewComposersDefiner
             ]));
         });
 
-        View::composer('PLPD.orders.partials.create-form', function ($view) {
+        View::composer([
+            'PLPD.orders.partials.create-form',
+            'PLPD.orders.partials.edit-form',
+        ], function ($view) {
             $view->with(self::getDefaultOrdersShareData());
         });
     }

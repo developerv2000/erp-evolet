@@ -20,10 +20,28 @@
                 type="date"
                 :isRequired="true" />
         </div>
-    </div>
 
-    <div class="form__block">
-        <x-form.misc.dynamic-rows title="{{ __('Products list') }}" />
+        <div class="form__row">
+            <x-form.selects.selectize.id-based-single-select.default-select
+                labelText="Brand Eng"
+                inputName="process_id"
+                :options="[]"
+                optionCaptionField="full_trademark_en"
+                :isRequired="true" />
+
+            <x-form.selects.selectize.id-based-single-select.default-select
+                labelText="MAH"
+                inputName="marketing_authorization_holder_id"
+                :options="[]"
+                :isRequired="true" />
+
+            <x-form.inputs.default-input
+                labelText="Quantity"
+                inputName="quantity"
+                type="number"
+                min="0"
+                :isRequired="true" />
+        </div>
     </div>
 
     <div class="form__block">

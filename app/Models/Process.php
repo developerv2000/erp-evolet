@@ -1114,6 +1114,43 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         }
     }
 
+    /**
+     * Used on orders.create & order.edit pages
+     */
+    public static function getReadyForOrderRecordsOfManufacturer($manufacturerID, $countryID, $appendFullTrademarkEn = false)
+    {
+        $processes = self::onlyReadyForOrder()
+            ->withRelationsForOrder()
+            ->withOnlyRequiredSelectsForOrder()
+            ->whereHas('product.manufacturer', function ($manufacturerQuery) use ($manufacturerID) {
+                $manufacturerQuery->where('manufacturers.id', $manufacturerID);
+            })
+            ->where('country_id', $countryID)
+            ->get()
+            ->unique('product_id')
+            ->values();
+
+        // Append 'full_trademark_en' attribute
+        if ($appendFullTrademarkEn) {
+            $processes->each->append('full_trademark_en');
+        }
+
+        return $processes;
+    }
+
+    public static function getMAHsOfReadyForOrderRecordsForManufacturer($manufacturerID, $countryID)
+    {
+        return MarketingAuthorizationHolder::whereHas('processes', function ($processQuery) use ($manufacturerID, $countryID) {
+            $processQuery
+                ->onlyReadyForOrder()
+                ->whereHas('product.manufacturer', function ($manufacturerQuery) use ($manufacturerID) {
+                    $manufacturerQuery->where('manufacturers.id', $manufacturerID);
+                })
+                ->where('country_id', $countryID);
+        })
+            ->get();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Misc

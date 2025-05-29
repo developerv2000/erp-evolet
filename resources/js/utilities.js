@@ -45,22 +45,29 @@ export function createElementFromHTML(htmlString) {
  *
  * @param {Object} selectize - The Selectize instance.
  * @param {Object} newItems - Object of items to populate the dropdown.
- * @param {Function} onChange - Callback to bind on value change.
+ * @param {Function|null} onChange - Optional callback to bind on value change.
  * @param {string} labelField - Field to display as label (default: 'name').
  * @param {string} valueField - Field to use as value (default: 'id').
  * @param {boolean} isMultiple - Whether the select is multiple (default: true).
  */
-export function refreshSelectizeOptions(selectize, newItems, onChange, labelField = 'name', valueField = 'id', isMultiple = true) {
-    const items = Object.values(newItems); // Convert input object to array of items
+export function refreshSelectizeOptions(selectize, newItems, onChange = null, labelField = 'name', valueField = 'id', isMultiple = true) {
+    const items = Object.values(newItems); // Convert input object to array
     const previousSelection = selectize.getValue();
 
-    // Temporarily unbind change handler to avoid triggering it during programmatic updates
+    // Always unbind previous change handler
     selectize.off('change');
 
-    // Clear all existing options
-    selectize.clearOptions();
+    // Clear previous selections and options
+    selectize.clear(true); // Clears selection + input
+    selectize.clearOptions(); // Clears dropdown options
 
-    // Add new options from item list
+    // Refresh even if no items to force UI reset
+    if (items.length === 0) {
+        selectize.refreshOptions(false); // false = don't trigger dropdown open
+        return;
+    }
+
+    // Add new options
     items.forEach(item => {
         selectize.addOption({
             [SELECTIZE_DEFAULT_OPTIONS.valueField]: item[valueField],
@@ -68,17 +75,19 @@ export function refreshSelectizeOptions(selectize, newItems, onChange, labelFiel
         });
     });
 
-    // Restore selection if values still exist in new item list
+    // Restore valid selections
     if (isMultiple) {
         const validSelections = previousSelection.filter(value =>
             items.some(item => item[valueField] == value)
         );
-        selectize.setValue(validSelections, true); // 'true' prevents firing change event
+        selectize.setValue(validSelections, true);
     } else {
         const isValid = items.some(item => item[valueField] == previousSelection);
         selectize.setValue(isValid ? previousSelection : null, true);
     }
 
-    // Rebind the change handler
-    selectize.on('change', onChange);
+    // Bind change handler if provided
+    if (typeof onChange === 'function') {
+        selectize.on('change', onChange);
+    }
 }

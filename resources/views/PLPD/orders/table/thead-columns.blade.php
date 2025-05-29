@@ -9,6 +9,10 @@
         <x-tables.partials.th.id />
     @break
 
+    @case('Quantity')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="quantity" />
+    @break
+
     @case('Receive date')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="receive_date" />
     @break

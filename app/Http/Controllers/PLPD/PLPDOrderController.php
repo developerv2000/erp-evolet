@@ -64,19 +64,14 @@ class PLPDOrderController extends Controller
     }
 
     /**
-     * Ajax request
+     * Ajax request on create & edit pages
      */
-    public function getAvailableProductsOnCreate(Request $request)
+    public function getReadyForOrderProcessesOfManufacturer(Request $request)
     {
         $manufacturerID = $request->input('manufacturer_id');
         $countryID = $request->input('country_id');
 
-        $readyForOrderProcesses = Process::onlyReadyForOrder()
-            ->whereHas('product.manufacturer', function ($manufacturerQuery) use ($manufacturerID) {
-                $manufacturerQuery->where('manufacturers.id', $manufacturerID);
-            })
-            ->where('country_id', $countryID)
-            ->get();
+        $readyForOrderProcesses = Process::getReadyForOrderRecordsOfManufacturer($manufacturerID, $countryID, true);
 
         if ($readyForOrderProcesses->isEmpty()) {
             return response()->json([
@@ -88,6 +83,7 @@ class PLPDOrderController extends Controller
         return response()->json([
             'productsFound' => true,
             'readyForOrderProcesses' => $readyForOrderProcesses,
+            'MAHs' => Process::getMAHsOfReadyForOrderRecordsForManufacturer($manufacturerID, $countryID),
         ]);
     }
 
@@ -106,7 +102,13 @@ class PLPDOrderController extends Controller
     {
         $record = Order::withTrashed()->findOrFail($record);
 
-        return view('PLPD.orders.edit', compact('record'));
+        $manufacturerID = $record->process->product->manufacturer_id;
+        $countryID = $record->process->country_id;
+
+        $readyForOrderProcesses = Process::getReadyForOrderRecordsOfManufacturer($manufacturerID, $countryID, true);
+        $MAHs = Process::getMAHsOfReadyForOrderRecordsForManufacturer($manufacturerID, $countryID);
+
+        return view('PLPD.orders.edit', compact('record', 'readyForOrderProcesses', 'MAHs'));
     }
 
     /**
