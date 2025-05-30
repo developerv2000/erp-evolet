@@ -41,7 +41,7 @@ class ProcessMarkedAsReadyForOrder extends Notification
             'process_id' => $this->process->id,
             'full_trademark_en' => $this->process->full_trademark_en,
             'manufacturer' => $this->process->manufacturer->name,
-            'country' => $this->process->searchCountry->name,
+            'country' => $this->process->searchCountry->code,
             'marketing_authorization_holder' => $this->process->MAH?->name,
         ];
     }

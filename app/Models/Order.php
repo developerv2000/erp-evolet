@@ -28,8 +28,8 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     const SETTINGS_PLPD_TABLE_COLUMNS_KEY = 'PLPD_orders_table_columns';
 
-    const DEFAULT_ORDER_BY = 'updated_at';
-    const DEFAULT_ORDER_TYPE = 'desc';
+    const DEFAULT_ORDER_BY = 'id';
+    const DEFAULT_ORDER_TYPE = 'asc';
     const DEFAULT_PAGINATION_LIMIT = 50;
 
     const LIMITED_EXCEL_RECORDS_COUNT_FOR_EXPORT = 20;
