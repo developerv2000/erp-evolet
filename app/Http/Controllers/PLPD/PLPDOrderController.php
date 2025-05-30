@@ -73,17 +73,21 @@ class PLPDOrderController extends Controller
 
         $readyForOrderProcesses = Process::getReadyForOrderRecordsOfManufacturer($manufacturerID, $countryID, true);
 
-        if ($readyForOrderProcesses->isEmpty()) {
-            return response()->json([
-                'productsFound' => false,
-                'message' => __('No products found for the given manufacturer and country') . '.',
-            ]);
-        }
+        return response()->json([
+            'readyForOrderProcesses' => $readyForOrderProcesses,
+            'notFoundmessage' => __('No products found for the given manufacturer and country') . '.',
+        ]);
+    }
+
+    /**
+     * Ajax request on create & edit pages
+     */
+    public function getAvailableMAHsOfReadyForOrderProcess(Request $request)
+    {
+        $process = Process::findOrFail($request->input('process_id'));
 
         return response()->json([
-            'productsFound' => true,
-            'readyForOrderProcesses' => $readyForOrderProcesses,
-            'MAHs' => Process::getMAHsOfReadyForOrderRecordsForManufacturer($manufacturerID, $countryID),
+            'MAHs' => $process->getAvailableMAHsForOrder(),
         ]);
     }
 
@@ -105,8 +109,8 @@ class PLPDOrderController extends Controller
         $manufacturerID = $record->process->product->manufacturer_id;
         $countryID = $record->process->country_id;
 
-        $readyForOrderProcesses = Process::getReadyForOrderRecordsOfManufacturer($manufacturerID, $countryID, true);
-        $MAHs = Process::getMAHsOfReadyForOrderRecordsForManufacturer($manufacturerID, $countryID);
+        $readyForOrderProcesses = Process::getReadyForOrderRecordsOfManufacturer($manufacturerID, $countryID);
+        $MAHs = $record->process->getAvailableMAHsForOrder();
 
         return view('PLPD.orders.edit', compact('record', 'readyForOrderProcesses', 'MAHs'));
     }

@@ -228,7 +228,22 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     public static function createFromRequest($request)
     {
-        $record = self::create($request->all());
+        // Detect valid 'process_id' of order, which is depended on
+        // selected processes 'product_id' and 'country_id' and also on selected 'marketing_authorization_holder_id'
+        $selectedProcess = Process::findOrFail($request->input('process_id'));
+        $productID = $selectedProcess->product_id;
+        $countryID = $selectedProcess->country_id;
+        $mahID = $request->input('marketing_authorization_holder_id');
+
+        $process = Process::onlyReadyForOrder()
+            ->where('product_id', $productID)
+            ->where('country_id', $countryID)
+            ->where('marketing_authorization_holder_id', $mahID)
+            ->first();
+
+        $record = new Order($request->all());
+        $record->process_id = $process->id;
+        $record->save();
 
         // HasMany relations
         $record->storeCommentFromRequest($request);
@@ -236,7 +251,22 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     public function updateFromRequest($request)
     {
-        $this->update($request->all());
+        // Detect valid 'process_id' of order, which is depended on
+        // selected processes 'product_id' and 'country_id' and also on selected 'marketing_authorization_holder_id'
+        $selectedProcess = Process::findOrFail($request->input('process_id'));
+        $productID = $selectedProcess->product_id;
+        $countryID = $selectedProcess->country_id;
+        $mahID = $request->input('marketing_authorization_holder_id');
+
+        $process = Process::onlyReadyForOrder()
+            ->where('product_id', $productID)
+            ->where('country_id', $countryID)
+            ->where('marketing_authorization_holder_id', $mahID)
+            ->first();
+
+        $this->fill($request->all());
+        $this->process_id = $process->id;
+        $this->save();
 
         // HasMany relations
         $this->storeCommentFromRequest($request);

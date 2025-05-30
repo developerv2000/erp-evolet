@@ -1115,22 +1115,32 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     }
 
     /**
-     * Used on orders.create & order.edit pages
+     * Retrieve distinct ready-for-order Process records for a given manufacturer and country.
+     *
+     * This method is used on the `orders.create` and `orders.edit` pages to populate
+     * the list of available products for a selected manufacturer and country.
+     *
+     * @param int  $manufacturerID          ID of the manufacturer.
+     * @param int  $countryID               ID of the country.
+     * @param bool $appendFullTrademarkEn   Whether to append the 'full_trademark_en' attribute.
+     *
+     * @return \Illuminate\Support\Collection<\App\Models\Process>
      */
-    public static function getReadyForOrderRecordsOfManufacturer($manufacturerID, $countryID, $appendFullTrademarkEn = false)
+    public static function getReadyForOrderRecordsOfManufacturer(int $manufacturerID, int $countryID, bool $appendFullTrademarkEn = false)
     {
         $processes = self::onlyReadyForOrder()
             ->withRelationsForOrder()
             ->withOnlyRequiredSelectsForOrder()
-            ->whereHas('product.manufacturer', function ($manufacturerQuery) use ($manufacturerID) {
-                $manufacturerQuery->where('manufacturers.id', $manufacturerID);
-            })
+            ->whereHas(
+                'product.manufacturer',
+                fn($query) =>
+                $query->where('manufacturers.id', $manufacturerID)
+            )
             ->where('country_id', $countryID)
             ->get()
             ->unique('product_id')
             ->values();
 
-        // Append 'full_trademark_en' attribute
         if ($appendFullTrademarkEn) {
             $processes->each->append('full_trademark_en');
         }
@@ -1138,17 +1148,22 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         return $processes;
     }
 
-    public static function getMAHsOfReadyForOrderRecordsForManufacturer($manufacturerID, $countryID)
+    /**
+     * Get all available MAHs (Marketing Authorization Holders) for this process
+     * that are eligible for ordering.
+     *
+     * This is used on the `orders.create` and `orders.edit` pages to fetch
+     * MAHs related to the current process's product and country context.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<\App\Models\MarketingAuthorizationHolder>
+     */
+    public function getAvailableMAHsForOrder()
     {
-        return MarketingAuthorizationHolder::whereHas('processes', function ($processQuery) use ($manufacturerID, $countryID) {
-            $processQuery
-                ->onlyReadyForOrder()
-                ->whereHas('product.manufacturer', function ($manufacturerQuery) use ($manufacturerID) {
-                    $manufacturerQuery->where('manufacturers.id', $manufacturerID);
-                })
-                ->where('country_id', $countryID);
-        })
-            ->get();
+        return MarketingAuthorizationHolder::whereHas('processes', function ($query) {
+            $query->onlyReadyForOrder()
+                ->where('product_id', $this->product_id)
+                ->where('country_id', $this->country_id);
+        })->get();
     }
 
     /*
