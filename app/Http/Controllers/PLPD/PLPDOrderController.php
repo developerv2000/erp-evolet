@@ -127,6 +127,20 @@ class PLPDOrderController extends Controller
         return redirect($request->input('previous_url'));
     }
 
+    /**
+     * Ajax request
+     */
+    public function toggleIsSentToBDMAttribute(Request $request)
+    {
+        $record = Order::withTrashed()->findOrFail($request->input('record_id'));
+        $record->toggleIsSentToBDMAttribute($request);
+
+        return response()->json([
+            'isSentToBdm' => $record->is_sent_to_bdm,
+            'sentToBdmDate' => $record->sent_to_bdm_date?->isoFormat('DD MMM Y'),
+        ]);
+    }
+
     public function exportAsExcel(Request $request)
     {
         // Preapare request for valid model querying

@@ -292,13 +292,14 @@
 
     "Order": "Заказ",
     "Receive date": "Дата получения",
-    "Sent to BDM": "Отправлено BDM-у",
+    "Sent to BDM": "Отправлено БДМ-у",
     "Quantity": "Количество",
     "Products list": "Список продуктов",
     "Products": "Продукты",
     "Add product": "Добавить продукт",
     "No products found for the given manufacturer and country": "Для указанного производителя и страны не найдено ни одного продукта",
     "There are no available products for given order": "Нет доступных продуктов для данного заказа",
+    "Send to BDM": "Отправить БДМ-у",
 
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

@@ -16,6 +16,7 @@ import { refreshSelectizeOptions } from "../utilities";
 // Orders
 const GET_READY_FOR_ORDER_PROCESSES_OF_MANUFACTURER_POST_URL = '/plpd/orders/get-ready-for-order-processes-of-manufacturer';
 const GET_AVAILABLE_MAHS_OF_READY_FOR_ORDER_PROCESS_POST_URL = '/plpd/orders/get-available-mahs-of-ready-for-order-process';
+const TOGGLE_ORDERS_IS_SENT_TO_BDM_ATTRIBUTE_POST_URL = '/plpd/orders/toggle-is-sent-to-bdm-attribute';
 
 /*
 |--------------------------------------------------------------------------
@@ -105,6 +106,32 @@ export function updateMAHSelectOnOrderFormChange() {
         .then(response => {
             const MAHs = response.data.MAHs;
             refreshSelectizeOptions(mahSelect, MAHs, null, 'name', 'id', false);
+        })
+        .finally(function () {
+            hideSpinner();
+        });
+}
+
+export function toggleOrdersIsSentToBDMAttribute(evt) {
+    showSpinner();
+
+    const target = evt.currentTarget;
+
+    const data = {
+        'record_id': target.dataset.recordId,
+        'action': target.dataset.actionType,
+    };
+
+    axios.post(TOGGLE_ORDERS_IS_SENT_TO_BDM_ATTRIBUTE_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            if (response.data.isSentToBdm) {
+                const td = target.closest('td');
+                td.innerHTML = response.data.sentToBdmDate;
+            }
         })
         .finally(function () {
             hideSpinner();

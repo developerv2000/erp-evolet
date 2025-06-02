@@ -16,11 +16,20 @@ import { debounce } from '../utilities';
 // Order forms
 const orderCreateOrEditForm = document.querySelector('.plpd-orders-create-form, .plpd-orders-edit-form');
 
+// Orders table
+const ordersTable = document.querySelector('.plpd-orders-table');
+
 /*
 |--------------------------------------------------------------------------
 | Event Listeners
 |--------------------------------------------------------------------------
 */
+
+ordersTable?.querySelectorAll('button[data-click-action="toggle-orders-is-sent-to-bdm-attribute"]').forEach(button => {
+    button.addEventListener('click', (evt) => {
+        functions.toggleOrdersIsSentToBDMAttribute(evt);
+    });
+});
 
 /*
 |--------------------------------------------------------------------------

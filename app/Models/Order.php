@@ -10,6 +10,7 @@ use App\Support\Traits\Model\Commentable;
 use App\Support\Traits\Model\ExportsRecordsAsExcel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
@@ -77,6 +78,11 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     | Additional attributes
     |--------------------------------------------------------------------------
     */
+
+    public function getIsSentToBdmAttribute(): bool
+    {
+        return !is_null($this->sent_to_bdm_date);
+    }
 
     public function getTotalPriceAttribute()
     {
@@ -277,6 +283,13 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     | Misc
     |--------------------------------------------------------------------------
     */
+
+    public function toggleIsSentToBDMAttribute(Request $request)
+    {
+        $action = $request->input('action');
+        $this->sent_to_bdm_date = $action == 'send' ? now() : null;
+        $this->save();
+    }
 
     /**
      * Provides the default PLPD table columns along with their properties.

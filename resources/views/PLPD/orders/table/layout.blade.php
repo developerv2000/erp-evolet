@@ -1,4 +1,4 @@
-<x-tables.template.main-template :records="$records">
+<x-tables.template.main-template class="plpd-orders-table" :records="$records">
     {{-- thead titles --}}
     <x-slot:thead-rows>
         <tr>
