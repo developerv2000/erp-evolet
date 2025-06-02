@@ -19,8 +19,11 @@ Route::middleware('auth', 'auth.session')->prefix('plpd')->name('plpd.')->group(
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-PLPD-orders', 'can:edit-PLPD-orders');
 
         Route::post('/toggle-is-sent-to-bdm-attribute', 'toggleIsSentToBDMAttribute');  // AJAX request
+        Route::post('/toggle-is-confirmed-attribute', 'toggleIsConfirmedAttribute');  // AJAX request
+
         Route::post('/get-ready-for-order-processes-of-manufacturer', 'getReadyForOrderProcessesOfManufacturer');  // AJAX request on create/edit
         Route::post('/get-available-mahs-of-ready-for-order-process', 'getAvailableMAHsOfReadyForOrderProcess');  // AJAX request on create/edit
+
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });
 });

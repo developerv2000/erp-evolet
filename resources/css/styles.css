@@ -248,6 +248,7 @@ a {
 
 .button--arrowed-link {
     flex-direction: row-reverse;
+    text-align: left;
 }
 
 .button--arrowed-link .button__text {

@@ -1,57 +1,27 @@
 <x-form-templates.edit-template :action="route('cmd.orders.update', $record->id)">
     <div class="form__block">
         <div class="form__row">
-            <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Manufacturer"
-                field="manufacturer_id"
+            <x-form.inputs.record-field-input
+                labelText="PO №"
+                field="name"
                 :model="$record"
-                :options="$manufacturers"
-                :initial-value="$record->process->product->manufacturer_id"
                 :isRequired="true" />
 
             <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Country"
-                field="country_id"
+                labelText="Currency"
+                field="currency_id"
                 :model="$record"
-                :options="$countriesOrderedByProcessesCount"
-                optionCaptionField="code"
-                :initial-value="$record->process->country_id"
+                :options="$currencies"
+                :initial-value="$record->currency_id ?: $defaultSelectedCurrencyID"
                 :isRequired="true" />
 
             <x-form.inputs.record-field-input
-                labelText="Receive date"
-                field="receive_date"
-                :model="$record"
-                type="date"
-                :initial-value="$record->receive_date->format('Y-m-d')"
-                :isRequired="true" />
-        </div>
-    </div>
-
-    <div class="form__block">
-        <div class="form__row">
-            <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="Brand Eng"
-                field="process_id"
-                :model="$record"
-                :options="$readyForOrderProcesses"
-                optionCaptionField="full_trademark_en"
-                :isRequired="true" />
-
-            <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="MAH"
-                field="marketing_authorization_holder_id"
-                :model="$record"
-                :options="$MAHs"
-                :initial-value="$record->process->marketing_authorization_holder_id"
-                :isRequired="true" />
-
-            <x-form.inputs.record-field-input
-                labelText="Quantity"
-                field="quantity"
+                labelText="Price"
+                field="price"
                 :model="$record"
                 type="number"
-                min="0"
+                step="0.01"
+                min="0.00"
                 :isRequired="true" />
         </div>
     </div>

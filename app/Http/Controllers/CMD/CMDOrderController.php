@@ -21,7 +21,7 @@ class CMDOrderController extends Controller
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
-        $query = Order::withBasicRelations()->withBasicRelationCounts();
+        $query = Order::onlySentToBdm()->withBasicRelations()->withBasicRelationCounts();
         $filteredQuery = Order::filterQueryForRequest($query, $request);
         $records = Order::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
@@ -47,14 +47,14 @@ class CMDOrderController extends Controller
     /**
      * Ajax request
      */
-    public function toggleIsSentToBDMAttribute(Request $request)
+    public function toggleIsSentToConfirmationAttribute(Request $request)
     {
         $record = Order::withTrashed()->findOrFail($request->input('record_id'));
-        $record->toggleIsSentToBDMAttribute($request);
+        $record->toggleIsSentToConfirmationAttribute($request);
 
         return response()->json([
-            'isSentToBdm' => $record->is_sent_to_bdm,
-            'sentToBdmDate' => $record->sent_to_bdm_date?->isoFormat('DD MMM Y'),
+            'isSentToConfirmation' => $record->is_sent_to_confirmation,
+            'sentToConfirmationDate' => $record->sent_to_confirmation_date?->isoFormat('DD MMM Y'),
         ]);
     }
 }

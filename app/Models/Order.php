@@ -7,6 +7,7 @@ use App\Support\Contracts\Model\CanExportRecordsAsExcel;
 use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\Commentable;
+use App\Support\Traits\Model\ScopesOrderingByName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     use HasFactory;
     use SoftDeletes;
     use Commentable;
+    use ScopesOrderingByName;
 
     /*
     |--------------------------------------------------------------------------
@@ -48,6 +50,10 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     protected $casts = [
         'receive_date' => 'date',
         'sent_to_bdm_date' => 'date',
+        'purchase_date' => 'date',
+        'sent_to_confirmation_date' => 'date',
+        'confirmation_date' => 'date',
+        'sent_to_manufacturer_date' => 'date',
     ];
 
     /*
@@ -73,6 +79,11 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         )->withTrashedParents()->withTrashed();
     }
 
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes
@@ -82,6 +93,16 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     public function getIsSentToBdmAttribute(): bool
     {
         return !is_null($this->sent_to_bdm_date);
+    }
+
+    public function getIsSentToConfirmationAttribute(): bool
+    {
+        return !is_null($this->sent_to_confirmation_date);
+    }
+
+    public function getIsConfirmedAttribute(): bool
+    {
+        return !is_null($this->confirmation_date);
     }
 
     public function getTotalPriceAttribute()
@@ -135,6 +156,11 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $query->whereNotNull('sent_to_bdm_date');
     }
 
+    public function scopeOnlyWithName($query)
+    {
+        return $query->whereNotNull('name');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Contracts
@@ -166,7 +192,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     // Implement method declared in HasTitle Interface
     public function getTitleAttribute(): string
     {
-        return '#' . $this->id;
+        return $this->name ?: ('#' . $this->id);
     }
 
     // Implement method declared in CanExportRecordsAsExcel Interface
@@ -202,8 +228,8 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     private static function getFilterConfig(): array
     {
         return [
-            'whereEqal' => ['process_id', 'quantity'],
-            'whereIn' => ['id'],
+            'whereEqal' => ['process_id', 'quantity', 'price'],
+            'whereIn' => ['id', 'currency_id'],
             'dateRange' => ['receive_date', 'sent_to_bdm_date', 'created_at', 'updated_at'],
 
             'relationEqual' => [
@@ -320,6 +346,13 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     {
         $this->update($request->all());
 
+        // Update 'purchase_date'
+        if (is_null($this->purchase_date) && !is_null($this->name)) {
+            $this->update([
+                'purchase_date' => now(),
+            ]);
+        }
+
         // HasMany relations
         $this->storeCommentFromRequest($request);
     }
@@ -334,6 +367,20 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     {
         $action = $request->input('action');
         $this->sent_to_bdm_date = $action == 'send' ? now() : null;
+        $this->save();
+    }
+
+    public function toggleIsSentToConfirmationAttribute(Request $request)
+    {
+        $action = $request->input('action');
+        $this->sent_to_confirmation_date = $action == 'send' ? now() : null;
+        $this->save();
+    }
+
+    public function toggleIsConfirmedAttribute(Request $request)
+    {
+        $action = $request->input('action');
+        $this->confirmation_date = $action == 'confirm' ? now() : null;
         $this->save();
     }
 
@@ -365,14 +412,21 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
-            ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Price', 'order' => $order++, 'width' => 70, 'visible' => 1],
+            ['name' => 'Total price', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
             ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Sent to confirmation', 'order' => $order++, 'width' => 244, 'visible' => 1],
+            ['name' => 'Confirmation date', 'order' => $order++, 'width' => 172, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
@@ -411,14 +465,21 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
             ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
-            ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Price', 'order' => $order++, 'width' => 70, 'visible' => 1],
+            ['name' => 'Total price', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
+            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Sent to confirmation', 'order' => $order++, 'width' => 244, 'visible' => 1],
+            ['name' => 'Confirmation date', 'order' => $order++, 'width' => 172, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
-            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],

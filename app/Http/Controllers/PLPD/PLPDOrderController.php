@@ -139,4 +139,18 @@ class PLPDOrderController extends Controller
             'sentToBdmDate' => $record->sent_to_bdm_date?->isoFormat('DD MMM Y'),
         ]);
     }
+
+    /**
+     * Ajax request
+     */
+    public function toggleIsConfirmedAttribute(Request $request)
+    {
+        $record = Order::withTrashed()->findOrFail($request->input('record_id'));
+        $record->toggleIsConfirmedAttribute($request);
+
+        return response()->json([
+            'isConfirmed' => $record->is_confirmed,
+            'confirmationDate' => $record->confirmation_date?->isoFormat('DD MMM Y'),
+        ]);
+    }
 }

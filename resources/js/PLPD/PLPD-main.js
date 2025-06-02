@@ -31,6 +31,12 @@ ordersTable?.querySelectorAll('button[data-click-action="toggle-orders-is-sent-t
     });
 });
 
+ordersTable?.querySelectorAll('button[data-click-action="toggle-orders-is-confirmed-attribute"]').forEach(button => {
+    button.addEventListener('click', (evt) => {
+        functions.toggleOrdersConfirmedAttribute(evt);
+    });
+});
+
 /*
 |--------------------------------------------------------------------------
 | Initializations

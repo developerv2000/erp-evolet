@@ -293,13 +293,22 @@
     "Order": "Заказ",
     "Receive date": "Дата получения",
     "Sent to BDM": "Отправлено БДМ-у",
+    "Send to BDM": "Отправить БДМ-у",
     "Quantity": "Количество",
+    "Confirm": "Подтвердить",
     "Products list": "Список продуктов",
     "Products": "Продукты",
     "Add product": "Добавить продукт",
     "No products found for the given manufacturer and country": "Для указанного производителя и страны не найдено ни одного продукта",
     "There are no available products for given order": "Нет доступных продуктов для данного заказа",
-    "Send to BDM": "Отправить БДМ-у",
+
+    "PO №": "Номер заявки",
+    "PO date": "Дата заявки",
+    "Sent to confirmation": "Отправлено на подтверждение",
+    "Send to confirmation": "Отправить на подтверждение",
+    "Confirmation date": "Дата подтверждения",
+    "About order": "О заказе",
+    "Total price": "Общая стоимость",
 
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

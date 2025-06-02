@@ -9,6 +9,6 @@ Route::middleware('auth', 'auth.session')->prefix('cmd')->name('cmd.')->group(fu
     Route::prefix('/orders')->controller(CMDOrderController::class)->name('orders.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-CMD-orders', 'can:edit-CMD-orders');
 
-        Route::post('/toggle-is-sent-to-bdm-attribute', 'toggleIsSentToBDMAttribute');  // AJAX request
+        Route::post('/toggle-is-sent-to-confirmation-attribute', 'toggleIsSentToConfirmationAttribute');  // AJAX request
     });
 });

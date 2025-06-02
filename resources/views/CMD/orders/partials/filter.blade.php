@@ -1,4 +1,9 @@
 <x-filter.layout>
+    <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        labelText="PO №"
+        inputName="id[]"
+        :options="$orderNames" />
+
     <x-form.selects.selectize.multiple-select.request-based-select
         labelText="Brand Eng"
         inputName="trademark_en[]"
@@ -31,12 +36,6 @@
         :options="$bdmUsers" />
 
     <x-form.inputs.request-based-input
-        labelText="Receive date"
-        inputName="receive_date"
-        class="date-range-picker-input"
-        autocomplete="off" />
-
-    <x-form.inputs.request-based-input
         labelText="Sent to BDM"
         inputName="sent_to_bdm_date"
         class="date-range-picker-input"
@@ -49,11 +48,17 @@
         min="0" />
 
     <x-form.inputs.request-based-input
-        :label-text="__('Product') . ' ID'"
-        inputName="process_id"
+        labelText="Price"
+        inputName="price"
         type="number"
-        min="0" />
+        step="0.01"
+        min="0.00" />
+
+    <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        labelText="Currency"
+        inputName="currency_id[]"
+        :options="$currencies" />
 
     {{-- Default filter inputs --}}
-    <x-filter.partials.default-inputs />
+    <x-filter.partials.default-inputs :exclude="['id']" />
 </x-filter.layout>

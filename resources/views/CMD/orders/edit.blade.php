@@ -23,6 +23,7 @@
         </div>
 
         {{-- Edit form --}}
+        @include('CMD.orders.partials.about-order')
         @include('CMD.orders.partials.edit-form')
     </div>
 

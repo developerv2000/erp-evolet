@@ -13,6 +13,14 @@
             title="{{ $record->process->product->manufacturer->bdm->name }}" />
     @break
 
+    @case('PO №')
+        {{ $record->name }}
+    @break
+
+    @case('PO date')
+        {{ $record->purchase_date?->isoformat('DD MMM Y') }}
+    @break
+
     @case('Brand Eng')
         {{ $record->process->full_trademark_en }}
     @break
@@ -29,8 +37,40 @@
         <x-tables.partials.td.formatted-price :price="$record->quantity" />
     @break
 
-    @case('Receive date')
-        {{ $record->receive_date->isoformat('DD MMM Y') }}
+    @case('Price')
+        {{ $record->price }}
+    @break
+
+    @case('Total price')
+        {{ $record->total_price }}
+    @break
+
+    @case('Currency')
+        {{ $record->currency?->name }}
+    @break
+
+    @case('Sent to BDM')
+        {{ $record->sent_to_bdm_date?->isoformat('DD MMM Y') }}
+    @break
+
+    @case('Sent to confirmation')
+        @if ($record->is_sent_to_confirmation)
+            {{ $record->sent_to_confirmation_date->isoformat('DD MMM Y') }}
+        @else
+            <x-misc.button
+                style="transparent"
+                class="button--arrowed-link button--margined-bottom"
+                icon="line_end_arrow_notch"
+                data-click-action="toggle-orders-is-sent-to-confirmation-attribute"
+                data-action-type="send"
+                data-record-id="{{ $record->id }}">
+                {{ __('Send to confirmation') }}
+            </x-misc.button>
+        @endif
+    @break
+
+    @case('Confirmation date')
+        {{ $record->confirmation_date?->isoformat('DD MMM Y') }}
     @break
 
     @case('Manufacturer')
@@ -41,20 +81,8 @@
         {{ $record->process->searchCountry->code }}
     @break
 
-    @case('Sent to BDM')
-        @if ($record->is_sent_to_bdm)
-            {{ $record->sent_to_bdm_date?->isoformat('DD MMM Y') }}
-        @else
-            <x-misc.button
-                style="transparent"
-                class="button--arrowed-link button--margined-bottom"
-                icon="line_end_arrow_notch"
-                data-click-action="toggle-orders-is-sent-to-bdm-attribute"
-                data-action-type="send"
-                data-record-id="{{ $record->id }}">
-                {{ __('Send to BDM') }}
-            </x-misc.button>
-        @endif
+    @case('Generic')
+        <x-tables.partials.td.max-lines-limited-text :text="$record->process->product->inn->name" />
     @break
 
     @case('Comments')

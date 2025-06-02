@@ -13,6 +13,14 @@
             title="{{ $record->process->product->manufacturer->bdm->name }}" />
     @break
 
+    @case('PO №')
+        {{ $record->name }}
+    @break
+
+    @case('PO date')
+        {{ $record->purchase_date?->isoformat('DD MMM Y') }}
+    @break
+
     @case('Brand Eng')
         {{ $record->process->full_trademark_en }}
     @break
@@ -29,6 +37,18 @@
         <x-tables.partials.td.formatted-price :price="$record->quantity" />
     @break
 
+    @case('Price')
+        {{ $record->price }}
+    @break
+
+    @case('Total price')
+        {{ $record->total_price }}
+    @break
+
+    @case('Currency')
+        {{ $record->currency?->name }}
+    @break
+
     @case('Receive date')
         {{ $record->receive_date->isoformat('DD MMM Y') }}
     @break
@@ -43,7 +63,7 @@
 
     @case('Sent to BDM')
         @if ($record->is_sent_to_bdm)
-            {{ $record->sent_to_bdm_date?->isoformat('DD MMM Y') }}
+            {{ $record->sent_to_bdm_date->isoformat('DD MMM Y') }}
         @else
             <x-misc.button
                 style="transparent"
@@ -53,6 +73,26 @@
                 data-action-type="send"
                 data-record-id="{{ $record->id }}">
                 {{ __('Send to BDM') }}
+            </x-misc.button>
+        @endif
+    @break
+
+    @case('Sent to confirmation')
+        {{ $record->sent_to_confirmation_date?->isoformat('DD MMM Y') }}
+    @break
+
+    @case('Confirmation date')
+        @if ($record->is_confirmed)
+            {{ $record->confirmation_date->isoformat('DD MMM Y') }}
+        @elseif ($record->is_sent_to_confirmation)
+            <x-misc.button
+                style="transparent"
+                class="button--arrowed-link button--margined-bottom"
+                icon="done_all"
+                data-click-action="toggle-orders-is-confirmed-attribute"
+                data-action-type="confirm"
+                data-record-id="{{ $record->id }}">
+                {{ __('Confirm') }}
             </x-misc.button>
         @endif
     @break
