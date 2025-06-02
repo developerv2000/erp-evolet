@@ -270,6 +270,10 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             foreach ($record->statusHistory as $history) {
                 $history->delete();
             }
+
+            foreach ($record->orders as $order) {
+                $order->delete();
+            }
         });
     }
 
@@ -509,7 +513,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     */
 
     // Implement method defined in BaseModel abstract class
-    public function generateBreadcrumbs(): array
+    public function generateBreadcrumbs($department = null): array
     {
         $breadcrumbs = [
             ['link' => route('mad.processes.index'), 'text' => __('VPS')],

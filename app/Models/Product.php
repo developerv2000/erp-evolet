@@ -221,7 +221,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
     */
 
     // Implement method defined in BaseModel abstract class
-    public function generateBreadcrumbs(): array
+    public function generateBreadcrumbs($department = null): array
     {
         $breadcrumbs = [
             ['link' => route('mad.products.index'), 'text' => __('IVP')],

@@ -109,7 +109,7 @@ class Meeting extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     */
 
     // Implement method defined in BaseModel abstract class
-    public function generateBreadcrumbs(): array
+    public function generateBreadcrumbs($department = null): array
     {
         $breadcrumbs = [
             ['link' => route('mad.meetings.index'), 'text' => __('Meetings')],

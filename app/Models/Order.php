@@ -7,7 +7,6 @@ use App\Support\Contracts\Model\CanExportRecordsAsExcel;
 use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\Commentable;
-use App\Support\Traits\Model\ExportsRecordsAsExcel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
@@ -19,7 +18,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     use HasFactory;
     use SoftDeletes;
     use Commentable;
-    use ExportsRecordsAsExcel;
 
     /*
     |--------------------------------------------------------------------------
@@ -27,15 +25,17 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     |--------------------------------------------------------------------------
     */
 
+    // PLPD
     const SETTINGS_PLPD_TABLE_COLUMNS_KEY = 'PLPD_orders_table_columns';
+    const DEFAULT_PLPD_ORDER_BY = 'id';
+    const DEFAULT_PLPD_ORDER_TYPE = 'asc';
+    const DEFAULT_PLPD_PAGINATION_LIMIT = 50;
 
-    const DEFAULT_ORDER_BY = 'id';
-    const DEFAULT_ORDER_TYPE = 'asc';
-    const DEFAULT_PAGINATION_LIMIT = 50;
-
-    const LIMITED_EXCEL_RECORDS_COUNT_FOR_EXPORT = 20;
-    const STORAGE_PATH_OF_EXCEL_TEMPLATE_FILE_FOR_EXPORT = 'app/excel/export-templates/plpd-orders.xlsx';
-    const STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES = 'app/excel/exports/plpd-orders';
+    // CMD
+    const SETTINGS_CMD_TABLE_COLUMNS_KEY = 'CMD_orders_table_columns';
+    const DEFAULT_CMD_ORDER_BY = 'sent_to_bdm_date';
+    const DEFAULT_CMD_ORDER_TYPE = 'desc';
+    const DEFAULT_CMD_PAGINATION_LIMIT = 50;
 
     /*
     |--------------------------------------------------------------------------
@@ -130,24 +130,35 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         ]);
     }
 
+    public function scopeOnlySentToBdm($query)
+    {
+        return $query->whereNotNull('sent_to_bdm_date');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Contracts
     |--------------------------------------------------------------------------
     */
 
-    // Implement method defined in BaseModel abstract class
-    public function generateBreadcrumbs(): array
+    /**
+     * Implement method defined in BaseModel abstract class
+     *
+     * No trash page for 'CMD' orders
+     */
+    public function generateBreadcrumbs($department = null): array
     {
+        $lowercasedDepartment = strtolower($department);
+
         $breadcrumbs = [
-            ['link' => route('plpd.orders.index'), 'text' => __('Orders')],
+            ['link' => route($lowercasedDepartment . '.orders.index'), 'text' => __('Orders')],
         ];
 
-        if ($this->trashed()) {
-            $breadcrumbs[] = ['link' => route('plpd.orders.trash'), 'text' => __('Trash')];
+        if ($this->trashed() && $department == 'PLPD') {
+            $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.trash'), 'text' => __('Trash')];
         }
 
-        $breadcrumbs[] = ['link' => route('plpd.orders.edit', $this->id), 'text' => $this->title];
+        $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.edit', $this->id), 'text' => $this->title];
 
         return $breadcrumbs;
     }
@@ -228,24 +239,41 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     /*
     |--------------------------------------------------------------------------
+    | Adding default query params to request
+    |--------------------------------------------------------------------------
+    */
+
+    public static function addDefaultPLPDQueryParamsToRequest(Request $request)
+    {
+        self::addDefaultQueryParamsToRequest(
+            $request,
+            'DEFAULT_PLPD_ORDER_BY',
+            'DEFAULT_PLPD_ORDER_TYPE',
+            'DEFAULT_PLPD_PAGINATION_LIMIT',
+        );
+    }
+
+    public static function addDefaultCMDQueryParamsToRequest(Request $request)
+    {
+        self::addDefaultQueryParamsToRequest(
+            $request,
+            'DEFAULT_CMD_ORDER_BY',
+            'DEFAULT_CMD_ORDER_TYPE',
+            'DEFAULT_CMD_PAGINATION_LIMIT',
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Create & Update
     |--------------------------------------------------------------------------
     */
 
+    // PLPD part
+
     public static function createFromRequest($request)
     {
-        // Detect valid 'process_id' of order, which is depended on
-        // selected processes 'product_id' and 'country_id' and also on selected 'marketing_authorization_holder_id'
-        $selectedProcess = Process::findOrFail($request->input('process_id'));
-        $productID = $selectedProcess->product_id;
-        $countryID = $selectedProcess->country_id;
-        $mahID = $request->input('marketing_authorization_holder_id');
-
-        $process = Process::onlyReadyForOrder()
-            ->where('product_id', $productID)
-            ->where('country_id', $countryID)
-            ->where('marketing_authorization_holder_id', $mahID)
-            ->first();
+        $process = self::determineProcessOnCreateOrEditFromRequest($request);
 
         $record = new Order($request->all());
         $record->process_id = $process->id;
@@ -255,24 +283,42 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $record->storeCommentFromRequest($request);
     }
 
-    public function updateFromRequest($request)
+    public function updateByPLPDFromRequest($request)
     {
-        // Detect valid 'process_id' of order, which is depended on
-        // selected processes 'product_id' and 'country_id' and also on selected 'marketing_authorization_holder_id'
+        $process = self::determineProcessOnCreateOrEditFromRequest($request);
+
+        $this->fill($request->all());
+        $this->process_id = $process->id;
+        $this->save();
+
+        // HasMany relations
+        $this->storeCommentFromRequest($request);
+    }
+
+    /**
+     * Detect valid 'process' of order, which is depended on
+     * selected processes 'product_id' with 'country_id' and
+     * also on selected 'marketing_authorization_holder_id'
+     */
+    private static function determineProcessOnCreateOrEditFromRequest($request)
+    {
         $selectedProcess = Process::findOrFail($request->input('process_id'));
         $productID = $selectedProcess->product_id;
         $countryID = $selectedProcess->country_id;
         $mahID = $request->input('marketing_authorization_holder_id');
 
-        $process = Process::onlyReadyForOrder()
+        return Process::onlyReadyForOrder()
             ->where('product_id', $productID)
             ->where('country_id', $countryID)
             ->where('marketing_authorization_holder_id', $mahID)
             ->first();
+    }
 
-        $this->fill($request->all());
-        $this->process_id = $process->id;
-        $this->save();
+    // CMD part
+
+    public function updateByCMDFromRequest($request)
+    {
+        $this->update($request->all());
 
         // HasMany relations
         $this->storeCommentFromRequest($request);
@@ -309,6 +355,52 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $columns = array();
 
         if (Gate::forUser($user)->allows('edit-PLPD-orders')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
+            ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
+            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
+        );
+
+        return $columns;
+    }
+
+    /**
+     * Provides the default CMD table columns along with their properties.
+     *
+     * These columns are typically used to display data in tables,
+     * such as on index and trash pages, and are iterated over in a loop.
+     *
+     * @return array
+     */
+    public static function getDefaultCMDTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-CMD-orders')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        if (Gate::forUser($user)->allows('edit-CMD-orders')) {
             array_push(
                 $columns,
                 ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],

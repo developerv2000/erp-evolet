@@ -102,22 +102,11 @@ class RoleSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | CMD roles
-        |--------------------------------------------------------------------------
-        */
-
-        $role = new Role();
-        $role->name = Role::CMD_BDM_NAME;
-        $role->description = "User is assosiated as 'BDM'. Not fully implemented yet!";
-        $role->department_id = Department::findByName(Department::CMD_NAME)->id;
-        $role->save();
-
-        /*
-        |--------------------------------------------------------------------------
         | PLPD roles
         |--------------------------------------------------------------------------
         */
 
+        // PLPD Logistician
         $role = new Role();
         $role->name = Role::PLPD_LOGISTICIAN_NAME;
         $role->description = "Not fully implemented yet!";
@@ -125,6 +114,25 @@ class RoleSeeder extends Seeder
         $role->save();
 
         $permissionNames = Permission::getPLPDLogisticianPermissionNames();
+
+        foreach ($permissionNames as $permissionName) {
+            $role->permissions()->attach(Permission::findByName($permissionName)->id);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | CMD roles
+        |--------------------------------------------------------------------------
+        */
+
+        // CMD BDM
+        $role = new Role();
+        $role->name = Role::CMD_BDM_NAME;
+        $role->description = "User is assosiated as 'BDM'. Not fully implemented yet!";
+        $role->department_id = Department::findByName(Department::CMD_NAME)->id;
+        $role->save();
+
+        $permissionNames = Permission::getCMDBDMPermissionNames();
 
         foreach ($permissionNames as $permissionName) {
             $role->permissions()->attach(Permission::findByName($permissionName)->id);

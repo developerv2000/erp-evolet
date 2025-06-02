@@ -364,6 +364,7 @@ class User extends Authenticatable
         // Table settings
         $this->resetMADTablesColumnSettings($settings);
         $this->resetPLPDTablesColumnSettings($settings);
+        $this->resetCMDTablesColumnSettings($settings);
     }
 
     /**
@@ -392,6 +393,19 @@ class User extends Authenticatable
         $this->refresh();
         $settings = $this->settings;
         $settings[Order::SETTINGS_PLPD_TABLE_COLUMNS_KEY] = Order::getDefaultPLPDTableColumnsForUser($this);
+
+        $this->settings = $settings;
+        $this->save();
+    }
+
+    /**
+     * Reset users CMD tables column settings
+     */
+    public function resetCMDTablesColumnSettings($settings)
+    {
+        $this->refresh();
+        $settings = $this->settings;
+        $settings[Order::SETTINGS_CMD_TABLE_COLUMNS_KEY] = Order::getDefaultCMDTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -427,6 +441,9 @@ class User extends Authenticatable
             'MAD_DH_table_columns' => Process::getDefaultMADDHTableColumnsForUser($this),
 
             'PLPD_orders_table_columns' => Order::getDefaultPLPDTableColumnsForUser($this),
+
+            'CMD_orders_table_columns' => Order::getDefaultCMDTableColumnsForUser($this),
+
             default => throw new InvalidArgumentExceptio("Unknown key: $key"),
         };
 
@@ -672,6 +689,9 @@ class User extends Authenticatable
             // PLPD
             'plpd.processes.ready-for-order.index' => 'view-PLPD-ready-for-order-processes',
             'plpd.orders.index' => 'view-PLPD-orders',
+
+            // CMD
+            'cmd.orders.index' => 'view-CMD-orders',
         ];
 
         foreach ($homepageRoutes as $routeName => $gate) {

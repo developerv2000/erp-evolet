@@ -1,0 +1,22 @@
+@canany(['view-CMD-ready-for-order-processes', 'view-CMD-orders'])
+    <div class="leftbar__section leftbar__section--CMD">
+        <p class="leftbar__section-title">{{ __('CMD') }}</p>
+
+        <nav class="leftbar__nav">
+            {{-- Orders --}}
+            @can('view-CMD-orders')
+                <a
+                    @class([
+                        'leftbar__nav-link',
+                        'leftbar__nav-link--active' => request()->routeIs(
+                            'cmd.orders.*'),
+                    ])
+                    href="{{ route('cmd.orders.index') }}">
+
+                    <x-misc.material-symbol class="leftbar__nav-link-icon" icon="package_2" />
+                    <span class="leftbar__nav-link-text">{{ __('Orders') }}</span>
+                </a>
+            @endcan
+        </nav>
+    </div>
+@endcanany

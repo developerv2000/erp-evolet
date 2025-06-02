@@ -125,5 +125,26 @@ class PermissionSeeder extends Seeder
                 'department_id' => Department::findByName(Department::PLPD_NAME)->id,
             ]);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | BDM permissions
+        |--------------------------------------------------------------------------
+        */
+
+        $CMDs = [
+            Permission::CAN_VIEW_CMD_ORDERS_NAME,
+
+            Permission::CAN_EDIT_CMD_ORDERS_NAME,
+
+            Permission::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_SENT_TO_CMD_BDM,
+        ];
+
+        foreach ($CMDs as $cmd) {
+            Permission::create([
+                'name' => $cmd,
+                'department_id' => Department::findByName(Department::CMD_NAME)->id,
+            ]);
+        }
     }
 }

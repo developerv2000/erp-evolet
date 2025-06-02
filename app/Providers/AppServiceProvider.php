@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Support\Definers\GateDefiners\CMDGatesDefiner;
 use App\Support\Definers\GateDefiners\GlobalGatesDefiner;
 use App\Support\Definers\GateDefiners\MADGatesDefiner;
 use App\Support\Definers\GateDefiners\PLPDGatesDefiner;
+use App\Support\Definers\ViewComposerDefiners\CMDViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\GlobalViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\MADViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\MGMTViewComposersDefiner;
@@ -30,11 +32,13 @@ class AppServiceProvider extends ServiceProvider
         GlobalGatesDefiner::defineAll();
         MADGatesDefiner::defineAll();
         PLPDGatesDefiner::defineAll();
+        CMDGatesDefiner::defineAll();
 
         // View composer definers
         GlobalViewComposersDefiner::defineAll();
         MGMTViewComposersDefiner::defineAll();
         MADViewComposersDefiner::defineAll();
         PLPDViewComposersDefiner::defineAll();
+        CMDViewComposersDefiner::defineAll();
     }
 }

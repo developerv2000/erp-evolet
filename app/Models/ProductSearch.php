@@ -181,7 +181,7 @@ class ProductSearch extends BaseModel implements HasTitle, CanExportRecordsAsExc
     */
 
     // Implement method defined in BaseModel abstract class
-    public function generateBreadcrumbs(): array
+    public function generateBreadcrumbs($department = null): array
     {
         $breadcrumbs = [
             ['link' => route('mad.product-searches.index'), 'text' => __('KVPP')],

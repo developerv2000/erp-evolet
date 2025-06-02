@@ -124,6 +124,21 @@ class Permission extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | CMD permissions
+    |--------------------------------------------------------------------------
+    */
+
+    // View
+    const CAN_VIEW_CMD_ORDERS_NAME = 'can view CMD orders';
+
+    // Edit
+    const CAN_EDIT_CMD_ORDERS_NAME = 'can edit CMD orders';
+
+    // Other permissions
+    const CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_SENT_TO_CMD_BDM = 'can receive notification when PLPD order is sent to CMD BDM';
+
+    /*
+    |--------------------------------------------------------------------------
     | Properties
     |--------------------------------------------------------------------------
     */
@@ -297,6 +312,17 @@ class Permission extends Model
             self::CAN_EDIT_PLPD_ORDERS_NAME,
 
             self::CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER,
+        ];
+    }
+
+    public static function getCMDBDMPermissionNames()
+    {
+        return [
+            self::CAN_VIEW_CMD_ORDERS_NAME,
+
+            self::CAN_EDIT_CMD_ORDERS_NAME,
+
+            self::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_SENT_TO_CMD_BDM,
         ];
     }
 }

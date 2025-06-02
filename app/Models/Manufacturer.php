@@ -228,7 +228,7 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
     */
 
     // Implement method defined in BaseModel abstract class
-    public function generateBreadcrumbs(): array
+    public function generateBreadcrumbs($department = null): array
     {
         $breadcrumbs = [
             ['link' => route('mad.manufacturers.index'), 'text' => __('EPP')],

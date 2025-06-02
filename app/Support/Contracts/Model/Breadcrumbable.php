@@ -11,5 +11,5 @@ interface Breadcrumbable
      *
      * @return array
      */
-    public function generateBreadcrumbs(): array;
+    public function generateBreadcrumbs($department = null): array;
 }

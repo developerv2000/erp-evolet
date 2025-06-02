@@ -63,13 +63,12 @@ return new class extends Migration
             $table->string('down_payment_condition')->nullable(); // nullable until the end
 
             // Stage 3 (АЦ)
-            // required
             $table->unsignedSmallInteger('currency_id')
-                ->nullable()
                 ->index()
                 ->foreign()
                 ->references('id')
-                ->on('currencies');
+                ->on('currencies')
+                ->nullable(); // required
 
             $table->decimal('manufacturer_first_offered_price', 8, 2)->nullable(); // required
             $table->decimal('manufacturer_followed_offered_price', 8, 2)->nullable(); // required
@@ -78,11 +77,11 @@ return new class extends Migration
 
             // nullable at stages (3, 4) and became required at stage 5
             $table->unsignedSmallInteger('marketing_authorization_holder_id')
-                ->nullable()
                 ->index()
                 ->foreign()
                 ->references('id')
-                ->on('marketing_authorization_holders');
+                ->on('marketing_authorization_holders')
+                ->nullable();
 
             $table->string('trademark_en')->nullable(); // nullable at stages (3, 4) and became required at stage 5
             $table->string('trademark_ru')->nullable(); // nullable at stages (3, 4) and became required at stage 5

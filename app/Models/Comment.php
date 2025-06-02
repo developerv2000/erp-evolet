@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Support\Helpers\GeneralHelper;
 use App\Support\Traits\Model\FormatsAttributeForDateTimeInput;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Comment extends Model
 {

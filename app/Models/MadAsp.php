@@ -120,7 +120,7 @@ class MadAsp extends BaseModel implements HasTitle
     */
 
     // Implement method defined in BaseModel abstract class
-    public function generateBreadcrumbs(): array
+    public function generateBreadcrumbs($department = null): array
     {
         return [
             ['link' => route('mad.asp.index'), 'text' => __('SPG')],

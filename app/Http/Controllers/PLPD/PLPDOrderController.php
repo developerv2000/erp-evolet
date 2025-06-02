@@ -4,9 +4,8 @@ namespace App\Http\Controllers\PLPD;
 
 use App\Models\Order;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\OrderStoreRequest;
-use App\Http\Requests\OrderUpdateRequest;
-use App\Models\MarketingAuthorizationHolder;
+use App\Http\Requests\OrderStoreByPLPDRequest;
+use App\Http\Requests\OrderUpdateByPLPDRequest;
 use App\Models\Process;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
@@ -25,7 +24,7 @@ class PLPDOrderController extends Controller
     public function index(Request $request)
     {
         // Preapare request for valid model querying
-        Order::addDefaultQueryParamsToRequest($request);
+        Order::addDefaultPLPDQueryParamsToRequest($request);
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
@@ -43,7 +42,7 @@ class PLPDOrderController extends Controller
     public function trash(Request $request)
     {
         // Preapare request for valid model querying
-        Order::addDefaultQueryParamsToRequest($request);
+        Order::addDefaultPLPDQueryParamsToRequest($request);
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get trashed finalized records paginated
@@ -91,7 +90,7 @@ class PLPDOrderController extends Controller
         ]);
     }
 
-    public function store(OrderStoreRequest $request)
+    public function store(OrderStoreByPLPDRequest $request)
     {
         Order::createFromRequest($request);
 
@@ -119,10 +118,10 @@ class PLPDOrderController extends Controller
      * Route model binding is not used, because trashed records can also be edited.
      * Route model binding looks only for untrashed records!
      */
-    public function update(OrderUpdateRequest $request, $record)
+    public function update(OrderUpdateByPLPDRequest $request, $record)
     {
         $record = Order::withTrashed()->findOrFail($record);
-        $record->updateFromRequest($request);
+        $record->updateByPLPDFromRequest($request);
 
         return redirect($request->input('previous_url'));
     }
@@ -139,20 +138,5 @@ class PLPDOrderController extends Controller
             'isSentToBdm' => $record->is_sent_to_bdm,
             'sentToBdmDate' => $record->sent_to_bdm_date?->isoFormat('DD MMM Y'),
         ]);
-    }
-
-    public function exportAsExcel(Request $request)
-    {
-        // Preapare request for valid model querying
-        Order::addRefererQueryParamsToRequest($request);
-        Order::addDefaultQueryParamsToRequest($request);
-
-        // Get finalized records query
-        $query = Order::withRelationsForExport();
-        $filteredQuery = Order::filterQueryForRequest($query, $request);
-        $records = Order::finalizeQueryForRequest($filteredQuery, $request, 'query');
-
-        // Export records
-        return Order::exportRecordsAsExcel($records);
     }
 }
