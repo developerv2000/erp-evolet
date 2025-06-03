@@ -54,6 +54,7 @@
         </div>
     </div>
 
+    {{-- CMD part --}}
     @if ($record->is_sent_to_confirmation)
         <div class="form__block">
             <div class="form__row">

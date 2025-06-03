@@ -55,6 +55,7 @@ class CMDOrderController extends Controller
         return response()->json([
             'isSentToConfirmation' => $record->is_sent_to_confirmation,
             'sentToConfirmationDate' => $record->sent_to_confirmation_date?->isoFormat('DD MMM Y'),
+            'statusHTML' => view('components.tables.partials.td.order-status-badge', ['status' => $record->status])->render(),
         ]);
     }
 }

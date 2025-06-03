@@ -5,7 +5,7 @@
 */
 
 import { hideSpinner, showSpinner } from "../../custom-components/script";
-import { refreshSelectizeOptions } from "../utilities";
+import { updateOrderStatus } from "../shared";
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +53,9 @@ export function toggleOrdersIsSentToConfirmationAttribute(evt) {
             if (response.data.isSentToConfirmation) {
                 const td = target.closest('td');
                 td.innerHTML = response.data.sentToConfirmationDate;
+
+                // Update order status
+                updateOrderStatus(td, response.data.statusHTML);
             }
         })
         .finally(function () {

@@ -30,7 +30,7 @@ class CMDViewComposersDefiner
     {
         View::composer('CMD.orders.partials.filter', function ($view) {
             $view->with([
-                'orderNames' => Order::onlyWithName()->orderByName()->get(),
+                'orders' => Order::onlyWithName()->orderByName()->get(),
                 'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
                 'enTrademarks' => Process::pluckAllEnTrademarks(),
@@ -38,6 +38,7 @@ class CMDViewComposersDefiner
                 'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
                 'bdmUsers' => User::getCMDBDMsMinifed(),
                 'currencies' => Currency::orderByName()->get(),
+                'statusOptions' => Order::getFilterStatusOptions(),
             ]);
         });
 

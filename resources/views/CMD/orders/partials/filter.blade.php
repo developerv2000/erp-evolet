@@ -2,7 +2,12 @@
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="PO №"
         inputName="id[]"
-        :options="$orderNames" />
+        :options="$orders" />
+
+    <x-form.selects.selectize.single-select.request-based-select
+        labelText="Status"
+        inputName="status"
+        :options="$statusOptions" />
 
     <x-form.selects.selectize.multiple-select.request-based-select
         labelText="Brand Eng"

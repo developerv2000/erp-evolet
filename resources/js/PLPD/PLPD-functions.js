@@ -6,6 +6,7 @@
 
 import { hideSpinner, showSpinner } from "../../custom-components/script";
 import { refreshSelectizeOptions } from "../utilities";
+import { updateOrderStatus } from "../shared";
 
 /*
 |--------------------------------------------------------------------------
@@ -132,6 +133,9 @@ export function toggleOrdersIsSentToBDMAttribute(evt) {
             if (response.data.isSentToBdm) {
                 const td = target.closest('td');
                 td.innerHTML = response.data.sentToBdmDate;
+
+                // Update order status
+                updateOrderStatus(td, response.data.statusHTML);
             }
         })
         .finally(function () {
@@ -158,6 +162,9 @@ export function toggleOrdersConfirmedAttribute(evt) {
             if (response.data.isConfirmed) {
                 const td = target.closest('td');
                 td.innerHTML = response.data.confirmationDate;
+
+                // Update order status
+                updateOrderStatus(td, response.data.statusHTML);
             }
         })
         .finally(function () {

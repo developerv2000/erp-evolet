@@ -1,4 +1,14 @@
 <x-filter.layout>
+    <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        labelText="PO №"
+        inputName="id[]"
+        :options="$orders" />
+
+    <x-form.selects.selectize.single-select.request-based-select
+        labelText="Status"
+        inputName="status"
+        :options="$statusOptions" />
+
     <x-form.selects.selectize.multiple-select.request-based-select
         labelText="Brand Eng"
         inputName="trademark_en[]"
@@ -49,10 +59,16 @@
         min="0" />
 
     <x-form.inputs.request-based-input
-        :label-text="__('Product') . ' ID'"
-        inputName="process_id"
+        labelText="Price"
+        inputName="price"
         type="number"
-        min="0" />
+        step="0.01"
+        min="0.00" />
+
+    <x-form.selects.selectize.id-based-multiple-select.request-based-select
+        labelText="Currency"
+        inputName="currency_id[]"
+        :options="$currencies" />
 
     {{-- Default filter inputs --}}
     <x-filter.partials.default-inputs />

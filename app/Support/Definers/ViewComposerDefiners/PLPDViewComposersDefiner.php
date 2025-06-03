@@ -7,6 +7,7 @@ use App\Models\Currency;
 use App\Models\Inn;
 use App\Models\Manufacturer;
 use App\Models\MarketingAuthorizationHolder;
+use App\Models\Order;
 use App\Models\Process;
 use App\Models\ProductForm;
 use App\Models\User;
@@ -46,10 +47,13 @@ class PLPDViewComposersDefiner
     {
         View::composer('PLPD.orders.partials.filter', function ($view) {
             $view->with(array_merge(self::getDefaultOrdersShareData(), [
+                'orders' => Order::onlyWithName()->orderByName()->get(),
                 'enTrademarks' => Process::pluckAllEnTrademarks(),
                 'ruTrademarks' => Process::pluckAllRuTrademarks(),
                 'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
                 'bdmUsers' => User::getCMDBDMsMinifed(),
+                'currencies' => Currency::orderByName()->get(),
+                'statusOptions' => Order::getFilterStatusOptions(),
             ]));
         });
 

@@ -21,6 +21,14 @@
         {{ $record->purchase_date?->isoformat('DD MMM Y') }}
     @break
 
+    @case('Status')
+        <div class="td__order-status">
+            @if ($record->status)
+                <x-tables.partials.td.order-status-badge :status="$record->status" />
+            @endif
+        </div>
+    @break
+
     @case('Brand Eng')
         {{ $record->process->full_trademark_en }}
     @break

@@ -39,6 +39,12 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     const DEFAULT_CMD_ORDER_TYPE = 'desc';
     const DEFAULT_CMD_PAGINATION_LIMIT = 50;
 
+    // Statuses
+    const STATUS_IS_CONFIRMED_NAME = 'Confirmed';
+    const STATUS_IS_SENT_TO_CONFIRMATION_NAME = 'Sent to confirmation';
+    const STATUS_IS_SENT_TO_BDM_NAME = 'Sent to BDM';
+    const STATUS_CREATED_NAME = 'Created';
+
     /*
     |--------------------------------------------------------------------------
     | Properties
@@ -110,6 +116,19 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $total = $this->quantity * $this->price;
 
         return floor($total * 100) / 100;
+    }
+
+    public function getStatusAttribute()
+    {
+        if ($this->is_confirmed) {
+            return self::STATUS_IS_CONFIRMED_NAME;
+        } else if ($this->is_sent_to_confirmation) {
+            return self::STATUS_IS_SENT_TO_CONFIRMATION_NAME;
+        } else if ($this->is_sent_to_bdm) {
+            return self::STATUS_IS_SENT_TO_BDM_NAME;
+        }
+
+        return self::STATUS_CREATED_NAME;
     }
 
     /*
@@ -222,6 +241,9 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         // Apply base filters using helper
         $query = QueryFilterHelper::applyFilters($query, $request, self::getFilterConfig());
 
+        // Apply 'status' filter
+        self::applyStatusFilter($query, $request);
+
         return $query;
     }
 
@@ -262,6 +284,45 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ],
         ];
     }
+
+    public static function getFilterStatusOptions()
+    {
+        return [
+            self::STATUS_CREATED_NAME,
+            self::STATUS_IS_SENT_TO_BDM_NAME,
+            self::STATUS_IS_SENT_TO_CONFIRMATION_NAME,
+            self::STATUS_IS_CONFIRMED_NAME,
+        ];
+    }
+
+    /**
+     * Applies a status-based filter to the query.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query   The query builder instance.
+     * @param \Illuminate\Http\Request              $request The incoming request containing filters.
+     * @return void
+     */
+    public static function applyStatusFilter($query, Request $request): void
+    {
+        $status = $request->input('status');
+
+        if (!$status) {
+            return;
+        }
+
+        $conditions = match ($status) {
+            self::STATUS_CREATED_NAME => fn($q) => $q->whereNull('sent_to_bdm_date'),
+            self::STATUS_IS_SENT_TO_BDM_NAME => fn($q) => $q->whereNotNull('sent_to_bdm_date')->whereNull('sent_to_confirmation_date'),
+            self::STATUS_IS_SENT_TO_CONFIRMATION_NAME => fn($q) => $q->whereNotNull('sent_to_confirmation_date')->whereNull('confirmation_date'),
+            self::STATUS_IS_CONFIRMED_NAME => fn($q) => $q->whereNotNull('confirmation_date'),
+            default => null,
+        };
+
+        if ($conditions) {
+            $conditions($query);
+        }
+    }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -414,6 +475,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 108, 'visible' => 1],
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
@@ -467,6 +529,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 108, 'visible' => 1],
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
