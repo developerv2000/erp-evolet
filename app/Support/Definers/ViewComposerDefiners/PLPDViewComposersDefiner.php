@@ -3,6 +3,7 @@
 namespace App\Support\Definers\ViewComposerDefiners;
 
 use App\Models\Country;
+use App\Models\Currency;
 use App\Models\Inn;
 use App\Models\Manufacturer;
 use App\Models\MarketingAuthorizationHolder;
@@ -52,11 +53,15 @@ class PLPDViewComposersDefiner
             ]));
         });
 
-        View::composer([
-            'PLPD.orders.partials.create-form',
-            'PLPD.orders.partials.edit-form',
-        ], function ($view) {
+        View::composer('PLPD.orders.partials.create-form', function ($view) {
             $view->with(self::getDefaultOrdersShareData());
+        });
+
+        View::composer('PLPD.orders.partials.edit-form', function ($view) {
+            $view->with(array_merge(self::getDefaultOrdersShareData(), [
+                'currencies' => Currency::orderByName()->get(),
+                'defaultSelectedCurrencyID' => Currency::getDefaultIdValueForMADProcesses(),
+            ]));
         });
     }
 

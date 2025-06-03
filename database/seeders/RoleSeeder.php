@@ -102,25 +102,6 @@ class RoleSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | PLPD roles
-        |--------------------------------------------------------------------------
-        */
-
-        // PLPD Logistician
-        $role = new Role();
-        $role->name = Role::PLPD_LOGISTICIAN_NAME;
-        $role->description = "Not fully implemented yet!";
-        $role->department_id = Department::findByName(Department::PLPD_NAME)->id;
-        $role->save();
-
-        $permissionNames = Permission::getPLPDLogisticianPermissionNames();
-
-        foreach ($permissionNames as $permissionName) {
-            $role->permissions()->attach(Permission::findByName($permissionName)->id);
-        }
-
-        /*
-        |--------------------------------------------------------------------------
         | CMD roles
         |--------------------------------------------------------------------------
         */
@@ -133,6 +114,25 @@ class RoleSeeder extends Seeder
         $role->save();
 
         $permissionNames = Permission::getCMDBDMPermissionNames();
+
+        foreach ($permissionNames as $permissionName) {
+            $role->permissions()->attach(Permission::findByName($permissionName)->id);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | PLPD roles
+        |--------------------------------------------------------------------------
+        */
+
+        // PLPD Logistician
+        $role = new Role();
+        $role->name = Role::PLPD_LOGISTICIAN_NAME;
+        $role->description = "Not fully implemented yet!";
+        $role->department_id = Department::findByName(Department::PLPD_NAME)->id;
+        $role->save();
+
+        $permissionNames = Permission::getPLPDLogisticianPermissionNames();
 
         foreach ($permissionNames as $permissionName) {
             $role->permissions()->attach(Permission::findByName($permissionName)->id);
