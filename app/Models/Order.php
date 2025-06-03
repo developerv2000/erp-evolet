@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Notifications\OrderIsConfirmed;
+use App\Notifications\OrderIsSentToBDM;
+use App\Notifications\OrderIsSentToConfirmation;
 use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\CanExportRecordsAsExcel;
 use App\Support\Contracts\Model\HasTitle;
@@ -251,7 +254,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     {
         return [
             'whereEqal' => ['process_id', 'quantity', 'price'],
-            'whereIn' => ['id', 'currency_id'],
+            'whereIn' => ['id', 'name', 'currency_id'],
             'dateRange' => ['receive_date', 'sent_to_bdm_date', 'created_at', 'updated_at'],
 
             'relationEqual' => [
@@ -380,6 +383,9 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
         // HasMany relations
         $this->storeCommentFromRequest($request);
+
+        // Validate related processes 'increased_price'
+        $this->syncPriceWithRelatedProcess();
     }
 
     /**
@@ -416,6 +422,9 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
         // HasMany relations
         $this->storeCommentFromRequest($request);
+
+        // Validate related processes 'increased_price'
+        $this->syncPriceWithRelatedProcess();
     }
 
     /*
@@ -429,6 +438,12 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $action = $request->input('action');
         $this->sent_to_bdm_date = $action == 'send' ? now() : null;
         $this->save();
+
+        // Notify users
+        if ($action == 'send') {
+            $notification = new OrderIsSentToBDM($this);
+            User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-PLPD-order-is-sent-to-CMD-BDM');
+        }
     }
 
     public function toggleIsSentToConfirmationAttribute(Request $request)
@@ -436,6 +451,12 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $action = $request->input('action');
         $this->sent_to_confirmation_date = $action == 'send' ? now() : null;
         $this->save();
+
+        // Notify users
+        if ($action == 'send') {
+            $notification = new OrderIsSentToConfirmation($this);
+            User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-CMD-order-is-sent-for-confirmation');
+        }
     }
 
     public function toggleIsConfirmedAttribute(Request $request)
@@ -443,6 +464,39 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $action = $request->input('action');
         $this->confirmation_date = $action == 'confirm' ? now() : null;
         $this->save();
+
+        // Notify users
+        if ($action == 'confirm') {
+            $notification = new OrderIsConfirmed($this);
+            User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-PLPD-order-is-confirmed');
+        }
+    }
+
+    /**
+     * Sync the price and currency of the related Process with this model.
+     *
+     * If the price differs, it updates the 'increased_price' field.
+     * If the currency differs, it updates the 'currency_id'.
+     * Changes are saved only if any attributes are modified.
+     *
+     * @return void
+     */
+    public function syncPriceWithRelatedProcess(): void
+    {
+        $process = Process::findOrFail($this->process_id);
+
+        // Update price if changed
+        if ($process->agreed_price != $this->price) {
+            $process->increased_price = $this->price;
+        }
+
+        // Update currency if changed
+        if ($process->currency_id != $this->currency_id) {
+            $process->currency_id = $this->currency_id;
+        }
+
+        // Persist only if there are changes
+        $process->isDirty() && $process->save();
     }
 
     /**

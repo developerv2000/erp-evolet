@@ -47,7 +47,7 @@ class PLPDViewComposersDefiner
     {
         View::composer('PLPD.orders.partials.filter', function ($view) {
             $view->with(array_merge(self::getDefaultOrdersShareData(), [
-                'orders' => Order::onlyWithName()->orderByName()->get(),
+                'orderNames' => Order::onlyWithName()->orderByName()->pluck('name'),
                 'enTrademarks' => Process::pluckAllEnTrademarks(),
                 'ruTrademarks' => Process::pluckAllRuTrademarks(),
                 'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),

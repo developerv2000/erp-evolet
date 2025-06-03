@@ -117,6 +117,7 @@ class PermissionSeeder extends Seeder
             Permission::CAN_EDIT_PLPD_ORDERS_NAME,
 
             Permission::CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER,
+            Permission::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_FOR_CONFIRMATION,
         ];
 
         foreach ($PLPDs as $plpd) {
@@ -138,6 +139,7 @@ class PermissionSeeder extends Seeder
             Permission::CAN_EDIT_CMD_ORDERS_NAME,
 
             Permission::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_SENT_TO_CMD_BDM,
+            Permission::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_CONFIRMED,
         ];
 
         foreach ($CMDs as $cmd) {

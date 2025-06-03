@@ -19,6 +19,7 @@
                 labelText="Price"
                 field="price"
                 :model="$record"
+                :initial-value="$record->price ?: $record->process->agreed_price"
                 type="number"
                 step="0.01"
                 min="0.00"

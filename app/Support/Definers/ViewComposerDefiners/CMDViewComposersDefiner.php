@@ -30,7 +30,7 @@ class CMDViewComposersDefiner
     {
         View::composer('CMD.orders.partials.filter', function ($view) {
             $view->with([
-                'orders' => Order::onlyWithName()->orderByName()->get(),
+                'orderNames' => Order::onlyWithName()->orderByName()->pluck('name'),
                 'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
                 'enTrademarks' => Process::pluckAllEnTrademarks(),

@@ -121,6 +121,7 @@ class Permission extends Model
 
     // Other permissions
     const CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER = 'can receive notification when MAD VPS is marked as ready for order';
+    const CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_FOR_CONFIRMATION = 'can receive notification when CMD order is sent for confirmation';
 
     /*
     |--------------------------------------------------------------------------
@@ -136,6 +137,7 @@ class Permission extends Model
 
     // Other permissions
     const CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_SENT_TO_CMD_BDM = 'can receive notification when PLPD order is sent to CMD BDM';
+    const CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_CONFIRMED = 'can receive notification when PLPD order is confirmed';
 
     /*
     |--------------------------------------------------------------------------
@@ -312,6 +314,7 @@ class Permission extends Model
             self::CAN_EDIT_PLPD_ORDERS_NAME,
 
             self::CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER,
+            self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_FOR_CONFIRMATION,
         ];
     }
 
@@ -323,6 +326,7 @@ class Permission extends Model
             self::CAN_EDIT_CMD_ORDERS_NAME,
 
             self::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_SENT_TO_CMD_BDM,
+            self::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_CONFIRMED,
         ];
     }
 }

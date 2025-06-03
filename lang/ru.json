@@ -310,6 +310,9 @@
     "About order": "О заказе",
     "Price": "Цена",
     "Total price": "Общая стоимость",
+    "New order has been received": "Получен новый заказ",
+    "New order for confirmation has been received": "Получен новый заказ для подтверждения",
+    "Order has been confirmed": "Заказ подтвержден",
 
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }
