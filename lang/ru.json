@@ -316,5 +316,9 @@
     "New order for confirmation has been received": "Получен новый заказ для подтверждения",
     "Order has been confirmed": "Заказ подтвержден",
 
+    "Sent to manufacturer": "Отправлено заводу",
+    "Send to manufacturer": "Отправить заводу",
+    "Given order has been sent to manufacturer": "Данный заказ отправлен производителю",
+
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

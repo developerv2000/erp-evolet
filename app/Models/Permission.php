@@ -141,6 +141,15 @@ class Permission extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | DD permissions
+    |--------------------------------------------------------------------------
+    */
+
+    // Global permissions
+    const CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER = 'can receive notification when CMD order is sent to manufacturer';
+
+    /*
+    |--------------------------------------------------------------------------
     | Properties
     |--------------------------------------------------------------------------
     */
@@ -315,6 +324,7 @@ class Permission extends Model
 
             self::CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER,
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_FOR_CONFIRMATION,
+            self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER,
         ];
     }
 
@@ -327,6 +337,13 @@ class Permission extends Model
 
             self::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_SENT_TO_CMD_BDM,
             self::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_CONFIRMED,
+        ];
+    }
+
+    public static function getDDDesignerPermissionNames()
+    {
+        return [
+            self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER,
         ];
     }
 }

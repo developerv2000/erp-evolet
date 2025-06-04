@@ -28,6 +28,12 @@ ordersTable?.querySelectorAll('button[data-click-action="toggle-orders-is-sent-t
     });
 });
 
+ordersTable?.querySelectorAll('button[data-click-action="toggle-orders-is-sent-to-manufacturer-attribute"]').forEach(button => {
+    button.addEventListener('click', (evt) => {
+        functions.toggleOrdersIsSentToManufacturerAttribute(evt);
+    });
+});
+
 /*
 |--------------------------------------------------------------------------
 | Initializations

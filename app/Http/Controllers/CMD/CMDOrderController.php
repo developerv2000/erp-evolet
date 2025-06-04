@@ -58,4 +58,19 @@ class CMDOrderController extends Controller
             'statusHTML' => view('components.tables.partials.td.order-status-badge', ['status' => $record->status])->render(),
         ]);
     }
+
+    /**
+     * Ajax request
+     */
+    public function toggleIsSentToManufacturerAttribute(Request $request)
+    {
+        $record = Order::withTrashed()->findOrFail($request->input('record_id'));
+        $record->toggleIsSentToManufacturerAttribute($request);
+
+        return response()->json([
+            'isSentToManufacturer' => $record->is_sent_to_manufacturer,
+            'sentToManufacturerDate' => $record->sent_to_manufacturer_date?->isoFormat('DD MMM Y'),
+            'statusHTML' => view('components.tables.partials.td.order-status-badge', ['status' => $record->status])->render(),
+        ]);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Support\Definers\GateDefiners\CMDGatesDefiner;
+use App\Support\Definers\GateDefiners\DDGatesDefiner;
 use App\Support\Definers\GateDefiners\GlobalGatesDefiner;
 use App\Support\Definers\GateDefiners\MADGatesDefiner;
 use App\Support\Definers\GateDefiners\PLPDGatesDefiner;
@@ -33,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         MADGatesDefiner::defineAll();
         PLPDGatesDefiner::defineAll();
         CMDGatesDefiner::defineAll();
+        DDGatesDefiner::defineAll();
 
         // View composer definers
         GlobalViewComposersDefiner::defineAll();

@@ -148,5 +148,24 @@ class PermissionSeeder extends Seeder
                 'department_id' => Department::findByName(Department::CMD_NAME)->id,
             ]);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | DD permissions
+        |--------------------------------------------------------------------------
+        */
+
+        // Global permissions
+        $ddGlobal = [
+            Permission::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER,
+        ];
+
+        foreach ($ddGlobal as $globalPermission) {
+            Permission::create([
+                'name' => $globalPermission,
+                'global' => true,
+                'department_id' => Department::findByName(Department::DD_NAME)->id,
+            ]);
+        }
     }
 }

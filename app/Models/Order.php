@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Notifications\OrderIsConfirmed;
 use App\Notifications\OrderIsSentToBDM;
 use App\Notifications\OrderIsSentToConfirmation;
+use App\Notifications\OrderIsSentToManufacturer;
 use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\CanExportRecordsAsExcel;
 use App\Support\Contracts\Model\HasTitle;
@@ -43,10 +44,11 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     const DEFAULT_CMD_PAGINATION_LIMIT = 50;
 
     // Statuses
-    const STATUS_IS_CONFIRMED_NAME = 'Confirmed';
-    const STATUS_IS_SENT_TO_CONFIRMATION_NAME = 'Sent to confirmation';
-    const STATUS_IS_SENT_TO_BDM_NAME = 'Sent to BDM';
     const STATUS_CREATED_NAME = 'Created';
+    const STATUS_IS_SENT_TO_BDM_NAME = 'Sent to BDM';
+    const STATUS_IS_SENT_TO_CONFIRMATION_NAME = 'Sent to confirmation';
+    const STATUS_IS_CONFIRMED_NAME = 'Confirmed';
+    const STATUS_IS_SENT_TO_MANUFACTURER_NAME = 'Sent to manufacturer';
 
     /*
     |--------------------------------------------------------------------------
@@ -114,6 +116,11 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return !is_null($this->confirmation_date);
     }
 
+    public function getIsSentToManufacturerAttribute(): bool
+    {
+        return !is_null($this->sent_to_manufacturer_date);
+    }
+
     public function getTotalPriceAttribute()
     {
         $total = $this->quantity * $this->price;
@@ -123,7 +130,9 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     public function getStatusAttribute()
     {
-        if ($this->is_confirmed) {
+        if ($this->is_sent_to_manufacturer) {
+            return self::STATUS_IS_SENT_TO_MANUFACTURER_NAME;
+        } elseif ($this->is_confirmed) {
             return self::STATUS_IS_CONFIRMED_NAME;
         } else if ($this->is_sent_to_confirmation) {
             return self::STATUS_IS_SENT_TO_CONFIRMATION_NAME;
@@ -196,19 +205,28 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
      */
     public function generateBreadcrumbs($department = null): array
     {
-        $lowercasedDepartment = strtolower($department);
+        // If department is declared
+        if ($department) {
+            $lowercasedDepartment = strtolower($department);
 
-        $breadcrumbs = [
-            ['link' => route($lowercasedDepartment . '.orders.index'), 'text' => __('Orders')],
-        ];
+            $breadcrumbs = [
+                ['link' => route($lowercasedDepartment . '.orders.index'), 'text' => __('Orders')],
+            ];
 
-        if ($this->trashed() && $department == 'PLPD') {
-            $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.trash'), 'text' => __('Trash')];
+            if ($this->trashed() && $department == 'PLPD') {
+                $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.trash'), 'text' => __('Trash')];
+            }
+
+            $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.edit', $this->id), 'text' => $this->title];
+
+            return $breadcrumbs;
         }
 
-        $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.edit', $this->id), 'text' => $this->title];
-
-        return $breadcrumbs;
+        // If department is null
+        return [
+            ['link' => null, 'text' => __('Orders')],
+            ['link' => null, 'text' => $this->title],
+        ];
     }
 
     // Implement method declared in HasTitle Interface
@@ -439,42 +457,73 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * PLPD logistician sends order to CMD BDM
+     */
     public function toggleIsSentToBDMAttribute(Request $request)
     {
         $action = $request->input('action');
-        $this->sent_to_bdm_date = $action == 'send' ? now() : null;
-        $this->save();
 
-        // Notify users
-        if ($action == 'send') {
+        if ($action == 'send' && !$this->is_sent_to_bdm) {
+            $this->sent_to_bdm_date = now();
+            $this->save();
+
+            // Notify specific users
             $notification = new OrderIsSentToBDM($this);
             User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-PLPD-order-is-sent-to-CMD-BDM');
         }
     }
 
+    /**
+     * CMD BDM sends order to PLPD Logistician for confirmation
+     */
     public function toggleIsSentToConfirmationAttribute(Request $request)
     {
         $action = $request->input('action');
-        $this->sent_to_confirmation_date = $action == 'send' ? now() : null;
-        $this->save();
 
-        // Notify users
-        if ($action == 'send') {
+        if ($action == 'send' && !$this->is_sent_to_confirmation) {
+            $this->sent_to_confirmation_date = now();
+            $this->save();
+
+            // Notify specific users
             $notification = new OrderIsSentToConfirmation($this);
             User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-CMD-order-is-sent-for-confirmation');
         }
     }
 
+    /**
+     * PLPD Logistician confirms order, CMD continues process
+     */
     public function toggleIsConfirmedAttribute(Request $request)
     {
         $action = $request->input('action');
-        $this->confirmation_date = $action == 'confirm' ? now() : null;
-        $this->save();
 
-        // Notify users
-        if ($action == 'confirm') {
+        if ($action == 'confirm' && !$this->is_confirmed) {
+            $this->confirmation_date = now();
+            $this->save();
+
+            // Notify specific users
             $notification = new OrderIsConfirmed($this);
             User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-PLPD-order-is-confirmed');
+        }
+    }
+
+    /**
+     * CMD BDM sends order to manufacturer (not real erp process)
+     *
+     * Notification is send to both PLPD Logisticians and DD Designers
+     */
+    public function toggleIsSentToManufacturerAttribute(Request $request)
+    {
+        $action = $request->input('action');
+
+        if ($action == 'send' && !$this->is_sent_to_manufacturer) {
+            $this->sent_to_manufacturer_date = now();
+            $this->save();
+
+            // Notify specific users
+            $notification = new OrderIsSentToManufacturer($this);
+            User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-CMD-order-is-sent-to-manufacturer');
         }
     }
 
@@ -533,7 +582,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Status', 'order' => $order++, 'width' => 108, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
@@ -594,7 +643,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Status', 'order' => $order++, 'width' => 108, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
@@ -619,6 +668,8 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
             ['name' => 'Sent to confirmation', 'order' => $order++, 'width' => 244, 'visible' => 1],
             ['name' => 'Confirmation date', 'order' => $order++, 'width' => 172, 'visible' => 1],
+
+            ['name' => 'Sent to manufacturer', 'order' => $order++, 'width' => 164, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],

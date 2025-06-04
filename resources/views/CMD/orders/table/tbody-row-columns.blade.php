@@ -125,6 +125,22 @@
         {{ $record->confirmation_date?->isoformat('DD MMM Y') }}
     @break
 
+    @case('Sent to manufacturer')
+        @if ($record->is_sent_to_manufacturer)
+            {{ $record->sent_to_manufacturer_date->isoformat('DD MMM Y') }}
+        @else
+            <x-misc.button
+                style="transparent"
+                class="button--arrowed-link button--margined-bottom"
+                icon="line_end_arrow_notch"
+                data-click-action="toggle-orders-is-sent-to-manufacturer-attribute"
+                data-action-type="send"
+                data-record-id="{{ $record->id }}">
+                {{ __('Send to manufacturer') }}
+            </x-misc.button>
+        @endif
+    @break
+
     @case('Date of creation')
         {{ $record->created_at->isoformat('DD MMM Y') }}
     @break

@@ -10,5 +10,6 @@ Route::middleware('auth', 'auth.session')->prefix('cmd')->name('cmd.')->group(fu
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-CMD-orders', 'can:edit-CMD-orders');
 
         Route::post('/toggle-is-sent-to-confirmation-attribute', 'toggleIsSentToConfirmationAttribute');  // AJAX request
+        Route::post('/toggle-is-sent-to-manufacturer-attribute', 'toggleIsSentToManufacturerAttribute');  // AJAX request
     });
 });
