@@ -14,12 +14,12 @@
             </tr>
 
             <tr>
-                <td>{{ __('Brand Eng') }}:</td>
+                <td>{{ __('TM Eng') }}:</td>
                 <td>{{ $record->process->full_trademark_en }}</td>
             </tr>
 
             <tr>
-                <td>{{ __('Brand Rus') }}:</td>
+                <td>{{ __('TM Rus') }}:</td>
                 <td>{{ $record->process->full_trademark_ru }}</td>
             </tr>
 

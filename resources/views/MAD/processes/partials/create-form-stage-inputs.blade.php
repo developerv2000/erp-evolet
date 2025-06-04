@@ -107,13 +107,13 @@
         <div class="form__row">
             {{-- Field is nullable until stage 5 --}}
             <x-form.inputs.default-input
-                labelText="Brand Eng"
+                labelText="TM Eng"
                 inputName="trademark_en"
                 :isRequired="$stage >= 5" />
 
             {{-- Field is nullable until stage 5 --}}
             <x-form.inputs.default-input
-                labelText="Brand Rus"
+                labelText="TM Rus"
                 inputName="trademark_ru"
                 :isRequired="$stage >= 5" />
 

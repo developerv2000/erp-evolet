@@ -118,11 +118,11 @@
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="responsible_people_update_date" />
     @break
 
-    @case('Brand Eng')
+    @case('TM Eng')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="trademark_en" />
     @break
 
-    @case('Brand Rus')
+    @case('TM Rus')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="trademark_ru" />
     @break
 

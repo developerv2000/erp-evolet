@@ -175,13 +175,13 @@
         </td>
     @break
 
-    @case('Brand Eng')
+    @case('TM Eng')
         <td>
             <x-tables.partials.td.max-lines-limited-text :text="$record->trademark_en" />
         </td>
     @break
 
-    @case('Brand Rus')
+    @case('TM Rus')
         <td>
             <x-tables.partials.td.max-lines-limited-text :text="$record->trademark_ru" />
         </td>

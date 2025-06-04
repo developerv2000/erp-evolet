@@ -242,11 +242,11 @@
         {{ $record->days_past }}
     @break
 
-    @case('Brand Eng')
+    @case('TM Eng')
         {{ $record->trademark_en }}
     @break
 
-    @case('Brand Rus')
+    @case('TM Rus')
         {{ $record->trademark_ru }}
     @break
 

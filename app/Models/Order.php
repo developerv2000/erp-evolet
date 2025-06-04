@@ -253,8 +253,8 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     private static function getFilterConfig(): array
     {
         return [
-            'whereEqal' => ['process_id', 'quantity', 'price'],
-            'whereIn' => ['id', 'name', 'currency_id'],
+            'whereEqal' => ['process_id'],
+            'whereIn' => ['id', 'name'],
             'dateRange' => ['receive_date', 'sent_to_bdm_date', 'created_at', 'updated_at'],
 
             'relationEqual' => [
@@ -266,8 +266,18 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
             'relationIn' => [
                 [
+                    'name' => 'process.product',
+                    'attribute' => 'manufacturer_id',
+                ],
+
+                [
                     'name' => 'process',
                     'attribute' => 'country_id',
+                ],
+
+                [
+                    'name' => 'process',
+                    'attribute' => 'marketing_authorization_holder_id',
                 ],
 
                 [
@@ -278,11 +288,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
                 [
                     'name' => 'process',
                     'attribute' => 'trademark_ru',
-                ],
-
-                [
-                    'name' => 'process.product',
-                    'attribute' => 'manufacturer_id',
                 ],
             ],
         ];
@@ -404,6 +409,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ->where('product_id', $productID)
             ->where('country_id', $countryID)
             ->where('marketing_authorization_holder_id', $mahID)
+            ->latest()
             ->first();
     }
 
@@ -527,25 +533,32 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
-            ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 108, 'visible' => 1],
+            ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
-            ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
+
+            ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'TM Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'TM Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Form', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Pack', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'Price', 'order' => $order++, 'width' => 70, 'visible' => 1],
             ['name' => 'Total price', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
-            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
-            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Sent to confirmation', 'order' => $order++, 'width' => 244, 'visible' => 1],
             ['name' => 'Confirmation date', 'order' => $order++, 'width' => 172, 'visible' => 1],
-            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
-            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
-            ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
         );
@@ -581,25 +594,32 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
-            ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 108, 'visible' => 1],
+            ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
             ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
+
+            ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'TM Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'TM Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Form', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Pack', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'Price', 'order' => $order++, 'width' => 70, 'visible' => 1],
             ['name' => 'Total price', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
-            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Sent to confirmation', 'order' => $order++, 'width' => 244, 'visible' => 1],
             ['name' => 'Confirmation date', 'order' => $order++, 'width' => 172, 'visible' => 1],
-            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
-            ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
-            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
-            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
-            ['name' => 'Comments date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
         );

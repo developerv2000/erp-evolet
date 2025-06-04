@@ -158,14 +158,14 @@
         <div class="form__row">
             {{-- Field is nullable until stage 5 --}}
             <x-form.inputs.record-field-input
-                labelText="Brand Eng"
+                labelText="TM Eng"
                 field="trademark_en"
                 :model="$record"
                 :isRequired="$stage >= 5" />
 
             {{-- Field is nullable until stage 5 --}}
             <x-form.inputs.record-field-input
-                labelText="Brand Rus"
+                labelText="TM Rus"
                 field="trademark_ru"
                 :model="$record"
                 :isRequired="$stage >= 5" />

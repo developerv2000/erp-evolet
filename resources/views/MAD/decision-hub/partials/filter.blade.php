@@ -78,10 +78,10 @@
         :options="$MAHs" />
 
     <x-form.inputs.request-based-input
-        labelText="Brand Eng"
+        labelText="TM Eng"
         inputName="trademark_en" />
 
     <x-form.inputs.request-based-input
-        labelText="Brand Rus"
+        labelText="TM Rus"
         inputName="trademark_ru" />
 </x-filter.layout>

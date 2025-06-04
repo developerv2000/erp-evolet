@@ -1,6 +1,6 @@
 @switch($column['name'])
     @case('Edit')
-        <x-tables.partials.td.edit :link="route('cmd.orders.edit', $record->id)" />
+        <x-tables.partials.td.edit :link="route('plpd.orders.edit', $record->id)" />
     @break
 
     @case('ID')
@@ -13,14 +13,6 @@
             title="{{ $record->process->product->manufacturer->bdm->name }}" />
     @break
 
-    @case('PO №')
-        {{ $record->name }}
-    @break
-
-    @case('PO date')
-        {{ $record->purchase_date?->isoformat('DD MMM Y') }}
-    @break
-
     @case('Status')
         <div class="td__order-status">
             @if ($record->status)
@@ -29,12 +21,24 @@
         </div>
     @break
 
+    @case('Receive date')
+        {{ $record->receive_date->isoformat('DD MMM Y') }}
+    @break
+
+    @case('Manufacturer')
+        {{ $record->process->product->manufacturer->name }}
+    @break
+
+    @case('Country')
+        {{ $record->process->searchCountry->code }}
+    @break
+
     @case('Brand Eng')
-        {{ $record->process->full_trademark_en }}
+        <x-tables.partials.td.max-lines-limited-text :text="$record->process->full_trademark_en" />
     @break
 
     @case('Brand Rus')
-        {{ $record->process->full_trademark_ru }}
+        <x-tables.partials.td.max-lines-limited-text :text="$record->process->full_trademark_ru" />
     @break
 
     @case('MAH')
@@ -43,6 +47,50 @@
 
     @case('Quantity')
         <x-tables.partials.td.formatted-price :price="$record->quantity" />
+    @break
+
+    @case('Comments')
+        <x-tables.partials.td.model-comments-link :record="$record" />
+    @break
+
+    @case('Last comment')
+        <x-tables.partials.td.max-lines-limited-text :text="$record->lastComment?->plain_text" />
+    @break
+
+    @case('Sent to BDM')
+        {{ $record->sent_to_bdm_date?->isoformat('DD MMM Y') }}
+    @break
+
+    @case('PO date')
+        {{ $record->purchase_date?->isoformat('DD MMM Y') }}
+    @break
+
+    @case('PO №')
+        {{ $record->name }}
+    @break
+
+    @case('TM Eng')
+        {{ $record->process->trademark_en }}
+    @break
+
+    @case('TM Rus')
+        {{ $record->process->trademark_ru }}
+    @break
+
+    @case('Generic')
+        <x-tables.partials.td.max-lines-limited-text :text="$record->process->product->inn->name" />
+    @break
+
+    @case('Form')
+        {{ $record->process->product->form->name }}
+    @break
+
+    @case('Dosage')
+        <x-tables.partials.td.max-lines-limited-text :text="$record->process->product->dosage" />
+    @break
+
+    @case('Pack')
+        {{ $record->process->product->pack }}
     @break
 
     @case('Price')
@@ -55,10 +103,6 @@
 
     @case('Currency')
         {{ $record->currency?->name }}
-    @break
-
-    @case('Sent to BDM')
-        {{ $record->sent_to_bdm_date?->isoformat('DD MMM Y') }}
     @break
 
     @case('Sent to confirmation')
@@ -79,30 +123,6 @@
 
     @case('Confirmation date')
         {{ $record->confirmation_date?->isoformat('DD MMM Y') }}
-    @break
-
-    @case('Manufacturer')
-        {{ $record->process->product->manufacturer->name }}
-    @break
-
-    @case('Country')
-        {{ $record->process->searchCountry->code }}
-    @break
-
-    @case('Generic')
-        <x-tables.partials.td.max-lines-limited-text :text="$record->process->product->inn->name" />
-    @break
-
-    @case('Comments')
-        <x-tables.partials.td.model-comments-link :record="$record" />
-    @break
-
-    @case('Last comment')
-        <x-tables.partials.td.max-lines-limited-text :text="$record->lastComment?->plain_text" />
-    @break
-
-    @case('Comments date')
-        {{ $record->lastComment?->created_at->isoformat('DD MMM Y') }}
     @break
 
     @case('Date of creation')

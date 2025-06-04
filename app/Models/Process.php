@@ -1450,8 +1450,8 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             ['name' => 'ATX', 'order' => $order++, 'width' => 190, 'visible' => 1],
             ['name' => 'Our ATX', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
-            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'TM Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'TM Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],
 
             ['name' => 'Date of forecast', 'order' => $order++, 'width' => 96, 'visible' => 1],
             ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
@@ -1547,8 +1547,8 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             ['name' => 'Our price 1', 'order' => $order++, 'width' => 118, 'visible' => 1],
 
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
-            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'TM Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'TM Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],
 
             ['name' => 'Forecast 1 year', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Forecast 2 year', 'order' => $order++, 'width' => 130, 'visible' => 1],

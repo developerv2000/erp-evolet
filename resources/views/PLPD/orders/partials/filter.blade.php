@@ -1,23 +1,19 @@
 <x-filter.layout>
-    <x-form.selects.selectize.multiple-select.request-based-select
-        labelText="PO №"
-        inputName="name[]"
-        :options="$orderNames" />
+    <x-form.selects.selectize.id-based-single-select.request-based-select
+        labelText="BDM"
+        inputName="bdm_user_id"
+        :options="$bdmUsers" />
 
     <x-form.selects.selectize.single-select.request-based-select
         labelText="Status"
         inputName="status"
         :options="$statusOptions" />
 
-    <x-form.selects.selectize.multiple-select.request-based-select
-        labelText="Brand Eng"
-        inputName="trademark_en[]"
-        :options="$enTrademarks" />
-
-    <x-form.selects.selectize.multiple-select.request-based-select
-        labelText="Brand Rus"
-        inputName="trademark_ru[]"
-        :options="$ruTrademarks" />
+    <x-form.inputs.request-based-input
+        labelText="Receive date"
+        inputName="receive_date"
+        class="date-range-picker-input"
+        autocomplete="off" />
 
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Manufacturer"
@@ -35,16 +31,15 @@
         inputName="marketing_authorization_holder_id[]"
         :options="$MAHs" />
 
-    <x-form.selects.selectize.id-based-single-select.request-based-select
-        labelText="BDM"
-        inputName="bdm_user_id"
-        :options="$bdmUsers" />
+    <x-form.selects.selectize.multiple-select.request-based-select
+        labelText="TM Eng"
+        inputName="trademark_en[]"
+        :options="$enTrademarks" />
 
-    <x-form.inputs.request-based-input
-        labelText="Receive date"
-        inputName="receive_date"
-        class="date-range-picker-input"
-        autocomplete="off" />
+    <x-form.selects.selectize.multiple-select.request-based-select
+        labelText="TM Rus"
+        inputName="trademark_ru[]"
+        :options="$ruTrademarks" />
 
     <x-form.inputs.request-based-input
         labelText="Sent to BDM"
@@ -52,23 +47,14 @@
         class="date-range-picker-input"
         autocomplete="off" />
 
-    <x-form.inputs.request-based-input
-        labelText="Quantity"
-        inputName="quantity"
-        type="number"
-        min="0" />
+    <x-form.selects.selectize.multiple-select.request-based-select
+        labelText="PO №"
+        inputName="name[]"
+        :options="$orderNames" />
 
     <x-form.inputs.request-based-input
-        labelText="Price"
-        inputName="price"
-        type="number"
-        step="0.01"
-        min="0.00" />
-
-    <x-form.selects.selectize.id-based-multiple-select.request-based-select
-        labelText="Currency"
-        inputName="currency_id[]"
-        :options="$currencies" />
+        :label-text="__('Process') . ' ID'"
+        inputName="process_id" />
 
     {{-- Default filter inputs --}}
     <x-filter.partials.default-inputs />

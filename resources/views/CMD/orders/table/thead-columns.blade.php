@@ -9,24 +9,24 @@
         <x-tables.partials.th.id />
     @break
 
-    @case('Quantity')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="quantity" />
-    @break
-
     @case('Receive date')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="receive_date" />
+    @break
+
+    @case('Quantity')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="quantity" />
     @break
 
     @case('Sent to BDM')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="sent_to_bdm_date" />
     @break
 
-    @case('PO №')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="name" />
-    @break
-
     @case('PO date')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="purchase_date" />
+    @break
+
+    @case('PO №')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="name" />
     @break
 
     @case('Price')

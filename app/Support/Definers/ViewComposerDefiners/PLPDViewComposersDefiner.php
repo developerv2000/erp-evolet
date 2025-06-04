@@ -47,13 +47,12 @@ class PLPDViewComposersDefiner
     {
         View::composer('PLPD.orders.partials.filter', function ($view) {
             $view->with(array_merge(self::getDefaultOrdersShareData(), [
-                'orderNames' => Order::onlyWithName()->orderByName()->pluck('name'),
+                'bdmUsers' => User::getCMDBDMsMinifed(),
+                'statusOptions' => Order::getFilterStatusOptions(),
+                'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
                 'enTrademarks' => Process::pluckAllEnTrademarks(),
                 'ruTrademarks' => Process::pluckAllRuTrademarks(),
-                'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
-                'bdmUsers' => User::getCMDBDMsMinifed(),
-                'currencies' => Currency::orderByName()->get(),
-                'statusOptions' => Order::getFilterStatusOptions(),
+                'orderNames' => Order::onlyWithName()->orderByName()->pluck('name'),
             ]));
         });
 

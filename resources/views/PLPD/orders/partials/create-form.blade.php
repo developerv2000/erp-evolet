@@ -23,7 +23,7 @@
 
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.default-select
-                labelText="Brand Eng"
+                labelText="TM Eng"
                 inputName="process_id"
                 :options="[]"
                 optionCaptionField="full_trademark_en"
