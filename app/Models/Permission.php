@@ -155,9 +155,6 @@ class Permission extends Model
     // PLPD and DD permissions
     const CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER = 'can receive notification when CMD order is sent to manufacturer';
 
-    // Other permissions
-    const CAN_APPROVE_DD_ORDERS_LAYOUT = 'can approve DD orders layout';
-
     /*
     |--------------------------------------------------------------------------
     | Properties
@@ -357,7 +354,6 @@ class Permission extends Model
             self::CAN_EDIT_DD_ORDERS_NAME,
 
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER,
-            self::CAN_APPROVE_DD_ORDERS_LAYOUT
         ];
     }
 }

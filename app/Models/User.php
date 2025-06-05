@@ -365,6 +365,7 @@ class User extends Authenticatable
         $this->resetMADTablesColumnSettings($settings);
         $this->resetPLPDTablesColumnSettings($settings);
         $this->resetCMDTablesColumnSettings($settings);
+        $this->resetDDTablesColumnSettings($settings);
     }
 
     /**
@@ -412,6 +413,19 @@ class User extends Authenticatable
     }
 
     /**
+     * Reset users DD tables column settings
+     */
+    public function resetDDTablesColumnSettings($settings)
+    {
+        $this->refresh();
+        $settings = $this->settings;
+        $settings[Order::SETTINGS_DD_TABLE_COLUMNS_KEY] = Order::getDefaultDDTableColumnsForUser($this);
+
+        $this->settings = $settings;
+        $this->save();
+    }
+
+    /**
      * Reset all settings to default for all users
      *
      * Used via artisan command line
@@ -443,6 +457,8 @@ class User extends Authenticatable
             'PLPD_orders_table_columns' => Order::getDefaultPLPDTableColumnsForUser($this),
 
             'CMD_orders_table_columns' => Order::getDefaultCMDTableColumnsForUser($this),
+
+            'DD_orders_table_columns' => Order::getDefaultDDTableColumnsForUser($this),
 
             default => throw new InvalidArgumentExceptio("Unknown key: $key"),
         };
@@ -692,6 +708,9 @@ class User extends Authenticatable
 
             // CMD
             'cmd.orders.index' => 'view-CMD-orders',
+
+            // DD
+            'dd.orders.index' => 'view-DD-orders',
         ];
 
         foreach ($homepageRoutes as $routeName => $gate) {

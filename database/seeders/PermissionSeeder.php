@@ -180,7 +180,6 @@ class PermissionSeeder extends Seeder
         $dds = [
             Permission::CAN_VIEW_DD_ORDERS_NAME,
             Permission::CAN_EDIT_DD_ORDERS_NAME,
-            Permission::CAN_APPROVE_DD_ORDERS_LAYOUT,
         ];
 
         foreach ($dds as $dd) {

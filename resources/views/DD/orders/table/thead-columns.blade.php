@@ -9,8 +9,8 @@
         <x-tables.partials.th.id />
     @break
 
-    @case('Receive date')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="receive_date" />
+    @case('Layout approved')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="layout_approved_date" />
     @break
 
     @case('Quantity')
@@ -21,32 +21,28 @@
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="sent_to_bdm_date" />
     @break
 
-    @case('PO date')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="purchase_date" />
-    @break
-
     @case('PO №')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="name" />
     @break
 
-    @case('Price')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="price" />
-    @break
-
-    @case('Currency')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="currency_id" />
-    @break
-
-    @case('Sent to confirmation')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="sent_to_confirmation_date" />
-    @break
-
-    @case('Confirmation date')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="confirmation_date" />
-    @break
-
     @case('Sent to manufacturer')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="sent_to_manufacturer_date" />
+    @break
+
+    @case('Layout status')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="new_layout" />
+    @break
+
+    @case('Layout sent date')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="date_of_sending_new_layout_to_manufacturer" />
+    @break
+
+    @case('Print proof receive date')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="date_of_receiving_print_proof_from_manufacturer" />
+    @break
+
+    @case('Layout approved date')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="layout_approved_date" />
     @break
 
     @case('Date of creation')

@@ -9,6 +9,7 @@
         @include('layouts.leftbar.navs.MAD')
         @include('layouts.leftbar.navs.PLPD')
         @include('layouts.leftbar.navs.CMD')
+        @include('layouts.leftbar.navs.DD')
         @include('layouts.leftbar.navs.MGMT')
     </div>
 </aside>

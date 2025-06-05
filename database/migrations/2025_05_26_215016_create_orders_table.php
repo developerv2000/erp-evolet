@@ -53,10 +53,11 @@ return new class extends Migration
             // $table->timestamp('prepayment_requested_date')->nullable(); // action
 
             // DD Designer part
-            $table->boolean('new_layout')->default(false);
+            $table->boolean('new_layout')->nullable();
             $table->date('date_of_sending_new_layout_to_manufacturer')->nullable();
             $table->date('date_of_receiving_print_proof_from_manufacturer')->nullable(); // required only when 'new_layout' is true
-            $table->boolean('layout_approved')->default(false); // action
+            $table->string('box_article')->nullable();
+            $table->timestamp('layout_approved_date')->nullable(); // manually filled (similar to action)
 
             $table->timestamps();
             $table->softDeletes();

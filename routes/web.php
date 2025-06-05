@@ -70,3 +70,4 @@ require __DIR__ . '/MGMT.php';
 require __DIR__ . '/MAD.php';
 require __DIR__ . '/PLPD.php';
 require __DIR__ . '/CMD.php';
+require __DIR__ . '/DD.php';

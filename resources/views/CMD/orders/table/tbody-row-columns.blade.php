@@ -1,6 +1,6 @@
 @switch($column['name'])
     @case('Edit')
-        <x-tables.partials.td.edit :link="route('plpd.orders.edit', $record->id)" />
+        <x-tables.partials.td.edit :link="route('cmd.orders.edit', $record->id)" />
     @break
 
     @case('ID')
@@ -128,7 +128,7 @@
     @case('Sent to manufacturer')
         @if ($record->is_sent_to_manufacturer)
             {{ $record->sent_to_manufacturer_date->isoformat('DD MMM Y') }}
-        @else
+        @elseif($record->is_confirmed)
             <x-misc.button
                 style="transparent"
                 class="button--arrowed-link button--margined-bottom"

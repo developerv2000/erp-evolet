@@ -320,5 +320,14 @@
     "Send to manufacturer": "Отправить заводу",
     "Given order has been sent to manufacturer": "Данный заказ отправлен производителю",
 
+    "Layout status": "Статус макета",
+    "Layout sent date": "Дата отправки макета",
+    "Print proof receive date": "Дата получения принт пруфа",
+    "Box article": "Артикул бокса",
+    "Layout approved date": "Дата одобрения макета",
+    "Layout approved": "Макет одобрен",
+    "Approved": "Одобрен",
+    "No changes": "Без изменений",
+
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

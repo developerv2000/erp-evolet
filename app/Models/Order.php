@@ -43,6 +43,12 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     const DEFAULT_CMD_ORDER_TYPE = 'desc';
     const DEFAULT_CMD_PAGINATION_LIMIT = 50;
 
+    // DD
+    const SETTINGS_DD_TABLE_COLUMNS_KEY = 'DD_orders_table_columns';
+    const DEFAULT_DD_ORDER_BY = 'sent_to_manufacturer_date';
+    const DEFAULT_DD_ORDER_TYPE = 'desc';
+    const DEFAULT_DD_PAGINATION_LIMIT = 50;
+
     // Statuses
     const STATUS_CREATED_NAME = 'Created';
     const STATUS_IS_SENT_TO_BDM_NAME = 'Sent to BDM';
@@ -65,6 +71,9 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         'sent_to_confirmation_date' => 'date',
         'confirmation_date' => 'date',
         'sent_to_manufacturer_date' => 'date',
+        'date_of_sending_new_layout_to_manufacturer' => 'date',
+        'date_of_receiving_print_proof_from_manufacturer' => 'date',
+        'layout_approved_date' => 'date',
     ];
 
     /*
@@ -119,6 +128,11 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     public function getIsSentToManufacturerAttribute(): bool
     {
         return !is_null($this->sent_to_manufacturer_date);
+    }
+
+    public function getLayoutApprovedAttribute(): bool
+    {
+        return !is_null($this->layout_approved_date);
     }
 
     public function getTotalPriceAttribute()
@@ -185,6 +199,11 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     public function scopeOnlySentToBdm($query)
     {
         return $query->whereNotNull('sent_to_bdm_date');
+    }
+
+    public function scopeOnlySentToManufacturer($query)
+    {
+        return $query->whereNotNull('sent_to_manufacturer_date');
     }
 
     public function scopeOnlyWithName($query)
@@ -271,9 +290,18 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     private static function getFilterConfig(): array
     {
         return [
-            'whereEqal' => ['process_id'],
+            'whereEqual' => ['process_id', 'new_layout'],
             'whereIn' => ['id', 'name'],
-            'dateRange' => ['receive_date', 'sent_to_bdm_date', 'created_at', 'updated_at'],
+            'dateRange' => [
+                'receive_date',
+                'sent_to_bdm_date',
+                'sent_to_manufacturer_date',
+                'date_of_sending_new_layout_to_manufacturer',
+                'date_of_receiving_print_proof_from_manufacturer',
+                'layout_approved_date',
+                'created_at',
+                'updated_at'
+            ],
 
             'relationEqual' => [
                 [
@@ -373,6 +401,16 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             'DEFAULT_CMD_ORDER_BY',
             'DEFAULT_CMD_ORDER_TYPE',
             'DEFAULT_CMD_PAGINATION_LIMIT',
+        );
+    }
+
+    public static function addDefaultDDQueryParamsToRequest(Request $request)
+    {
+        self::addDefaultQueryParamsToRequest(
+            $request,
+            'DEFAULT_DD_ORDER_BY',
+            'DEFAULT_DD_ORDER_TYPE',
+            'DEFAULT_DD_PAGINATION_LIMIT',
         );
     }
 
@@ -554,14 +592,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $process->isDirty() && $process->save();
     }
 
-    /**
-     * Provides the default PLPD table columns along with their properties.
-     *
-     * These columns are typically used to display data in tables,
-     * such as on index and trash pages, and are iterated over in a loop.
-     *
-     * @return array
-     */
     public static function getDefaultPLPDTableColumnsForUser($user)
     {
         if (Gate::forUser($user)->denies('view-PLPD-orders')) {
@@ -615,14 +645,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $columns;
     }
 
-    /**
-     * Provides the default CMD table columns along with their properties.
-     *
-     * These columns are typically used to display data in tables,
-     * such as on index and trash pages, and are iterated over in a loop.
-     *
-     * @return array
-     */
     public static function getDefaultCMDTableColumnsForUser($user)
     {
         if (Gate::forUser($user)->denies('view-CMD-orders')) {
@@ -670,6 +692,57 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Confirmation date', 'order' => $order++, 'width' => 172, 'visible' => 1],
 
             ['name' => 'Sent to manufacturer', 'order' => $order++, 'width' => 164, 'visible' => 1],
+
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
+        );
+
+        return $columns;
+    }
+
+    public static function getDefaultDDTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-DD-orders')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        if (Gate::forUser($user)->allows('edit-DD-orders')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
+            ['name' => 'Layout approved', 'order' => $order++, 'width' => 134, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
+
+            ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'TM Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'TM Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Form', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Pack', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Sent to manufacturer', 'order' => $order++, 'width' => 164, 'visible' => 1],
+
+            ['name' => 'Layout status', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            ['name' => 'Layout sent date', 'order' => $order++, 'width' => 178, 'visible' => 1],
+            ['name' => 'Print proof receive date', 'order' => $order++, 'width' => 228, 'visible' => 1],
+            ['name' => 'Box article', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Layout approved date', 'order' => $order++, 'width' => 188, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],

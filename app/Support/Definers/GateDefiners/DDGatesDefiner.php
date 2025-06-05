@@ -9,7 +9,21 @@ class DDGatesDefiner
 {
     public static function defineAll()
     {
-        // Other permissions
+        // View
+        Gate::define(
+            'view-DD-orders',
+            fn($user) =>
+            $user->hasPermission(Permission::CAN_VIEW_DD_ORDERS_NAME)
+        );
+
+        // Edit
+        Gate::define(
+            'edit-DD-orders',
+            fn($user) =>
+            $user->hasPermission(Permission::CAN_EDIT_DD_ORDERS_NAME)
+        );
+
+        // Other gates
         Gate::define(
             'receive-notification-when-CMD-order-is-sent-to-manufacturer',
             fn($user) =>

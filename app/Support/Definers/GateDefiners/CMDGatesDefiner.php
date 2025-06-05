@@ -9,6 +9,7 @@ class CMDGatesDefiner
 {
     public static function defineAll()
     {
+        // View
         Gate::define(
             'view-CMD-orders',
             fn($user) =>

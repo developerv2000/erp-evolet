@@ -8,6 +8,7 @@ use App\Support\Definers\GateDefiners\GlobalGatesDefiner;
 use App\Support\Definers\GateDefiners\MADGatesDefiner;
 use App\Support\Definers\GateDefiners\PLPDGatesDefiner;
 use App\Support\Definers\ViewComposerDefiners\CMDViewComposersDefiner;
+use App\Support\Definers\ViewComposerDefiners\DDViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\GlobalViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\MADViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\MGMTViewComposersDefiner;
@@ -42,5 +43,6 @@ class AppServiceProvider extends ServiceProvider
         MADViewComposersDefiner::defineAll();
         PLPDViewComposersDefiner::defineAll();
         CMDViewComposersDefiner::defineAll();
+        DDViewComposersDefiner::defineAll();
     }
 }
