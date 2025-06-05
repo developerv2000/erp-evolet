@@ -24,7 +24,7 @@ return new class extends Migration
                 ->on('processes');
 
             $table->date('receive_date');
-            $table->timestamp('sent_to_bdm_date')->nullable();
+            $table->timestamp('sent_to_bdm_date')->nullable(); // action
 
             // Step 2:
             $table->string('name')->nullable();
@@ -38,14 +38,25 @@ return new class extends Migration
                 ->on('currencies')
                 ->nullable();
 
-            $table->timestamp('sent_to_confirmation_date')->nullable(); // auto
+            $table->timestamp('sent_to_confirmation_date')->nullable(); // action
 
             // Step 3:
-            $table->timestamp('confirmation_date')->nullable(); // auto
+            $table->timestamp('confirmation_date')->nullable(); // action
 
             // Step 4:
-            $table->timestamp('sent_to_manufacturer_date')->nullable(); // auto
-            $table->string('expected_dispatch_date')->nullable();
+            $table->timestamp('sent_to_manufacturer_date')->nullable(); // action
+
+            // Step 5:
+            // CMD BDM part
+            // $table->string('expected_dispatch_date')->nullable();
+            // $table->date('receiving_prepayment_invoice_date')->nullable();
+            // $table->timestamp('prepayment_requested_date')->nullable(); // action
+
+            // DD Designer part
+            $table->boolean('new_layout')->default(false);
+            $table->date('date_of_sending_new_layout_to_manufacturer')->nullable();
+            $table->date('date_of_receiving_print_proof_from_manufacturer')->nullable(); // required only when 'new_layout' is true
+            $table->boolean('layout_approved')->default(false); // action
 
             $table->timestamps();
             $table->softDeletes();

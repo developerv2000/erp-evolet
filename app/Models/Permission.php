@@ -145,8 +145,18 @@ class Permission extends Model
     |--------------------------------------------------------------------------
     */
 
+    // View
+    const CAN_VIEW_DD_ORDERS_NAME = 'can view DD orders';
+
+    // Edit
+    const CAN_EDIT_DD_ORDERS_NAME = 'can edit DD orders';
+
     // Global permissions
+    // PLPD and DD permissions
     const CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER = 'can receive notification when CMD order is sent to manufacturer';
+
+    // Other permissions
+    const CAN_APPROVE_DD_ORDERS_LAYOUT = 'can approve DD orders layout';
 
     /*
     |--------------------------------------------------------------------------
@@ -343,7 +353,11 @@ class Permission extends Model
     public static function getDDDesignerPermissionNames()
     {
         return [
+            self::CAN_VIEW_DD_ORDERS_NAME,
+            self::CAN_EDIT_DD_ORDERS_NAME,
+
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER,
+            self::CAN_APPROVE_DD_ORDERS_LAYOUT
         ];
     }
 }

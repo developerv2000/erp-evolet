@@ -41,6 +41,8 @@ class PermissionSeeder extends Seeder
         |--------------------------------------------------------------------------
         */
 
+        $departmentID = Department::findByName(Department::MAD_NAME)->id;
+
         $MADs = [
             Permission::CAN_VIEW_MAD_EPP_NAME,
             Permission::CAN_VIEW_MAD_KVPP_NAME,
@@ -100,7 +102,7 @@ class PermissionSeeder extends Seeder
         foreach ($MADs as $mad) {
             Permission::create([
                 'name' => $mad,
-                'department_id' => Department::findByName(Department::MAD_NAME)->id,
+                'department_id' => $departmentID,
             ]);
         }
 
@@ -109,6 +111,8 @@ class PermissionSeeder extends Seeder
         | PLPD permissions
         |--------------------------------------------------------------------------
         */
+
+        $departmentID = Department::findByName(Department::PLPD_NAME)->id;
 
         $PLPDs = [
             Permission::CAN_VIEW_PLPD_READY_FOR_ORDER_PROCESSES_NAME,
@@ -123,7 +127,7 @@ class PermissionSeeder extends Seeder
         foreach ($PLPDs as $plpd) {
             Permission::create([
                 'name' => $plpd,
-                'department_id' => Department::findByName(Department::PLPD_NAME)->id,
+                'department_id' => $departmentID,
             ]);
         }
 
@@ -132,6 +136,8 @@ class PermissionSeeder extends Seeder
         | BDM permissions
         |--------------------------------------------------------------------------
         */
+
+        $departmentID = Department::findByName(Department::CMD_NAME)->id;
 
         $CMDs = [
             Permission::CAN_VIEW_CMD_ORDERS_NAME,
@@ -145,7 +151,7 @@ class PermissionSeeder extends Seeder
         foreach ($CMDs as $cmd) {
             Permission::create([
                 'name' => $cmd,
-                'department_id' => Department::findByName(Department::CMD_NAME)->id,
+                'department_id' => $departmentID,
             ]);
         }
 
@@ -155,16 +161,32 @@ class PermissionSeeder extends Seeder
         |--------------------------------------------------------------------------
         */
 
+        $departmentID = Department::findByName(Department::DD_NAME)->id;
+
         // Global permissions
-        $ddGlobal = [
+        $ddGlobals = [
             Permission::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER,
         ];
 
-        foreach ($ddGlobal as $globalPermission) {
+        foreach ($ddGlobals as $global) {
             Permission::create([
-                'name' => $globalPermission,
+                'name' => $global,
                 'global' => true,
-                'department_id' => Department::findByName(Department::DD_NAME)->id,
+                'department_id' => $departmentID,
+            ]);
+        }
+
+        // Non global permissions
+        $dds = [
+            Permission::CAN_VIEW_DD_ORDERS_NAME,
+            Permission::CAN_EDIT_DD_ORDERS_NAME,
+            Permission::CAN_APPROVE_DD_ORDERS_LAYOUT,
+        ];
+
+        foreach ($dds as $dd) {
+            Permission::create([
+                'name' => $dd,
+                'department_id' => $departmentID,
             ]);
         }
     }

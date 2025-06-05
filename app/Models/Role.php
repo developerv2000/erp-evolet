@@ -46,6 +46,9 @@ class Role extends Model
     // CMD
     const CMD_BDM_NAME = 'CMD BDM';                             // User is assosiated as 'BDM'. Not fully implemented yet!
 
+    // DD
+    const DD_DESIGNER_NAME = 'DD Designer';                     // Not fully implemented yet!
+
     /*
     |--------------------------------------------------------------------------
     | Properties
