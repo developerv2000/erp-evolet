@@ -45,6 +45,26 @@
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="confirmation_date" />
     @break
 
+    @case('Sent to manufacturer')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="sent_to_manufacturer_date" />
+    @break
+
+    @case('Layout status')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="new_layout" />
+    @break
+
+    @case('Layout sent date')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="date_of_sending_new_layout_to_manufacturer" />
+    @break
+
+    @case('Print proof receive date')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="date_of_receiving_print_proof_from_manufacturer" />
+    @break
+
+    @case('Layout approved date')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="layout_approved_date" />
+    @break
+
     @case('Date of creation')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="created_at" />
     @break

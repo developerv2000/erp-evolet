@@ -46,6 +46,10 @@
 }
 
 /* Form group */
+.form-group--hidden-visibility {
+    visibility: hidden;
+}
+
 .form__row .form-group {
     flex-basis: 100%;
 }

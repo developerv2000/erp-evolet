@@ -449,26 +449,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $this->syncPriceWithRelatedProcess();
     }
 
-    /**
-     * Detect valid 'process' of order, which is depended on
-     * selected processes 'product_id' with 'country_id' and
-     * also on selected 'marketing_authorization_holder_id'
-     */
-    private static function determineProcessOnCreateOrEditFromRequest($request)
-    {
-        $selectedProcess = Process::findOrFail($request->input('process_id'));
-        $productID = $selectedProcess->product_id;
-        $countryID = $selectedProcess->country_id;
-        $mahID = $request->input('marketing_authorization_holder_id');
-
-        return Process::onlyReadyForOrder()
-            ->where('product_id', $productID)
-            ->where('country_id', $countryID)
-            ->where('marketing_authorization_holder_id', $mahID)
-            ->latest()
-            ->first();
-    }
-
     // CMD part
 
     public function updateByCMDFromRequest($request)
@@ -487,6 +467,23 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
         // Validate related processes 'increased_price'
         $this->syncPriceWithRelatedProcess();
+    }
+
+    // DD part
+
+    function updateByDDFromRequest(Request $request)
+    {
+        $this->fill($request->safe()->all());
+
+        // Validate 'date_of_receiving_print_proof_from_manufacturer' attribute
+        if (!$this->new_layout) {
+            $this->date_of_receiving_print_proof_from_manufacturer = null;
+        }
+
+        $this->save();
+
+        // HasMany relations
+        $this->storeCommentFromRequest($request);
     }
 
     /*
@@ -638,6 +635,13 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Sent to confirmation', 'order' => $order++, 'width' => 244, 'visible' => 1],
             ['name' => 'Confirmation date', 'order' => $order++, 'width' => 172, 'visible' => 1],
 
+            ['name' => 'Sent to manufacturer', 'order' => $order++, 'width' => 164, 'visible' => 1],
+            ['name' => 'Layout status', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            ['name' => 'Layout sent date', 'order' => $order++, 'width' => 178, 'visible' => 1],
+            ['name' => 'Print proof receive date', 'order' => $order++, 'width' => 228, 'visible' => 1],
+            ['name' => 'Box article', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Layout approved date', 'order' => $order++, 'width' => 188, 'visible' => 1],
+
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
         );
@@ -692,6 +696,11 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Confirmation date', 'order' => $order++, 'width' => 172, 'visible' => 1],
 
             ['name' => 'Sent to manufacturer', 'order' => $order++, 'width' => 164, 'visible' => 1],
+            ['name' => 'Layout status', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            ['name' => 'Layout sent date', 'order' => $order++, 'width' => 178, 'visible' => 1],
+            ['name' => 'Print proof receive date', 'order' => $order++, 'width' => 228, 'visible' => 1],
+            ['name' => 'Box article', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Layout approved date', 'order' => $order++, 'width' => 188, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],

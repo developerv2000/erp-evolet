@@ -43,19 +43,4 @@ class DDOrderController extends Controller
 
         return redirect($request->input('previous_url'));
     }
-
-    /**
-     * Ajax request
-     */
-    public function toggleLayoutApprovedAttribute(Request $request)
-    {
-        $record = Order::withTrashed()->findOrFail($request->input('record_id'));
-        $record->toggleLayoutApprovedAttribute($request);
-
-        return response()->json([
-            'layoutisApproved' => $record->layout_is_approved,
-            'layoutApprovedDate' => $record->layout_approved_date?->isoFormat('DD MMM Y'),
-            // 'statusHTML' => view('components.tables.partials.td.order-status-badge', ['status' => $record->status])->render(),
-        ]);
-    }
 }

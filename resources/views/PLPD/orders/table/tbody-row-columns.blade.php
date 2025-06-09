@@ -137,6 +137,36 @@
         @endif
     @break
 
+    @case('Sent to manufacturer')
+        {{ $record->sent_to_manufacturer_date->isoformat('DD MMM Y') }}
+    @break
+
+    @case('Layout status')
+        <span @class([
+            'badge',
+            'badge--yellow' => $record->new_layout,
+            'badge--blue' => !$record->new_layout,
+        ])>
+            {{ $record->new_layout ? __('New') : __('No changes') }}
+        </span>
+    @break
+
+    @case('Layout sent date')
+        {{ $record->date_of_sending_new_layout_to_manufacturer?->isoformat('DD MMM Y') }}
+    @break
+
+    @case('Print proof receive date')
+        {{ $record->date_of_receiving_print_proof_from_manufacturer?->isoformat('DD MMM Y') }}
+    @break
+
+    @case('Box article')
+        {{ $record->box_article }}
+    @break
+
+    @case('Layout approved date')
+        {{ $record->layout_approved_date?->isoformat('DD MMM Y') }}
+    @break
+
     @case('Date of creation')
         {{ $record->created_at->isoformat('DD MMM Y') }}
     @break
