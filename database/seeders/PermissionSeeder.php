@@ -172,7 +172,6 @@ class PermissionSeeder extends Seeder
             Permission::create([
                 'name' => $global,
                 'global' => true,
-                'department_id' => $departmentID,
             ]);
         }
 

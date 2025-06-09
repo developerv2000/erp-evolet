@@ -16,7 +16,7 @@ import { updateOrderStatus } from "../shared";
 
 // Orders
 const GET_READY_FOR_ORDER_PROCESSES_OF_MANUFACTURER_POST_URL = '/plpd/orders/get-ready-for-order-processes-of-manufacturer';
-const GET_AVAILABLE_MAHS_OF_READY_FOR_ORDER_PROCESS_POST_URL = '/plpd/orders/get-available-mahs-of-ready-for-order-process';
+const GET_PROCESS_WITH_IT_SIMILAR_RECORDS_FOR_ORDER_POST_URL = '/plpd/orders/get-process-with-it-similar-records-for-order';
 const TOGGLE_ORDERS_IS_SENT_TO_BDM_ATTRIBUTE_POST_URL = '/plpd/orders/toggle-is-sent-to-bdm-attribute';
 const TOGGLE_ORDERS_IS_CONFIRMED_ATTRIBUTE_POST_URL = '/plpd/orders/toggle-is-confirmed-attribute';
 
@@ -68,10 +68,10 @@ export function updateProcessSelectOnOrderFormChange() {
             if (response.data.readyForOrderProcesses.length > 0) {
                 // Update processes select
                 const readyForOrderProcesses = response.data.readyForOrderProcesses;
-                refreshSelectizeOptions(processSelect, readyForOrderProcesses, updateMAHSelectOnOrderFormChange, 'full_trademark_en', 'id', false);
+                refreshSelectizeOptions(processSelect, readyForOrderProcesses, updateMAHSelectOnOrderFormChange, 'full_trademark_en_with_id', 'id', false);
             } else {
                 // Empty processes select and alert user
-                refreshSelectizeOptions(processSelect, [], updateMAHSelectOnOrderFormChange, 'full_trademark_en', 'id', false);
+                refreshSelectizeOptions(processSelect, [], updateMAHSelectOnOrderFormChange, 'full_trademark_en_with_id', 'id', false);
                 alert(response.data.notFoundmessage);
             }
         })
@@ -84,12 +84,12 @@ export function updateProcessSelectOnOrderFormChange() {
 
 export function updateMAHSelectOnOrderFormChange() {
     const processSelect = document.querySelector('select[name="process_id"]');
-    const mahSelect = document.querySelector('select[name="marketing_authorization_holder_id"]').selectize;
+    const mahSelect = document.querySelector('select[name="final_process_id"]').selectize;
 
     if (processSelect.value == '') {
         // Empty MAHs select, because this function is also called by updateProcessSelectOnOrderFormChange(),
         // while executing function, processesSelect value can be empty
-        refreshSelectizeOptions(mahSelect, [], null, 'name', 'id', false);
+        refreshSelectizeOptions(mahSelect, [], null, 'mah_name_with_id', 'id', false);
 
         return;
     }
@@ -100,14 +100,14 @@ export function updateMAHSelectOnOrderFormChange() {
         'process_id': processSelect.value,
     };
 
-    axios.post(GET_AVAILABLE_MAHS_OF_READY_FOR_ORDER_PROCESS_POST_URL, data, {
+    axios.post(GET_PROCESS_WITH_IT_SIMILAR_RECORDS_FOR_ORDER_POST_URL, data, {
         headers: {
             'Content-Type': 'application/json'
         }
     })
         .then(response => {
-            const MAHs = response.data.MAHs;
-            refreshSelectizeOptions(mahSelect, MAHs, null, 'name', 'id', false);
+            const processWithItSimilarRecords = response.data.processWithItSimilarRecords;
+            refreshSelectizeOptions(mahSelect, processWithItSimilarRecords, null, 'mah_name_with_id', 'id', false);
         })
         .finally(function () {
             hideSpinner();

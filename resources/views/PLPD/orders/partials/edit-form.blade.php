@@ -33,15 +33,16 @@
                 field="process_id"
                 :model="$record"
                 :options="$readyForOrderProcesses"
-                optionCaptionField="full_trademark_en"
+                optionCaptionField="full_trademark_en_with_id"
                 :isRequired="true" />
 
             <x-form.selects.selectize.id-based-single-select.record-field-select
                 labelText="MAH"
-                field="marketing_authorization_holder_id"
+                field="final_process_id"
                 :model="$record"
-                :options="$MAHs"
-                :initial-value="$record->process->marketing_authorization_holder_id"
+                :options="$processWithItSimilarRecords"
+                optionCaptionField="mah_name_with_id"
+                :initial-value="$record->process->id"
                 :isRequired="true" />
 
             <x-form.inputs.record-field-input

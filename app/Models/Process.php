@@ -216,14 +216,36 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         return $this->readiness_for_order_date ? true : false;
     }
 
+    /**
+     * Used on order pages.
+     */
     public function getFullTrademarkEnAttribute()
     {
         return $this->trademark_en . ' ' . $this->product->form->name . ' ' . $this->product->dosage . ' ' . $this->product->pack;
     }
 
+    /**
+     * Used on plpd.orders.create and plpd.orders.edit pages.
+     */
+    public function getFullTrademarkEnWithIdAttribute()
+    {
+        return $this->trademark_en . ' ' . $this->product->form->name . ' ' . $this->product->dosage . ' ' . $this->product->pack . ' — #' . $this->id;
+    }
+
+    /**
+     * Used on order pages.
+     */
     public function getFullTrademarkRuAttribute()
     {
         return $this->trademark_ru . ' ' . $this->product->form->name . ' ' . $this->product->dosage . ' ' . $this->product->pack;
+    }
+
+    /**
+     * Used on plpd.orders.create and plpd.orders.edit pages.
+     */
+    public function getMahNameWithIdAttribute()
+    {
+        return $this->MAH->name . ' — #' . $this->id;
     }
 
     /*
@@ -1119,18 +1141,18 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     }
 
     /**
-     * Retrieve distinct ready-for-order Process records for a given manufacturer and country.
+     * Retrieve ready-for-order Process records for a given manufacturer and country.
      *
-     * This method is used on the `orders.create` and `orders.edit` pages to populate
+     * This method is used on the `plpd.orders.create` and `plpd.orders.edit` pages to populate
      * the list of available products for a selected manufacturer and country.
      *
      * @param int  $manufacturerID          ID of the manufacturer.
      * @param int  $countryID               ID of the country.
-     * @param bool $appendFullTrademarkEn   Whether to append the 'full_trademark_en' attribute.
+     * @param bool $appendFullTrademarkEnWithId   Whether to append the 'full_trademark_en_with_id' attribute.
      *
      * @return \Illuminate\Support\Collection<\App\Models\Process>
      */
-    public static function getReadyForOrderRecordsOfManufacturer(int $manufacturerID, int $countryID, bool $appendFullTrademarkEn = false)
+    public static function getReadyForOrderRecordsOfManufacturer(int $manufacturerID, int $countryID, bool $appendFullTrademarkEnWithId = false)
     {
         $processes = self::onlyReadyForOrder()
             ->withRelationsForOrder()
@@ -1141,33 +1163,34 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                 $query->where('manufacturers.id', $manufacturerID)
             )
             ->where('country_id', $countryID)
-            ->get()
-            ->unique('product_id')
-            ->values();
+            ->get();
 
-        if ($appendFullTrademarkEn) {
-            $processes->each->append('full_trademark_en');
+        if ($appendFullTrademarkEnWithId) {
+            $processes->each->append('full_trademark_en_with_id');
         }
 
         return $processes;
     }
 
     /**
-     * Get all available MAHs (Marketing Authorization Holders) for this process
-     * that are eligible for ordering.
+     * Get process with all its similar records for order.
      *
-     * This is used on the `orders.create` and `orders.edit` pages to fetch
-     * MAHs related to the current process's product and country context.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection<\App\Models\MarketingAuthorizationHolder>
+     * This method is used on the `plpd.orders.create` and `plpd.orders.edit` pages to fetch
+     * processes with MAHs related to the current process's product and country context.
      */
-    public function getAvailableMAHsForOrder()
+    public function getProcessWithItSimilarRecordsForOrder($appendMahNameWithId = false)
     {
-        return MarketingAuthorizationHolder::whereHas('processes', function ($query) {
-            $query->onlyReadyForOrder()
-                ->where('product_id', $this->product_id)
-                ->where('country_id', $this->country_id);
-        })->get();
+        $processes = self::onlyReadyForOrder()
+            ->where('product_id', $this->product_id)
+            ->where('country_id', $this->country_id)
+            ->with('MAH')
+            ->get();
+
+        if ($appendMahNameWithId) {
+            $processes->each->append('mah_name_with_id');
+        }
+
+        return $processes;
     }
 
     /*

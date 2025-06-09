@@ -63,7 +63,7 @@ class PLPDOrderController extends Controller
     }
 
     /**
-     * Ajax request on create & edit pages
+     * Ajax request on create & edit pages.
      */
     public function getReadyForOrderProcessesOfManufacturer(Request $request)
     {
@@ -79,14 +79,17 @@ class PLPDOrderController extends Controller
     }
 
     /**
-     * Ajax request on create & edit pages
+     * Ajax request on create & edit pages.
+     *
+     * Used to select process with required MAH, from different similar processes,
+     * with the same product and country context.
      */
-    public function getAvailableMAHsOfReadyForOrderProcess(Request $request)
+    public function getProcessWithItSimilarRecordsForOrder(Request $request)
     {
         $process = Process::findOrFail($request->input('process_id'));
 
         return response()->json([
-            'MAHs' => $process->getAvailableMAHsForOrder(),
+            'processWithItSimilarRecords' => $process->getProcessWithItSimilarRecordsForOrder(true),
         ]);
     }
 
@@ -109,9 +112,9 @@ class PLPDOrderController extends Controller
         $countryID = $record->process->country_id;
 
         $readyForOrderProcesses = Process::getReadyForOrderRecordsOfManufacturer($manufacturerID, $countryID);
-        $MAHs = $record->process->getAvailableMAHsForOrder();
+        $processWithItSimilarRecords = $record->process->getProcessWithItSimilarRecordsForOrder();
 
-        return view('PLPD.orders.edit', compact('record', 'readyForOrderProcesses', 'MAHs'));
+        return view('PLPD.orders.edit', compact('record', 'readyForOrderProcesses', 'processWithItSimilarRecords'));
     }
 
     /**

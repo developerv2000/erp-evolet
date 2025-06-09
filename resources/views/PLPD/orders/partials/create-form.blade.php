@@ -26,13 +26,14 @@
                 labelText="TM Eng"
                 inputName="process_id"
                 :options="[]"
-                optionCaptionField="full_trademark_en"
+                optionCaptionField="full_trademark_en_with_id"
                 :isRequired="true" />
 
             <x-form.selects.selectize.id-based-single-select.default-select
                 labelText="MAH"
-                inputName="marketing_authorization_holder_id"
+                inputName="final_process_id"
                 :options="[]"
+                optionCaptionField="mah_name_with_id"
                 :isRequired="true" />
 
             <x-form.inputs.default-input

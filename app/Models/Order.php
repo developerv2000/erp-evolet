@@ -424,11 +424,11 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     public static function createFromRequest($request)
     {
-        $process = self::determineProcessOnCreateOrEditFromRequest($request);
+        $request->merge([
+            'process_id' => $request->input('final_process_id'),
+        ]);
 
-        $record = new Order($request->all());
-        $record->process_id = $process->id;
-        $record->save();
+        $record = Order::create($request->all());
 
         // HasMany relations
         $record->storeCommentFromRequest($request);
@@ -436,11 +436,11 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     public function updateByPLPDFromRequest($request)
     {
-        $process = self::determineProcessOnCreateOrEditFromRequest($request);
+        $request->merge([
+            'process_id' => $request->input('final_process_id'),
+        ]);
 
-        $this->fill($request->all());
-        $this->process_id = $process->id;
-        $this->save();
+        $this->update($request->all());
 
         // HasMany relations
         $this->storeCommentFromRequest($request);
