@@ -33,8 +33,8 @@ class MADProcessController extends Controller
         // Get finalized records paginated
         $query = Process::withBasicRelations()->withBasicRelationCounts();
         $filteredQuery = Process::filterQueryForRequest($query, $request);
-        $filteredQuery = Process::addJoinsForOrdering($query, $request); // add join if joined ordering requested
-        $records = Process::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
+        $joinedQuery = Process::addJoinsForOrdering($filteredQuery, $request); // add joins if joined ordering requested
+        $records = Process::finalizeQueryForRequest($joinedQuery, $request, 'paginate');
 
         // Add 'general_status_periods' for records
         Process::addGeneralStatusPeriodsForRecords($records);
@@ -60,7 +60,8 @@ class MADProcessController extends Controller
         // Get trashed finalized records paginated
         $query = Process::onlyTrashed()->withBasicRelations()->withBasicRelationCounts();
         $filteredQuery = Process::filterQueryForRequest($query, $request);
-        $records = Process::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
+        $joinedQuery = Process::addJoinsForOrdering($filteredQuery, $request); // add joins if joined ordering requested
+        $records = Process::finalizeQueryForRequest($joinedQuery, $request, 'paginate');
 
         // Add 'general_status_periods' for records
         Process::addGeneralStatusPeriodsForRecords($records);

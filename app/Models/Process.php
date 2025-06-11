@@ -583,7 +583,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             },
         ])
             ->select(
-                'id',
+                'processes.id',
                 'product_id',
                 'country_id',
             );

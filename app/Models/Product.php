@@ -265,7 +265,7 @@ class Product extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Ex
                 'shelfLife',
             ])
             ->select([
-                'id',
+                'products.id',
                 'inn_id',
                 'form_id',
                 'shelf_life_id',

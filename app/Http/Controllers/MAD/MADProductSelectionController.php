@@ -51,6 +51,12 @@ class MADProductSelectionController extends Controller
         // Get finalized records query
         $query = $model::withRelationsForProductSelection();
         $filteredQuery = $model::filterQueryForRequest($query, $request);
+
+        // Add joins if joined ordering requested
+        if (method_exists($model, 'addJoinsForOrdering')) {
+            $filteredQuery = $model::addJoinsForOrdering($filteredQuery, $request);
+        }
+
         $finalizedQuery = $model::finalizeQueryForRequest($filteredQuery, $request, 'query');
 
         // Generate excel file
