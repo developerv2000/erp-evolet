@@ -138,7 +138,7 @@
     @break
 
     @case('Sent to manufacturer')
-        {{ $record->sent_to_manufacturer_date->isoformat('DD MMM Y') }}
+        {{ $record->sent_to_manufacturer_date?->isoformat('DD MMM Y') }}
     @break
 
     @case('Layout status')
