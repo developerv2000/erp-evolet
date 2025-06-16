@@ -1271,7 +1271,9 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     /**
      * Validates and sets the 'order_priority' attribute of the record.
      *
-     * This method is typically called on model 'created'/'updated' events or when storing comments.
+     * This method is typically called on model 'created'/'updated' events,
+     * after storing comments and on 'updating' event of ProcessStatusHistory model.
+     *
      * It assigns 'order_priority' based on the following logic:
      * - **-1**: For records with a 'stopped' status.
      * - **0**: For records that either have no deadline or whose deadline has not yet expired.
@@ -1279,8 +1281,19 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
      *
      * @return void
      */
-    public function validateOrderPriorityAttribute(): void
+    public function validateOrderPriorityAttribute($refresh = true): void
     {
+        // Refresh record, because activeStatusHistory and lastComments can be updated!
+        if ($refresh) {
+            $this->refresh();
+        }
+
+        // Escape errors while processes activeStatusHistory can be null,
+        // right after closing active status history on ProcessStatusHistory updated event.
+        if (!$this->activeStatusHistory) {
+            return;
+        }
+
         // If the record's status is "stopped", set priority to -1 and exit.
         if ($this->status->isStopedStatus()) {
             $this->order_priority = -1;
