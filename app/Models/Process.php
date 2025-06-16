@@ -15,8 +15,11 @@ use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\Commentable;
 use App\Support\Traits\Model\ExportsRecordsAsExcel;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
@@ -44,6 +47,10 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     const LIMITED_EXCEL_RECORDS_COUNT_FOR_EXPORT = 15;
     const STORAGE_PATH_OF_EXCEL_TEMPLATE_FILE_FOR_EXPORT = 'app/excel/export-templates/vps.xlsx';
     const STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES = 'app/excel/exports/vps';
+
+    const DEADLINE_EXPIRED_STATUS_NAME = 'Expired';
+    const DEADLINE_NOT_EXPIRED_STATUS_NAME = 'Not expired';
+    const DEADLINE_STOPED_STATUS_NAME = 'Stoped';
 
     /*
     |--------------------------------------------------------------------------
@@ -142,6 +149,17 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     | Additional attributes
     |--------------------------------------------------------------------------
     */
+
+    public function getDeadlineStatusAttribute()
+    {
+        if ($this->order_priority == -1) {
+            return self::DEADLINE_STOPED_STATUS_NAME;
+        } else if ($this->order_priority == 0) {
+            return self::DEADLINE_NOT_EXPIRED_STATUS_NAME;
+        } else {
+            return self::DEADLINE_EXPIRED_STATUS_NAME;
+        }
+    }
 
     /**
      * Also used while exporting product selection.
@@ -263,12 +281,19 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
         static::created(function ($record) {
             $record->addStatusHistoryForCurrentStatus($record->created_at);
+            // Validate 'order_priority' after creating status history.
+            $record->validateOrderPriorityAttribute();
         });
 
         static::updating(function ($record) {
             $record->updateStatusHistory();
             $record->notifyUsersOnContractStage();
             $record->handleResponsiblePersonUpdateDate();
+        });
+
+        static::updated(function ($record) {
+            // Validate 'order_priority' after updating event, because status history can be updated.
+            $record->validateOrderPriorityAttribute();
         });
 
         static::saving(function ($record) {
@@ -1195,6 +1220,132 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
     /*
     |--------------------------------------------------------------------------
+    | Ordering by priority
+    |--------------------------------------------------------------------------
+    */
+
+    public static function addOrderByPriorityQueryParamToRequest($request, $orderByPriority = true)
+    {
+        $request->mergeIfMissing([
+            'order_by_priority' => $request->input('order_by_priority', $orderByPriority),
+        ]);
+    }
+
+    /**
+     * Finalizes the query by applying ordering by priority and secondary orderings,
+     * pagination, or retrieving data based on the specified action.
+     */
+    public static function finalizeQueryOrderedByPriorityForRequest(
+        Builder|Relation $query,
+        Request $request,
+        string $action = 'query',
+        string $defaultOrderBy = 'created_at',
+        string $defaultOrderType = 'desc',
+    ) {
+        // Apply primary and secondary ordering
+        $query->when($request->input('order_by_priority'), function ($q) {
+            return $q->orderBy('order_priority', 'desc');
+        })
+            ->orderBy($request->input('order_by', $defaultOrderBy), $request->input('order_type', $defaultOrderType))
+            ->orderBy('id', $request->input('order_type', $defaultOrderType));
+
+        // Handle pagination or retrieval based on the action parameter
+        switch ($action) {
+            case 'paginate':
+                return $query->paginate(
+                    $request->input('pagination_limit', 20),
+                    ['*'],
+                    'page',
+                    $request->input('page', 1)
+                )->appends($request->except(['page', 'reversed_order_url']));
+
+            case 'get':
+                return $query->get();
+
+            case 'query':
+            default:
+                return $query;
+        }
+    }
+
+    /**
+     * Validates and sets the 'order_priority' attribute of the record.
+     *
+     * This method is typically called on model 'created'/'updated' events or when storing comments.
+     * It assigns 'order_priority' based on the following logic:
+     * - **-1**: For records with a 'stopped' status.
+     * - **0**: For records that either have no deadline or whose deadline has not yet expired.
+     * - **Days past deadline**: For records with an expired deadline, it's set to the number of days past the deadline.
+     *
+     * @return void
+     */
+    public function validateOrderPriorityAttribute(): void
+    {
+        // If the record's status is "stopped", set priority to -1 and exit.
+        if ($this->status->isStopedStatus()) {
+            $this->order_priority = -1;
+            $this->timestamps = false;
+            $this->saveQuietly();
+            return;
+        }
+
+        // Initialize order_priority to 0 as a default for non-stopped statuses.
+        // This covers cases where there's no deadline or the deadline hasn't passed.
+        $this->order_priority = 0;
+
+        // If the status has a deadline, calculate priority based on deadline expiration.
+        if ($this->status->hasDeadline()) {
+            $deadlineDays = $this->status->deadline_days;
+            $lastActivityDate = $this->getLastActivityDateByStatusUpdateOrCommentCreate();
+            $diffInDays = $lastActivityDate->diffInDays(now());
+
+            // If the difference in days exceeds the deadline days,
+            // set order_priority to the number of days past the deadline.
+            if ($diffInDays > $deadlineDays) {
+                $this->order_priority = $diffInDays - $deadlineDays;
+            }
+        }
+
+        // Save the model silently without updating timestamps.
+        $this->timestamps = false;
+        $this->saveQuietly();
+    }
+
+    /**
+     * Get the latest activity date between the last status update and the last comment creation.
+     *
+     * This function compares two dates:
+     * 1. The start_date from the associated activeStatusHistory (which is always expected to exist).
+     * 2. The created_at date from the last associated comment (which may or may not exist).
+     *
+     * @return Carbon|null The latest Carbon date, or null if neither date is available (though activeStatusHistory should always provide one).
+     */
+    public function getLastActivityDateByStatusUpdateOrCommentCreate(): ?Carbon
+    {
+        $lastStatusUpdateDate = $this->activeStatusHistory->start_date;
+        $lastCommentCreateDate = $this->lastComment?->created_at;
+
+        // Compare the two dates and return the latest one.
+        if ($lastCommentCreateDate && $lastStatusUpdateDate->lessThan($lastCommentCreateDate)) {
+            return $lastCommentCreateDate;
+        }
+
+        // If lastCommentCreateDate is null or older than lastStatusUpdateDate,
+        // or if only lastStatusUpdateDate exists, return lastStatusUpdateDate.
+        return $lastStatusUpdateDate;
+    }
+
+    public static function validateAllOrderPriorityAttributes()
+    {
+        self::with(['activeStatusHistory', 'lastComment'])->chunk(500, function ($records) {
+            foreach ($records as $record) {
+                $record->validateOrderPriorityAttribute();
+            }
+        });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Misc
     |--------------------------------------------------------------------------
     */
@@ -1420,6 +1571,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Status date', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Deadline', 'order' => $order++, 'width' => 118, 'visible' => 1],
         );
 
         if (Gate::forUser($user)->allows('control-MAD-ASP-processes')) {

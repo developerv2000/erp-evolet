@@ -41,6 +41,10 @@ return new class extends Migration
                 ->references('id')
                 ->on('process_responsible_people');
 
+            // auto
+            $table->smallInteger('order_priority')
+                ->default(0);
+
             // Stage 1 (ВП)
             // required and immutable after stage 1
             $table->unsignedSmallInteger('country_id')

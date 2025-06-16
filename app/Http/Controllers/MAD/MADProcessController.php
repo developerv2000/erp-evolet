@@ -28,13 +28,14 @@ class MADProcessController extends Controller
     {
         // Preapare request for valid model querying
         Process::addDefaultQueryParamsToRequest($request);
+        Process::addOrderByPriorityQueryParamToRequest($request);
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
         $query = Process::withBasicRelations()->withBasicRelationCounts();
         $filteredQuery = Process::filterQueryForRequest($query, $request);
         $joinedQuery = Process::addJoinsForOrdering($filteredQuery, $request); // add joins if joined ordering requested
-        $records = Process::finalizeQueryForRequest($joinedQuery, $request, 'paginate');
+        $records = Process::finalizeQueryOrderedByPriorityForRequest($joinedQuery, $request, 'paginate'); // order by priority
 
         // Add 'general_status_periods' for records
         Process::addGeneralStatusPeriodsForRecords($records);

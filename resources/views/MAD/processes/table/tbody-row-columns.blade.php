@@ -16,6 +16,21 @@
         {{ $record->statusHistory->last()->start_date->isoformat('DD MMM Y') }}
     @break
 
+    @case('Deadline')
+        <span @class([
+            'badge',
+            'badge--grey' => $record->deadline_status == App\Models\Process::DEADLINE_STOPED_STATUS_NAME,
+            'badge--green' => $record->deadline_status == App\Models\Process::DEADLINE_NOT_EXPIRED_STATUS_NAME,
+            'badge--pink' => $record->deadline_status == App\Models\Process::DEADLINE_EXPIRED_STATUS_NAME,
+        ])>
+            {{ __($record->deadline_status) }}
+        </span>
+
+        @if ($record->deadline_status == App\Models\Process::DEADLINE_EXPIRED_STATUS_NAME)
+            <br> {{ __($record->order_priority) }} {{ __('days') }}
+        @endif
+    @break
+
     @case('5Кк')
         @if ($record->isReadyForASPContract() || $record->contracted_in_asp)
             <input class="checkbox td__checkbox" type="checkbox" data-on-toggle="toggle-mad-process-contracted-in-asp-boolean" data-process-id={{ $record->id }} @checked($record->contracted_in_asp)>

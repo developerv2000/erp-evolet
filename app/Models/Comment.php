@@ -63,6 +63,11 @@ class Comment extends Model
             if ($record->commentable_type == Manufacturer::class) {
                 $record->commentable->updateSelfOnCommentCreate();
             }
+
+            if ($record->commentable_type == Process::class) {
+                // Validate processes 'order_priority' after creating comment.
+                $record->commentable->validateOrderPriorityAttribute();
+            }
         });
     }
 

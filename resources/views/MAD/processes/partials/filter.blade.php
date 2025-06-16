@@ -49,6 +49,28 @@
             readonly />
     @endif
 
+    {{-- Order by deadline. Component is not used, because of built-in highlight --}}
+    <x-form.groups.wrapped-label-group
+        labelText="Order by deadline"
+        errorFieldName="order_by_priority"
+        :validation-error-key="null"
+        :is-required="false">
+
+        <select
+            @class([
+                'single-selectize',
+                'single-selectize--highlight' =>
+                    request()->has('order_by_priority') &&
+                    !request()->input('order_by_priority'),
+            ])
+            name="order_by_priority">
+
+            <option></option>
+            <option value="1" @selected(request()->has('order_by_priority') && request()->input('order_by_priority'))>{{ __('Yes') }}</option>
+            <option value="0" @selected(request()->has('order_by_priority') && !request()->input('order_by_priority'))>{{ __('No') }}</option>
+        </select>
+    </x-form.groups.wrapped-label-group>
+
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         class="smart-filter-select"
         labelText="{{ '* ' . __('Generic') }}"

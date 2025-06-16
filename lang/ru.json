@@ -230,6 +230,11 @@
     "About product": "О продукте",
     "Historical date": "Историческая дата",
     "Reason for stop": "Причина стопа",
+    "Deadline": "Дедлайн",
+    "Expired": "Просрочен",
+    "Not expired": "Не просрочен",
+    "Stoped": "Стоп",
+    "Order by deadline": "Сортировать по дедлайну",
 
     "Priority": "Приоритет",
     "Matched VPS": "Совпадение с ВПЦ",

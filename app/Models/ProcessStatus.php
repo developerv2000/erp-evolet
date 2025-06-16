@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class ProcessStatus extends Model
@@ -18,15 +17,23 @@ class ProcessStatus extends Model
     const REGISTERED_RECORD_ID = 16;
 
     const STOPED_IDS = [
-        2,
-        4,
-        6,
-        8,
-        10,
-        12,
-        13,
-        15,
-        17,
+        2, // SВб
+        4, // SПО
+        6, // SАЦ
+        8, // SСЦ
+        10, // SПцКк
+        12, // SКк
+        13, // NKk
+        15, // SКД
+        17, // SПцР
+    ];
+
+    const IDS_WITH_DEADLINE = [
+        1, // Вб
+        3, // ПО
+        5, // АЦ
+        7, // СЦ
+        9, // ПцКк
     ];
 
     /*
@@ -51,6 +58,35 @@ class ProcessStatus extends Model
     public function processes()
     {
         return $this->hasMany(Process::class, 'status_id');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Additional attributes
+    |--------------------------------------------------------------------------
+    */
+
+    public function getDeadlineDaysAttribute()
+    {
+        if (!$this->hasDeadline()) {
+            return null;
+        }
+
+        switch ($this->id) {
+            case 1: // Вб
+            case 3: // ПО
+                return 2;
+                break;
+            case 5: // АЦ
+                return 5;
+                break;
+            case 7: // СЦ
+                return 3;
+                break;
+            case 9: // ПцКк
+                return 15;
+                break;
+        }
     }
 
     /*
@@ -88,10 +124,20 @@ class ProcessStatus extends Model
     /**
      * Check if status is stoped.
      *
-     * Used in processes.edit page.
+     * Used in processes.edit & handling processes 'order_priority' attribute.
      */
     public function isStopedStatus()
     {
         return in_array($this->id, self::STOPED_IDS);
+    }
+
+    /**
+     * Check if status has deadline.
+     *
+     * Used in handling processes 'order_priority' attribute.
+     */
+    public function hasDeadline()
+    {
+        return in_array($this->id, self::IDS_WITH_DEADLINE);
     }
 }

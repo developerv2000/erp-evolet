@@ -56,6 +56,11 @@ class ProcessStatusHistory extends Model
 
     protected static function booted(): void
     {
+        static::updated(function ($record) {
+            // Validate processes 'order_priority' after updating status history.
+            $record->process->validateOrderPriorityAttribute();
+        });
+
         static::deleting(function ($record) {
             // Escape errors on processes.destroy route
             $currentRouteName = request()->route()->getName();
