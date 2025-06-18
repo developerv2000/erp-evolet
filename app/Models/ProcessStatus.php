@@ -72,21 +72,7 @@ class ProcessStatus extends Model
             return null;
         }
 
-        switch ($this->id) {
-            case 1: // Вб
-            case 3: // ПО
-                return 2;
-                break;
-            case 5: // АЦ
-                return 5;
-                break;
-            case 7: // СЦ
-                return 3;
-                break;
-            case 9: // ПцКк
-                return 15;
-                break;
-        }
+        return 15;
     }
 
     /*
