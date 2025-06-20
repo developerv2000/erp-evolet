@@ -50,7 +50,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
     const DEADLINE_EXPIRED_STATUS_NAME = 'Expired';
     const DEADLINE_NOT_EXPIRED_STATUS_NAME = 'Not expired';
-    const DEADLINE_STOPED_STATUS_NAME = 'Stoped';
+    const DEADLINE_STOPPED_STATUS_NAME = 'Stopped';
 
     /*
     |--------------------------------------------------------------------------
@@ -153,7 +153,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     public function getDeadlineStatusAttribute()
     {
         if ($this->order_priority == -1) {
-            return self::DEADLINE_STOPED_STATUS_NAME;
+            return self::DEADLINE_STOPPED_STATUS_NAME;
         } else if ($this->order_priority == 0) {
             return self::DEADLINE_NOT_EXPIRED_STATUS_NAME;
         } else {
@@ -620,6 +620,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         return [
             $this->id,
             $this->statusHistory->last()->start_date,
+            trans($this->deadline_status ) . ($this->order_priority > 0 ? (' ' . $this->order_priority . ' ' . trans('days')) : ''),
             $this->searchCountry->code,
             $this->status->name,
             $this->status->generalStatus->name_for_analysts,
@@ -701,6 +702,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
         self::applyManufacturerRegionFilter($query, $request);
         self::applyActiveStatusStartDateRangeFilter($query, $request);
+        self::applyDeadlineStatusFilter($query, $request);
         self::applyContractedOnSpecificMonthFilter($query, $request); // if redirected from KPI/ASP pages
         self::applyRegisteredOnSpecificMonthFilter($query, $request); // if redirected from KPI/ASP pages
         self::applyGeneralStatusHistoryFilter($query, $request); // if redirected from KPI page
@@ -845,6 +847,28 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                         $statusQuery->where('id', $request->input('has_general_status_id'));
                     });
             });
+        }
+    }
+
+    /**
+     * Filter only processes which have specific deadline status
+     */
+    public static function applyDeadlineStatusFilter($query, $request)
+    {
+        if (!$request->filled('deadline_status')) return;
+
+        switch ($request->input('deadline_status')) {
+            case trans(self::DEADLINE_STOPPED_STATUS_NAME):
+                return $query->where('order_priority', -1);
+                break;
+
+            case trans(self::DEADLINE_NOT_EXPIRED_STATUS_NAME):
+                return $query->where('order_priority', 0);
+                break;
+
+            case trans(self::DEADLINE_EXPIRED_STATUS_NAME):
+                return $query->where('order_priority', '>', 1);
+                break;
         }
     }
 
@@ -1488,6 +1512,18 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             ->distinct()
             ->orderBy('trademark_ru', 'asc')
             ->pluck('trademark_ru');
+    }
+
+    /**
+     * Used in filtering dropdown for deadline status.
+     */
+    public static function getDeadlineStatusOptions()
+    {
+        return [
+            trans(self::DEADLINE_STOPPED_STATUS_NAME),
+            trans(self::DEADLINE_NOT_EXPIRED_STATUS_NAME),
+            trans(self::DEADLINE_EXPIRED_STATUS_NAME)
+        ];
     }
 
     /**

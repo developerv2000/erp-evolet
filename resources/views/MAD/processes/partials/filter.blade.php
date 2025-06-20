@@ -71,6 +71,11 @@
         </select>
     </x-form.groups.wrapped-label-group>
 
+    <x-form.selects.selectize.single-select.request-based-select
+        labelText="Deadline"
+        inputName="deadline_status"
+        :options="$deadlineStatusOptions" />
+
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         class="smart-filter-select"
         labelText="{{ '* ' . __('Generic') }}"

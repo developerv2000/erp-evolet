@@ -11,6 +11,7 @@ use App\Models\ManufacturerBlacklist;
 use App\Models\ManufacturerCategory;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\PortfolioManager;
+use App\Models\Process;
 use App\Models\ProcessGeneralStatus;
 use App\Models\ProcessResponsiblePerson;
 use App\Models\ProcessStatus;
@@ -144,6 +145,7 @@ class MADViewComposersDefiner
 
         View::composer('MAD.processes.partials.filter', function ($view) {
             $view->with([
+                'deadlineStatusOptions' => Process::getDeadlineStatusOptions(),
                 'countriesOrderedByName' => Country::orderByName()->get(),
                 'analystUsers' => User::getMADAnalystsMinified(),
                 'bdmUsers' => User::getCMDBDMsMinifed(),

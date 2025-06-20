@@ -42,7 +42,7 @@ return new class extends Migration
                 ->on('process_responsible_people');
 
             // auto
-            $table->smallInteger('order_priority')
+            $table->smallInteger('order_priority') // used in deadline status
                 ->default(0);
 
             // Stage 1 (ВП)

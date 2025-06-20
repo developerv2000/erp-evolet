@@ -19,7 +19,7 @@
     @case('Deadline')
         <span @class([
             'badge',
-            'badge--grey' => $record->deadline_status == App\Models\Process::DEADLINE_STOPED_STATUS_NAME,
+            'badge--grey' => $record->deadline_status == App\Models\Process::DEADLINE_STOPPED_STATUS_NAME,
             'badge--green' => $record->deadline_status == App\Models\Process::DEADLINE_NOT_EXPIRED_STATUS_NAME,
             'badge--pink' => $record->deadline_status == App\Models\Process::DEADLINE_EXPIRED_STATUS_NAME,
         ])>
