@@ -41,6 +41,7 @@ return new class extends Migration
             $table->date('layout_approved_date')->nullable(); // manually filled (similar to action)
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

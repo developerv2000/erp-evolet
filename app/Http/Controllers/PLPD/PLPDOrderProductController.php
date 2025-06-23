@@ -5,7 +5,7 @@ namespace App\Http\Controllers\PLPD;
 use App\Models\OrderProduct;
 use App\Http\Controllers\Controller;
 
-class OrderProductController extends Controller
+class PLPDOrderProductController extends Controller
 {
     use DestroysModelRecords;
     use RestoresModelRecords;

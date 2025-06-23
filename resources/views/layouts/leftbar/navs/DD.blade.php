@@ -1,4 +1,4 @@
-@canany(['view-DD-orders'])
+@canany(['view-DD-order-products'])
     <div class="leftbar__section leftbar__section--DD">
         <p class="leftbar__section-title">{{ __('DD') }}</p>
 
@@ -9,12 +9,12 @@
                     @class([
                         'leftbar__nav-link',
                         'leftbar__nav-link--active' => request()->routeIs(
-                            'dd.orders.*'),
+                            'dd.order-products.*'),
                     ])
-                    href="{{ route('dd.orders.index') }}">
+                    href="{{ route('dd.order-products.index') }}">
 
-                    <x-misc.material-symbol class="leftbar__nav-link-icon" icon="package_2" />
-                    <span class="leftbar__nav-link-text">{{ __('Orders') }}</span>
+                    <x-misc.material-symbol class="leftbar__nav-link-icon" icon="medication" />
+                    <span class="leftbar__nav-link-text">{{ __('Products') }}</span>
                 </a>
             @endcan
         </nav>

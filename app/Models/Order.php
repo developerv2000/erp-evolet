@@ -178,8 +178,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             'lastComment',
 
             'manufacturer' => function ($manufacturersQuery) {
-                $manufacturersQuery->select('manufacturers.id', 'manufacturers.name')
-                    ->with('name');
+                $manufacturersQuery->select('manufacturers.id', 'manufacturers.name');
             },
         ]);
     }

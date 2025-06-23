@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PLPD\PLPDOrderController;
+use App\Http\Controllers\PLPD\PLPDOrderProductController;
 use App\Http\Controllers\PLPD\PLPDReadyForOrderProcessController;
 use App\Support\Generators\CRUDRouteGenerator;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,13 @@ Route::middleware('auth', 'auth.session')->prefix('plpd')->name('plpd.')->group(
 
         Route::post('/get-ready-for-order-processes-of-manufacturer', 'getReadyForOrderProcessesOfManufacturer');  // AJAX request on create/edit
         Route::post('/get-process-with-it-similar-records-for-order', 'getProcessWithItSimilarRecordsForOrder');  // AJAX request on create/edit
+
+        Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
+    });
+
+    // Order products
+    Route::prefix('/order-products')->controller(PLPDOrderProductController::class)->name('order-products.')->group(function () {
+        CRUDRouteGenerator::defineDefaultRoutesExcept(['show', 'trash', 'restore'], 'id', 'can:view-PLPD-order-products', 'can:edit-PLPD-order-products');
 
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });

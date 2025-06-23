@@ -394,6 +394,7 @@ class User extends Authenticatable
         $this->refresh();
         $settings = $this->settings;
         $settings[Order::SETTINGS_PLPD_TABLE_COLUMNS_KEY] = Order::getDefaultPLPDTableColumnsForUser($this);
+        $settings[OrderProduct::SETTINGS_PLPD_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultPLPDTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -407,6 +408,7 @@ class User extends Authenticatable
         $this->refresh();
         $settings = $this->settings;
         $settings[Order::SETTINGS_CMD_TABLE_COLUMNS_KEY] = Order::getDefaultCMDTableColumnsForUser($this);
+        $settings[OrderProduct::SETTINGS_CMD_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultCMDTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -419,7 +421,7 @@ class User extends Authenticatable
     {
         $this->refresh();
         $settings = $this->settings;
-        $settings[Order::SETTINGS_DD_TABLE_COLUMNS_KEY] = Order::getDefaultDDTableColumnsForUser($this);
+        $settings[OrderProduct::SETTINGS_DD_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultDDTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
