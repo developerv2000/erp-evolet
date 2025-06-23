@@ -117,8 +117,10 @@ class PermissionSeeder extends Seeder
         $PLPDs = [
             Permission::CAN_VIEW_PLPD_READY_FOR_ORDER_PROCESSES_NAME,
             Permission::CAN_VIEW_PLPD_ORDERS_NAME,
+            Permission::CAN_VIEW_PLPD_ORDER_PRODUCTS_NAME,
 
             Permission::CAN_EDIT_PLPD_ORDERS_NAME,
+            Permission::CAN_EDIT_PLPD_ORDER_PRODUCTS_NAME,
 
             Permission::CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER,
             Permission::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_FOR_CONFIRMATION,
@@ -141,8 +143,9 @@ class PermissionSeeder extends Seeder
 
         $CMDs = [
             Permission::CAN_VIEW_CMD_ORDERS_NAME,
+            Permission::CAN_VIEW_CMD_ORDER_PRODUCTS_NAME,
 
-            Permission::CAN_EDIT_CMD_ORDERS_NAME,
+            Permission::CAN_EDIT_CMD_ORDER_PRODUCTS_NAME,
 
             Permission::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_SENT_TO_CMD_BDM,
             Permission::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_CONFIRMED,
@@ -177,8 +180,8 @@ class PermissionSeeder extends Seeder
 
         // Non global permissions
         $dds = [
-            Permission::CAN_VIEW_DD_ORDERS_NAME,
-            Permission::CAN_EDIT_DD_ORDERS_NAME,
+            Permission::CAN_VIEW_DD_ORDER_PRODUCTS_NAME,
+            Permission::CAN_EDIT_DD_ORDER_PRODUCTS_NAME,
         ];
 
         foreach ($dds as $dd) {

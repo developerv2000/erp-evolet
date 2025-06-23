@@ -98,9 +98,9 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         )->withTrashedParents()->withTrashed();
     }
 
-    public function orders()
+    public function orderProducts()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(OrderProduct::class);
     }
 
     public function status()
@@ -318,8 +318,8 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                 $history->delete();
             }
 
-            foreach ($record->orders as $order) {
-                $order->delete();
+            foreach ($record->orderProducts as $orderProduct) {
+                $orderProduct->delete();
             }
         });
     }
@@ -507,8 +507,8 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
             'product' => function ($productQuery) {
                 $productQuery->select(
-                    'id',
-                    'manufacturer_id',
+                    'products.id',
+                    'products.manufacturer_id',
                     'inn_id',
                     'form_id',
                     'dosage',
@@ -520,8 +520,8 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
                         'manufacturer' => function ($manufQuery) {
                             $manufQuery->select(
-                                'id',
-                                'name',
+                                'manufacturers.id',
+                                'manufacturers.name',
                                 'bdm_user_id',
                             )
                                 ->with([
@@ -536,20 +536,20 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     public function scopeWithRelationCountsForOrder($query)
     {
         return $query->withCount([
-            'orders',
+            'orderProducts',
         ]);
     }
 
     public function scopeWithOnlyRequiredSelectsForOrder($query)
     {
         return $query->select(
-            'id',
+            'processes.id',
             'readiness_for_order_date',
             'trademark_en',
             'trademark_ru',
-            'product_id',
-            'country_id',
-            'marketing_authorization_holder_id',
+            'processes.product_id',
+            'processes.country_id',
+            'processes.marketing_authorization_holder_id',
         );
     }
 
@@ -620,7 +620,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         return [
             $this->id,
             $this->statusHistory->last()->start_date,
-            trans($this->deadline_status ) . ($this->order_priority > 0 ? (' ' . $this->order_priority . ' ' . trans('days')) : ''),
+            trans($this->deadline_status) . ($this->order_priority > 0 ? (' ' . $this->order_priority . ' ' . trans('days')) : ''),
             $this->searchCountry->code,
             $this->status->name,
             $this->status->generalStatus->name_for_analysts,
@@ -1374,7 +1374,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
     public static function validateAllOrderPriorityAttributes()
     {
-        self::with(['activeStatusHistory', 'lastComment'])->chunk(500, function ($records) {
+        self::withTrashed()->with(['activeStatusHistory', 'lastComment'])->chunk(500, function ($records) {
             foreach ($records as $record) {
                 $record->validateOrderPriorityAttribute();
             }

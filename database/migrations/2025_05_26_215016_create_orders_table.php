@@ -15,13 +15,17 @@ return new class extends Migration
             $table->unsignedMediumInteger('id')->autoIncrement();
 
             // Step 1:
-            $table->unsignedMediumInteger('quantity');
-
-            $table->unsignedInteger('process_id')
+            $table->unsignedInteger('manufacturer_id')
                 ->index()
                 ->foreign()
                 ->references('id')
-                ->on('processes');
+                ->on('manufacturers');
+
+            $table->unsignedSmallInteger('country_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('countries');
 
             $table->date('receive_date');
             $table->timestamp('sent_to_bdm_date')->nullable(); // action
@@ -29,7 +33,6 @@ return new class extends Migration
             // Step 2:
             $table->string('name')->nullable();
             $table->date('purchase_date')->nullable(); // auto filled when field 'name' filled
-            $table->decimal('price', 8, 2)->nullable();
 
             $table->unsignedSmallInteger('currency_id')
                 ->index()
@@ -51,13 +54,6 @@ return new class extends Migration
             // $table->string('expected_dispatch_date')->nullable();
             // $table->date('receiving_prepayment_invoice_date')->nullable();
             // $table->timestamp('prepayment_requested_date')->nullable(); // action
-
-            // DD Designer part
-            $table->boolean('new_layout')->default(false);
-            $table->date('date_of_sending_new_layout_to_manufacturer')->nullable();
-            $table->date('date_of_receiving_print_proof_from_manufacturer')->nullable(); // required only when 'new_layout' is true
-            $table->string('box_article')->nullable();
-            $table->date('layout_approved_date')->nullable(); // manually filled (similar to action)
 
             $table->timestamps();
             $table->softDeletes();

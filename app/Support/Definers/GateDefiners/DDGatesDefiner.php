@@ -11,16 +11,16 @@ class DDGatesDefiner
     {
         // View
         Gate::define(
-            'view-DD-orders',
+            'view-DD-order-products',
             fn($user) =>
-            $user->hasPermission(Permission::CAN_VIEW_DD_ORDERS_NAME)
+            $user->hasPermission(Permission::CAN_VIEW_DD_ORDER_PRODUCTS_NAME)
         );
 
         // Edit
         Gate::define(
-            'edit-DD-orders',
+            'edit-DD-order-products',
             fn($user) =>
-            $user->hasPermission(Permission::CAN_EDIT_DD_ORDERS_NAME)
+            $user->hasPermission(Permission::CAN_EDIT_DD_ORDER_PRODUCTS_NAME)
         );
 
         // Other gates

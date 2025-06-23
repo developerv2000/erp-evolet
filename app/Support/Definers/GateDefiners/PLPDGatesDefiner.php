@@ -22,11 +22,24 @@ class PLPDGatesDefiner
             $user->hasPermission(Permission::CAN_VIEW_PLPD_ORDERS_NAME)
         );
 
+        Gate::define(
+            'view-PLPD-order-products',
+            fn($user) =>
+            $user->hasPermission(Permission::CAN_VIEW_PLPD_ORDER_PRODUCTS_NAME)
+        );
+
         // Edit
         Gate::define(
             'edit-PLPD-orders',
             fn($user) =>
             $user->hasPermission(Permission::CAN_EDIT_PLPD_ORDERS_NAME)
+        );
+
+        // Edit
+        Gate::define(
+            'edit-PLPD-order-products',
+            fn($user) =>
+            $user->hasPermission(Permission::CAN_EDIT_PLPD_ORDER_PRODUCTS_NAME)
         );
 
         // Other gates

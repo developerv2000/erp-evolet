@@ -55,8 +55,8 @@
                 <td>{{ $record->product->pack }}</td>
 
                 <td>
-                    <a class="main-link text-lowercase" href="{{ route('plpd.orders.index', ['process_id' => $record->id]) }}">
-                        {{ $record->orders_count }} {{ __('Orders') }}
+                    <a class="main-link text-lowercase" href="{{ route('plpd.order-products.index', ['process_id' => $record->id]) }}">
+                        {{ $record->order_products_count }} {{ __('Orders') }}
                     </a>
                 </td>
             </tr>

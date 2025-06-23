@@ -16,11 +16,23 @@ class CMDGatesDefiner
             $user->hasPermission(Permission::CAN_VIEW_CMD_ORDERS_NAME)
         );
 
+        Gate::define(
+            'view-CMD-order-products',
+            fn($user) =>
+            $user->hasPermission(Permission::CAN_VIEW_CMD_ORDER_PRODUCTS_NAME)
+        );
+
         // Edit
         Gate::define(
             'edit-CMD-orders',
             fn($user) =>
             $user->hasPermission(Permission::CAN_EDIT_CMD_ORDERS_NAME)
+        );
+
+        Gate::define(
+            'edit-CMD-order-products',
+            fn($user) =>
+            $user->hasPermission(Permission::CAN_EDIT_CMD_ORDER_PRODUCTS_NAME)
         );
 
         // Other gates

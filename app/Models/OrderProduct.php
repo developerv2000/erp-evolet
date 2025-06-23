@@ -2,28 +2,21 @@
 
 namespace App\Models;
 
-use App\Notifications\OrderIsConfirmed;
-use App\Notifications\OrderIsSentToBDM;
-use App\Notifications\OrderIsSentToConfirmation;
-use App\Notifications\OrderIsSentToManufacturer;
 use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\CanExportRecordsAsExcel;
 use App\Support\Contracts\Model\HasTitle;
-use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\Commentable;
-use App\Support\Traits\Model\ScopesOrderingByName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
+class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 {
-    /** @use HasFactory<\Database\Factories\ManufacturerFactory> */
+    /** @use HasFactory<\Database\Factories\OrderProductFactory> */
     use HasFactory;
-    use SoftDeletes;
+    use SoftDeletes; // Trashed when order parent is trashed
     use Commentable;
-    use ScopesOrderingByName;
 
     /*
     |--------------------------------------------------------------------------
@@ -32,23 +25,22 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     */
 
     // PLPD
-    const SETTINGS_PLPD_TABLE_COLUMNS_KEY = 'PLPD_orders_table_columns';
-    const DEFAULT_PLPD_ORDER_BY = 'id';
+    const SETTINGS_PLPD_TABLE_COLUMNS_KEY = 'PLPD_order_products_table_columns';
+    const DEFAULT_PLPD_ORDER_BY = 'order_id';
     const DEFAULT_PLPD_ORDER_TYPE = 'asc';
     const DEFAULT_PLPD_PAGINATION_LIMIT = 50;
 
     // CMD
-    const SETTINGS_CMD_TABLE_COLUMNS_KEY = 'CMD_orders_table_columns';
-    const DEFAULT_CMD_ORDER_BY = 'sent_to_bdm_date';
+    const SETTINGS_CMD_TABLE_COLUMNS_KEY = 'CMD_order_products_table_columns';
+    const DEFAULT_CMD_ORDER_BY = 'order_sent_to_bdm_date';
     const DEFAULT_CMD_ORDER_TYPE = 'desc';
     const DEFAULT_CMD_PAGINATION_LIMIT = 50;
 
-    // Statuses
-    const STATUS_CREATED_NAME = 'Created';
-    const STATUS_IS_SENT_TO_BDM_NAME = 'Sent to BDM';
-    const STATUS_IS_SENT_TO_CONFIRMATION_NAME = 'Sent to confirmation';
-    const STATUS_IS_CONFIRMED_NAME = 'Confirmed';
-    const STATUS_IS_SENT_TO_MANUFACTURER_NAME = 'Sent to manufacturer';
+    // DD
+    const SETTINGS_DD_TABLE_COLUMNS_KEY = 'DD_order_products_table_columns';
+    const DEFAULT_DD_ORDER_BY = 'order_sent_to_manufacturer_date';
+    const DEFAULT_DD_ORDER_TYPE = 'desc';
+    const DEFAULT_DD_PAGINATION_LIMIT = 50;
 
     /*
     |--------------------------------------------------------------------------
@@ -59,14 +51,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     protected $guarded = ['id'];
 
     protected $casts = [
-        'receive_date' => 'date',
-        'sent_to_bdm_date' => 'date',
-        'purchase_date' => 'date',
-        'sent_to_confirmation_date' => 'date',
-        'confirmation_date' => 'date',
-        'sent_to_manufacturer_date' => 'date',
-        'date_of_sending_new_layout_to_manufacturer' => 'date',
-        'date_of_receiving_print_proof_from_manufacturer' => 'date',
         'layout_approved_date' => 'date',
     ];
 
@@ -76,24 +60,26 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     |--------------------------------------------------------------------------
     */
 
-    public function manufacturer()
+    public function order()
     {
-        return $this->belongsTo(Manufacturer::class)->withTrashed();;
+        return $this->belongsTo(Order::class)->withTrashed();
     }
 
-    public function country()
+    public function process()
     {
-        return $this->belongsTo(Country::class);
+        return $this->belongsTo(Process::class)->withTrashed();
     }
 
-    public function currency()
+    public function product()
     {
-        return $this->belongsTo(Currency::class);
-    }
-
-    public function products()
-    {
-        return $this->hasMany(OrderProduct::class)->withTrashed();
+        return $this->hasOneThrough(
+            Product::class,
+            Process::class,
+            'id', // Foreign key on the Processes table
+            'id', // Foreign key on the Products table
+            'process_id', // Local key on the Orders table
+            'product_id' // Local key on the Processes table
+        )->withTrashedParents()->withTrashed();
     }
 
     /*
@@ -102,66 +88,16 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     |--------------------------------------------------------------------------
     */
 
-    public function getIsSentToBdmAttribute(): bool
+    public function getLayoutApprovedAttribute(): bool
     {
-        return !is_null($this->sent_to_bdm_date);
+        return !is_null($this->layout_approved_date);
     }
 
-    public function getIsSentToConfirmationAttribute(): bool
+    public function getTotalPriceAttribute()
     {
-        return !is_null($this->sent_to_confirmation_date);
-    }
+        $total = $this->quantity * $this->price;
 
-    public function getIsConfirmedAttribute(): bool
-    {
-        return !is_null($this->confirmation_date);
-    }
-
-    public function getIsSentToManufacturerAttribute(): bool
-    {
-        return !is_null($this->sent_to_manufacturer_date);
-    }
-
-    public function getStatusAttribute()
-    {
-        if ($this->is_sent_to_manufacturer) {
-            return self::STATUS_IS_SENT_TO_MANUFACTURER_NAME;
-        } elseif ($this->is_confirmed) {
-            return self::STATUS_IS_CONFIRMED_NAME;
-        } else if ($this->is_sent_to_confirmation) {
-            return self::STATUS_IS_SENT_TO_CONFIRMATION_NAME;
-        } else if ($this->is_sent_to_bdm) {
-            return self::STATUS_IS_SENT_TO_BDM_NAME;
-        }
-
-        return self::STATUS_CREATED_NAME;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Events
-    |--------------------------------------------------------------------------
-    */
-
-    protected static function booted(): void
-    {
-        static::deleting(function ($record) { // trashing
-            foreach ($record->products as $product) {
-                $product->delete();
-            }
-        });
-
-        static::restored(function ($record) {
-            foreach ($record->products as $product) {
-                $product->restore();
-            }
-        });
-
-        static::forceDeleting(function ($record) {
-            foreach ($record->products as $product) {
-                $product->forceDelete();
-            }
-        });
+        return floor($total * 100) / 100;
     }
 
     /*
@@ -173,13 +109,23 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     public function scopeWithBasicRelations($query)
     {
         return $query->with([
-            'country',
-            'currency',
             'lastComment',
 
-            'manufacturer' => function ($manufacturersQuery) {
-                $manufacturersQuery->select('manufacturers.id', 'manufacturers.name')
-                    ->with('name');
+            'order' => function ($orderQuery) {
+                $orderQuery->with([ // ->withBasicRelations not used because of redundant 'lastComment'
+                    'country',
+                    'currency',
+
+                    'manufacturer' => function ($manufacturersQuery) {
+                        $manufacturersQuery->select('manufacturers.id', 'manufacturers.name')
+                            ->with('name');
+                    },
+                ]);
+            },
+
+            'process' => function ($processQuery) {
+                $processQuery->withRelationsForOrder()
+                    ->withOnlyRequiredSelectsForOrder();
             },
         ]);
     }
@@ -188,23 +134,34 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     {
         return $query->withCount([
             'comments',
-            'products',
         ]);
     }
 
     public function scopeOnlySentToBdm($query)
     {
-        return $query->whereNotNull('sent_to_bdm_date');
+        return $query->whereHas([
+            'order' => function ($orderQuery) {
+                $orderQuery->onlySentToBdm();
+            }
+        ]);
     }
 
     public function scopeOnlySentToManufacturer($query)
     {
-        return $query->whereNotNull('sent_to_manufacturer_date');
+        return $query->whereHas([
+            'order' => function ($orderQuery) {
+                $orderQuery->onlySentToManufacturer();
+            }
+        ]);
     }
 
     public function scopeOnlyWithName($query)
     {
-        return $query->whereNotNull('name');
+        return $query->whereHas([
+            'order' => function ($orderQuery) {
+                $orderQuery->onlyWithName();
+            }
+        ]);
     }
 
     /*
@@ -216,32 +173,31 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     /**
      * Implement method defined in BaseModel abstract class.
      *
-     * Used by 'PLPD' and 'CDM' departments.
+     * Used by 'PLPD', 'CDM', 'DD' departments.
      *
-     * Trash page is available only for 'PLPD'.
+     * No orders page for 'DD'.
      */
     public function generateBreadcrumbs($department = null): array
     {
         // If department is declared
         if ($department) {
             $lowercasedDepartment = strtolower($department);
+            $breadcrumbs = [];
 
-            $breadcrumbs = [
-                ['link' => route($lowercasedDepartment . '.orders.index'), 'text' => __('Orders')],
-            ];
-
-            if ($this->trashed() && $department == 'PLPD') {
-                $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.trash'), 'text' => __('Trash')];
+            // If departments has 'orders' page
+            if ($department != 'DD') {
+                $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.order.index'), 'text' => __('Orders')];
             }
 
-            $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.edit', $this->id), 'text' => $this->title];
+            $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.order-products.index'), 'text' => __('Products')];
+            $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.order-products.edit', $this->id), 'text' => $this->title];
 
             return $breadcrumbs;
         }
 
         // If department is null
         return [
-            ['link' => null, 'text' => __('Orders')],
+            ['link' => null, 'text' => __('Products')],
             ['link' => null, 'text' => $this->title],
         ];
     }
@@ -249,7 +205,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     // Implement method declared in HasTitle Interface
     public function getTitleAttribute(): string
     {
-        return $this->name ?: ('#' . $this->id);
+        return '#' . $this->id;
     }
 
     // Implement method declared in CanExportRecordsAsExcel Interface
@@ -288,25 +244,49 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     private static function getFilterConfig(): array
     {
         return [
-            'whereEqual' => ['currency_id'],
-            'whereIn' => ['id', 'manufacturer_id', 'country_id', 'name'],
+            'whereEqual' => ['process_id', 'new_layout'],
+            'whereIn' => ['id', 'order_id'],
             'dateRange' => [
-                'receive_date',
-                'sent_to_bdm_date',
-                'sent_to_manufacturer_date',
+                'date_of_sending_new_layout_to_manufacturer',
+                'date_of_receiving_print_proof_from_manufacturer',
+                'layout_approved_date',
                 'created_at',
                 'updated_at'
             ],
-        ];
-    }
 
-    public static function getFilterStatusOptions()
-    {
-        return [
-            self::STATUS_CREATED_NAME,
-            self::STATUS_IS_SENT_TO_BDM_NAME,
-            self::STATUS_IS_SENT_TO_CONFIRMATION_NAME,
-            self::STATUS_IS_CONFIRMED_NAME,
+            'relationEqual' => [
+                [
+                    'name' => 'process.product.manufacturer',
+                    'attribute' => 'bdm_user_id',
+                ],
+            ],
+
+            'relationIn' => [
+                [
+                    'name' => 'process.product',
+                    'attribute' => 'manufacturer_id',
+                ],
+
+                [
+                    'name' => 'process',
+                    'attribute' => 'country_id',
+                ],
+
+                [
+                    'name' => 'process',
+                    'attribute' => 'marketing_authorization_holder_id',
+                ],
+
+                [
+                    'name' => 'process',
+                    'attribute' => 'trademark_en',
+                ],
+
+                [
+                    'name' => 'process',
+                    'attribute' => 'trademark_ru',
+                ],
+            ],
         ];
     }
 
@@ -319,23 +299,9 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
      */
     public static function applyStatusFilter($query, Request $request): void
     {
-        $status = $request->input('status');
-
-        if (!$status) {
-            return;
-        }
-
-        $conditions = match ($status) {
-            self::STATUS_CREATED_NAME => fn($q) => $q->whereNull('sent_to_bdm_date'),
-            self::STATUS_IS_SENT_TO_BDM_NAME => fn($q) => $q->whereNotNull('sent_to_bdm_date')->whereNull('sent_to_confirmation_date'),
-            self::STATUS_IS_SENT_TO_CONFIRMATION_NAME => fn($q) => $q->whereNotNull('sent_to_confirmation_date')->whereNull('confirmation_date'),
-            self::STATUS_IS_CONFIRMED_NAME => fn($q) => $q->whereNotNull('confirmation_date'),
-            default => null,
-        };
-
-        if ($conditions) {
-            $conditions($query);
-        }
+        $query->whereHas('order', function ($orderQuery) use ($request) {
+            Order::applyStatusFilter($orderQuery, $request);
+        });
     }
 
     /*
@@ -364,6 +330,16 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         );
     }
 
+    public static function addDefaultDDQueryParamsToRequest(Request $request)
+    {
+        self::addDefaultQueryParamsToRequest(
+            $request,
+            'DEFAULT_DD_ORDER_BY',
+            'DEFAULT_DD_ORDER_TYPE',
+            'DEFAULT_DD_PAGINATION_LIMIT',
+        );
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Create & Update
@@ -374,6 +350,10 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     public static function createFromRequest($request)
     {
+        $request->merge([
+            'process_id' => $request->input('final_process_id'),
+        ]);
+
         $record = self::create($request->all());
 
         // HasMany relations
@@ -382,24 +362,48 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     public function updateByPLPDFromRequest($request)
     {
+        $request->merge([
+            'process_id' => $request->input('final_process_id'),
+        ]);
+
         $this->update($request->all());
 
         // HasMany relations
         $this->storeCommentFromRequest($request);
+
+        // Validate related processes 'increased_price'
+        $this->syncPriceWithRelatedProcess();
     }
 
     // CMD part
 
     public function updateByCMDFromRequest($request)
     {
+        $request->merge([
+            'process_id' => $request->input('final_process_id'),
+        ]);
+
         $this->update($request->all());
 
-        // Update 'purchase_date'
-        if (is_null($this->purchase_date) && !is_null($this->name)) {
-            $this->update([
-                'purchase_date' => now(),
-            ]);
+        // HasMany relations
+        $this->storeCommentFromRequest($request);
+
+        // Validate related processes 'increased_price'
+        $this->syncPriceWithRelatedProcess();
+    }
+
+    // DD part
+
+    function updateByDDFromRequest(Request $request)
+    {
+        $this->fill($request->safe()->all());
+
+        // Validate 'date_of_receiving_print_proof_from_manufacturer' attribute
+        if (!$this->new_layout) {
+            $this->date_of_receiving_print_proof_from_manufacturer = null;
         }
+
+        $this->save();
 
         // HasMany relations
         $this->storeCommentFromRequest($request);
@@ -412,73 +416,30 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     */
 
     /**
-     * PLPD logistician sends order to CMD BDM
-     */
-    public function toggleIsSentToBDMAttribute(Request $request)
-    {
-        $action = $request->input('action');
-
-        if ($action == 'send' && !$this->is_sent_to_bdm) {
-            $this->sent_to_bdm_date = now();
-            $this->save();
-
-            // Notify specific users
-            $notification = new OrderIsSentToBDM($this);
-            User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-PLPD-order-is-sent-to-CMD-BDM');
-        }
-    }
-
-    /**
-     * CMD BDM sends order to PLPD Logistician for confirmation
-     */
-    public function toggleIsSentToConfirmationAttribute(Request $request)
-    {
-        $action = $request->input('action');
-
-        if ($action == 'send' && !$this->is_sent_to_confirmation) {
-            $this->sent_to_confirmation_date = now();
-            $this->save();
-
-            // Notify specific users
-            $notification = new OrderIsSentToConfirmation($this);
-            User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-CMD-order-is-sent-for-confirmation');
-        }
-    }
-
-    /**
-     * PLPD Logistician confirms order, CMD continues process
-     */
-    public function toggleIsConfirmedAttribute(Request $request)
-    {
-        $action = $request->input('action');
-
-        if ($action == 'confirm' && !$this->is_confirmed) {
-            $this->confirmation_date = now();
-            $this->save();
-
-            // Notify specific users
-            $notification = new OrderIsConfirmed($this);
-            User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-PLPD-order-is-confirmed');
-        }
-    }
-
-    /**
-     * CMD BDM sends order to manufacturer (not real erp process)
+     * Sync the price and currency of the related Process with this model.
      *
-     * Notification is send to both PLPD Logisticians and DD Designers
+     * If the price differs, it updates the 'increased_price' field.
+     * If the currency differs, it updates the 'currency_id'.
+     * Changes are saved only if any attributes are modified.
+     *
+     * @return void
      */
-    public function toggleIsSentToManufacturerAttribute(Request $request)
+    public function syncPriceWithRelatedProcess(): void
     {
-        $action = $request->input('action');
+        $process = Process::findOrFail($this->process_id);
 
-        if ($action == 'send' && !$this->is_sent_to_manufacturer) {
-            $this->sent_to_manufacturer_date = now();
-            $this->save();
-
-            // Notify specific users
-            $notification = new OrderIsSentToManufacturer($this);
-            User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-CMD-order-is-sent-to-manufacturer');
+        // Update price if changed
+        if ($process->agreed_price != $this->price) {
+            $process->increased_price = $this->price;
         }
+
+        // Update currency if changed
+        if ($process->currency_id != $this->currency_id) {
+            $process->currency_id = $this->currency_id;
+        }
+
+        // Persist only if there are changes
+        $process->isDirty() && $process->save();
     }
 
     public static function getDefaultPLPDTableColumnsForUser($user)
@@ -500,21 +461,39 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         array_push(
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
+            ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
 
             ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'TM Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'TM Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Form', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Pack', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Price', 'order' => $order++, 'width' => 70, 'visible' => 1],
+            ['name' => 'Total price', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
             ['name' => 'Sent to confirmation', 'order' => $order++, 'width' => 244, 'visible' => 1],
             ['name' => 'Confirmation date', 'order' => $order++, 'width' => 172, 'visible' => 1],
 
             ['name' => 'Sent to manufacturer', 'order' => $order++, 'width' => 164, 'visible' => 1],
+            ['name' => 'Layout status', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            ['name' => 'Layout sent date', 'order' => $order++, 'width' => 178, 'visible' => 1],
+            ['name' => 'Print proof receive date', 'order' => $order++, 'width' => 228, 'visible' => 1],
+            ['name' => 'Box article', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Layout approved date', 'order' => $order++, 'width' => 188, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
