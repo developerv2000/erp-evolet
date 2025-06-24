@@ -39,11 +39,9 @@ class OrderIsSentToBDM extends Notification
     {
         return [
             'order_id' => $this->order->id,
-            'full_trademark_en' => $this->order->process->full_trademark_en,
-            'manufacturer' => $this->order->process->manufacturer->name,
-            'country' => $this->order->process->searchCountry->code,
-            'marketing_authorization_holder' => $this->order->process->MAH?->name,
-            'quantity' => $this->order->quantity,
+            'products_count' => $this->order->products->count(),
+            'manufacturer' => $this->order->manufacturer->name,
+            'country' => $this->order->country->code,
         ];
     }
 }

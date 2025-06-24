@@ -27,6 +27,12 @@
         {{ $record->country->code }}
     @break
 
+    @case('Products')
+        <a href="{{ route('plpd.order-products.index', ['order_id[]' => $record->id]) }}" class="main-link text-lowercase">
+            {{ $record->products_count }} {{ __('Products') }}
+        </a>
+    @break
+
     @case('Comments')
         <x-tables.partials.td.model-comments-link :record="$record" />
     @break

@@ -126,13 +126,7 @@ class PLPDOrderController extends Controller
     {
         $record = Order::withTrashed()->findOrFail($record);
 
-        $manufacturerID = $record->process->product->manufacturer_id;
-        $countryID = $record->process->country_id;
-
-        $readyForOrderProcesses = Process::getReadyForOrderRecordsOfManufacturer($manufacturerID, $countryID);
-        $processWithItSimilarRecords = $record->process->getProcessWithItSimilarRecordsForOrder();
-
-        return view('PLPD.orders.edit', compact('record', 'readyForOrderProcesses', 'processWithItSimilarRecords'));
+        return view('PLPD.orders.edit', compact('record'));
     }
 
     /**

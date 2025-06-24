@@ -6,7 +6,6 @@
                 field="manufacturer_id"
                 :model="$record"
                 :options="$manufacturers"
-                :initial-value="$record->process->product->manufacturer_id"
                 :isRequired="true" />
 
             <x-form.selects.selectize.id-based-single-select.record-field-select
@@ -15,7 +14,6 @@
                 :model="$record"
                 :options="$countriesOrderedByProcessesCount"
                 optionCaptionField="code"
-                :initial-value="$record->process->country_id"
                 :isRequired="true" />
 
             <x-form.inputs.record-field-input
@@ -24,33 +22,6 @@
                 :model="$record"
                 type="date"
                 :initial-value="$record->receive_date->format('Y-m-d')"
-                :isRequired="true" />
-        </div>
-
-        <div class="form__row">
-            <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="TM Eng"
-                field="process_id"
-                :model="$record"
-                :options="$readyForOrderProcesses"
-                optionCaptionField="full_trademark_en_with_id"
-                :isRequired="true" />
-
-            <x-form.selects.selectize.id-based-single-select.record-field-select
-                labelText="MAH"
-                field="final_process_id"
-                :model="$record"
-                :options="$processWithItSimilarRecords"
-                optionCaptionField="mah_name_with_id"
-                :initial-value="$record->process->id"
-                :isRequired="true" />
-
-            <x-form.inputs.record-field-input
-                labelText="Quantity"
-                field="quantity"
-                :model="$record"
-                type="number"
-                min="0"
                 :isRequired="true" />
         </div>
     </div>
@@ -73,14 +44,7 @@
                     :initial-value="$record->currency_id ?: $defaultSelectedCurrencyID"
                     :isRequired="true" />
 
-                <x-form.inputs.record-field-input
-                    labelText="Price"
-                    field="price"
-                    :model="$record"
-                    type="number"
-                    step="0.01"
-                    min="0.00"
-                    :isRequired="true" />
+                <div class="form-group"></div>
             </div>
         </div>
     @endif
