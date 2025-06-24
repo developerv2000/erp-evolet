@@ -20,29 +20,11 @@
                 type="date"
                 :isRequired="true" />
         </div>
+    </div>
 
-        <div class="form__row">
-            <x-form.selects.selectize.id-based-single-select.default-select
-                labelText="TM Eng"
-                inputName="process_id"
-                :options="[]"
-                optionCaptionField="full_trademark_en_with_id"
-                :isRequired="true" />
-
-            <x-form.selects.selectize.id-based-single-select.default-select
-                labelText="MAH"
-                inputName="final_process_id"
-                :options="[]"
-                optionCaptionField="mah_name_with_id"
-                :isRequired="true" />
-
-            <x-form.inputs.default-input
-                labelText="Quantity"
-                inputName="quantity"
-                type="number"
-                min="0"
-                :isRequired="true" />
-        </div>
+    {{-- Multiple dynamic products holder --}}
+    <div class="form__block">
+        <x-form.misc.dynamic-rows title="{{ __('Products') }}" />
     </div>
 
     <div class="form__block">

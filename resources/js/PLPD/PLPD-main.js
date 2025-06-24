@@ -14,6 +14,7 @@ import { debounce } from '../utilities';
 */
 
 // Order forms
+const ordersCreateForm = document.querySelector('.plpd-orders-create-form');
 const orderCreateOrEditForm = document.querySelector('.plpd-orders-create-form, .plpd-orders-edit-form');
 
 // Orders table
@@ -43,26 +44,19 @@ ordersTable?.querySelectorAll('button[data-click-action="toggle-orders-is-confir
 |--------------------------------------------------------------------------
 */
 
-function initializeOrdersCreateOrEditForm() {
-    if (!orderCreateOrEditForm) {
+function initializeOrdersCreateForm() {
+    if (!ordersCreateForm) {
         return;
     }
 
-    // Attach change event listeners to Manufacturer and Country dropdowns
-    const selects = orderCreateOrEditForm.querySelectorAll('select[name="manufacturer_id"], select[name="country_id"]');
-
-    for (const select of selects) {
-        select.selectize.on('change', () => functions.updateProcessSelectOnOrderFormChange());
-    }
-
-    // Attach change event listener to Process dropdown
-    const processSelect = orderCreateOrEditForm.querySelector('select[name="process_id"]');
-    processSelect.selectize.on('change', () => functions.updateMAHSelectOnOrderFormChange());
+    // Attach click event listener to dynamic rows list add item button
+    const addRowButton = ordersCreateForm.querySelector('.form__dynamic-rows-list-add-item-button');
+    addRowButton.addEventListener('click', () => functions.addDynamicRowsListItemOnOrdersCreate());
 }
 
 function init() {
     // Orders
-    initializeOrdersCreateOrEditForm();
+    initializeOrdersCreateForm();
 }
 
 init();

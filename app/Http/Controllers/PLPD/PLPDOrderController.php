@@ -69,12 +69,30 @@ class PLPDOrderController extends Controller
     {
         $manufacturerID = $request->input('manufacturer_id');
         $countryID = $request->input('country_id');
+        $inputsIndex = $request->input('inputs_index');
+
+        // Check if manufacturer and country are selected
+        if (! $manufacturerID || ! $countryID) {
+            return response()->json([
+                'success' => false,
+                'errorMessage' => __('Please select manufacturer and country'),
+            ]);
+        }
 
         $readyForOrderProcesses = Process::getReadyForOrderRecordsOfManufacturer($manufacturerID, $countryID, true);
 
+        // Check if any records were found
+        if ($readyForOrderProcesses->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'errorMessage' => __('No products found for the given manufacturer and country'),
+            ]);
+        }
+
+        // Return row with ready for order processes
         return response()->json([
-            'readyForOrderProcesses' => $readyForOrderProcesses,
-            'notFoundmessage' => __('No products found for the given manufacturer and country') . '.',
+            'success' => true,
+            'row' => view('PLPD.orders.partials.create-form-dynamic-rows-list-item', compact('readyForOrderProcesses', 'inputsIndex'))->render(),
         ]);
     }
 
@@ -95,7 +113,7 @@ class PLPDOrderController extends Controller
 
     public function store(OrderStoreByPLPDRequest $request)
     {
-        Order::createFromRequest($request);
+        Order::createByPLPDFromRequest($request);
 
         return to_route('plpd.orders.index');
     }

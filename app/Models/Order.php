@@ -371,12 +371,26 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     // PLPD part
 
-    public static function createFromRequest($request)
+    public static function createByPLPDFromRequest($request)
     {
-        $record = self::create($request->all());
+        $record = self::create($request->only([
+            'manufacturer_id',
+            'country_id',
+            'receive_date',
+        ]));
 
         // HasMany relations
         $record->storeCommentFromRequest($request);
+
+        // Store products
+        $products = $request->input('products', []);
+
+        foreach($products as $product) {
+            $record->products()->create([
+                'process_id' => $product['process_id'],
+                'quantity' => $product['quantity'],
+            ]);
+        }
     }
 
     public function updateByPLPDFromRequest($request)

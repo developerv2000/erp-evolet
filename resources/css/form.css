@@ -372,6 +372,12 @@
     color: var(--theme-text-color);
 }
 
+/* Single/multiple disabled selectizes input */
+.selectize-control .selectize-input.disabled {
+    opacity: 1;
+    background-color: var(--theme-body-background-color);
+}
+
 /* Single selectize input on focus */
 .single-selectize.selectize-control .selectize-input.input-active {
     color: var(--form-input-text-color);

@@ -205,7 +205,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     // Implement method declared in HasTitle Interface
     public function getTitleAttribute(): string
     {
-        return '#' . $this->id;
+        return ($this->order->name ? $this->order->name . ' ' : '') . '#' . $this->id;
     }
 
     // Implement method declared in CanExportRecordsAsExcel Interface

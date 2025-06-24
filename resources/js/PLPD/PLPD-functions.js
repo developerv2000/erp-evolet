@@ -7,6 +7,8 @@
 import { hideSpinner, showSpinner } from "../../custom-components/script";
 import { refreshSelectizeOptions } from "../utilities";
 import { updateOrderStatus } from "../shared";
+import { createElementFromHTML } from "../utilities";
+import { initializeSelectizes } from "../plugins";
 
 /*
 |--------------------------------------------------------------------------
@@ -26,11 +28,15 @@ const TOGGLE_ORDERS_IS_CONFIRMED_ATTRIBUTE_POST_URL = '/plpd/orders/toggle-is-co
 |--------------------------------------------------------------------------
 */
 
+const formDynamicRowsList = document.querySelector('.form__dynamic-rows-list');
+
 /*
 |--------------------------------------------------------------------------
 | Variables
 |--------------------------------------------------------------------------
 */
+
+let formDynamicInputsArrayIndex = 1; // Incrementable array index
 
 /*
 |--------------------------------------------------------------------------
@@ -38,25 +44,18 @@ const TOGGLE_ORDERS_IS_CONFIRMED_ATTRIBUTE_POST_URL = '/plpd/orders/toggle-is-co
 |--------------------------------------------------------------------------
 */
 
-export function updateProcessSelectOnOrderFormChange() {
+export function addDynamicRowsListItemOnOrdersCreate() {
+    showSpinner();
+
     // Get manufacturer, and country ID values
     const manufacturerID = document.querySelector('select[name="manufacturer_id"]').value;
     const countryID = document.querySelector('select[name="country_id"]').value;
-
-    // Return if any required fields are empty
-    if (manufacturerID == '' || countryID == '') {
-        return;
-    }
-
-    // Get updatable select
-    const processSelect = document.querySelector('select[name="process_id"]').selectize;
-
-    showSpinner();
 
     // Send ajax request
     const data = {
         'manufacturer_id': manufacturerID,
         'country_id': countryID,
+        'inputs_index': formDynamicInputsArrayIndex,
     };
 
     axios.post(GET_READY_FOR_ORDER_PROCESSES_OF_MANUFACTURER_POST_URL, data, {
@@ -65,39 +64,44 @@ export function updateProcessSelectOnOrderFormChange() {
         }
     })
         .then(response => {
-            if (response.data.readyForOrderProcesses.length > 0) {
-                // Update processes select
-                const readyForOrderProcesses = response.data.readyForOrderProcesses;
-                refreshSelectizeOptions(processSelect, readyForOrderProcesses, updateMAHSelectOnOrderFormChange, 'full_trademark_en_with_id', 'id', false);
+            if (response.data.success) {
+                // Insert new row
+                const row = createElementFromHTML(response.data.row);
+                formDynamicRowsList.appendChild(row);
+
+                // Initialize new selectizes
+                initializeSelectizes();
+
+                // Attach event listener to new added Trademark selectize
+                const trademarkSelect =
+                    formDynamicRowsList.querySelector(`select[name='products[${formDynamicInputsArrayIndex}][temporary_process_id]']`);
+
+                const mahInputArrayIndex = formDynamicInputsArrayIndex;
+                trademarkSelect.selectize.on('change', (value) => updateMAHSelectOnOrderCreateFormChange(value, mahInputArrayIndex));
+
+                // Disable manufacturer and country selectizes
+                document.querySelector('select[name="manufacturer_id"]').selectize.disable();
+                document.querySelector('select[name="country_id"]').selectize.disable();
+                // Remove disabled attribute from selects so data will be sent to the server
+                document.querySelector('select[name="manufacturer_id"]').removeAttribute('disabled');
+                document.querySelector('select[name="country_id"]').removeAttribute('disabled');
+
+                // Increment array index
+                formDynamicInputsArrayIndex++;
             } else {
-                // Empty processes select and alert user
-                refreshSelectizeOptions(processSelect, [], updateMAHSelectOnOrderFormChange, 'full_trademark_en_with_id', 'id', false);
-                alert(response.data.notFoundmessage);
+                alert(response.data.errorMessage);
             }
         })
         .finally(function () {
-            // Update MAHs select
-            updateMAHSelectOnOrderFormChange();
             hideSpinner();
         });
 }
 
-export function updateMAHSelectOnOrderFormChange() {
-    const processSelect = document.querySelector('select[name="process_id"]');
-    const mahSelect = document.querySelector('select[name="final_process_id"]').selectize;
-
-    if (processSelect.value == '') {
-        // Empty MAHs select, because this function is also called by updateProcessSelectOnOrderFormChange(),
-        // while executing function, processesSelect value can be empty
-        refreshSelectizeOptions(mahSelect, [], null, 'mah_name_with_id', 'id', false);
-
-        return;
-    }
-
+export function updateMAHSelectOnOrderCreateFormChange(temporaryProcessID, mahInputArrayIndex) {
     showSpinner();
 
     const data = {
-        'process_id': processSelect.value,
+        'process_id': temporaryProcessID,
     };
 
     axios.post(GET_PROCESS_WITH_IT_SIMILAR_RECORDS_FOR_ORDER_POST_URL, data, {
@@ -106,8 +110,10 @@ export function updateMAHSelectOnOrderFormChange() {
         }
     })
         .then(response => {
+            // Update MAH selectize
+            const mahSelectize = document.querySelector(`select[name='products[${mahInputArrayIndex}][process_id]']`).selectize;
             const processWithItSimilarRecords = response.data.processWithItSimilarRecords;
-            refreshSelectizeOptions(mahSelect, processWithItSimilarRecords, null, 'mah_name_with_id', 'id', false);
+            refreshSelectizeOptions(mahSelectize, processWithItSimilarRecords, null, 'mah_name_with_id', 'id', false);
         })
         .finally(function () {
             hideSpinner();
