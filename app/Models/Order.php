@@ -178,7 +178,14 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             'lastComment',
 
             'manufacturer' => function ($manufacturersQuery) {
-                $manufacturersQuery->select('manufacturers.id', 'manufacturers.name');
+                $manufacturersQuery->select(
+                    'manufacturers.id',
+                    'manufacturers.name',
+                    'bdm_user_id',
+                )
+                    ->with([
+                        'bdm:id,name,photo',
+                    ]);
             },
         ]);
     }
@@ -287,7 +294,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     private static function getFilterConfig(): array
     {
         return [
-            'whereEqual' => ['currency_id'],
             'whereIn' => ['id', 'manufacturer_id', 'country_id', 'name'],
             'dateRange' => [
                 'receive_date',
@@ -295,6 +301,13 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
                 'sent_to_manufacturer_date',
                 'created_at',
                 'updated_at'
+            ],
+
+            'relationEqual' => [
+                [
+                    'name' => 'manufacturer',
+                    'attribute' => 'bdm_user_id',
+                ],
             ],
         ];
     }
@@ -385,7 +398,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         // Store products
         $products = $request->input('products', []);
 
-        foreach($products as $product) {
+        foreach ($products as $product) {
             $record->products()->create([
                 'process_id' => $product['process_id'],
                 'quantity' => $product['quantity'],
@@ -513,11 +526,12 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         array_push(
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
+            ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
-            ['name' => 'Products', 'order' => $order++, 'width' => 98, 'visible' => 1],
+            ['name' => 'Products', 'order' => $order++, 'width' => 126, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],

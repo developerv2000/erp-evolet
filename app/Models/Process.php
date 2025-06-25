@@ -553,6 +553,44 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         );
     }
 
+    /**
+     * Manufacturer is not required, because its directly loaded while querying order products
+     */
+    public function scopeWithRelationsForOrderProduct($query)
+    {
+        return $query->with([
+            'searchCountry',
+            'MAH',
+
+            'product' => function ($productQuery) {
+                $productQuery->select(
+                    'products.id',
+                    'products.manufacturer_id',
+                    'inn_id',
+                    'form_id',
+                    'dosage',
+                    'pack',
+                )
+                    ->with([
+                        'inn',
+                        'form',
+                    ]);
+            },
+        ]);
+    }
+
+    public function scopeWithOnlyRequiredSelectsForOrderProduct($query)
+    {
+        return $query->select(
+            'processes.id',
+            'trademark_en',
+            'trademark_ru',
+            'processes.product_id',
+            'processes.country_id',
+            'processes.marketing_authorization_holder_id',
+        );
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Contracts

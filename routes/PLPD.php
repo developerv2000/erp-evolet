@@ -18,19 +18,22 @@ Route::middleware('auth', 'auth.session')->prefix('plpd')->name('plpd.')->group(
     // Orders
     Route::prefix('/orders')->controller(PLPDOrderController::class)->name('orders.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show'], 'id', 'can:view-PLPD-orders', 'can:edit-PLPD-orders');
+        Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
 
         Route::post('/toggle-is-sent-to-bdm-attribute', 'toggleIsSentToBDMAttribute');  // AJAX request
         Route::post('/toggle-is-confirmed-attribute', 'toggleIsConfirmedAttribute');  // AJAX request
 
         Route::post('/get-ready-for-order-processes-of-manufacturer', 'getReadyForOrderProcessesOfManufacturer');  // AJAX request on create/edit
-        Route::post('/get-process-with-it-similar-records-for-order', 'getProcessWithItSimilarRecordsForOrder');  // AJAX request on create/edit
-
-        Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });
 
     // Order products
     Route::prefix('/order-products')->controller(PLPDOrderProductController::class)->name('order-products.')->group(function () {
-        CRUDRouteGenerator::defineDefaultRoutesExcept(['show', 'trash', 'restore'], 'id', 'can:view-PLPD-order-products', 'can:edit-PLPD-order-products');
+        CRUDRouteGenerator::defineDefaultRoutesExcept(
+            ['show', 'trash', 'restore'],
+            'id',
+            'can:view-PLPD-order-products',
+            'can:edit-PLPD-order-products'
+        );
 
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });

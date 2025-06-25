@@ -18,7 +18,7 @@ import { initializeSelectizes } from "../plugins";
 
 // Orders
 const GET_READY_FOR_ORDER_PROCESSES_OF_MANUFACTURER_POST_URL = '/plpd/orders/get-ready-for-order-processes-of-manufacturer';
-const GET_PROCESS_WITH_IT_SIMILAR_RECORDS_FOR_ORDER_POST_URL = '/plpd/orders/get-process-with-it-similar-records-for-order';
+const GET_PROCESS_WITH_IT_SIMILAR_RECORDS_FOR_ORDER_POST_URL = '/processes/get-process-with-it-similar-records-for-order';
 const TOGGLE_ORDERS_IS_SENT_TO_BDM_ATTRIBUTE_POST_URL = '/plpd/orders/toggle-is-sent-to-bdm-attribute';
 const TOGGLE_ORDERS_IS_CONFIRMED_ATTRIBUTE_POST_URL = '/plpd/orders/toggle-is-confirmed-attribute';
 
@@ -97,7 +97,7 @@ export function addDynamicRowsListItemOnOrdersCreate() {
         });
 }
 
-export function updateMAHSelectOnOrderCreateFormChange(temporaryProcessID, mahInputArrayIndex) {
+export function updateMAHsOnOrderProductFormChange(temporaryProcessID) {
     showSpinner();
 
     const data = {
@@ -110,9 +110,8 @@ export function updateMAHSelectOnOrderCreateFormChange(temporaryProcessID, mahIn
         }
     })
         .then(response => {
-            // Update MAH selectize
-            const mahSelectize = document.querySelector(`select[name='products[${mahInputArrayIndex}][process_id]']`).selectize;
             const processWithItSimilarRecords = response.data.processWithItSimilarRecords;
+            const mahSelectize = document.querySelector('select[name="process_id"]').selectize;
             refreshSelectizeOptions(mahSelectize, processWithItSimilarRecords, null, 'mah_name_with_id', 'id', false);
         })
         .finally(function () {
@@ -172,6 +171,35 @@ export function toggleOrdersConfirmedAttribute(evt) {
                 // Update order status
                 updateOrderStatus(td, response.data.statusHTML);
             }
+        })
+        .finally(function () {
+            hideSpinner();
+        });
+}
+
+/*
+|--------------------------------------------------------------------------
+| Private functions
+|--------------------------------------------------------------------------
+*/
+
+function updateMAHSelectOnOrderCreateFormChange(temporaryProcessID, mahInputArrayIndex) {
+    showSpinner();
+
+    const data = {
+        'process_id': temporaryProcessID,
+    };
+
+    axios.post(GET_PROCESS_WITH_IT_SIMILAR_RECORDS_FOR_ORDER_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            // Update MAH selectize
+            const mahSelectize = document.querySelector(`select[name='products[${mahInputArrayIndex}][process_id]']`).selectize;
+            const processWithItSimilarRecords = response.data.processWithItSimilarRecords;
+            refreshSelectizeOptions(mahSelectize, processWithItSimilarRecords, null, 'mah_name_with_id', 'id', false);
         })
         .finally(function () {
             hideSpinner();

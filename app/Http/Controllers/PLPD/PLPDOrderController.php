@@ -92,22 +92,10 @@ class PLPDOrderController extends Controller
         // Return row with ready for order processes
         return response()->json([
             'success' => true,
-            'row' => view('PLPD.orders.partials.create-form-dynamic-rows-list-item', compact('readyForOrderProcesses', 'inputsIndex'))->render(),
-        ]);
-    }
-
-    /**
-     * Ajax request on create & edit pages.
-     *
-     * Used to select process with required MAH, from different similar processes,
-     * with the same product and country context.
-     */
-    public function getProcessWithItSimilarRecordsForOrder(Request $request)
-    {
-        $process = Process::findOrFail($request->input('process_id'));
-
-        return response()->json([
-            'processWithItSimilarRecords' => $process->getProcessWithItSimilarRecordsForOrder(true),
+            'row' => view(
+                'PLPD.orders.partials.create-form-dynamic-rows-list-item',
+                compact('readyForOrderProcesses', 'inputsIndex')
+            )->render(),
         ]);
     }
 

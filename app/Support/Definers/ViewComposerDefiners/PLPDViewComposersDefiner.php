@@ -69,25 +69,16 @@ class PLPDViewComposersDefiner
     private static function defineOrderProductsComposers()
     {
         View::composer('PLPD.order-products.partials.filter', function ($view) {
-            $view->with(array_merge(self::getDefaultOrdersShareData(), [
+            $view->with([
+                'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
+                'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
                 'bdmUsers' => User::getCMDBDMsMinifed(),
                 'statusOptions' => Order::getFilterStatusOptions(),
                 'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
                 'enTrademarks' => Process::pluckAllEnTrademarks(),
                 'ruTrademarks' => Process::pluckAllRuTrademarks(),
                 'orderNames' => Order::onlyWithName()->orderByName()->pluck('name'),
-            ]));
-        });
-
-        View::composer('PLPD.order-products.partials.create-form', function ($view) {
-            $view->with(self::getDefaultOrdersShareData());
-        });
-
-        View::composer('PLPD.order-products.partials.edit-form', function ($view) {
-            $view->with(array_merge(self::getDefaultOrdersShareData(), [
-                'currencies' => Currency::orderByName()->get(),
-                'defaultSelectedCurrencyID' => Currency::getDefaultIdValueForMADProcesses(),
-            ]));
+            ]);
         });
     }
 
@@ -98,14 +89,6 @@ class PLPDViewComposersDefiner
     */
 
     private static function getDefaultOrdersShareData()
-    {
-        return [
-            'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
-            'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
-        ];
-    }
-
-    private static function getDefaultOrderProductsShareData()
     {
         return [
             'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),

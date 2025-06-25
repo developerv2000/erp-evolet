@@ -15,7 +15,7 @@ import { debounce } from '../utilities';
 
 // Order forms
 const ordersCreateForm = document.querySelector('.plpd-orders-create-form');
-const orderCreateOrEditForm = document.querySelector('.plpd-orders-create-form, .plpd-orders-edit-form');
+const orderProductCreateOrEditForm = document.querySelector('.plpd-order-products-create-form, .plpd-order-products-edit-form');
 
 // Orders table
 const ordersTable = document.querySelector('.plpd-orders-table');
@@ -54,9 +54,21 @@ function initializeOrdersCreateForm() {
     addRowButton.addEventListener('click', () => functions.addDynamicRowsListItemOnOrdersCreate());
 }
 
+function initializeOrderProductCreateOrEditForm() {
+    if (!orderProductCreateOrEditForm) {
+        return;
+    }
+
+    const trademarkSelect = orderProductCreateOrEditForm.querySelector('select[name="temporary_process_id"]');
+    trademarkSelect.selectize.on('change', (value) => functions.updateMAHsOnOrderProductFormChange(value));
+}
+
 function init() {
     // Orders
     initializeOrdersCreateForm();
+
+    // Order products
+    initializeOrderProductCreateOrEditForm();
 }
 
 init();

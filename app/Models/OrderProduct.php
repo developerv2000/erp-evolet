@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\CanExportRecordsAsExcel;
 use App\Support\Contracts\Model\HasTitle;
+use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\Commentable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -102,6 +103,19 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     /*
     |--------------------------------------------------------------------------
+    | Events
+    |--------------------------------------------------------------------------
+    */
+
+    protected static function booted(): void
+    {
+        static::updated(function ($record) {
+            $record->syncPriceWithRelatedProcess();
+        });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Scopes
     |--------------------------------------------------------------------------
     */
@@ -117,15 +131,21 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
                     'currency',
 
                     'manufacturer' => function ($manufacturersQuery) {
-                        $manufacturersQuery->select('manufacturers.id', 'manufacturers.name')
-                            ->with('name');
+                        $manufacturersQuery->select(
+                            'manufacturers.id',
+                            'manufacturers.name',
+                            'bdm_user_id',
+                        )
+                            ->with([
+                                'bdm:id,name,photo',
+                            ]);
                     },
                 ]);
             },
 
             'process' => function ($processQuery) {
-                $processQuery->withRelationsForOrder()
-                    ->withOnlyRequiredSelectsForOrder();
+                $processQuery->withRelationsForOrderProduct()
+                    ->withOnlyRequiredSelectsForOrderProduct();
             },
         ]);
     }
@@ -186,7 +206,8 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
             // If departments has 'orders' page
             if ($department != 'DD') {
-                $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.order.index'), 'text' => __('Orders')];
+                $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.index'), 'text' => __('Orders')];
+                $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.edit', $this->order_id), 'text' => $this->order->title];
             }
 
             $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.order-products.index'), 'text' => __('Products')];
@@ -244,8 +265,8 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     private static function getFilterConfig(): array
     {
         return [
-            'whereEqual' => ['process_id', 'new_layout'],
-            'whereIn' => ['id', 'order_id'],
+            'whereEqual' => ['process_id', 'new_layout', 'order_id'],
+            'whereIn' => ['id'],
             'dateRange' => [
                 'date_of_sending_new_layout_to_manufacturer',
                 'date_of_receiving_print_proof_from_manufacturer',
@@ -256,7 +277,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
             'relationEqual' => [
                 [
-                    'name' => 'process.product.manufacturer',
+                    'name' => 'order.manufacturer',
                     'attribute' => 'bdm_user_id',
                 ],
             ],
@@ -348,12 +369,8 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     // PLPD part
 
-    public static function createFromRequest($request)
+    public static function createByPLPDFromRequest($request)
     {
-        $request->merge([
-            'process_id' => $request->input('final_process_id'),
-        ]);
-
         $record = self::create($request->all());
 
         // HasMany relations
@@ -362,34 +379,20 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public function updateByPLPDFromRequest($request)
     {
-        $request->merge([
-            'process_id' => $request->input('final_process_id'),
-        ]);
-
         $this->update($request->all());
 
         // HasMany relations
         $this->storeCommentFromRequest($request);
-
-        // Validate related processes 'increased_price'
-        $this->syncPriceWithRelatedProcess();
     }
 
     // CMD part
 
     public function updateByCMDFromRequest($request)
     {
-        $request->merge([
-            'process_id' => $request->input('final_process_id'),
-        ]);
-
         $this->update($request->all());
 
         // HasMany relations
         $this->storeCommentFromRequest($request);
-
-        // Validate related processes 'increased_price'
-        $this->syncPriceWithRelatedProcess();
     }
 
     // DD part
@@ -418,15 +421,17 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     /**
      * Sync the price and currency of the related Process with this model.
      *
+     * Used on models updated event.
+     *
      * If the price differs, it updates the 'increased_price' field.
      * If the currency differs, it updates the 'currency_id'.
-     * Changes are saved only if any attributes are modified.
      *
      * @return void
      */
     public function syncPriceWithRelatedProcess(): void
     {
-        $process = Process::findOrFail($this->process_id);
+        $this->refresh();
+        $process = $this->process;
 
         // Update price if changed
         if ($process->agreed_price != $this->price) {
@@ -434,8 +439,8 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         }
 
         // Update currency if changed
-        if ($process->currency_id != $this->currency_id) {
-            $process->currency_id = $this->currency_id;
+        if ($process->currency_id != $this->order->currency_id) {
+            $process->currency_id = $this->order->currency_id;
         }
 
         // Persist only if there are changes
@@ -463,6 +468,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
+            ['name' => 'Order', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],

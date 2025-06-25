@@ -7,11 +7,15 @@
         {{ $record->id }}
     @break
 
+    @case('BDM')
+        <x-misc.ava
+            image="{{ $record->manufacturer->bdm->photo_asset_url }}"
+            title="{{ $record->manufacturer->bdm->name }}" />
+    @break
+
     @case('Status')
         <div class="td__order-status">
-            @if ($record->status)
-                <x-tables.partials.td.order-status-badge :status="$record->status" />
-            @endif
+            <x-tables.partials.td.order-status-badge :status="$record->status" />
         </div>
     @break
 
@@ -28,8 +32,16 @@
     @break
 
     @case('Products')
-        <a href="{{ route('plpd.order-products.index', ['order_id[]' => $record->id]) }}" class="main-link text-lowercase">
+        <x-misc.buttoned-link
+            style="transparent"
+            class="button--arrowed-link button--margined-bottom text-lowercase"
+            icon="arrow_forward"
+            :link="route('plpd.order-products.index', ['order_id' => $record->id])">
             {{ $record->products_count }} {{ __('Products') }}
+        </x-misc.buttoned-link>
+
+        <a class="main-link" href="{{ route('plpd.order-products.create', ['order_id' => $record->id]) }}">
+            {{ __('New') }} <span class="text-lowercase">{{ __('Product') }}</span>
         </a>
     @break
 

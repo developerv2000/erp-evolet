@@ -44,6 +44,10 @@
         autocomplete="off" />
 
     <x-form.inputs.request-based-input
+        :label-text="__('Order') . ' ID'"
+        inputName="order_id" />
+
+    <x-form.inputs.request-based-input
         :label-text="__('Process') . ' ID'"
         inputName="process_id" />
 
