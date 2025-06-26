@@ -608,14 +608,14 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public static function getDefaultDDTableColumnsForUser($user)
     {
-        if (Gate::forUser($user)->denies('view-DD-orders')) {
+        if (Gate::forUser($user)->denies('view-DD-order-products')) {
             return null;
         }
 
         $order = 1;
         $columns = array();
 
-        if (Gate::forUser($user)->allows('edit-DD-orders')) {
+        if (Gate::forUser($user)->allows('edit-DD-order-products')) {
             array_push(
                 $columns,
                 ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
