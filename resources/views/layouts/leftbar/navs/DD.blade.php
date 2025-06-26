@@ -1,10 +1,10 @@
-@canany(['view-DD-order-products'])
+@canany(['view-DD-order-products', 'edit-DD-order-products'])
     <div class="leftbar__section leftbar__section--DD">
         <p class="leftbar__section-title">{{ __('DD') }}</p>
 
         <nav class="leftbar__nav">
             {{-- Orders --}}
-            @can('view-DD-orders')
+            @can('view-DD-order-products')
                 <a
                     @class([
                         'leftbar__nav-link',

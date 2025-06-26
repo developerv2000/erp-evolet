@@ -709,12 +709,14 @@ class User extends Authenticatable
             // PLPD
             'plpd.processes.ready-for-order.index' => 'view-PLPD-ready-for-order-processes',
             'plpd.orders.index' => 'view-PLPD-orders',
+            'plpd.order-products.index' => 'view-PLPD-order-products',
 
             // CMD
             'cmd.orders.index' => 'view-CMD-orders',
+            'cmd.order-products.index' => 'view-CMD-order-products',
 
             // DD
-            'dd.orders.index' => 'view-DD-orders',
+            'dd.order-products.index' => 'view-DD-order-products',
         ];
 
         foreach ($homepageRoutes as $routeName => $gate) {
