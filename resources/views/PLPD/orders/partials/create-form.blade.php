@@ -1,5 +1,7 @@
 <x-form-templates.create-template class="plpd-orders-create-form" :action="route('plpd.orders.store')">
     <div class="form__block">
+        <h2 class="main-title main-title--marginless">{{ __('Order') }}</h2>
+
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.default-select
                 labelText="Manufacturer"

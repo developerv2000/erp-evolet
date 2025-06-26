@@ -29,7 +29,8 @@ class PLPDOrderProductController extends Controller
         // Get finalized records paginated
         $query = OrderProduct::withBasicRelations()->withBasicRelationCounts();
         $filteredQuery = OrderProduct::filterQueryForRequest($query, $request);
-        $records = OrderProduct::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
+        $joinedQuery = OrderProduct::addJoinsForOrdering($filteredQuery, $request); // add joins if joined ordering requested
+        $records = OrderProduct::finalizeQueryForRequest($joinedQuery, $request, 'paginate');
 
         // Get all and only visible table columns
         $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(OrderProduct::SETTINGS_PLPD_TABLE_COLUMNS_KEY);
@@ -58,14 +59,8 @@ class PLPDOrderProductController extends Controller
         return to_route('plpd.order-products.index', ['order_id' => $request->order_id]);
     }
 
-    /**
-     * Route model binding is not used, because trashed records can also be edited.
-     * Route model binding looks only for untrashed records!
-     */
-    public function edit(Request $request, $record)
+    public function edit(Request $request, OrderProduct $record)
     {
-        $record = OrderProduct::withTrashed()->findOrFail($record);
-
         $readyForOrderProcesses = Process::getReadyForOrderRecordsOfManufacturer(
             $record->order->manufacturer_id,
             $record->order->country_id,
@@ -77,13 +72,8 @@ class PLPDOrderProductController extends Controller
         return view('PLPD.order-products.edit', compact('record', 'readyForOrderProcesses', 'processWithItSimilarRecords'));
     }
 
-    /**
-     * Route model binding is not used, because trashed records can also be edited.
-     * Route model binding looks only for untrashed records!
-     */
-    public function update(OrderProductUpdateByPLPDRequest $request, $record)
+    public function update(OrderProductUpdateByPLPDRequest $request, OrderProduct $record)
     {
-        $record = OrderProduct::withTrashed()->findOrFail($record);
         $record->updateByPLPDFromRequest($request);
 
         return redirect($request->input('previous_url'));

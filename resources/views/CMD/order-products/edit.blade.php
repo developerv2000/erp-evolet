@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => $record->title . ' — ' . __('Products'),
-    'pageName' => 'plpd-order-products-edit',
+    'pageName' => 'cmd-order-products-edit',
     'mainAutoOverflowed' => false,
 ])
 
@@ -8,7 +8,7 @@
     <div class="main-box">
         {{-- Toolbar --}}
         <div class="toolbar">
-            <x-layouts.breadcrumbs :crumbs="$record->generateBreadcrumbs('PLPD')" />
+            <x-layouts.breadcrumbs :crumbs="$record->generateBreadcrumbs('CMD')" />
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
@@ -23,10 +23,10 @@
         </div>
 
         {{-- About order --}}
-        @include('PLPD.order-products.partials.about-order', ['order' => $record->order])
+        @include('CMD.order-products.partials.about-order', ['order' => $record->order])
 
         {{-- Edit form --}}
-        @include('PLPD.order-products.partials.edit-form')
+        @include('CMD.order-products.partials.edit-form')
     </div>
 
 @endsection

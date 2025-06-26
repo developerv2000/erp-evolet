@@ -1,5 +1,7 @@
 <x-form-templates.edit-template class="plpd-order-products-edit-form" :action="route('plpd.order-products.update', $record->id)">
     <div class="form__block">
+        <h2 class="main-title main-title--marginless">{{ __('Product') }}</h2>
+
         <div class="form__row">
             <x-form.selects.selectize.id-based-single-select.record-field-select
                 labelText="TM Eng"
@@ -26,11 +28,9 @@
                 min="0"
                 :isRequired="true" />
         </div>
-    </div>
 
-    {{-- CMD part --}}
-    @if ($record->order->is_sent_to_confirmation)
-        <div class="form__block">
+        {{-- CMD part --}}
+        @if ($record->order->is_sent_to_confirmation)
             <div class="form__row">
                 <x-form.inputs.record-field-input
                     labelText="Price"
@@ -44,8 +44,8 @@
                 <div class="form-group"></div>
                 <div class="form-group"></div>
             </div>
-        </div>
-    @endif
+        @endif
+    </div>
 
     <div class="form__block">
         <x-form.misc.comment-inputs-on-model-edit :record="$record" />

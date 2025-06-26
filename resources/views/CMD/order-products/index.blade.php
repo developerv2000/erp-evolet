@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('Products'),
-    'pageName' => 'plpd-order-products-index',
+    'pageName' => 'cmd-order-products-index',
     'mainAutoOverflowed' => true,
 ])
 
@@ -11,8 +11,8 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('plpd.orders.index'), 'text' => __('Orders')],
-                    ['link' => route('plpd.order-products.index'), 'text' => __('Products')],
+                    ['link' => route('cmd.orders.index'), 'text' => __('Orders')],
+                    ['link' => route('cmd.order-products.index'), 'text' => __('Products')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -22,16 +22,6 @@
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
-                @can('edit-PLPD-order-products')
-                    <x-misc.button
-                        class="toolbar__button"
-                        style="shadowed"
-                        icon="close"
-                        data-click-action="show-modal"
-                        data-modal-selector=".multiple-delete-modal">{{ __('Delete selected') }}
-                    </x-misc.button>
-                @endcan
-
                 <x-misc.button
                     class="toolbar__button"
                     style="shadowed"
@@ -51,21 +41,15 @@
         </div>
 
         {{-- Table --}}
-        @include('PLPD.order-products.table.layout', ['trashedRecords' => false])
+        @include('CMD.order-products.table.layout', ['trashedRecords' => false])
     </div>
 
     {{-- Modals --}}
     <x-modals.edit-table-columns
-        form-action="{{ route('settings.update-table-columns', 'PLPD_order_products_table_columns') }}"
+        form-action="{{ route('settings.update-table-columns', 'CMD_order_products_table_columns') }}"
         :columns="$allTableColumns" />
-
-    @can('edit-PLPD-order-products')
-        <x-modals.multiple-delete
-            form-action="{{ route('plpd.order-products.destroy') }}"
-            :forceDelete="true" />
-    @endcan
 @endsection
 
 @section('rightbar')
-    @include('PLPD.order-products.partials.filter')
+    @include('CMD.order-products.partials.filter')
 @endsection

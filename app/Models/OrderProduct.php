@@ -165,11 +165,9 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public function scopeOnlySentToBdm($query)
     {
-        return $query->whereHas([
-            'order' => function ($orderQuery) {
-                $orderQuery->onlySentToBdm();
-            }
-        ]);
+        return $query->whereHas('order', function ($orderQuery) {
+            $orderQuery->onlySentToBdm();
+        });
     }
 
     public function scopeOnlySentToManufacturer($query)
@@ -188,6 +186,30 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
                 $orderQuery->onlyWithName();
             }
         ]);
+    }
+
+    /**
+     * Add 'order_sent_to_bdm_date' attribute.
+     *
+     * Used while ordering products by 'order_sent_to_bdm_date'
+     */
+    public function scopeWithOrderSentToBdmDateAttribute($query)
+    {
+        return $query
+            ->join('orders', 'orders.id', '=', 'order_products.order_id')
+            ->selectRaw('orders.sent_to_bdm_date as order_sent_to_bdm_date');
+    }
+
+    /**
+     * Add 'order_sent_to_manufacturer_date' attribute.
+     *
+     * Used while ordering products by 'order_sent_to_manufacturer_date'
+     */
+    public function scopeWithOrderSentToManufacturerDateAttribute($query)
+    {
+        return $query
+            ->join('orders', 'orders.id', '=', 'order_products.order_id')
+            ->selectRaw('orders.sent_to_manufacturer_date as order_sent_to_manufacturer_date');
     }
 
     /*
@@ -425,6 +447,22 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     */
 
     /**
+     * Used on order-products.index pages for ordering.
+     */
+    public static function addJoinsForOrdering($query, $request)
+    {
+        if ($request->input('order_by') == 'order_sent_to_bdm_date') {
+            $query->withOrderSentToBdmDateAttribute();
+        }
+
+        if ($request->input('order_by') == 'order_sent_to_manufacturer_date') {
+            $query->withOrderSentToManufacturerDateAttribute();
+        }
+
+        return $query;
+    }
+
+    /**
      * Sync the price of the related Process with this model.
      * If the price differs, it updates the 'increased_price' field.
      *
@@ -537,6 +575,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
+            ['name' => 'Order', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
