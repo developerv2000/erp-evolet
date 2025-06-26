@@ -14,7 +14,7 @@ import { debounce } from '../utilities';
 */
 
 // Orders
-const ordersEdit = document.querySelector('.dd-orders-edit');
+const orderProductsEdit = document.querySelector('.dd-order-products-edit');
 
 /*
 |--------------------------------------------------------------------------
@@ -22,13 +22,13 @@ const ordersEdit = document.querySelector('.dd-orders-edit');
 |--------------------------------------------------------------------------
 */
 
-function initializeOrdersEditForm() {
-    if (!ordersEdit) {
+function initializeOrderProductssEditForm() {
+    if (!orderProductsEdit) {
         return;
     }
 
-    const layoutStatusSelect = ordersEdit.querySelector('select[name="new_layout"]');
-    layoutStatusSelect.selectize.on('change', (value) => functions.handleOrdersEditLayoutStatusChange(value));
+    const layoutStatusSelect = orderProductsEdit.querySelector('select[name="new_layout"]');
+    layoutStatusSelect.selectize.on('change', (value) => functions.handleOrderProductsEditLayoutStatusChange(value));
 }
 
 /*
@@ -38,7 +38,7 @@ function initializeOrdersEditForm() {
 */
 
 function init() {
-    initializeOrdersEditForm();
+    initializeOrderProductssEditForm();
 }
 
 init();

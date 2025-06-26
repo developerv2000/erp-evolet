@@ -13,7 +13,7 @@ class DDViewComposersDefiner
 {
     public static function defineAll()
     {
-        self::defineOrdersComposers();
+        self::defineOrderProductsComposers();
     }
 
     /*
@@ -22,9 +22,9 @@ class DDViewComposersDefiner
     |--------------------------------------------------------------------------
     */
 
-    private static function defineOrdersComposers()
+    private static function defineOrderProductsComposers()
     {
-        View::composer('DD.orders.partials.filter', function ($view) {
+        View::composer('DD.order-products.partials.filter', function ($view) {
             $view->with([
                 'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),

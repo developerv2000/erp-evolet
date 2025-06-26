@@ -54,6 +54,8 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     protected $guarded = ['id'];
 
     protected $casts = [
+        'date_of_sending_new_layout_to_manufacturer' => 'date',
+        'date_of_receiving_print_proof_from_manufacturer' => 'date',
         'layout_approved_date' => 'date',
     ];
 
@@ -172,20 +174,9 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public function scopeOnlySentToManufacturer($query)
     {
-        return $query->whereHas([
-            'order' => function ($orderQuery) {
-                $orderQuery->onlySentToManufacturer();
-            }
-        ]);
-    }
-
-    public function scopeOnlyWithName($query)
-    {
-        return $query->whereHas([
-            'order' => function ($orderQuery) {
-                $orderQuery->onlyWithName();
-            }
-        ]);
+        return $query->whereHas('order', function ($orderQuery) {
+            $orderQuery->onlySentToManufacturer();
+        });
     }
 
     /**
@@ -425,7 +416,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     // DD part
 
-    function updateByDDFromRequest(Request $request)
+    function updateByDDFromRequest($request)
     {
         $this->fill($request->safe()->all());
 

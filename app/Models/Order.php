@@ -65,9 +65,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         'sent_to_confirmation_date' => 'date',
         'confirmation_date' => 'date',
         'sent_to_manufacturer_date' => 'date',
-        'date_of_sending_new_layout_to_manufacturer' => 'date',
-        'date_of_receiving_print_proof_from_manufacturer' => 'date',
-        'layout_approved_date' => 'date',
     ];
 
     /*

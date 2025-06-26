@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class OrderUpdateByDDRequest extends FormRequest
+class OrderProductUpdateByDDRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

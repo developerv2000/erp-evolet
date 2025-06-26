@@ -34,7 +34,7 @@ import { hideSpinner, showSpinner } from "../../custom-components/script";
  * Update 'date_of_receiving_print_proof_from_manufacturer' inputs visibilty/value,
  * based on 'new_layout' select value, on orders edit form.
  */
-export function handleOrdersEditLayoutStatusChange(newLayout) {
+export function handleOrderProductsEditLayoutStatusChange(newLayout) {
     const printProofInput = document.querySelector('input[name="date_of_receiving_print_proof_from_manufacturer"]');
     const formGroup = printProofInput.closest('.form-group');
 
