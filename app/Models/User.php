@@ -457,10 +457,12 @@ class User extends Authenticatable
             'MAD_DH_table_columns' => Process::getDefaultMADDHTableColumnsForUser($this),
 
             'PLPD_orders_table_columns' => Order::getDefaultPLPDTableColumnsForUser($this),
+            'PLPD_order_products_table_columns' => OrderProduct::getDefaultPLPDTableColumnsForUser($this),
 
             'CMD_orders_table_columns' => Order::getDefaultCMDTableColumnsForUser($this),
+            'CMD_order_products_table_columns' => OrderProduct::getDefaultCMDTableColumnsForUser($this),
 
-            'DD_orders_table_columns' => Order::getDefaultDDTableColumnsForUser($this),
+            'DD_order_products_table_columns' => OrderProduct::getDefaultDDTableColumnsForUser($this),
 
             default => throw new InvalidArgumentExceptio("Unknown key: $key"),
         };
