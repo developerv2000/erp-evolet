@@ -16,7 +16,7 @@ Route::middleware('auth', 'auth.session')->prefix('cmd')->name('cmd.')->group(fu
 
     // Order products
     Route::prefix('/order-products')->controller(CMDOrderProductController::class)->name('order-products.')->group(function () {
-        CRUDRouteGenerator::defineDefaultRoutesOnly(['index', 'edit', 'update'], 'id', 'can:view-CMD-orders', 'can:edit-CMD-orders');
+        CRUDRouteGenerator::defineDefaultRoutesOnly(['index', 'edit', 'update'], 'id', 'can:view-CMD-order-products', 'can:edit-CMD-order-products');
 
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });

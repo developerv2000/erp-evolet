@@ -5,9 +5,7 @@ namespace App\Support\Definers\ViewComposerDefiners;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Manufacturer;
-use App\Models\MarketingAuthorizationHolder;
 use App\Models\Order;
-use App\Models\Process;
 use App\Models\User;
 use Illuminate\Support\Facades\View;
 
@@ -28,13 +26,10 @@ class CMDViewComposersDefiner
     {
         View::composer('CMD.orders.partials.filter', function ($view) {
             $view->with([
-                'bdmUsers' => User::getCMDBDMsMinifed(),
-                'statusOptions' => Order::getFilterStatusOptions(),
                 'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
-                'MAHs' => MarketingAuthorizationHolder::orderByName()->get(),
-                'enTrademarks' => Process::pluckAllEnTrademarks(),
-                'ruTrademarks' => Process::pluckAllRuTrademarks(),
+                'bdmUsers' => User::getCMDBDMsMinifed(),
+                'statusOptions' => Order::getFilterStatusOptions(),
                 'orderNames' => Order::onlyWithName()->orderByName()->pluck('name'),
             ]);
         });

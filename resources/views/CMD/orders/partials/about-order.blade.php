@@ -4,33 +4,23 @@
     <table class="secondary-table">
         <tbody>
             <tr>
+                <td>{{ __('Order') }}:</td>
+                <td>{{ $record->title }}</td>
+            </tr>
+
+            <tr>
+                <td>{{ __('Receive date') }}:</td>
+                <td>{{ $record->receive_date->isoformat('DD MMM Y') }}</td>
+            </tr>
+
+            <tr>
                 <td>{{ __('Manufacturer') }}:</td>
-                <td>{{ $record->process->product->manufacturer->name }}</td>
+                <td>{{ $record->manufacturer->name }}</td>
             </tr>
 
             <tr>
                 <td>{{ __('Country') }}:</td>
-                <td>{{ $record->process->searchCountry->code }}</td>
-            </tr>
-
-            <tr>
-                <td>{{ __('TM Eng') }}:</td>
-                <td>{{ $record->process->full_trademark_en }}</td>
-            </tr>
-
-            <tr>
-                <td>{{ __('TM Rus') }}:</td>
-                <td>{{ $record->process->full_trademark_ru }}</td>
-            </tr>
-
-            <tr>
-                <td>{{ __('MAH') }}:</td>
-                <td>{{ $record->process->MAH->name }}</td>
-            </tr>
-
-            <tr>
-                <td>{{ __('Quantity') }}:</td>
-                <td>{{ $record->quantity }}</td>
+                <td>{{ $record->manufacturer->country->code }}</td>
             </tr>
         </tbody>
     </table>

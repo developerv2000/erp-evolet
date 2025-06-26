@@ -3,10 +3,11 @@
         {{ __('Given order has been sent to manufacturer') }}:
     </strong><br>
 
-    {{ __('ID') }}: #{{ $record->data['order_id'] }}<br>
+    {{ __('ID') }}: <a class="main-link" href="{{ route('dd.order-products.index', ['order_id' => $record->data['order_id']]) }}">
+        #{{ $record->data['order_id'] }}
+    </a><br>
     {{ __('PO №') }}: {{ $record->data['name'] }}<br>
-    {{ __('Product') }}: {{ $record->data['full_trademark_en'] }}<br>
+    {{ __('Products') }}: {{ $record->data['products_count'] }}<br>
     {{ __('Manufacturer') }}: {{ $record->data['manufacturer'] }}<br>
     {{ __('Country') }}: {{ $record->data['country'] }}<br>
-    {{ __('MAH') }}: {{ $record->data['MAH'] }}<br>
 </div>

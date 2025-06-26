@@ -40,9 +40,8 @@ class OrderIsConfirmed extends Notification
         return [
             'order_id' => $this->order->id,
             'name' => $this->order->name,
-            'products_count' => $this->order->products->count(),
             'purchase_date' => $this->order->purchase_date->isoformat('DD MMM Y'),
-            'currency' => $this->order->currency->name,
+            'products_count' => $this->order->products->count(),
         ];
     }
 }

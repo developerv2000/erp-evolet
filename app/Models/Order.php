@@ -145,6 +145,12 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     protected static function booted(): void
     {
+        static::updated(function ($record) {
+            foreach ($record->products as $product) {
+                $product->syncCurrencyWithRelatedProcess();
+            }
+        });
+
         static::deleting(function ($record) { // trashing
             foreach ($record->products as $product) {
                 $product->delete();
@@ -421,7 +427,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $this->update($request->all());
 
         // Update 'purchase_date'
-        if (is_null($this->purchase_date) && !is_null($this->name)) {
+        if (is_null($this->purchase_date)) {
             $this->update([
                 'purchase_date' => now(),
             ]);
@@ -429,6 +435,15 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
         // HasMany relations
         $this->storeCommentFromRequest($request);
+
+        // Update products
+        foreach ($request->products as $id => $product) {
+            $orderProduct = $this->products()->findOrFail($id);
+
+            $orderProduct->update([
+                'price' => $product['price'],
+            ]);
+        }
     }
 
     /*
@@ -575,34 +590,18 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
-            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
-            ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Products', 'order' => $order++, 'width' => 126, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
 
             ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
-            ['name' => 'TM Eng', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'TM Rus', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'Generic', 'order' => $order++, 'width' => 180, 'visible' => 1],
-            ['name' => 'Form', 'order' => $order++, 'width' => 120, 'visible' => 1],
-            ['name' => 'Dosage', 'order' => $order++, 'width' => 120, 'visible' => 1],
-            ['name' => 'Pack', 'order' => $order++, 'width' => 100, 'visible' => 1],
-            ['name' => 'Price', 'order' => $order++, 'width' => 70, 'visible' => 1],
-            ['name' => 'Total price', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
             ['name' => 'Sent to confirmation', 'order' => $order++, 'width' => 244, 'visible' => 1],
             ['name' => 'Confirmation date', 'order' => $order++, 'width' => 172, 'visible' => 1],
 
             ['name' => 'Sent to manufacturer', 'order' => $order++, 'width' => 164, 'visible' => 1],
-            ['name' => 'Layout status', 'order' => $order++, 'width' => 126, 'visible' => 1],
-            ['name' => 'Layout sent date', 'order' => $order++, 'width' => 178, 'visible' => 1],
-            ['name' => 'Print proof receive date', 'order' => $order++, 'width' => 228, 'visible' => 1],
-            ['name' => 'Box article', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            ['name' => 'Layout approved date', 'order' => $order++, 'width' => 188, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],

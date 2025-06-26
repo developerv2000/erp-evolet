@@ -7,7 +7,6 @@
         #{{ $record->data['order_id'] }}
     </a><br>
     {{ __('PO №') }}: {{ $record->data['name'] }}<br>
-    {{ __('Products count') }}: {{ $record->data['products_count'] }}<br>
     {{ __('PO date') }}: {{ $record->data['purchase_date'] }}<br>
-    {{ __('Currency') }}: {{ $record->data['currency'] }}<br>
+    {{ __('Products') }}: {{ $record->data['products_count'] }}<br>
 </div>

@@ -10,7 +10,7 @@
 
             <tr>
                 <td>{{ __('Receive date') }}:</td>
-                <td>{{ $order->receive_date }}</td>
+                <td>{{ $order->receive_date->isoformat('DD MMM Y') }}</td>
             </tr>
 
             <tr>

@@ -40,10 +40,10 @@ class OrderIsSentToManufacturer extends Notification
         return [
             'order_id' => $this->order->id,
             'name' => $this->order->name,
-            'full_trademark_en' => $this->order->process->full_trademark_en,
-            'manufacturer' => $this->order->process->product->manufacturer->name,
-            'country' => $this->order->process->searchCountry->code,
-            'MAH' => $this->order->process->MAH->name,
+            'purchase_date' => $this->order->purchase_date->isoformat('DD MMM Y'),
+            'products_count' => $this->order->products->count(),
+            'manufacturer' => $this->order->manufacturer->name,
+            'country' => $this->order->country->code,
         ];
     }
 }

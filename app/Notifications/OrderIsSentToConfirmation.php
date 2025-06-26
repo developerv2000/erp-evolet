@@ -41,9 +41,7 @@ class OrderIsSentToConfirmation extends Notification
             'order_id' => $this->order->id,
             'name' => $this->order->name,
             'purchase_date' => $this->order->purchase_date->isoformat('DD MMM Y'),
-            'quantity' => $this->order->quantity,
-            'price' => $this->order->price,
-            'currency' => $this->order->currency->name,
+            'products_count' => $this->order->products->count(),
         ];
     }
 }

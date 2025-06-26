@@ -41,7 +41,6 @@
                     field="currency_id"
                     :model="$record"
                     :options="$currencies"
-                    :initial-value="$record->currency_id ?: $defaultSelectedCurrencyID"
                     :isRequired="true" />
 
                 <div class="form-group"></div>

@@ -26,6 +26,24 @@
         </div>
     </div>
 
+    {{-- CMD part --}}
+    @if ($order->is_sent_to_confirmation)
+        <div class="form__block">
+            <div class="form__row">
+                <x-form.inputs.default-input
+                    labelText="Price"
+                    inputName="price"
+                    type="number"
+                    step="0.01"
+                    min="0.00"
+                    :isRequired="true" />
+
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+            </div>
+        </div>
+    @endif
+
     <div class="form__block">
         <x-form.misc.comment-inputs-on-model-create />
     </div>

@@ -11,9 +11,6 @@ use Illuminate\Http\Request;
 
 class CMDOrderController extends Controller
 {
-    // Used in multiple destroy/restore traits
-    public static $model = Order::class;
-
     public function index(Request $request)
     {
         // Preapare request for valid model querying
@@ -34,6 +31,17 @@ class CMDOrderController extends Controller
 
     public function edit(Request $request, Order $record)
     {
+        $record->load([
+            'products' => function ($productsQuery) {
+                $productsQuery->with([
+                    'process' => function ($processQuery) {
+                        $processQuery->withRelationsForOrderProduct();
+                            // ->withOnlyRequiredSelectsForOrderProduct(); not used because 'agreed_price' also required
+                    },
+                ]);
+            }
+        ]);
+
         return view('CMD.orders.edit', compact('record'));
     }
 

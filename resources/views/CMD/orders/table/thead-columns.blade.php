@@ -13,10 +13,6 @@
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="receive_date" />
     @break
 
-    @case('Quantity')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="quantity" />
-    @break
-
     @case('Sent to BDM')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="sent_to_bdm_date" />
     @break
@@ -27,10 +23,6 @@
 
     @case('PO №')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="name" />
-    @break
-
-    @case('Price')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="price" />
     @break
 
     @case('Currency')
@@ -47,22 +39,6 @@
 
     @case('Sent to manufacturer')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="sent_to_manufacturer_date" />
-    @break
-
-    @case('Layout status')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="new_layout" />
-    @break
-
-    @case('Layout sent date')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="date_of_sending_new_layout_to_manufacturer" />
-    @break
-
-    @case('Print proof receive date')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="date_of_receiving_print_proof_from_manufacturer" />
-    @break
-
-    @case('Layout approved date')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="layout_approved_date" />
     @break
 
     @case('Date of creation')

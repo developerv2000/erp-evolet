@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
+use function PHPUnit\Framework\isNull;
+
 class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 {
     /** @use HasFactory<\Database\Factories\OrderProductFactory> */
@@ -109,6 +111,10 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     protected static function booted(): void
     {
+        static::created(function ($record) {
+            $record->syncPriceWithRelatedProcess();
+        });
+
         static::updated(function ($record) {
             $record->syncPriceWithRelatedProcess();
         });
@@ -419,32 +425,34 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     */
 
     /**
-     * Sync the price and currency of the related Process with this model.
-     *
-     * Used on models updated event.
-     *
+     * Sync the price of the related Process with this model.
      * If the price differs, it updates the 'increased_price' field.
-     * If the currency differs, it updates the 'currency_id'.
      *
-     * @return void
+     * Used in models created/updated events.
      */
     public function syncPriceWithRelatedProcess(): void
     {
+        if ($this->price && ($this->process->agreed_price != $this->price)) {
+            $this->process->update([
+                'increased_price' => $this->price
+            ]);
+        }
+    }
+
+    /**
+     * Sync the currency of the related Process with this model.
+     *
+     * Used in Order models updated event!
+     */
+    public function syncCurrencyWithRelatedProcess(): void
+    {
         $this->refresh();
-        $process = $this->process;
 
-        // Update price if changed
-        if ($process->agreed_price != $this->price) {
-            $process->increased_price = $this->price;
+        if ($this->order->currency_id && ($this->process->currency_id != $this->order->currency_id)) {
+            $this->process->update([
+                'currency_id' => $this->order->currency_id,
+            ]);
         }
-
-        // Update currency if changed
-        if ($process->currency_id != $this->order->currency_id) {
-            $process->currency_id = $this->order->currency_id;
-        }
-
-        // Persist only if there are changes
-        $process->isDirty() && $process->save();
     }
 
     public static function getDefaultPLPDTableColumnsForUser($user)

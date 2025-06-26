@@ -41,7 +41,7 @@
                     ])
                     href="{{ route('plpd.order-products.index') }}">
 
-                    <x-misc.material-symbol class="leftbar__nav-link-icon" icon="pill" />
+                    <x-misc.material-symbol class="leftbar__nav-link-icon" icon="medication" />
                     <span class="leftbar__nav-link-text">{{ __('Products') }}</span>
                 </a>
             @endcan
