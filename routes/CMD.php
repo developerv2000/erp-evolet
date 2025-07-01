@@ -35,7 +35,7 @@ Route::middleware('auth', 'auth.session')->prefix('cmd')->name('cmd.')->group(fu
 
         Route::prefix('/orders/attached-invoices')->group(function () {
             CRUDRouteGenerator::defineDefaultRoutesOnly(
-                ['edit', 'update', 'delete'],
+                ['store', 'edit', 'update', 'delete'],
                 'id',
                 'can:view-CMD-attached-order-invoices',
                 'can:edit-CMD-attached-order-invoices'
