@@ -320,6 +320,11 @@
     "New order has been received": "Получен новый заказ",
     "New order for confirmation has been received": "Получен новый заказ для подтверждения",
     "Order has been confirmed": "Заказ подтвержден",
+    "Expected dispatch date": "Ожидаемая дата отправки",
+    "Attached invoices": "Прикреплённые инвойсы",
+    "Attach": "Прикрепить",
+    "Invoice": "Инвойс",
+    "Invoices": "Инвойсы",
 
     "Sent to manufacturer": "Отправлено заводу",
     "Send to manufacturer": "Отправить заводу",

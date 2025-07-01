@@ -12,13 +12,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-use function PHPUnit\Framework\isNull;
-
 class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 {
     /** @use HasFactory<\Database\Factories\OrderProductFactory> */
     use HasFactory;
-    use SoftDeletes; // Trashed when order parent is trashed
+    use SoftDeletes; // No manual trashing/restoring. Trashed when order parent is trashed.
     use Commentable;
 
     /*

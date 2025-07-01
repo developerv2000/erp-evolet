@@ -101,6 +101,26 @@
         @endif
     @break
 
+    @case('Expected dispatch date')
+        {{ $record->expected_dispatch_date }}
+    @break
+
+    @case('Attached invoices')
+        <x-misc.buttoned-link
+            style="transparent"
+            class="button--arrowed-link button--margined-bottom text-lowercase"
+            icon="arrow_forward"
+            :link="route('cmd.attached-order-invoices.index', $record->id)">
+            {{ $record->attached_invoices_count }} {{ __('Invoices') }}
+        </x-misc.buttoned-link>
+
+        @if ($record->canAttachNewInvoice())
+            <a class="main-link" href="{{ route('cmd.attached-order-invoices.create', $record->id) }}">
+                {{ __('Attach') }} <span class="text-lowercase">{{ __('Invoice') }}</span>
+            </a>
+        @endif
+    @break
+
     @case('Date of creation')
         {{ $record->created_at->isoformat('DD MMM Y') }}
     @break

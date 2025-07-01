@@ -16,6 +16,12 @@
                 :options="$currencies"
                 :initial-value="$record->currency_id ?: $defaultSelectedCurrencyID"
                 :isRequired="true" />
+
+            @if ($record->is_sent_to_manufacturer)
+                <x-form.inputs.default-input
+                    labelText="Expected dispatch date"
+                    inputName="expected_dispatch_date" />
+            @endif
         </div>
     </div>
 

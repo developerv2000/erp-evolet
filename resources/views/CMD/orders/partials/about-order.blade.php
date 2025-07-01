@@ -20,7 +20,7 @@
 
             <tr>
                 <td>{{ __('Country') }}:</td>
-                <td>{{ $record->manufacturer->country->code }}</td>
+                <td>{{ $record->country->code }}</td>
             </tr>
         </tbody>
     </table>

@@ -50,10 +50,7 @@ return new class extends Migration
             $table->timestamp('sent_to_manufacturer_date')->nullable(); // action
 
             // Step 5:
-            // CMD BDM part
-            // $table->string('expected_dispatch_date')->nullable();
-            // $table->date('receiving_prepayment_invoice_date')->nullable();
-            // $table->timestamp('prepayment_requested_date')->nullable(); // action
+            $table->string('expected_dispatch_date')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

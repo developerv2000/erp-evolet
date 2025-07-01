@@ -38,8 +38,6 @@ return new class extends Migration
 
             $table->primary(['role_id', 'user_id']);
         });
-
-
     }
 
     /**

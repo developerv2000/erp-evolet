@@ -68,5 +68,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('countries');
         Schema::dropIfExists('clinical_trial_country_process');
+        Schema::dropIfExists('responsible_country_user');
+        Schema::dropIfExists('additional_search_country_product_search');
     }
 };

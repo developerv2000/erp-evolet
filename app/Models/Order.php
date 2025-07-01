@@ -90,7 +90,12 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     public function products()
     {
-        return $this->hasMany(OrderProduct::class)->withTrashed();
+        return $this->hasMany(OrderProduct::class)->withTrashed(); // No manual trashing/restoring
+    }
+
+    public function attachedInvoices()
+    {
+        return $this->hasMany(AttachedOrderInvoice::class)->withTrashed(); // No manual trashing/restoring
     }
 
     /*
@@ -152,17 +157,29 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             foreach ($record->products as $product) {
                 $product->delete();
             }
+
+            foreach ($record->attachedInvoices as $invoice) {
+                $invoice->delete();
+            }
         });
 
         static::restored(function ($record) {
             foreach ($record->products as $product) {
                 $product->restore();
             }
+
+            foreach ($record->attachedInvoices as $invoice) {
+                $invoice->restore();
+            }
         });
 
         static::forceDeleting(function ($record) {
             foreach ($record->products as $product) {
                 $product->forceDelete();
+            }
+
+            foreach ($record->attachedInvoices as $invoice) {
+                $invoice->forceDelete();
             }
         });
     }
@@ -190,6 +207,12 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
                         'bdm:id,name,photo',
                     ]);
             },
+
+            'attachedInvoices' => function ($invoicesQuery) {
+                $invoicesQuery->with([
+                    'type',
+                ]);
+            },
         ]);
     }
 
@@ -198,6 +221,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $query->withCount([
             'comments',
             'products',
+            'attachedInvoices',
         ]);
     }
 
@@ -445,7 +469,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     /*
     |--------------------------------------------------------------------------
-    | Misc
+    | Attribute togglings
     |--------------------------------------------------------------------------
     */
 
@@ -517,6 +541,30 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             $notification = new OrderIsSentToManufacturer($this);
             User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-CMD-order-is-sent-to-manufacturer');
         }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Misc
+    |--------------------------------------------------------------------------
+    */
+
+    public function canAttachNewInvoice()
+    {
+        // Order must be sent to manufacturer
+        if (!$this->is_sent_to_manufacturer) {
+            return false;
+        }
+
+        // Order shouldn`t have final or full invoice payment types
+        if ($this->attachedInvoices->whereIn('payment_type_id', [
+            InvoicePaymentType::FINAL_PAYMENT_ID,
+            InvoicePaymentType::FULL_PAYMENT_ID,
+        ])->count()) {
+            return false;
+        }
+
+        return true;
     }
 
     public static function getDefaultPLPDTableColumnsForUser($user)
@@ -599,6 +647,9 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Confirmation date', 'order' => $order++, 'width' => 172, 'visible' => 1],
 
             ['name' => 'Sent to manufacturer', 'order' => $order++, 'width' => 164, 'visible' => 1],
+
+            ['name' => 'Expected dispatch date', 'order' => $order++, 'width' => 190, 'visible' => 1],
+            ['name' => 'Attached invoices', 'order' => $order++, 'width' => 188, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],

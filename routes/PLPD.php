@@ -27,7 +27,7 @@ Route::middleware('auth', 'auth.session')->prefix('plpd')->name('plpd.')->group(
     });
 
     // Order products
-    Route::prefix('/order-products')->controller(PLPDOrderProductController::class)->name('order-products.')->group(function () {
+    Route::prefix('/orders/products')->controller(PLPDOrderProductController::class)->name('order-products.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(
             ['show', 'trash', 'restore'],
             'id',
