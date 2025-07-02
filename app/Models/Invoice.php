@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\Contracts\Model\HasTitle;
+use App\Support\Traits\Model\FormatsAttributeForDateTimeInput;
 use App\Support\Traits\Model\UploadsFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,6 +12,7 @@ class Invoice extends Model implements HasTitle
 {
     use SoftDeletes; // No manual trashing/restoring. Trashed when order parent is trashed.
     use UploadsFile;
+    use FormatsAttributeForDateTimeInput;
 
     /*
     |--------------------------------------------------------------------------
@@ -29,8 +31,8 @@ class Invoice extends Model implements HasTitle
     protected $guarded = ['id'];
 
     protected $casts = [
-        'receive_date' => 'date',
-        'sent_for_payment_date' => 'date',
+        'receive_date' => 'datetime',
+        'sent_for_payment_date' => 'datetime',
     ];
 
     /*
@@ -104,10 +106,9 @@ class Invoice extends Model implements HasTitle
             $lowercasedDepartment = strtolower($department);
 
             return [
-                ['link' => route($lowercasedDepartment . '.orders.index'), 'text' => __('Orders')],
-                ['link' => route($lowercasedDepartment . '.orders.edit', $this->order_id), 'text' => $this->order->title],
-                ['link' => route($lowercasedDepartment . '.order-products.index'), 'text' => __('Invoices')],
-                ['link' => route($lowercasedDepartment . '.order-products.edit', $this->id), 'text' => $this->title],
+                ...$this->order->generateBreadcrumbs($lowercasedDepartment),
+                ['link' => route($lowercasedDepartment . '.invoices.index', $this->order_id), 'text' => __('Invoices')],
+                ['link' => route($lowercasedDepartment . '.invoices.edit', $this->id), 'text' => $this->title],
             ];
         }
 
@@ -151,6 +152,8 @@ class Invoice extends Model implements HasTitle
     public function updateByCMDFromRequest($request)
     {
         $this->update($request->all());
+
+        $this->uploadFile('filename', public_path(self::FILE_PATH), uniqid());
     }
 
     /*

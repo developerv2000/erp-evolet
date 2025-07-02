@@ -45,7 +45,7 @@ class CMDInvoiceController extends Controller
 
     public function update(Request $request, Invoice $record)
     {
-        $record->updateFromRequest($request);
+        $record->updateByCMDFromRequest($request);
 
         return redirect($request->input('previous_url'));
     }

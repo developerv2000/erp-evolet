@@ -3,7 +3,7 @@
     <x-slot:thead-rows>
         <tr>
             <th width="50"><x-tables.partials.th.select-all /></th>
-
+            <th width="40"><x-tables.partials.th.edit /></th>
             <th>{{ __('Receive date') }}</th>
             <th>{{ __('Payment type') }}</th>
             <th>{{ __('File') }}</th>
@@ -17,6 +17,7 @@
         @foreach ($records as $record)
             <tr>
                 <td><x-tables.partials.td.checkbox :value="$record->id" /></td>
+                <td><x-tables.partials.td.edit :link="route('cmd.invoices.edit', $record->id)" /></td>
                 <td>{{ $record->receive_date->isoformat('DD MMM Y') }}</td>
                 <td>{{ $record->paymentType->name }}</td>
 

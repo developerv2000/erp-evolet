@@ -60,11 +60,11 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     protected $casts = [
         'receive_date' => 'date',
-        'sent_to_bdm_date' => 'date',
+        'sent_to_bdm_date' => 'datetime',
         'purchase_date' => 'date',
-        'sent_to_confirmation_date' => 'date',
-        'confirmation_date' => 'date',
-        'sent_to_manufacturer_date' => 'date',
+        'sent_to_confirmation_date' => 'datetime',
+        'confirmation_date' => 'datetime',
+        'sent_to_manufacturer_date' => 'datetime',
     ];
 
     /*
