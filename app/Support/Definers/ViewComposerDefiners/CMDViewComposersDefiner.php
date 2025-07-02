@@ -4,6 +4,7 @@ namespace App\Support\Definers\ViewComposerDefiners;
 
 use App\Models\Country;
 use App\Models\Currency;
+use App\Models\InvoicePaymentType;
 use App\Models\Manufacturer;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\Order;
@@ -17,6 +18,7 @@ class CMDViewComposersDefiner
     {
         self::defineOrdersComposers();
         self::defineOrderProductsComposers();
+        self::defineInvoicesComposers();
     }
 
     /*
@@ -57,6 +59,16 @@ class CMDViewComposersDefiner
                 'enTrademarks' => Process::pluckAllEnTrademarks(),
                 'ruTrademarks' => Process::pluckAllRuTrademarks(),
                 'orderNames' => Order::onlyWithName()->orderByName()->pluck('name'),
+            ]);
+        });
+    }
+
+    private static function defineInvoicesComposers()
+    {
+        View::composer('CMD.invoices.create', function ($view) {
+            $view->with([
+                'paymentTypes' => InvoicePaymentType::withoutFinalPayment()->orderBy('id')->get(),
+                'finalPaymentTypeName' => InvoicePaymentType::FINAL_PAYMENT_NAME,
             ]);
         });
     }

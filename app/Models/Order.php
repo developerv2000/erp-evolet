@@ -93,9 +93,9 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $this->hasMany(OrderProduct::class)->withTrashed(); // No manual trashing/restoring
     }
 
-    public function attachedInvoices()
+    public function invoices()
     {
-        return $this->hasMany(AttachedOrderInvoice::class)->withTrashed(); // No manual trashing/restoring
+        return $this->hasMany(Invoice::class)->withTrashed(); // No manual trashing/restoring
     }
 
     /*
@@ -158,7 +158,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
                 $product->delete();
             }
 
-            foreach ($record->attachedInvoices as $invoice) {
+            foreach ($record->invoices as $invoice) {
                 $invoice->delete();
             }
         });
@@ -168,7 +168,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
                 $product->restore();
             }
 
-            foreach ($record->attachedInvoices as $invoice) {
+            foreach ($record->invoices as $invoice) {
                 $invoice->restore();
             }
         });
@@ -178,7 +178,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
                 $product->forceDelete();
             }
 
-            foreach ($record->attachedInvoices as $invoice) {
+            foreach ($record->invoices as $invoice) {
                 $invoice->forceDelete();
             }
         });
@@ -208,9 +208,9 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
                     ]);
             },
 
-            'attachedInvoices' => function ($invoicesQuery) {
+            'invoices' => function ($invoicesQuery) {
                 $invoicesQuery->with([
-                    'type',
+                    'paymentType',
                 ]);
             },
         ]);
@@ -221,7 +221,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $query->withCount([
             'comments',
             'products',
-            'attachedInvoices',
+            'invoices',
         ]);
     }
 
@@ -557,7 +557,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         }
 
         // Order shouldn`t have final or full invoice payment types
-        if ($this->attachedInvoices->whereIn('payment_type_id', [
+        if ($this->invoices->whereIn('payment_type_id', [
             InvoicePaymentType::FINAL_PAYMENT_ID,
             InvoicePaymentType::FULL_PAYMENT_ID,
         ])->count()) {
@@ -565,6 +565,16 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         }
 
         return true;
+    }
+
+    public function shouldHaveInvoiceOfFinalPaymentType()
+    {
+        if ($this->invoices->count() == 0) {
+            return false;
+        }
+
+        return $this->invoices->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID)->count() > 0
+            && $this->invoices->where('payment_type_id', InvoicePaymentType::FINAL_PAYMENT_ID)->count() == 0;
     }
 
     public static function getDefaultPLPDTableColumnsForUser($user)
@@ -649,7 +659,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Sent to manufacturer', 'order' => $order++, 'width' => 164, 'visible' => 1],
 
             ['name' => 'Expected dispatch date', 'order' => $order++, 'width' => 190, 'visible' => 1],
-            ['name' => 'Attached invoices', 'order' => $order++, 'width' => 188, 'visible' => 1],
+            ['name' => 'Invoices', 'order' => $order++, 'width' => 120, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],

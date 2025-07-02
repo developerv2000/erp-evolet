@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attached_order_invoices', function (Blueprint $table) {
+        Schema::create('invoices', function (Blueprint $table) {
             $table->unsignedMediumInteger('id')->autoIncrement();
             $table->timestamp('receive_date');
             $table->string('filename');
@@ -30,6 +30,7 @@ return new class extends Migration
 
             $table->timestamp('sent_for_payment_date')->nullable(); // action
 
+            $table->timestamps();
             $table->softDeletes();
         });
     }
@@ -39,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attached_order_invoices');
+        Schema::dropIfExists('invoices');
     }
 };

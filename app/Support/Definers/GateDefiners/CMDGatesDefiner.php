@@ -22,6 +22,12 @@ class CMDGatesDefiner
             $user->hasPermission(Permission::CAN_VIEW_CMD_ORDER_PRODUCTS_NAME)
         );
 
+        Gate::define(
+            'view-CMD-invoices',
+            fn($user) =>
+            $user->hasPermission(Permission::CAN_VIEW_CMD_INVOICES_NAME)
+        );
+
         // Edit
         Gate::define(
             'edit-CMD-orders',
@@ -33,6 +39,12 @@ class CMDGatesDefiner
             'edit-CMD-order-products',
             fn($user) =>
             $user->hasPermission(Permission::CAN_EDIT_CMD_ORDER_PRODUCTS_NAME)
+        );
+
+        Gate::define(
+            'edit-CMD-invoices',
+            fn($user) =>
+            $user->hasPermission(Permission::CAN_EDIT_CMD_INVOICES_NAME)
         );
 
         // Other gates

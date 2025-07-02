@@ -321,10 +321,11 @@
     "New order for confirmation has been received": "Получен новый заказ для подтверждения",
     "Order has been confirmed": "Заказ подтвержден",
     "Expected dispatch date": "Ожидаемая дата отправки",
-    "Attached invoices": "Прикреплённые инвойсы",
-    "Attach": "Прикрепить",
     "Invoice": "Инвойс",
     "Invoices": "Инвойсы",
+    "File": "Файл",
+    "Payment type": "Тип оплаты",
+    "Sent for payment date": "Дата отправки на оплату",
 
     "Sent to manufacturer": "Отправлено заводу",
     "Send to manufacturer": "Отправить заводу",

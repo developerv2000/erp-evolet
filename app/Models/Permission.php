@@ -134,10 +134,12 @@ class Permission extends Model
     // View
     const CAN_VIEW_CMD_ORDERS_NAME = 'can view CMD orders';
     const CAN_VIEW_CMD_ORDER_PRODUCTS_NAME = 'can view CMD order products';
+    const CAN_VIEW_CMD_INVOICES_NAME = 'can view CMD invoices';
 
     // Edit
     const CAN_EDIT_CMD_ORDERS_NAME = 'can edit CMD orders';
     const CAN_EDIT_CMD_ORDER_PRODUCTS_NAME = 'can edit CMD order products';
+    const CAN_EDIT_CMD_INVOICES_NAME = 'can edit CMD invoices';
 
     // Other permissions
     const CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_SENT_TO_CMD_BDM = 'can receive notification when PLPD order is sent to CMD BDM';
@@ -346,9 +348,11 @@ class Permission extends Model
         return [
             self::CAN_VIEW_CMD_ORDERS_NAME,
             self::CAN_VIEW_CMD_ORDER_PRODUCTS_NAME,
+            self::CAN_VIEW_CMD_INVOICES_NAME,
 
             self::CAN_EDIT_CMD_ORDERS_NAME,
             self::CAN_EDIT_CMD_ORDER_PRODUCTS_NAME,
+            self::CAN_EDIT_CMD_INVOICES_NAME,
 
             self::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_SENT_TO_CMD_BDM,
             self::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_CONFIRMED,

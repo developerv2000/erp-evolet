@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CMD\CMDAttachedOrderInvoiceController;
+use App\Http\Controllers\CMD\CMDInvoiceController;
 use App\Http\Controllers\CMD\CMDOrderController;
 use App\Http\Controllers\CMD\CMDOrderProductController;
 use App\Support\Generators\CRUDRouteGenerator;
@@ -23,22 +24,22 @@ Route::middleware('auth', 'auth.session')->prefix('cmd')->name('cmd.')->group(fu
     });
 
     // Attached order invoices
-    Route::controller(CMDAttachedOrderInvoiceController::class)->name('attached-order-invoices.')->group(function () {
-        Route::prefix('/orders/{order}/attached-invoices')->group(function () {
+    Route::controller(CMDInvoiceController::class)->name('invoices.')->group(function () {
+        Route::prefix('/orders/{order}/invoices')->group(function () {
             CRUDRouteGenerator::defineDefaultRoutesOnly(
                 ['index', 'create'],
                 'id',
-                'can:view-CMD-attached-order-invoices',
-                'can:edit-CMD-attached-order-invoices'
+                'can:view-CMD-invoices',
+                'can:edit-CMD-invoices'
             );
         });
 
-        Route::prefix('/orders/attached-invoices')->group(function () {
+        Route::prefix('/orders/invoices')->group(function () {
             CRUDRouteGenerator::defineDefaultRoutesOnly(
                 ['store', 'edit', 'update', 'delete'],
                 'id',
-                'can:view-CMD-attached-order-invoices',
-                'can:edit-CMD-attached-order-invoices'
+                'can:view-CMD-invoices',
+                'can:edit-CMD-invoices'
             );
         });
     });

@@ -35,9 +35,20 @@ class InvoicePaymentType extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function attachedOrderInvoices()
+    public function invoices()
     {
-        return $this->hasMany(AttachedOrderInvoice::class, 'payment_type_id');
+        return $this->hasMany(Invoice::class, 'payment_type_id');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Scope
+    |--------------------------------------------------------------------------
+    */
+
+    public function scopeWithoutFinalPayment($query)
+    {
+        return $query->where('id', '!=', self::FINAL_PAYMENT_ID);
     }
 
     /*

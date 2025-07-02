@@ -105,18 +105,18 @@
         {{ $record->expected_dispatch_date }}
     @break
 
-    @case('Attached invoices')
+    @case('Invoices')
         <x-misc.buttoned-link
             style="transparent"
             class="button--arrowed-link button--margined-bottom text-lowercase"
             icon="arrow_forward"
-            :link="route('cmd.attached-order-invoices.index', $record->id)">
-            {{ $record->attached_invoices_count }} {{ __('Invoices') }}
+            :link="route('cmd.invoices.index', $record->id)">
+            {{ $record->invoices_count }} {{ __('Invoices') }}
         </x-misc.buttoned-link>
 
         @if ($record->canAttachNewInvoice())
-            <a class="main-link" href="{{ route('cmd.attached-order-invoices.create', $record->id) }}">
-                {{ __('Attach') }} <span class="text-lowercase">{{ __('Invoice') }}</span>
+            <a class="main-link" href="{{ route('cmd.invoices.create', $record->id) }}">
+                {{ __('New') }} <span class="text-lowercase">{{ __('Invoice') }}</span>
             </a>
         @endif
     @break
