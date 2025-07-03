@@ -6,7 +6,7 @@
             <th width="40"><x-tables.partials.th.edit /></th>
             <th>{{ __('Receive date') }}</th>
             <th>{{ __('Payment type') }}</th>
-            <th>{{ __('File') }}</th>
+            <th>PDF</th>
             <th>{{ __('Order') }}</th>
             <th>{{ __('Sent for payment date') }}</th>
         </tr>
@@ -23,7 +23,7 @@
 
                 <td>
                     <a class="main-link" href="{{ $record->pdf_asset_url }}" target="_blank">
-                        {{ $record->filename }}
+                        {{ $record->pdf }}
                     </a>
                 </td>
 

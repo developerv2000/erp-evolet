@@ -17,7 +17,7 @@
 
             <x-form.inputs.default-input
                 :label-text="__('New') . ' ' . __('File')"
-                inputName="filename"
+                inputName="pdf"
                 type="file"
                 accept=".pdf" />
         </div>

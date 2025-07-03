@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\InvoiceIsSentForPayment;
 use App\Support\Contracts\Model\HasTitle;
 use App\Support\Traits\Model\FormatsAttributeForDateTimeInput;
 use App\Support\Traits\Model\UploadsFile;
@@ -20,7 +21,7 @@ class Invoice extends Model implements HasTitle
     |--------------------------------------------------------------------------
     */
 
-    const FILE_PATH = 'private/invoices';
+    const PDF_PATH = 'private/invoices';
 
     /*
     |--------------------------------------------------------------------------
@@ -59,12 +60,17 @@ class Invoice extends Model implements HasTitle
 
     public function getPdfAssetUrlAttribute(): string
     {
-        return asset(self::FILE_PATH . '/' . $this->filename);
+        return asset(self::PDF_PATH . '/' . $this->pdf);
     }
 
     public function getPdfPathAttribute()
     {
-        return public_path(self::FILE_PATH . '/' . $this->filename);
+        return public_path(self::PDF_PATH . '/' . $this->pdf);
+    }
+
+    public function getIsSentForPaymentAttribute(): bool
+    {
+        return !is_null($this->sent_for_payment_date);
     }
 
     /*
@@ -146,14 +152,14 @@ class Invoice extends Model implements HasTitle
 
         $record = self::create($request->all());
 
-        $record->uploadFile('filename', public_path(self::FILE_PATH), uniqid());
+        $record->uploadFile('pdf', public_path(self::PDF_PATH), uniqid());
     }
 
     public function updateByCMDFromRequest($request)
     {
         $this->update($request->all());
 
-        $this->uploadFile('filename', public_path(self::FILE_PATH), uniqid());
+        $this->uploadFile('pdf', public_path(self::PDF_PATH), uniqid());
     }
 
     /*
@@ -161,4 +167,21 @@ class Invoice extends Model implements HasTitle
     | Misc
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * CMD BDM sends invoice to PRD Financier for payment
+     */
+    public function toggleIsSentForPaymentAttribute(Request $request)
+    {
+        $action = $request->input('action');
+
+        if ($action == 'send' && !$this->is_sent_for_payment) {
+            $this->sent_for_payment_date = now();
+            $this->save();
+
+            // Notify specific users
+            $notification = new InvoiceIsSentForPayment($this);
+            User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-CMD-invoice-is-sent-for-payment');
+        }
+    }
 }

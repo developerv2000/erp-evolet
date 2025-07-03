@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PLPD\PLPDInvoiceController;
 use App\Http\Controllers\PLPD\PLPDOrderController;
 use App\Http\Controllers\PLPD\PLPDOrderProductController;
 use App\Http\Controllers\PLPD\PLPDReadyForOrderProcessController;
@@ -37,4 +38,7 @@ Route::middleware('auth', 'auth.session')->prefix('plpd')->name('plpd.')->group(
 
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });
+
+    // Invoices
+    Route::index('/invoices', [PLPDInvoiceController::class, 'index'])->name('invoices.index')->middleware('can:view-PLPD-invoices');
 });

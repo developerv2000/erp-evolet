@@ -325,6 +325,14 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
                     'attribute' => 'trademark_ru',
                 ],
             ],
+
+            'relationInAmbiguous' => [
+                [
+                    'name' => 'order',
+                    'attribute' => 'order_name',
+                    'ambiguousAttribute' => 'orders.name',
+                ],
+            ],
         ];
     }
 

@@ -7,12 +7,14 @@ use App\Support\Definers\GateDefiners\DDGatesDefiner;
 use App\Support\Definers\GateDefiners\GlobalGatesDefiner;
 use App\Support\Definers\GateDefiners\MADGatesDefiner;
 use App\Support\Definers\GateDefiners\PLPDGatesDefiner;
+use App\Support\Definers\GateDefiners\PRDGatesDefiner;
 use App\Support\Definers\ViewComposerDefiners\CMDViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\DDViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\GlobalViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\MADViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\MGMTViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\PLPDViewComposersDefiner;
+use App\Support\Definers\ViewComposerDefiners\PRDViewComposersDefiner;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -36,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
         PLPDGatesDefiner::defineAll();
         CMDGatesDefiner::defineAll();
         DDGatesDefiner::defineAll();
+        PRDGatesDefiner::defineAll();
 
         // View composer definers
         GlobalViewComposersDefiner::defineAll();
@@ -44,5 +47,6 @@ class AppServiceProvider extends ServiceProvider
         PLPDViewComposersDefiner::defineAll();
         CMDViewComposersDefiner::defineAll();
         DDViewComposersDefiner::defineAll();
+        PRDViewComposersDefiner::defineAll();
     }
 }

@@ -193,5 +193,43 @@ class PermissionSeeder extends Seeder
                 'department_id' => $departmentID,
             ]);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | PRD permissions
+        |--------------------------------------------------------------------------
+        */
+
+        $departmentID = Department::findByName(Department::PRD_NAME)->id;
+
+        // Global permissions
+        $ddGlobals = [
+            Permission::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_INVOICE_IS_SENT_FOR_PAYMENT,
+        ];
+
+        foreach ($ddGlobals as $global) {
+            Permission::create([
+                'name' => $global,
+                'global' => true,
+            ]);
+        }
+
+        // Non global permissions
+        $prds = [
+            Permission::CAN_VIEW_PRD_ORDERS_NAME,
+            Permission::CAN_VIEW_PRD_ORDER_PRODUCTS_NAME,
+            Permission::CAN_VIEW_PRD_INVOICES_NAME,
+
+            Permission::CAN_EDIT_PRD_ORDERS_NAME,
+            Permission::CAN_EDIT_PRD_ORDER_PRODUCTS_NAME,
+            Permission::CAN_EDIT_PRD_INVOICES_NAME,
+        ];
+
+        foreach ($prds as $prd) {
+            Permission::create([
+                'name' => $prd,
+                'department_id' => $departmentID,
+            ]);
+        }
     }
 }

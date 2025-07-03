@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->unsignedMediumInteger('id')->autoIncrement();
             $table->timestamp('receive_date');
-            $table->string('filename');
+            $table->string('pdf');
 
             $table->unsignedMediumInteger('order_id')
                 ->index()

@@ -329,7 +329,8 @@
 
     "Sent to manufacturer": "Отправлено заводу",
     "Send to manufacturer": "Отправить заводу",
-    "Given order has been sent to manufacturer": "Данный заказ отправлен производителю",
+    "Below order has been sent to manufacturer": "Данный заказ отправлен производителю",
+    "Below invoice has been sent for payment": "Данный инвойс был отправлен на оплату",
 
     "Layout status": "Статус макета",
     "Layout sent date": "Дата отправки макета",

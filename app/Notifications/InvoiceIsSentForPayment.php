@@ -2,22 +2,22 @@
 
 namespace App\Notifications;
 
-use App\Models\Order;
+use App\Models\Invoice;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class OrderIsSentToManufacturer extends Notification
+class InvoiceIsSentForPayment extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(Order $order)
+    public function __construct(Invoice $invoice)
     {
-        $this->order = $order;
+        $this->invoice = $invoice;
     }
 
     /**
@@ -38,11 +38,11 @@ class OrderIsSentToManufacturer extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'order_id' => $this->order->id,
-            'name' => $this->order->name,
-            'products_count' => $this->order->products->count(),
-            'manufacturer' => $this->order->manufacturer->name,
-            'country' => $this->order->country->code,
+            'invoice_id' => $this->invoice->id,
+            'order_name' => $this->invoice->order->name,
+            'order_products_count' => $this->invoice->order->products->count(),
+            'order_manufacturer_name' => $this->invoice->order->manufacturer->name,
+            'order_country_code' => $this->invoice->order->country->code,
         ];
     }
 }

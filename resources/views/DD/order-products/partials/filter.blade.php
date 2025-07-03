@@ -22,7 +22,7 @@
 
     <x-form.selects.selectize.multiple-select.request-based-select
         labelText="PO №"
-        inputName="name[]"
+        inputName="order_name[]"
         :options="$orderNames" />
 
     <x-form.inputs.request-based-input

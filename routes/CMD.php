@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\CMD\CMDAttachedOrderInvoiceController;
 use App\Http\Controllers\CMD\CMDInvoiceController;
 use App\Http\Controllers\CMD\CMDOrderController;
 use App\Http\Controllers\CMD\CMDOrderProductController;
@@ -23,7 +22,7 @@ Route::middleware('auth', 'auth.session')->prefix('cmd')->name('cmd.')->group(fu
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
     });
 
-    // Attached order invoices
+    // Order invoices
     Route::controller(CMDInvoiceController::class)->name('invoices.')->group(function () {
         Route::prefix('/orders/{order}/invoices')->group(function () {
             CRUDRouteGenerator::defineDefaultRoutesOnly(

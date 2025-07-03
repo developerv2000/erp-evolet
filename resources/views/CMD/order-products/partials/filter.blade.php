@@ -1,7 +1,7 @@
 <x-filter.layout>
     <x-form.selects.selectize.multiple-select.request-based-select
         labelText="PO №"
-        inputName="name[]"
+        inputName="order_name[]"
         :options="$orderNames" />
 
     <x-form.selects.selectize.id-based-single-select.request-based-select

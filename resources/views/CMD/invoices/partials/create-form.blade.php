@@ -26,7 +26,7 @@
 
             <x-form.inputs.default-input
                 labelText="File"
-                inputName="filename"
+                inputName="pdf"
                 type="file"
                 accept=".pdf"
                 :isRequired="true" />

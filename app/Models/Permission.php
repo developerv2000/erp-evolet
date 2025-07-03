@@ -163,6 +163,26 @@ class Permission extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | PRD permissions
+    |--------------------------------------------------------------------------
+    */
+
+    // View
+    const CAN_VIEW_PRD_ORDERS_NAME = 'can view PRD orders';
+    const CAN_VIEW_PRD_ORDER_PRODUCTS_NAME = 'can view PRD order products';
+    const CAN_VIEW_PRD_INVOICES_NAME = 'can view PRD invoices';
+
+    // Edit
+    const CAN_EDIT_PRD_ORDERS_NAME = 'can edit PRD orders';
+    const CAN_EDIT_PRD_ORDER_PRODUCTS_NAME = 'can edit PRD order products';
+    const CAN_EDIT_PRD_INVOICES_NAME = 'can edit PRD invoices';
+
+    // Global permissions
+    // PLPD and PRD permissions
+    const CAN_RECEIVE_NOTIFICATION_WHEN_CMD_INVOICE_IS_SENT_FOR_PAYMENT = 'can receive notification when CMD invoice is sent for payment';
+
+    /*
+    |--------------------------------------------------------------------------
     | Properties
     |--------------------------------------------------------------------------
     */
@@ -339,7 +359,10 @@ class Permission extends Model
 
             self::CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER,
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_FOR_CONFIRMATION,
+
+            // Globals
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER,
+            self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_INVOICE_IS_SENT_FOR_PAYMENT,
         ];
     }
 
@@ -366,6 +389,21 @@ class Permission extends Model
             self::CAN_EDIT_DD_ORDER_PRODUCTS_NAME,
 
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER,
+        ];
+    }
+
+    public static function getPRDFinancierPermissionNames()
+    {
+        return [
+            self::CAN_VIEW_PRD_ORDERS_NAME,
+            self::CAN_VIEW_PRD_ORDER_PRODUCTS_NAME,
+            self::CAN_VIEW_PRD_INVOICES_NAME,
+
+            self::CAN_EDIT_PRD_ORDERS_NAME,
+            self::CAN_EDIT_PRD_ORDER_PRODUCTS_NAME,
+            self::CAN_EDIT_PRD_INVOICES_NAME,
+
+            self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_INVOICE_IS_SENT_FOR_PAYMENT,
         ];
     }
 }

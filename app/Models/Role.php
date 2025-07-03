@@ -49,6 +49,9 @@ class Role extends Model
     // DD
     const DD_DESIGNER_NAME = 'DD Designer';                     // Not fully implemented yet!
 
+    // PRD
+    const PRD_FINANCIER_NAME = 'PRD Financier';                 // Not fully implemented yet!
+
     /*
     |--------------------------------------------------------------------------
     | Properties
