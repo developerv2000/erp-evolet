@@ -1,4 +1,4 @@
-@canany(['view-CMD-ready-for-order-processes', 'view-CMD-orders', 'view-CMD-order-products'])
+@canany(['view-CMD-orders', 'view-CMD-order-products', 'view-CMD-invoices'])
     <div class="leftbar__section leftbar__section--CMD">
         <p class="leftbar__section-title">{{ __('CMD') }}</p>
 
@@ -28,6 +28,20 @@
 
                     <x-misc.material-symbol class="leftbar__nav-link-icon" icon="medication" />
                     <span class="leftbar__nav-link-text">{{ __('Products') }}</span>
+                </a>
+            @endcan
+
+            {{-- Order invoices --}}
+            @can('view-CMD-invoices')
+                <a
+                    @class([
+                        'leftbar__nav-link',
+                        'leftbar__nav-link--active' => request()->routeIs('cmd.invoices.*'),
+                    ])
+                    href="{{ route('cmd.invoices.index') }}">
+
+                    <x-misc.material-symbol class="leftbar__nav-link-icon" icon="receipt_long" />
+                    <span class="leftbar__nav-link-text">{{ __('Invoices') }}</span>
                 </a>
             @endcan
         </nav>

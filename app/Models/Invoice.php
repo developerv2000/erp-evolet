@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Notifications\InvoiceIsSentForPayment;
+use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\HasTitle;
+use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\FormatsAttributeForDateTimeInput;
 use App\Support\Traits\Model\UploadsFile;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
-class Invoice extends Model implements HasTitle
+class Invoice extends BaseModel implements HasTitle
 {
     use SoftDeletes; // No manual trashing/restoring. Trashed when order parent is trashed.
     use UploadsFile;
@@ -22,6 +25,21 @@ class Invoice extends Model implements HasTitle
     */
 
     const PDF_PATH = 'private/invoices';
+
+    const SETTINGS_CMD_TABLE_COLUMNS_KEY = 'CMD_invoices_table_columns';
+    const DEFAULT_CMD_ORDER_BY = 'updated_at';
+    const DEFAULT_CMD_ORDER_TYPE = 'desc';
+    const DEFAULT_CMD_PAGINATION_LIMIT = 50;
+
+    const SETTINGS_PRD_TABLE_COLUMNS_KEY = 'PRD_invoices_table_columns';
+    const DEFAULT_PRD_ORDER_BY = 'updated_at';
+    const DEFAULT_PRD_ORDER_TYPE = 'desc';
+    const DEFAULT_PRD_PAGINATION_LIMIT = 50;
+
+    const SETTINGS_PLPD_TABLE_COLUMNS_KEY = 'PLPD_invoices_table_columns';
+    const DEFAULT_PLPD_ORDER_BY = 'created_at';
+    const DEFAULT_PLPD_ORDER_TYPE = 'desc';
+    const DEFAULT_PLPD_PAGINATION_LIMIT = 50;
 
     /*
     |--------------------------------------------------------------------------
@@ -63,7 +81,7 @@ class Invoice extends Model implements HasTitle
         return asset(self::PDF_PATH . '/' . $this->pdf);
     }
 
-    public function getPdfPathAttribute()
+    public function getPdfFilePathAttribute()
     {
         return public_path(self::PDF_PATH . '/' . $this->pdf);
     }
@@ -72,12 +90,6 @@ class Invoice extends Model implements HasTitle
     {
         return !is_null($this->sent_for_payment_date);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Events
-    |--------------------------------------------------------------------------
-    */
 
     /*
     |--------------------------------------------------------------------------
@@ -102,7 +114,7 @@ class Invoice extends Model implements HasTitle
     /**
      * Implement method defined in BaseModel abstract class.
      *
-     * Used by 'PLPD' and 'CDM' departments.
+     * Used by 'PLPD', 'CMD' and 'PRD' departments.
      *
      */
     public function generateBreadcrumbs($department = null): array
@@ -113,7 +125,7 @@ class Invoice extends Model implements HasTitle
 
             return [
                 ...$this->order->generateBreadcrumbs($lowercasedDepartment),
-                ['link' => route($lowercasedDepartment . '.invoices.index', $this->order_id), 'text' => __('Invoices')],
+                ['link' => route($lowercasedDepartment . '.invoices.index', ['order_id[]' => $this->order_id]), 'text' => __('Invoices')],
                 ['link' => route($lowercasedDepartment . '.invoices.edit', $this->id), 'text' => $this->title],
             ];
         }
@@ -130,6 +142,90 @@ class Invoice extends Model implements HasTitle
     public function getTitleAttribute(): string
     {
         return $this->paymentType->name . ' #' . $this->id;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Filtering
+    |--------------------------------------------------------------------------
+    */
+
+    public static function filterQueryForRequest($query, $request)
+    {
+        // Apply base filters using helper
+        $query = QueryFilterHelper::applyFilters($query, $request, self::getFilterConfig());
+
+        return $query;
+    }
+
+    private static function getFilterConfig(): array
+    {
+        return [
+            'whereEqual' => ['payment_type_id'],
+            'whereIn' => ['order_id'],
+            'dateRange' => [
+                'receive_date',
+                'sent_for_payment_date',
+                'created_at',
+                'updated_at'
+            ],
+
+            'relationEqual' => [
+                [
+                    'name' => 'order',
+                    'attribute' => 'manufacturer_id',
+                ],
+
+                [
+                    'name' => 'order',
+                    'attribute' => 'country_id',
+                ],
+            ],
+
+            'relationInAmbiguous' => [
+                [
+                    'name' => 'order',
+                    'attribute' => 'order_name',
+                    'ambiguousAttribute' => 'orders.name',
+                ],
+            ],
+        ];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Adding default query params to request
+    |--------------------------------------------------------------------------
+    */
+
+    public static function addDefaultCMDQueryParamsToRequest(Request $request)
+    {
+        self::addDefaultQueryParamsToRequest(
+            $request,
+            'DEFAULT_CMD_ORDER_BY',
+            'DEFAULT_CMD_ORDER_TYPE',
+            'DEFAULT_CMD_PAGINATION_LIMIT',
+        );
+    }
+
+    public static function addDefaultPRDQueryParamsToRequest(Request $request)
+    {
+        self::addDefaultQueryParamsToRequest(
+            $request,
+            'DEFAULT_PRD_ORDER_BY',
+            'DEFAULT_PRD_ORDER_TYPE',
+            'DEFAULT_PRD_PAGINATION_LIMIT',
+        );
+    }
+
+    public static function addDefaultPLPDQueryParamsToRequest(Request $request)
+    {
+        self::addDefaultQueryParamsToRequest(
+            $request,
+            'DEFAULT_PLPD_ORDER_BY',
+            'DEFAULT_PLPD_ORDER_TYPE',
+            'DEFAULT_PLPD_PAGINATION_LIMIT',
+        );
     }
 
     /*
@@ -183,5 +279,40 @@ class Invoice extends Model implements HasTitle
             $notification = new InvoiceIsSentForPayment($this);
             User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-CMD-invoice-is-sent-for-payment');
         }
+    }
+
+    public static function getDefaultCMDTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-CMD-invoices')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        if (Gate::forUser($user)->allows('edit-CMD-invoices')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
+            ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Payment type', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Sent for payment date', 'order' => $order++, 'width' => 198, 'visible' => 1],
+            ['name' => 'PDF', 'order' => $order++, 'width' => 140, 'visible' => 100],
+
+            ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
+        );
+
+        return $columns;
     }
 }

@@ -40,5 +40,5 @@ Route::middleware('auth', 'auth.session')->prefix('plpd')->name('plpd.')->group(
     });
 
     // Invoices
-    Route::index('/invoices', [PLPDInvoiceController::class, 'index'])->name('invoices.index')->middleware('can:view-PLPD-invoices');
+    Route::get('/invoices', [PLPDInvoiceController::class, 'index'])->name('invoices.index')->middleware('can:view-PLPD-invoices');
 });

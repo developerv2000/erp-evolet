@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ...$order->generateBreadcrumbs('CMD'),
+                    ['link' => route('cmd.orders.index'), 'text' => __('Orders')],
                     ['link' => url()->current(), 'text' => __('Invoices')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->count()]
                 ];
@@ -23,15 +23,6 @@
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
                 @can('edit-cmd-invoices')
-                    @if ($order->canAttachNewInvoice())
-                        <x-misc.buttoned-link
-                            class="toolbar__button"
-                            style="shadowed"
-                            link="{{ route('cmd.invoices.create', $order->id) }}"
-                            icon="add">{{ __('New') }}
-                        </x-misc.buttoned-link>
-                    @endif
-
                     <x-misc.button
                         class="toolbar__button"
                         style="shadowed"
@@ -52,7 +43,7 @@
         </div>
 
         {{-- Table --}}
-        @include('CMD.invoices.partials.table')
+        @include('CMD.invoices.table.layout', ['trashedRecords' => false])
     </div>
 
     {{-- Modals --}}

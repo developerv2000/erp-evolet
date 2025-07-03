@@ -115,7 +115,7 @@
         </x-misc.buttoned-link>
 
         @if ($record->canAttachNewInvoice())
-            <a class="main-link" href="{{ route('cmd.invoices.create', $record->id) }}">
+            <a class="main-link" href="{{ route('cmd.invoices.create', ['order_id' => $record->id]) }}">
                 {{ __('New') }} <span class="text-lowercase">{{ __('Invoice') }}</span>
             </a>
         @endif

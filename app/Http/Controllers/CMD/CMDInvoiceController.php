@@ -5,6 +5,8 @@ namespace App\Http\Controllers\CMD;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\Order;
+use App\Models\User;
+use App\Support\Helpers\UrlHelper;
 use App\Support\Traits\Controller\DestroysModelRecords;
 use Illuminate\Http\Request;
 
@@ -17,13 +19,26 @@ class CMDInvoiceController extends Controller
 
     public function index(Request $request, Order $order)
     {
-        $records = $order->invoices()->withBasicRelations()->get();
+        // Preapare request for valid model querying
+        Invoice::addDefaultCMDQueryParamsToRequest($request);
+        UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
-        return view('CMD.invoices.index', compact('order', 'records'));
+        // Get finalized records paginated
+        $query = Invoice::withBasicRelations();
+        $filteredQuery = Invoice::filterQueryForRequest($query, $request);
+        $records = Invoice::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
+
+        // Get all and only visible table columns
+        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Invoice::SETTINGS_CMD_TABLE_COLUMNS_KEY);
+        $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
+
+        return view('CMD.invoices.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
-    public function create(Request $request, Order $order)
+    public function create(Request $request)
     {
+        $order = Order::findOrFail($request->input('order_id'));
+
         if (!$order->canAttachNewInvoice()) {
             abort(404);
         }

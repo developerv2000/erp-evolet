@@ -43,6 +43,12 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     const DEFAULT_DD_ORDER_TYPE = 'desc';
     const DEFAULT_DD_PAGINATION_LIMIT = 50;
 
+    // PRD
+    const SETTINGS_PRD_TABLE_COLUMNS_KEY = 'PRD_order_products_table_columns';
+    const DEFAULT_PRD_ORDER_BY = 'order_sent_to_manufacturer_date';
+    const DEFAULT_PRD_ORDER_TYPE = 'desc';
+    const DEFAULT_PRD_PAGINATION_LIMIT = 50;
+
     /*
     |--------------------------------------------------------------------------
     | Properties

@@ -23,23 +23,7 @@ Route::middleware('auth', 'auth.session')->prefix('cmd')->name('cmd.')->group(fu
     });
 
     // Order invoices
-    Route::controller(CMDInvoiceController::class)->name('invoices.')->group(function () {
-        Route::prefix('/orders/{order}/invoices')->group(function () {
-            CRUDRouteGenerator::defineDefaultRoutesOnly(
-                ['index', 'create'],
-                'id',
-                'can:view-CMD-invoices',
-                'can:edit-CMD-invoices'
-            );
-        });
-
-        Route::prefix('/orders/invoices')->group(function () {
-            CRUDRouteGenerator::defineDefaultRoutesOnly(
-                ['store', 'edit', 'update', 'destroy'],
-                'id',
-                'can:view-CMD-invoices',
-                'can:edit-CMD-invoices'
-            );
-        });
+    Route::prefix('/orders/invoices')->controller(CMDInvoiceController::class)->name('invoices.')->group(function () {
+        CRUDRouteGenerator::defineDefaultRoutesExcept(['show', 'trash', 'restore'], 'id', 'can:view-CMD-invoices', 'can:edit-CMD-invoices');
     });
 });

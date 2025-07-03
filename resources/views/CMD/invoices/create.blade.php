@@ -12,7 +12,7 @@
             @php
                 $crumbs = [
                     ...$order->generateBreadcrumbs('CMD'),
-                    ['link' => route('cmd.invoices.index', $order->id), 'text' => __('Invoices')],
+                    ['link' => route('cmd.invoices.index', ['order_id[]' => $order->id]), 'text' => __('Invoices')],
                     ['link' => null, 'text' => __('Create new')],
                 ];
             @endphp

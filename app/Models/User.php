@@ -366,6 +366,7 @@ class User extends Authenticatable
         $this->resetPLPDTablesColumnSettings($settings);
         $this->resetCMDTablesColumnSettings($settings);
         $this->resetDDTablesColumnSettings($settings);
+        $this->resetPRDTablesColumnSettings($settings);
     }
 
     /**
@@ -409,6 +410,7 @@ class User extends Authenticatable
         $settings = $this->settings;
         $settings[Order::SETTINGS_CMD_TABLE_COLUMNS_KEY] = Order::getDefaultCMDTableColumnsForUser($this);
         $settings[OrderProduct::SETTINGS_CMD_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultCMDTableColumnsForUser($this);
+        $settings[Invoice::SETTINGS_CMD_TABLE_COLUMNS_KEY] = Invoice::getDefaultCMDTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -422,6 +424,21 @@ class User extends Authenticatable
         $this->refresh();
         $settings = $this->settings;
         $settings[OrderProduct::SETTINGS_DD_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultDDTableColumnsForUser($this);
+
+        $this->settings = $settings;
+        $this->save();
+    }
+
+    /**
+     * Reset users PRD tables column settings
+     */
+    public function resetPRDTablesColumnSettings($settings)
+    {
+        $this->refresh();
+        $settings = $this->settings;
+        $settings[Order::SETTINGS_PRD_TABLE_COLUMNS_KEY] = Order::getDefaultCMDTableColumnsForUser($this);
+        $settings[OrderProduct::SETTINGS_PRD_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultCMDTableColumnsForUser($this);
+        $settings[Invoice::SETTINGS_PRD_TABLE_COLUMNS_KEY] = Invoice::getDefaultCMDTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -717,6 +734,11 @@ class User extends Authenticatable
 
             // DD
             'dd.order-products.index' => 'view-DD-order-products',
+
+            // PRD
+            'prd.invoices.index' => 'view-PRD-invoices',
+            'prd.orders.index' => 'view-PRD-orders',
+            'prd.order-products.index' => 'view-PRD-order-products',
         ];
 
         foreach ($homepageRoutes as $routeName => $gate) {
