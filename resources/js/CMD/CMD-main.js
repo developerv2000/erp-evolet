@@ -5,7 +5,6 @@
 */
 
 import * as functions from './CMD-functions';
-import { debounce } from '../utilities';
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +14,9 @@ import { debounce } from '../utilities';
 
 // Orders table
 const ordersTable = document.querySelector('.cmd-orders-table');
+
+// Invoices table
+const invoicesTable = document.querySelector('.cmd-invoices-table');
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +33,12 @@ ordersTable?.querySelectorAll('button[data-click-action="toggle-orders-is-sent-t
 ordersTable?.querySelectorAll('button[data-click-action="toggle-orders-is-sent-to-manufacturer-attribute"]').forEach(button => {
     button.addEventListener('click', (evt) => {
         functions.toggleOrdersIsSentToManufacturerAttribute(evt);
+    });
+});
+
+invoicesTable?.querySelectorAll('button[data-click-action="toggle-invoices-is-sent-for-payment-attribute"]').forEach(button => {
+    button.addEventListener('click', (evt) => {
+        functions.toggleInvoicesIsSentForPaymentAttribute(evt);
     });
 });
 

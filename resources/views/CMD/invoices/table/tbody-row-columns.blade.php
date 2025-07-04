@@ -29,7 +29,7 @@
                 style="transparent"
                 class="button--arrowed-link button--margined-bottom"
                 icon="line_end_arrow_notch"
-                data-click-action="toggle-invoice-is-sent-for-payment-attribute"
+                data-click-action="toggle-invoices-is-sent-for-payment-attribute"
                 data-action-type="send"
                 data-record-id="{{ $record->id }}">
                 {{ __('Send for payment') }}

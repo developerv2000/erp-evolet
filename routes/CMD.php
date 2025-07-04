@@ -25,5 +25,7 @@ Route::middleware('auth', 'auth.session')->prefix('cmd')->name('cmd.')->group(fu
     // Order invoices
     Route::prefix('/orders/invoices')->controller(CMDInvoiceController::class)->name('invoices.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesExcept(['show', 'trash', 'restore'], 'id', 'can:view-CMD-invoices', 'can:edit-CMD-invoices');
+
+        Route::post('/toggle-is-sent-for-payment-attribute', 'toggleIsSentForPaymentAttribute');  // AJAX request
     });
 });

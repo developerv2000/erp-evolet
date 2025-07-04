@@ -17,6 +17,9 @@ import { updateOrderStatus } from "../shared";
 const TOGGLE_ORDERS_IS_SENT_TO_CONFIRMATION_ATTRIBUTE_POST_URL = '/cmd/orders/toggle-is-sent-to-confirmation-attribute';
 const TOGGLE_ORDERS_IS_SENT_TO_MANUFACTURER_ATTRIBUTE_POST_URL = '/cmd/orders/toggle-is-sent-to-manufacturer-attribute';
 
+// Invoices
+const TOGGLE_INVOICES_IS_SENT_FOR_PAYMENT_ATTRIBUTE_POST_URL = '/cmd/orders/invoices/toggle-is-sent-for-payment-attribute';
+
 /*
 |--------------------------------------------------------------------------
 | DOM Elements
@@ -86,6 +89,32 @@ export function toggleOrdersIsSentToManufacturerAttribute(evt) {
 
                 // Update order status
                 updateOrderStatus(td, response.data.statusHTML);
+            }
+        })
+        .finally(function () {
+            hideSpinner();
+        });
+}
+
+export function toggleInvoicesIsSentForPaymentAttribute(evt) {
+    showSpinner();
+
+    const target = evt.currentTarget;
+
+    const data = {
+        'record_id': target.dataset.recordId,
+        'action': target.dataset.actionType,
+    };
+
+    axios.post(TOGGLE_INVOICES_IS_SENT_FOR_PAYMENT_ATTRIBUTE_POST_URL, data, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            if (response.data.isSentForPayment) {
+                const td = target.closest('td');
+                td.innerHTML = response.data.sentForPaymentDate;
             }
         })
         .finally(function () {

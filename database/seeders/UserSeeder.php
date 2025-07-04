@@ -112,11 +112,37 @@ class UserSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
+        | PLPD users
+        |--------------------------------------------------------------------------
+        */
+
+        $plpdID = Department::findByName(Department::PLPD_NAME)->id;
+        $logisticianRoleID = Role::findByName(Role::PLPD_LOGISTICIAN_NAME);
+
+        $logisticians = [
+            ['name' => 'Logistic man', 'email' => 'logistician@mail.com', 'photo' => 'bdm.png'],
+        ];
+
+        // Create PLPD logisticians
+        foreach ($logisticians as $user) {
+            $newUser = User::create([
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'photo' => $user['photo'],
+                'department_id' => $plpdID,
+                'password' => bcrypt($password),
+            ]);
+
+            $newUser->roles()->attach($logisticianRoleID);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
         | CMD users
         |--------------------------------------------------------------------------
         */
 
-        $CmdID = Department::findByName(Department::CMD_NAME)->id;
+        $cmdID = Department::findByName(Department::CMD_NAME)->id;
         $bdmRoleID = Role::findByName(Role::CMD_BDM_NAME);
 
         $bdms = [
@@ -131,11 +157,63 @@ class UserSeeder extends Seeder
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'photo' => $user['photo'],
-                'department_id' => $CmdID,
+                'department_id' => $cmdID,
                 'password' => bcrypt($password),
             ]);
 
             $newUser->roles()->attach($bdmRoleID);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | DD users
+        |--------------------------------------------------------------------------
+        */
+
+        $ddID = Department::findByName(Department::DD_NAME)->id;
+        $designerRoleID = Role::findByName(Role::DD_DESIGNER_NAME);
+
+        $designers = [
+            ['name' => 'Designer man', 'email' => 'designer@mail.com', 'photo' => 'bdm.png'],
+        ];
+
+        // Create DD designers
+        foreach ($designers as $user) {
+            $newUser = User::create([
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'photo' => $user['photo'],
+                'department_id' => $ddID,
+                'password' => bcrypt($password),
+            ]);
+
+            $newUser->roles()->attach($designerRoleID);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | PRD users
+        |--------------------------------------------------------------------------
+        */
+
+        $prdID = Department::findByName(Department::PRD_NAME)->id;
+        $financierRoleID = Role::findByName(Role::PRD_FINANCIER_NAME);
+
+        $financiers = [
+            ['name' => 'Financier man', 'email' => 'financier@mail.com', 'photo' => 'bdm.png'],
+        ];
+
+        // Create PRD financiers
+        foreach ($financiers as $user) {
+            $newUser = User::create([
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'photo' => $user['photo'],
+                'department_id' => $prdID,
+                'password' => bcrypt($password),
+            ]);
+
+            $newUser->roles()->attach($financierRoleID);
         }
 
         /*

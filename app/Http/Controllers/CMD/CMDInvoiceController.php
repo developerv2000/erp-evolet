@@ -64,4 +64,18 @@ class CMDInvoiceController extends Controller
 
         return redirect($request->input('previous_url'));
     }
+
+    /**
+     * Ajax request
+     */
+    public function toggleIsSentForPaymentAttribute(Request $request)
+    {
+        $record = Invoice::findOrFail($request->input('record_id'));
+        $record->toggleIsSentForPaymentAttribute($request);
+
+        return response()->json([
+            'isSentForPayment' => $record->is_sent_for_payment,
+            'sentForPaymentDate' => $record->sent_for_payment_date?->isoFormat('DD MMM Y'),
+        ]);
+    }
 }
