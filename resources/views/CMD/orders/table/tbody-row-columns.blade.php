@@ -110,7 +110,7 @@
             style="transparent"
             class="button--arrowed-link button--margined-bottom text-lowercase"
             icon="arrow_forward"
-            :link="route('cmd.invoices.index', $record->id)">
+            :link="route('cmd.invoices.index', ['order_id[]' => $record->id])">
             {{ $record->invoices_count }} {{ __('Invoices') }}
         </x-misc.buttoned-link>
 

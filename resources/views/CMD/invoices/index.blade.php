@@ -53,3 +53,8 @@
             :forceDelete="true" />
     @endcan
 @endsection
+
+@section('rightbar')
+    @include('CMD.invoices.partials.filter')
+@endsection
+

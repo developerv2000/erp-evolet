@@ -71,6 +71,15 @@ class CMDViewComposersDefiner
                 'finalPaymentTypeName' => InvoicePaymentType::FINAL_PAYMENT_NAME,
             ]);
         });
+
+        View::composer('CMD.invoices.partials.filter', function ($view) {
+            $view->with([
+                'paymentTypes' => InvoicePaymentType::orderBy('id')->get(),
+                'ordersWithName' => Order::onlyWithName()->orderByName()->get(),
+                'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
+                'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+            ]);
+        });
     }
 
     /*

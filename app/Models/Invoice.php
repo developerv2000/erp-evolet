@@ -100,8 +100,20 @@ class Invoice extends BaseModel implements HasTitle
     public function scopeWithBasicRelations($query)
     {
         return $query->with([
-            'order',
             'paymentType',
+
+            'order' => function ($orderQuery) {
+                $orderQuery->with([ // ->withBasicRelations not used because of redundant relations
+                    'country',
+
+                    'manufacturer' => function ($manufacturersQuery) {
+                        $manufacturersQuery->select(
+                            'manufacturers.id',
+                            'manufacturers.name',
+                        );
+                    },
+                ]);
+            },
         ]);
     }
 
@@ -162,7 +174,7 @@ class Invoice extends BaseModel implements HasTitle
     {
         return [
             'whereEqual' => ['payment_type_id'],
-            'whereIn' => ['order_id'],
+            'whereIn' => ['id', 'order_id'],
             'dateRange' => [
                 'receive_date',
                 'sent_for_payment_date',
@@ -179,14 +191,6 @@ class Invoice extends BaseModel implements HasTitle
                 [
                     'name' => 'order',
                     'attribute' => 'country_id',
-                ],
-            ],
-
-            'relationInAmbiguous' => [
-                [
-                    'name' => 'order',
-                    'attribute' => 'order_name',
-                    'ambiguousAttribute' => 'orders.name',
                 ],
             ],
         ];

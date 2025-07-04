@@ -22,7 +22,19 @@
     @break
 
     @case('Sent for payment date')
-        {{ $record->sent_for_payment_date?->isoformat('DD MMM Y') }}
+        @if ($record->is_sent_for_payment)
+            {{ $record->sent_for_payment_date->isoformat('DD MMM Y') }}
+        @else
+            <x-misc.button
+                style="transparent"
+                class="button--arrowed-link button--margined-bottom"
+                icon="line_end_arrow_notch"
+                data-click-action="toggle-invoice-is-sent-for-payment-attribute"
+                data-action-type="send"
+                data-record-id="{{ $record->id }}">
+                {{ __('Send for payment') }}
+            </x-misc.button>
+        @endif
     @break
 
     @case('Order')
@@ -46,4 +58,5 @@
     @case('Update date')
         {{ $record->updated_at->isoformat('DD MMM Y') }}
     @break
+
 @endswitch
