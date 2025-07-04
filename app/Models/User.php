@@ -478,6 +478,7 @@ class User extends Authenticatable
 
             'CMD_orders_table_columns' => Order::getDefaultCMDTableColumnsForUser($this),
             'CMD_order_products_table_columns' => OrderProduct::getDefaultCMDTableColumnsForUser($this),
+            'CMD_invoices_table_columns' => Invoice::getDefaultCMDTableColumnsForUser($this),
 
             'DD_order_products_table_columns' => OrderProduct::getDefaultDDTableColumnsForUser($this),
 
