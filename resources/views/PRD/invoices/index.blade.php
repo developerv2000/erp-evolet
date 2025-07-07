@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('Invoices'),
-    'pageName' => 'cmd-invoices-index',
+    'pageName' => 'prd-invoices-index',
     'mainAutoOverflowed' => true,
 ])
 
@@ -11,7 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('cmd.orders.index'), 'text' => __('Orders')],
+                    ['link' => route('prd.orders.index'), 'text' => __('Orders')],
                     ['link' => url()->current(), 'text' => __('Invoices')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->count()]
                 ];
@@ -22,16 +22,6 @@
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
-                @can('edit-cmd-invoices')
-                    <x-misc.button
-                        class="toolbar__button"
-                        style="shadowed"
-                        icon="close"
-                        data-click-action="show-modal"
-                        data-modal-selector=".multiple-delete-modal">{{ __('Delete selected') }}
-                    </x-misc.button>
-                @endcan
-
                 <x-misc.button
                     class="toolbar__button"
                     style="shadowed"
@@ -51,22 +41,15 @@
         </div>
 
         {{-- Table --}}
-        @include('CMD.invoices.table.layout', ['trashedRecords' => false])
+        @include('PRD.invoices.table.layout', ['trashedRecords' => false])
     </div>
 
     {{-- Modals --}}
-    @can('edit-cmd-invoices')
-        <x-modals.multiple-delete
-            form-action="{{ route('cmd.invoices.destroy') }}"
-            :forceDelete="true" />
-
-        {{-- Modals --}}
-        <x-modals.edit-table-columns
-            form-action="{{ route('settings.update-table-columns', 'CMD_invoices_table_columns') }}"
-            :columns="$allTableColumns" />
-    @endcan
+    <x-modals.edit-table-columns
+        form-action="{{ route('settings.update-table-columns', 'PRD_invoices_table_columns') }}"
+        :columns="$allTableColumns" />
 @endsection
 
 @section('rightbar')
-    @include('CMD.invoices.partials.filter')
+    @include('PRD.invoices.partials.filter')
 @endsection

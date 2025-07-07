@@ -15,6 +15,7 @@ return new class extends Migration
             $table->unsignedMediumInteger('id')->autoIncrement();
 
             // Step 1:
+            // PLPD part
             $table->unsignedInteger('manufacturer_id')
                 ->index()
                 ->foreign()
@@ -31,6 +32,7 @@ return new class extends Migration
             $table->timestamp('sent_to_bdm_date')->nullable(); // action
 
             // Step 2:
+            // CMD part
             $table->string('name')->nullable();
             $table->date('purchase_date')->nullable(); // auto filled when field 'name' filled
 
@@ -44,12 +46,15 @@ return new class extends Migration
             $table->timestamp('sent_to_confirmation_date')->nullable(); // action
 
             // Step 3:
+            // PLPD part
             $table->timestamp('confirmation_date')->nullable(); // action
 
             // Step 4:
+            // CMD part
             $table->timestamp('sent_to_manufacturer_date')->nullable(); // action
 
             // Step 5:
+            // PLPD part
             $table->string('expected_dispatch_date')->nullable();
 
             $table->timestamps();

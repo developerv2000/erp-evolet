@@ -17,7 +17,7 @@ class CMDInvoiceController extends Controller
     // used in multiple destroy trait
     public static $model = Invoice::class;
 
-    public function index(Request $request, Order $order)
+    public function index(Request $request)
     {
         // Preapare request for valid model querying
         Invoice::addDefaultCMDQueryParamsToRequest($request);

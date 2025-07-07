@@ -241,6 +241,13 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $query->whereNotNull('sent_to_manufacturer_date');
     }
 
+    public function scopeOnlyWithInvoicesSentForPayment($query)
+    {
+        return $query->whereHas('invoices', function ($invoicesQuery) {
+            $invoicesQuery->onlySentForPayment();
+        });
+    }
+
     public function scopeOnlyWithName($query)
     {
         return $query->whereNotNull('name');
@@ -406,6 +413,16 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             'DEFAULT_CMD_ORDER_BY',
             'DEFAULT_CMD_ORDER_TYPE',
             'DEFAULT_CMD_PAGINATION_LIMIT',
+        );
+    }
+
+    public static function addDefaultPRDQueryParamsToRequest(Request $request)
+    {
+        self::addDefaultQueryParamsToRequest(
+            $request,
+            'DEFAULT_PRD_ORDER_BY',
+            'DEFAULT_PRD_ORDER_TYPE',
+            'DEFAULT_PRD_PAGINATION_LIMIT',
         );
     }
 
@@ -669,6 +686,35 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
+        );
+
+        return $columns;
+    }
+
+    public static function getDefaultPRDTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-PRD-orders')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        array_push(
+            $columns,
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
+            ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'Invoices', 'order' => $order++, 'width' => 120, 'visible' => 1],
+
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+            ['name' => 'Products', 'order' => $order++, 'width' => 126, 'visible' => 1],
+
+            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+
+            ['name' => 'Currency', 'order' => $order++, 'width' => 100, 'visible' => 1],
         );
 
         return $columns;

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->unsignedMediumInteger('id')->autoIncrement();
+            // CMD part
             $table->timestamp('receive_date');
             $table->string('pdf');
 
@@ -29,6 +30,13 @@ return new class extends Migration
                 ->on('invoice_payment_types');
 
             $table->timestamp('sent_for_payment_date')->nullable(); // action
+
+            // PRD part
+            $table->timestamp('accepted_by_financier_date')->nullable();
+            $table->timestamp('payment_request_date_by_financier')->nullable();
+            $table->timestamp('payment_date')->nullable();
+            $table->string('number')->nullable();
+            $table->string('payment_confirmation_document')->nullable(); // SWIFT
 
             $table->timestamps();
             $table->softDeletes();

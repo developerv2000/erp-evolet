@@ -436,9 +436,9 @@ class User extends Authenticatable
     {
         $this->refresh();
         $settings = $this->settings;
-        $settings[Order::SETTINGS_PRD_TABLE_COLUMNS_KEY] = Order::getDefaultCMDTableColumnsForUser($this);
-        $settings[OrderProduct::SETTINGS_PRD_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultCMDTableColumnsForUser($this);
-        $settings[Invoice::SETTINGS_PRD_TABLE_COLUMNS_KEY] = Invoice::getDefaultCMDTableColumnsForUser($this);
+        $settings[Order::SETTINGS_PRD_TABLE_COLUMNS_KEY] = Order::getDefaultPRDTableColumnsForUser($this);
+        $settings[OrderProduct::SETTINGS_PRD_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultPRDTableColumnsForUser($this);
+        $settings[Invoice::SETTINGS_PRD_TABLE_COLUMNS_KEY] = Invoice::getDefaultPRDTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -481,6 +481,10 @@ class User extends Authenticatable
             'CMD_invoices_table_columns' => Invoice::getDefaultCMDTableColumnsForUser($this),
 
             'DD_order_products_table_columns' => OrderProduct::getDefaultDDTableColumnsForUser($this),
+
+            'PRD_orders_table_columns' => Order::getDefaultPRDTableColumnsForUser($this),
+            'PRD_order_products_table_columns' => OrderProduct::getDefaultPRDTableColumnsForUser($this),
+            'PRD_invoices_table_columns' => Invoice::getDefaultPRDTableColumnsForUser($this),
 
             default => throw new InvalidArgumentExceptio("Unknown key: $key"),
         };

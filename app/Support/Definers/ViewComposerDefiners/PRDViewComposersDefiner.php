@@ -3,7 +3,6 @@
 namespace App\Support\Definers\ViewComposerDefiners;
 
 use App\Models\Country;
-use App\Models\Currency;
 use App\Models\InvoicePaymentType;
 use App\Models\Manufacturer;
 use App\Models\MarketingAuthorizationHolder;
@@ -16,9 +15,9 @@ class PRDViewComposersDefiner
 {
     public static function defineAll()
     {
-        // self::defineOrdersComposers();
-        // self::defineOrderProductsComposers();
-        // self::defineInvoicesComposers();
+        self::defineOrdersComposers();
+        self::defineOrderProductsComposers();
+        self::defineInvoicesComposers();
     }
 
     /*
@@ -29,27 +28,18 @@ class PRDViewComposersDefiner
 
     private static function defineOrdersComposers()
     {
-        View::composer('CMD.orders.partials.filter', function ($view) {
+        View::composer('PRD.orders.partials.filter', function ($view) {
             $view->with([
                 'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
-                'bdmUsers' => User::getCMDBDMsMinifed(),
-                'statusOptions' => Order::getFilterStatusOptions(),
                 'orderNames' => Order::onlyWithName()->orderByName()->pluck('name'),
-            ]);
-        });
-
-        View::composer('CMD.orders.partials.edit-form', function ($view) {
-            $view->with([
-                'currencies' => Currency::orderByName()->get(),
-                'defaultSelectedCurrencyID' => Currency::getDefaultIdValueForMADProcesses(),
             ]);
         });
     }
 
     private static function defineOrderProductsComposers()
     {
-        View::composer('CMD.order-products.partials.filter', function ($view) {
+        View::composer('PRD.order-products.partials.filter', function ($view) {
             $view->with([
                 'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
@@ -65,10 +55,12 @@ class PRDViewComposersDefiner
 
     private static function defineInvoicesComposers()
     {
-        View::composer('CMD.invoices.create', function ($view) {
+        View::composer('PRD.invoices.partials.filter', function ($view) {
             $view->with([
-                'paymentTypes' => InvoicePaymentType::withoutFinalPayment()->orderBy('id')->get(),
-                'finalPaymentTypeName' => InvoicePaymentType::FINAL_PAYMENT_NAME,
+                'paymentTypes' => InvoicePaymentType::orderBy('id')->get(),
+                'ordersWithName' => Order::onlyWithName()->orderByName()->get(),
+                'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
+                'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
             ]);
         });
     }

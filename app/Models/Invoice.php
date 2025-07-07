@@ -25,6 +25,7 @@ class Invoice extends BaseModel implements HasTitle
     */
 
     const PDF_PATH = 'private/invoices';
+    const PAYMENT_CONFIRMATION_DOCUMENT_PATH = 'private/payment-confirmation-documents';
 
     const SETTINGS_CMD_TABLE_COLUMNS_KEY = 'CMD_invoices_table_columns';
     const DEFAULT_CMD_ORDER_BY = 'updated_at';
@@ -37,7 +38,7 @@ class Invoice extends BaseModel implements HasTitle
     const DEFAULT_PRD_PAGINATION_LIMIT = 50;
 
     const SETTINGS_PLPD_TABLE_COLUMNS_KEY = 'PLPD_invoices_table_columns';
-    const DEFAULT_PLPD_ORDER_BY = 'created_at';
+    const DEFAULT_PLPD_ORDER_BY = 'updated_at';
     const DEFAULT_PLPD_ORDER_TYPE = 'desc';
     const DEFAULT_PLPD_PAGINATION_LIMIT = 50;
 
@@ -52,6 +53,9 @@ class Invoice extends BaseModel implements HasTitle
     protected $casts = [
         'receive_date' => 'datetime',
         'sent_for_payment_date' => 'datetime',
+        'accepted_by_financier_date' => 'datetime',
+        'payment_request_date_by_financier' => 'datetime',
+        'payment_date' => 'datetime',
     ];
 
     /*
@@ -86,6 +90,11 @@ class Invoice extends BaseModel implements HasTitle
         return public_path(self::PDF_PATH . '/' . $this->pdf);
     }
 
+    public function getPaymentConfirmationDocumentAssetUrlAttribute(): string
+    {
+        return asset(self::PDF_PATH . '/' . $this->pdf);
+    }
+
     public function getIsSentForPaymentAttribute(): bool
     {
         return !is_null($this->sent_for_payment_date);
@@ -115,6 +124,11 @@ class Invoice extends BaseModel implements HasTitle
                 ]);
             },
         ]);
+    }
+
+    public function scopeOnlySentForPayment($query)
+    {
+        return $query->whereNotNull('sent_for_payment_date');
     }
 
     /*
@@ -307,11 +321,52 @@ class Invoice extends BaseModel implements HasTitle
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Payment type', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Sent for payment date', 'order' => $order++, 'width' => 198, 'visible' => 1],
-            ['name' => 'PDF', 'order' => $order++, 'width' => 140, 'visible' => 100],
+            ['name' => 'PDF', 'order' => $order++, 'width' => 144, 'visible' => 100],
 
             ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
+        );
+
+        return $columns;
+    }
+
+    public static function getDefaultPRDTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-CMD-invoices')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        if (Gate::forUser($user)->allows('edit-CMD-invoices')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
+            ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Payment type', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Sent for payment date', 'order' => $order++, 'width' => 198, 'visible' => 1],
+            ['name' => 'PDF', 'order' => $order++, 'width' => 144, 'visible' => 100],
+
+            ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+
+            ['name' => 'Accepted date', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Payment request date', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Payment date', 'order' => $order++, 'width' => 122, 'visible' => 1],
+            ['name' => 'Invoice №', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'SWIFT', 'order' => $order++, 'width' => 144, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],

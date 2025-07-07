@@ -173,8 +173,6 @@ class Permission extends Model
     const CAN_VIEW_PRD_INVOICES_NAME = 'can view PRD invoices';
 
     // Edit
-    const CAN_EDIT_PRD_ORDERS_NAME = 'can edit PRD orders';
-    const CAN_EDIT_PRD_ORDER_PRODUCTS_NAME = 'can edit PRD order products';
     const CAN_EDIT_PRD_INVOICES_NAME = 'can edit PRD invoices';
 
     // Global permissions
@@ -399,8 +397,6 @@ class Permission extends Model
             self::CAN_VIEW_PRD_ORDER_PRODUCTS_NAME,
             self::CAN_VIEW_PRD_INVOICES_NAME,
 
-            self::CAN_EDIT_PRD_ORDERS_NAME,
-            self::CAN_EDIT_PRD_ORDER_PRODUCTS_NAME,
             self::CAN_EDIT_PRD_INVOICES_NAME,
 
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_INVOICE_IS_SENT_FOR_PAYMENT,

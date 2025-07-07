@@ -4,8 +4,6 @@ namespace App\Http\Controllers\PRD;
 
 use App\Models\OrderProduct;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\OrderProductUpdateByCMDRequest;
-use App\Models\Process;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
 use Illuminate\Http\Request;
@@ -15,31 +13,19 @@ class PRDOrderProductController extends Controller
     public function index(Request $request)
     {
         // Preapare request for valid model querying
-        OrderProduct::addDefaultCMDQueryParamsToRequest($request);
+        OrderProduct::addDefaultPRDQueryParamsToRequest($request);
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
-        $query = OrderProduct::onlySentToBdm()->withBasicRelations()->withBasicRelationCounts();
+        $query = OrderProduct::onlyWithInvoicesSentForPayment()->withBasicRelations()->withBasicRelationCounts();
         $filteredQuery = OrderProduct::filterQueryForRequest($query, $request);
         $joinedQuery = OrderProduct::addJoinsForOrdering($filteredQuery, $request); // add joins if joined ordering requested
         $records = OrderProduct::finalizeQueryForRequest($joinedQuery, $request, 'paginate');
 
         // Get all and only visible table columns
-        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(OrderProduct::SETTINGS_CMD_TABLE_COLUMNS_KEY);
+        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(OrderProduct::SETTINGS_PRD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('CMD.order-products.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
-    }
-
-    public function edit(Request $request, OrderProduct $record)
-    {
-        return view('CMD.order-products.edit', compact('record'));
-    }
-
-    public function update(OrderProductUpdateByCMDRequest $request, OrderProduct $record)
-    {
-        $record->updateByCMDFromRequest($request);
-
-        return redirect($request->input('previous_url'));
+        return view('PRD.order-products.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 }

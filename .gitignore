@@ -27,7 +27,9 @@ yarn-error.log
 
 /public/img/users/*
 /public/img/comments/*
+
 /public/private/invoices/*
+/public/private/payment-confirmation-documents/*
 
 /public/attachments/Manufacturer/*
 /public/attachments/Product/*

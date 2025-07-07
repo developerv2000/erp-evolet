@@ -220,8 +220,6 @@ class PermissionSeeder extends Seeder
             Permission::CAN_VIEW_PRD_ORDER_PRODUCTS_NAME,
             Permission::CAN_VIEW_PRD_INVOICES_NAME,
 
-            Permission::CAN_EDIT_PRD_ORDERS_NAME,
-            Permission::CAN_EDIT_PRD_ORDER_PRODUCTS_NAME,
             Permission::CAN_EDIT_PRD_INVOICES_NAME,
         ];
 

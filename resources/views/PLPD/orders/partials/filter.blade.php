@@ -43,10 +43,6 @@
         class="date-range-picker-input"
         autocomplete="off" />
 
-    <x-form.inputs.request-based-input
-        :label-text="__('Process') . ' ID'"
-        inputName="process_id" />
-
     {{-- Default filter inputs --}}
     <x-filter.partials.default-inputs />
 </x-filter.layout>

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->unsignedMediumInteger('id')->autoIncrement();
 
             // Step 1:
+            // PLPD part
             $table->unsignedMediumInteger('order_id')
                 ->index()
                 ->foreign()
@@ -30,6 +31,7 @@ return new class extends Migration
             $table->unsignedMediumInteger('quantity');
 
             // Step 2:
+            // CMD part
             $table->decimal('price', 8, 2)->nullable();
 
             // Step 5:

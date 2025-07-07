@@ -342,5 +342,10 @@
     "Approved": "Одобрен",
     "No changes": "Без изменений",
 
+    "Accepted date": "Дата принятия",
+    "Payment request date": "Дата запроса платежа",
+    "Payment date": "Дата платежа",
+    "Invoice №": "№ инвойса",
+
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }
