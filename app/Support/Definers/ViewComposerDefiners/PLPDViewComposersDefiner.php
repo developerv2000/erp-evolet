@@ -5,6 +5,7 @@ namespace App\Support\Definers\ViewComposerDefiners;
 use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Inn;
+use App\Models\InvoicePaymentType;
 use App\Models\Manufacturer;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\Order;
@@ -20,6 +21,7 @@ class PLPDViewComposersDefiner
         self::defineReadyForOrderProcessesComposers();
         self::defineOrdersComposers();
         self::defineOrderProductsComposers();
+        self::defineInvoicesComposers();
     }
 
     /*
@@ -78,6 +80,18 @@ class PLPDViewComposersDefiner
                 'enTrademarks' => Process::pluckAllEnTrademarks(),
                 'ruTrademarks' => Process::pluckAllRuTrademarks(),
                 'orderNames' => Order::onlyWithName()->orderByName()->pluck('name'),
+            ]);
+        });
+    }
+
+    private static function defineInvoicesComposers()
+    {
+        View::composer('PLPD.invoices.partials.filter', function ($view) {
+            $view->with([
+                'paymentTypes' => InvoicePaymentType::orderBy('id')->get(),
+                'ordersWithName' => Order::onlyWithName()->orderByName()->get(),
+                'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
+                'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
             ]);
         });
     }

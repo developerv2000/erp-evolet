@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\InvoiceIsSentForPayment;
+use App\Notifications\InvoicePaymentIsCompleted;
 use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\QueryFilterHelper;
@@ -56,6 +57,7 @@ class Invoice extends BaseModel implements HasTitle
         'accepted_by_financier_date' => 'datetime',
         'payment_request_date_by_financier' => 'datetime',
         'payment_date' => 'datetime',
+        'payment_completed_date' => 'datetime',
     ];
 
     /*
@@ -103,6 +105,11 @@ class Invoice extends BaseModel implements HasTitle
     public function getIsAcceptedByFinancierAttribute(): bool
     {
         return !is_null($this->accepted_by_financier_date);
+    }
+
+    public function getPaymentIsCompletedAttribute(): bool
+    {
+        return !is_null($this->payment_completed_date);
     }
 
     /*
@@ -171,7 +178,7 @@ class Invoice extends BaseModel implements HasTitle
     // Implement method declared in HasTitle Interface
     public function getTitleAttribute(): string
     {
-        return $this->paymentType->name . ' #' . $this->id;
+        return $this->paymentType->name . ' ' . ($this->number ?: ('#' . $this->id));
     }
 
     /*
@@ -191,7 +198,7 @@ class Invoice extends BaseModel implements HasTitle
     private static function getFilterConfig(): array
     {
         return [
-            'whereEqual' => ['payment_type_id'],
+            'whereEqual' => ['payment_type_id', 'number'],
             'whereIn' => ['id', 'order_id'],
             'dateRange' => [
                 'receive_date',
@@ -280,6 +287,19 @@ class Invoice extends BaseModel implements HasTitle
         $this->uploadFile('pdf', public_path(self::PDF_PATH), uniqid());
     }
 
+    public function updateByPRDFromRequest($request)
+    {
+        $this->update($request->all());
+
+        // Validate 'accepted_by_financier_date' attribute
+        if (!$this->is_accepted_by_financier) {
+            $this->accepted_by_financier_date = now();
+            $this->save();
+        }
+
+        $this->uploadFile('payment_confirmation_document', public_path(self::PAYMENT_CONFIRMATION_DOCUMENT_PATH), uniqid());
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Attribute togglings
@@ -296,6 +316,23 @@ class Invoice extends BaseModel implements HasTitle
         if ($action == 'accept' && !$this->is_accepted_by_financier) {
             $this->accepted_by_financier_date = now();
             $this->save();
+        }
+    }
+
+    /**
+     * PRD Financier completes payment
+     */
+    public function togglePaymentIsCompletedAttribute(Request $request)
+    {
+        $action = $request->input('action');
+
+        if ($action == 'complete' && !$this->payment_is_completed) {
+            $this->payment_completed_date = now();
+            $this->save();
+
+            // Notify specific users
+            $notification = new InvoicePaymentIsCompleted($this);
+            User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-PRD-invoice-payment-is-completed');
         }
     }
 
@@ -344,11 +381,18 @@ class Invoice extends BaseModel implements HasTitle
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Payment type', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Sent for payment date', 'order' => $order++, 'width' => 198, 'visible' => 1],
+            ['name' => 'Payment completed', 'order' => $order++, 'width' => 158, 'visible' => 1],
             ['name' => 'PDF', 'order' => $order++, 'width' => 144, 'visible' => 100],
 
             ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+
+            ['name' => 'Accepted date', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Payment request date', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Payment date', 'order' => $order++, 'width' => 122, 'visible' => 1],
+            ['name' => 'Invoice №', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'SWIFT', 'order' => $order++, 'width' => 144, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
@@ -359,14 +403,14 @@ class Invoice extends BaseModel implements HasTitle
 
     public static function getDefaultPRDTableColumnsForUser($user)
     {
-        if (Gate::forUser($user)->denies('view-CMD-invoices')) {
+        if (Gate::forUser($user)->denies('view-PRD-invoices')) {
             return null;
         }
 
         $order = 1;
         $columns = array();
 
-        if (Gate::forUser($user)->allows('edit-CMD-invoices')) {
+        if (Gate::forUser($user)->allows('edit-PRD-invoices')) {
             array_push(
                 $columns,
                 ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
@@ -379,6 +423,42 @@ class Invoice extends BaseModel implements HasTitle
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Payment type', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Sent for payment date', 'order' => $order++, 'width' => 198, 'visible' => 1],
+            ['name' => 'Payment completed', 'order' => $order++, 'width' => 158, 'visible' => 1],
+            ['name' => 'PDF', 'order' => $order++, 'width' => 144, 'visible' => 100],
+
+            ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+
+            ['name' => 'Accepted date', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Payment request date', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Payment date', 'order' => $order++, 'width' => 122, 'visible' => 1],
+            ['name' => 'Invoice №', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'SWIFT', 'order' => $order++, 'width' => 144, 'visible' => 1],
+
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
+        );
+
+        return $columns;
+    }
+
+    public static function getDefaultPLPDTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-PLPD-invoices')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        array_push(
+            $columns,
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
+            ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Payment type', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Sent for payment date', 'order' => $order++, 'width' => 198, 'visible' => 1],
+            ['name' => 'Payment completed', 'order' => $order++, 'width' => 158, 'visible' => 1],
             ['name' => 'PDF', 'order' => $order++, 'width' => 144, 'visible' => 100],
 
             ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],

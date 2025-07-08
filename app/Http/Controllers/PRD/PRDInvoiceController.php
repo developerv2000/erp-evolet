@@ -53,4 +53,18 @@ class PRDInvoiceController extends Controller
             'acceptedByFinancierDate' => $record->accepted_by_financier_date?->isoFormat('DD MMM Y'),
         ]);
     }
+
+    /**
+     * Ajax request
+     */
+    public function togglePaymentIsCompletedAttribute(Request $request)
+    {
+        $record = Invoice::findOrFail($request->input('record_id'));
+        $record->togglePaymentIsCompletedAttribute($request);
+
+        return response()->json([
+            'paymentIsCompleted' => $record->payment_is_completed,
+            'paymentCompletedDate' => $record->payment_completed_date?->isoFormat('DD MMM Y'),
+        ]);
+    }
 }

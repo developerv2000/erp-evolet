@@ -27,6 +27,12 @@ invoicesTable?.querySelectorAll('button[data-click-action="toggle-invoices-is-ac
     });
 });
 
+invoicesTable?.querySelectorAll('button[data-click-action="toggle-invoices-payment-is-completed-attribute"]').forEach(button => {
+    button.addEventListener('click', (evt) => {
+        functions.toggleInvoicesPaymentIsCompletedAttribute(evt);
+    });
+});
+
 /*
 |--------------------------------------------------------------------------
 | Initializations

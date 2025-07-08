@@ -105,6 +105,20 @@
         {{ $record->sent_to_manufacturer_date?->isoformat('DD MMM Y') }}
     @break
 
+    @case('Expected dispatch date')
+        {{ $record->expected_dispatch_date }}
+    @break
+
+    @case('Invoices')
+        <x-misc.buttoned-link
+            style="transparent"
+            class="button--arrowed-link button--margined-bottom text-lowercase"
+            icon="arrow_forward"
+            :link="route('plpd.invoices.index', ['order_id[]' => $record->id])">
+            {{ $record->invoices_count }} {{ __('Invoices') }}
+        </x-misc.buttoned-link>
+    @break
+
     @case('Date of creation')
         {{ $record->created_at->isoformat('DD MMM Y') }}
     @break

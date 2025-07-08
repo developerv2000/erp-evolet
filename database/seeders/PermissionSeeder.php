@@ -118,6 +118,7 @@ class PermissionSeeder extends Seeder
             Permission::CAN_VIEW_PLPD_READY_FOR_ORDER_PROCESSES_NAME,
             Permission::CAN_VIEW_PLPD_ORDERS_NAME,
             Permission::CAN_VIEW_PLPD_ORDER_PRODUCTS_NAME,
+            Permission::CAN_VIEW_PLPD_INVOICES_NAME,
 
             Permission::CAN_EDIT_PLPD_ORDERS_NAME,
             Permission::CAN_EDIT_PLPD_ORDER_PRODUCTS_NAME,
@@ -169,19 +170,6 @@ class PermissionSeeder extends Seeder
 
         $departmentID = Department::findByName(Department::DD_NAME)->id;
 
-        // Global permissions
-        $ddGlobals = [
-            Permission::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER,
-        ];
-
-        foreach ($ddGlobals as $global) {
-            Permission::create([
-                'name' => $global,
-                'global' => true,
-            ]);
-        }
-
-        // Non global permissions
         $dds = [
             Permission::CAN_VIEW_DD_ORDER_PRODUCTS_NAME,
             Permission::CAN_EDIT_DD_ORDER_PRODUCTS_NAME,
@@ -202,19 +190,6 @@ class PermissionSeeder extends Seeder
 
         $departmentID = Department::findByName(Department::PRD_NAME)->id;
 
-        // Global permissions
-        $ddGlobals = [
-            Permission::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_INVOICE_IS_SENT_FOR_PAYMENT,
-        ];
-
-        foreach ($ddGlobals as $global) {
-            Permission::create([
-                'name' => $global,
-                'global' => true,
-            ]);
-        }
-
-        // Non global permissions
         $prds = [
             Permission::CAN_VIEW_PRD_ORDERS_NAME,
             Permission::CAN_VIEW_PRD_ORDER_PRODUCTS_NAME,
@@ -227,6 +202,25 @@ class PermissionSeeder extends Seeder
             Permission::create([
                 'name' => $prd,
                 'department_id' => $departmentID,
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Shared order-based permissions
+        |--------------------------------------------------------------------------
+        */
+
+        $sharedPerms = [
+            Permission::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER,
+            Permission::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_INVOICE_IS_SENT_FOR_PAYMENT,
+            Permission::CAN_RECEIVE_NOTIFICATION_WHEN_PRD_INVOICE_PAYMENT_IS_COMPLETED,
+        ];
+
+        foreach ($sharedPerms as $shared) {
+            Permission::create([
+                'name' => $shared,
+                'global' => true,
             ]);
         }
     }

@@ -21,6 +21,10 @@
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="sent_for_payment_date" />
     @break
 
+    @case('Payment completed')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="payment_completed_date" />
+    @break
+
     @case('Accepted date')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="accepted_by_financier_date" />
     @break

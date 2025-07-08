@@ -16,7 +16,7 @@
                 :isRequired="true" />
 
             <x-form.inputs.default-input
-                :label-text="__('New') . ' ' . __('File')"
+                :label-text="__('New') . ' ' . __('PDF')"
                 inputName="pdf"
                 type="file"
                 accept=".pdf" />

@@ -16,6 +16,10 @@
         class="date-range-picker-input"
         autocomplete="off" />
 
+    <x-form.inputs.request-based-input
+        labelText="Invoice №"
+        inputName="number" />
+
     <x-form.selects.selectize.id-based-multiple-select.request-based-select
         labelText="Order"
         inputName="order_id[]"

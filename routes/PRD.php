@@ -12,6 +12,7 @@ Route::middleware('auth', 'auth.session')->prefix('prd')->name('prd.')->group(fu
         CRUDRouteGenerator::defineDefaultRoutesOnly(['index', 'edit', 'update'], 'id', 'can:view-PRD-invoices', 'can:edit-PRD-invoices');
 
         Route::post('/toggle-is-accepted-by-financier-attribute', 'toggleIsAcceptedByFinancierAttribute');  // AJAX request
+        Route::post('/toggle-payment-is-completed-attribute', 'togglePaymentIsCompletedAttribute');  // AJAX request
     });
 
     // Orders

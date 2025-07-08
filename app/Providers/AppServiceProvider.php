@@ -8,6 +8,7 @@ use App\Support\Definers\GateDefiners\GlobalGatesDefiner;
 use App\Support\Definers\GateDefiners\MADGatesDefiner;
 use App\Support\Definers\GateDefiners\PLPDGatesDefiner;
 use App\Support\Definers\GateDefiners\PRDGatesDefiner;
+use App\Support\Definers\GateDefiners\SharedGatesDefiner;
 use App\Support\Definers\ViewComposerDefiners\CMDViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\DDViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\GlobalViewComposersDefiner;
@@ -39,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
         CMDGatesDefiner::defineAll();
         DDGatesDefiner::defineAll();
         PRDGatesDefiner::defineAll();
+        SharedGatesDefiner::defineAll();
 
         // View composer definers
         GlobalViewComposersDefiner::defineAll();

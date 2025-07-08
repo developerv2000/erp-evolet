@@ -22,6 +22,9 @@
             </div>
         </div>
 
+        {{-- About invoice --}}
+        @include('PRD.invoices.partials.about-invoice')
+
         {{-- Edit form --}}
         @include('PRD.invoices.partials.edit-form')
     </div>

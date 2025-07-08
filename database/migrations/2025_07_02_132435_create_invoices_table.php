@@ -37,6 +37,7 @@ return new class extends Migration
             $table->timestamp('payment_date')->nullable();
             $table->string('number')->nullable();
             $table->string('payment_confirmation_document')->nullable(); // SWIFT
+            $table->timestamp('payment_completed_date')->nullable(); // action
 
             $table->timestamps();
             $table->softDeletes();

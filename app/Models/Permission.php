@@ -40,6 +40,21 @@ class Permission extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | Share permissions
+    |--------------------------------------------------------------------------
+    */
+
+    // PLPD and DD permissions
+    const CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER = 'can receive notification when CMD order is sent to manufacturer';
+
+    // PLPD and PRD permissions
+    const CAN_RECEIVE_NOTIFICATION_WHEN_CMD_INVOICE_IS_SENT_FOR_PAYMENT = 'can receive notification when CMD invoice is sent for payment';
+
+    // PLPD and CMD permissions
+    const CAN_RECEIVE_NOTIFICATION_WHEN_PRD_INVOICE_PAYMENT_IS_COMPLETED = 'can receive notification when PRD invoice payment is completed';
+
+    /*
+    |--------------------------------------------------------------------------
     | MAD permissions
     |--------------------------------------------------------------------------
     */
@@ -116,6 +131,7 @@ class Permission extends Model
     const CAN_VIEW_PLPD_READY_FOR_ORDER_PROCESSES_NAME = 'can view PLPD ready for order processes';
     const CAN_VIEW_PLPD_ORDERS_NAME = 'can view PLPD orders';
     const CAN_VIEW_PLPD_ORDER_PRODUCTS_NAME = 'can view PLPD order products';
+    const CAN_VIEW_PLPD_INVOICES_NAME = 'can view PLPD invoices';
 
     // Edit
     const CAN_EDIT_PLPD_ORDERS_NAME = 'can edit PLPD orders';
@@ -157,10 +173,6 @@ class Permission extends Model
     // Edit
     const CAN_EDIT_DD_ORDER_PRODUCTS_NAME = 'can edit DD order products';
 
-    // Global permissions
-    // PLPD and DD permissions
-    const CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER = 'can receive notification when CMD order is sent to manufacturer';
-
     /*
     |--------------------------------------------------------------------------
     | PRD permissions
@@ -174,10 +186,6 @@ class Permission extends Model
 
     // Edit
     const CAN_EDIT_PRD_INVOICES_NAME = 'can edit PRD invoices';
-
-    // Global permissions
-    // PLPD and PRD permissions
-    const CAN_RECEIVE_NOTIFICATION_WHEN_CMD_INVOICE_IS_SENT_FOR_PAYMENT = 'can receive notification when CMD invoice is sent for payment';
 
     /*
     |--------------------------------------------------------------------------
@@ -351,6 +359,7 @@ class Permission extends Model
             self::CAN_VIEW_PLPD_READY_FOR_ORDER_PROCESSES_NAME,
             self::CAN_VIEW_PLPD_ORDERS_NAME,
             self::CAN_VIEW_PLPD_ORDER_PRODUCTS_NAME,
+            self::CAN_VIEW_PLPD_INVOICES_NAME,
 
             self::CAN_EDIT_PLPD_ORDERS_NAME,
             self::CAN_EDIT_PLPD_ORDER_PRODUCTS_NAME,
@@ -358,9 +367,10 @@ class Permission extends Model
             self::CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER,
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_FOR_CONFIRMATION,
 
-            // Globals
+            // Shared
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER,
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_INVOICE_IS_SENT_FOR_PAYMENT,
+            self::CAN_RECEIVE_NOTIFICATION_WHEN_PRD_INVOICE_PAYMENT_IS_COMPLETED,
         ];
     }
 
@@ -377,6 +387,9 @@ class Permission extends Model
 
             self::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_SENT_TO_CMD_BDM,
             self::CAN_RECEIVE_NOTIFICATION_WHEN_PLPD_ORDER_IS_CONFIRMED,
+
+            // Shared
+            self::CAN_RECEIVE_NOTIFICATION_WHEN_PRD_INVOICE_PAYMENT_IS_COMPLETED,
         ];
     }
 
@@ -386,6 +399,7 @@ class Permission extends Model
             self::CAN_VIEW_DD_ORDER_PRODUCTS_NAME,
             self::CAN_EDIT_DD_ORDER_PRODUCTS_NAME,
 
+            // Shared
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER,
         ];
     }
@@ -399,6 +413,7 @@ class Permission extends Model
 
             self::CAN_EDIT_PRD_INVOICES_NAME,
 
+            // Shared
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_INVOICE_IS_SENT_FOR_PAYMENT,
         ];
     }

@@ -28,6 +28,12 @@ class PLPDGatesDefiner
             $user->hasPermission(Permission::CAN_VIEW_PLPD_ORDER_PRODUCTS_NAME)
         );
 
+        Gate::define(
+            'view-PLPD-invoices',
+            fn($user) =>
+            $user->hasPermission(Permission::CAN_VIEW_PLPD_INVOICES_NAME)
+        );
+
         // Edit
         Gate::define(
             'edit-PLPD-orders',

@@ -347,6 +347,11 @@
     "Payment date": "Дата платежа",
     "Invoice №": "№ инвойса",
     "Accept": "Принять",
+    "About invoice": "Об инвойсе",
+    "Payment completed": "Оплата завершена",
+    "Complete": "Завершить",
+    "Completed": "Завершена",
+    "Below invoice payment has been completed": "Оплата данного инвойса была завершена",
 
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

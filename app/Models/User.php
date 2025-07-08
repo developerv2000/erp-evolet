@@ -396,6 +396,7 @@ class User extends Authenticatable
         $settings = $this->settings;
         $settings[Order::SETTINGS_PLPD_TABLE_COLUMNS_KEY] = Order::getDefaultPLPDTableColumnsForUser($this);
         $settings[OrderProduct::SETTINGS_PLPD_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultPLPDTableColumnsForUser($this);
+        $settings[Invoice::SETTINGS_PLPD_TABLE_COLUMNS_KEY] = Invoice::getDefaultPLPDTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -475,6 +476,7 @@ class User extends Authenticatable
 
             'PLPD_orders_table_columns' => Order::getDefaultPLPDTableColumnsForUser($this),
             'PLPD_order_products_table_columns' => OrderProduct::getDefaultPLPDTableColumnsForUser($this),
+            'PLPD_invoices_table_columns' => Invoice::getDefaultPLPDTableColumnsForUser($this),
 
             'CMD_orders_table_columns' => Order::getDefaultCMDTableColumnsForUser($this),
             'CMD_order_products_table_columns' => OrderProduct::getDefaultCMDTableColumnsForUser($this),
@@ -732,10 +734,12 @@ class User extends Authenticatable
             'plpd.processes.ready-for-order.index' => 'view-PLPD-ready-for-order-processes',
             'plpd.orders.index' => 'view-PLPD-orders',
             'plpd.order-products.index' => 'view-PLPD-order-products',
+            'plpd.invoices.index' => 'view-PLPD-invoices',
 
             // CMD
             'cmd.orders.index' => 'view-CMD-orders',
             'cmd.order-products.index' => 'view-CMD-order-products',
+            'cmd.invoices.index' => 'view-CMD-invoices',
 
             // DD
             'dd.order-products.index' => 'view-DD-order-products',
