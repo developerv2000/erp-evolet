@@ -9,6 +9,7 @@ import './MAD/MAD-main'; // initialize MAD part
 import './PLPD/PLPD-main'; // initialize PLPD part
 import './CMD/CMD-main'; // initialize CMD part
 import './DD/DD-main'; // initialize DD part
+import './PRD/PRD-main'; // initialize PRD part
 import { showSpinner } from '../custom-components/script';
 import * as functions from './main-functions';
 

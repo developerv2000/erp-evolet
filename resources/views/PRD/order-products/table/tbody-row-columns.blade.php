@@ -1,8 +1,4 @@
 @switch($column['name'])
-    @case('Edit')
-        <x-tables.partials.td.edit :link="route('cmd.order-products.edit', $record->id)" />
-    @break
-
     @case('ID')
         {{ $record->id }}
     @break
@@ -14,7 +10,7 @@
     @break
 
     @case('Order')
-        <a class="main-link" href="{{ route('cmd.orders.index', ['id[]' => $record->order->id]) }}">
+        <a class="main-link" href="{{ route('prd.orders.index', ['id[]' => $record->order->id]) }}">
             {{ $record->order->title }}
         </a>
     @break

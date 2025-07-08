@@ -40,7 +40,19 @@
     @break
 
     @case('Accepted date')
-        {{ $record->accepted_by_financier_date?->isoformat('DD MMM Y') }}
+        @if ($record->is_accepted_by_financier)
+            {{ $record->accepted_by_financier_date->isoformat('DD MMM Y') }}
+        @else
+            <x-misc.button
+                style="transparent"
+                class="button--arrowed-link button--margined-bottom"
+                icon="done_all"
+                data-click-action="toggle-invoices-is-accepted-by-financier-attribute"
+                data-action-type="accept"
+                data-record-id="{{ $record->id }}">
+                {{ __('Accept') }}
+            </x-misc.button>
+        @endif
     @break
 
     @case('Payment request date')

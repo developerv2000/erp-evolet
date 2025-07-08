@@ -224,30 +224,23 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
      * Implement method defined in BaseModel abstract class.
      *
      * Used by 'PLPD', 'CDM', 'DD' departments.
-     *
-     * No orders page for 'DD'.
      */
     public function generateBreadcrumbs($department = null): array
     {
         // If department is declared
         if ($department) {
             $lowercasedDepartment = strtolower($department);
-            $breadcrumbs = [];
 
-            // If departments has 'orders' page
-            if ($department != 'DD') {
-                $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.index'), 'text' => __('Orders')];
-                $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.edit', $this->order_id), 'text' => $this->order->title];
-            }
-
-            $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.order-products.index'), 'text' => __('Products')];
-            $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.order-products.edit', $this->id), 'text' => $this->title];
-
-            return $breadcrumbs;
+            return [
+                ...$this->order->generateBreadcrumbs($department),
+                ['link' => route($lowercasedDepartment . '.order-products.index', ['order_id' => $this->order_id]), 'text' => __('Products')],
+                ['link' => route($lowercasedDepartment . '.order-products.edit', $this->id), 'text' => $this->title],
+            ];
         }
 
         // If department is null
         return [
+            ['link' => null, 'text' => __('Orders')],
             ['link' => null, 'text' => __('Products')],
             ['link' => null, 'text' => $this->title],
         ];
@@ -256,7 +249,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     // Implement method declared in HasTitle Interface
     public function getTitleAttribute(): string
     {
-        return ($this->order->name ? $this->order->name . ' ' : '') . '#' . $this->id;
+        return $this->process->trademark_en ?: ('#' . $this->id);
     }
 
     // Implement method declared in CanExportRecordsAsExcel Interface
@@ -688,19 +681,12 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public static function getDefaultPRDTableColumnsForUser($user)
     {
-        if (Gate::forUser($user)->denies('view-CMD-orders')) {
+        if (Gate::forUser($user)->denies('view-PRD-orders')) {
             return null;
         }
 
         $order = 1;
         $columns = array();
-
-        if (Gate::forUser($user)->allows('edit-CMD-orders')) {
-            array_push(
-                $columns,
-                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
-            );
-        }
 
         array_push(
             $columns,

@@ -11,8 +11,7 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('plpd.orders.index'), 'text' => __('Orders')],
-                    ['link' => route('plpd.orders.edit', $order->id), 'text' => $order->title],
+                    ...$order->generateBreadcrumbs('CMD'),
                     ['link' => route('plpd.order-products.index', ['order_id' => $order->id]), 'text' => __('Products')],
                     ['link' => null, 'text' => __('Create new record')]
                 ];

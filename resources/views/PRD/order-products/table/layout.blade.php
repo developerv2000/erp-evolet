@@ -1,4 +1,4 @@
-<x-tables.template.main-template class="cmd-order-products-table" :records="$records">
+<x-tables.template.main-template class="prd-order-products-table" :records="$records">
     {{-- thead titles --}}
     <x-slot:thead-rows>
         <tr>
@@ -11,7 +11,7 @@
 
             @foreach ($visibleTableColumns as $column)
                 <th width="{{ $column['width'] }}">
-                    @include('CMD.order-products.table.thead-columns')
+                    @include('PRD.order-products.table.thead-columns')
                 </th>
             @endforeach
         </tr>
@@ -25,12 +25,12 @@
 
                 @if ($trashedRecords)
                     <td>{{ $record->deleted_at->isoFormat('DD MMM Y') }}</td>
-                    <td><x-tables.partials.td.restore :form-action="route('cmd.order-products.restore')" :record-id="$record->id" /></td>
+                    <td><x-tables.partials.td.restore :form-action="route('prd.order-products.restore')" :record-id="$record->id" /></td>
                 @endif
 
                 @foreach ($visibleTableColumns as $column)
                     <td>
-                        @include('CMD.order-products.table.tbody-row-columns')
+                        @include('PRD.order-products.table.tbody-row-columns')
                     </td>
                 @endforeach
             </tr>

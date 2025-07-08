@@ -1,4 +1,4 @@
-<x-form-templates.edit-template class="plpd-order-products-edit-form" :action="route('cmd.invoices.update', $record->id)">
+<x-form-templates.edit-template class="cmd-invoices-edit-form" :action="route('cmd.invoices.update', $record->id)">
     <div class="form__block">
         <div class="form__row">
             <x-form.inputs.default-input

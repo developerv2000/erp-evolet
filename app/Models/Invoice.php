@@ -100,6 +100,11 @@ class Invoice extends BaseModel implements HasTitle
         return !is_null($this->sent_for_payment_date);
     }
 
+    public function getIsAcceptedByFinancierAttribute(): bool
+    {
+        return !is_null($this->accepted_by_financier_date);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Scopes
@@ -141,7 +146,6 @@ class Invoice extends BaseModel implements HasTitle
      * Implement method defined in BaseModel abstract class.
      *
      * Used by 'PLPD', 'CMD' and 'PRD' departments.
-     *
      */
     public function generateBreadcrumbs($department = null): array
     {
@@ -150,7 +154,7 @@ class Invoice extends BaseModel implements HasTitle
             $lowercasedDepartment = strtolower($department);
 
             return [
-                ...$this->order->generateBreadcrumbs($lowercasedDepartment),
+                ...$this->order->generateBreadcrumbs($department),
                 ['link' => route($lowercasedDepartment . '.invoices.index', ['order_id[]' => $this->order_id]), 'text' => __('Invoices')],
                 ['link' => route($lowercasedDepartment . '.invoices.edit', $this->id), 'text' => $this->title],
             ];
@@ -274,6 +278,25 @@ class Invoice extends BaseModel implements HasTitle
         $this->update($request->all());
 
         $this->uploadFile('pdf', public_path(self::PDF_PATH), uniqid());
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Attribute togglings
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * PRD Financier accepts invoice from CMD BDM
+     */
+    public function toggleIsAcceptedByFinancierAttribute(Request $request)
+    {
+        $action = $request->input('action');
+
+        if ($action == 'accept' && !$this->is_accepted_by_financier) {
+            $this->accepted_by_financier_date = now();
+            $this->save();
+        }
     }
 
     /*

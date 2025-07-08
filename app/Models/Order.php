@@ -262,25 +262,35 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     /**
      * Implement method defined in BaseModel abstract class.
      *
-     * Used by 'PLPD' and 'CDM' departments.
+     * Used by 'PLPD', 'CDM' and 'PRD' departments.
      *
      * Trash page is available only for 'PLPD'.
+     * No orders pages for 'DD'.
+     * No orders.edit page for 'PRD'.
      */
     public function generateBreadcrumbs($department = null): array
     {
         // If department is declared
         if ($department) {
+            // No order pages for 'DD'
+            if ($department == 'DD') return [];
+
+            // Generate breadcrumbs for other departments
             $lowercasedDepartment = strtolower($department);
 
+            // Index page
             $breadcrumbs = [
                 ['link' => route($lowercasedDepartment . '.orders.index'), 'text' => __('Orders')],
             ];
 
+            // Trash page. Only for 'PLPD'
             if ($this->trashed() && $department == 'PLPD') {
                 $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.trash'), 'text' => __('Trash')];
             }
 
-            $breadcrumbs[] = ['link' => route($lowercasedDepartment . '.orders.edit', $this->id), 'text' => $this->title];
+            // Edit page. No 'orders.edit' page for 'PRD'
+            $editPageLink = $department == 'PRD' ? null : route($lowercasedDepartment . '.orders.edit', $this->id);
+            $breadcrumbs[] = ['link' => $editPageLink, 'text' => $this->title];
 
             return $breadcrumbs;
         }

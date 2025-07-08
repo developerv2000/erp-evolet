@@ -39,4 +39,18 @@ class PRDInvoiceController extends Controller
 
         return redirect($request->input('previous_url'));
     }
+
+    /**
+     * Ajax request
+     */
+    public function toggleIsAcceptedByFinancierAttribute(Request $request)
+    {
+        $record = Invoice::findOrFail($request->input('record_id'));
+        $record->toggleIsAcceptedByFinancierAttribute($request);
+
+        return response()->json([
+            'isAcceptedByFinancier' => $record->is_accepted_by_financier,
+            'acceptedByFinancierDate' => $record->accepted_by_financier_date?->isoFormat('DD MMM Y'),
+        ]);
+    }
 }

@@ -12,7 +12,7 @@
             @php
                 $crumbs = [
                     ['link' => route('cmd.orders.index'), 'text' => __('Orders')],
-                    ['link' => route('cmd.order-products.index'), 'text' => __('Products')],
+                    ['link' => url()->current(), 'text' => __('Products')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
