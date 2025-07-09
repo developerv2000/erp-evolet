@@ -1483,6 +1483,7 @@ a {
 .invoice-products-list {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 12px;
 }
 
