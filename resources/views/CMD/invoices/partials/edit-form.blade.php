@@ -1,5 +1,7 @@
 <x-form-templates.edit-template class="cmd-invoices-edit-form" :action="route('cmd.invoices.update', $record->id)">
     <div class="form__block">
+        <h2 class="main-title main-title--marginless">{{ __('Invoice') }}</h2>
+
         <div class="form__row">
             <x-form.inputs.default-input
                 labelText="Payment type"
@@ -22,4 +24,6 @@
                 accept=".pdf" />
         </div>
     </div>
+
+    <x-misc.invoice-products-list :order-products="$orderProducts" :record="$record" :disabled="true" />
 </x-form-templates.edit-template>

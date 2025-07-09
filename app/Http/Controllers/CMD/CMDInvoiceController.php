@@ -55,7 +55,9 @@ class CMDInvoiceController extends Controller
 
     public function edit(Request $request, Invoice $record)
     {
-        return view('CMD.invoices.edit', compact('record'));
+        $orderProducts = $record->order->products()->withBasicRelations()->get();
+
+        return view('CMD.invoices.edit', compact('record', 'orderProducts'));
     }
 
     public function update(Request $request, Invoice $record)

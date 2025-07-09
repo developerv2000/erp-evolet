@@ -76,6 +76,11 @@ class Invoice extends BaseModel implements HasTitle
         return $this->belongsTo(InvoicePaymentType::class, 'payment_type_id');
     }
 
+    public function products()
+    {
+        return $this->belongsToMany(Process::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes
@@ -275,8 +280,14 @@ class Invoice extends BaseModel implements HasTitle
             ]);
         }
 
+        // Create invoice
         $record = self::create($request->all());
 
+        // Attach products
+        $productIDs = $order->products->pluck('id')->toArray();
+        $record->products()->attach($productIDs);
+
+        // Upload PDF file
         $record->uploadFile('pdf', public_path(self::PDF_PATH), uniqid());
     }
 
@@ -297,6 +308,11 @@ class Invoice extends BaseModel implements HasTitle
             $this->save();
         }
 
+        // Update products
+        $selectedProducts = $request->input('products', []);
+        $this->products()->sync($selectedProducts);
+
+        // Upload SWIFT file
         $this->uploadFile('payment_confirmation_document', public_path(self::PAYMENT_CONFIRMATION_DOCUMENT_PATH), uniqid());
     }
 

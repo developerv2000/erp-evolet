@@ -42,6 +42,20 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::create('invoice_process', function (Blueprint $table) {
+            $table->unsignedSmallInteger('invoice_id')
+                ->foreign()
+                ->references('id')
+                ->on('invoices');
+
+            $table->unsignedSmallInteger('process_id')
+                ->foreign()
+                ->references('id')
+                ->on('processes');
+
+            $table->primary(['invoice_id', 'process_id']);
+        });
     }
 
     /**
@@ -50,5 +64,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('invoices');
+        Schema::dropIfExists('invoice_process');
     }
 };

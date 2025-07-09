@@ -4,33 +4,33 @@
     <table class="secondary-table">
         <tbody>
             <tr>
-                <td>{{ __('Order') }}:</td>
-                <td>{{ $record->order->title }}</td>
+                <td width="50%">{{ __('Order') }}:</td>
+                <td width="50%">{{ $record->order->title }}</td>
             </tr>
 
             <tr>
-                <td>{{ __('Manufacturer') }}:</td>
-                <td>{{ $record->order->manufacturer->name }}</td>
+                <td width="50%">{{ __('Manufacturer') }}:</td>
+                <td width="50%">{{ $record->order->manufacturer->name }}</td>
             </tr>
 
             <tr>
-                <td>{{ __('Country') }}:</td>
-                <td>{{ $record->order->country->code }}</td>
+                <td width="50%">{{ __('Country') }}:</td>
+                <td width="50%">{{ $record->order->country->code }}</td>
             </tr>
 
             <tr>
-                <td>{{ __('Payment type') }}:</td>
-                <td>{{ $record->paymentType->name }}</td>
+                <td width="50%">{{ __('Payment type') }}:</td>
+                <td width="50%">{{ $record->paymentType->name }}</td>
             </tr>
 
             <tr>
-                <td>{{ __('Receive date') }}:</td>
-                <td>{{ $record->receive_date->isoformat('DD MMM Y') }}</td>
+                <td width="50%">{{ __('Receive date') }}:</td>
+                <td width="50%">{{ $record->receive_date->isoformat('DD MMM Y') }}</td>
             </tr>
 
             <tr>
-                <td>{{ __('Sent for payment date') }}:</td>
-                <td>{{ $record->sent_for_payment_date->isoformat('DD MMM Y') }}</td>
+                <td width="50%">{{ __('Sent for payment date') }}:</td>
+                <td width="50%">{{ $record->sent_for_payment_date->isoformat('DD MMM Y') }}</td>
             </tr>
         </tbody>
     </table>

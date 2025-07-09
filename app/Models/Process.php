@@ -144,6 +144,11 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         return $this->belongsToMany(Country::class, 'clinical_trial_country_process');
     }
 
+    public function invoices()
+    {
+        return $this->belongsToMany(Invoice::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes

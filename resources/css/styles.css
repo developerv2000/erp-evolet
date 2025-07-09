@@ -1472,3 +1472,28 @@ a {
 }
 
 /* ------------ /end Errors ------------ */
+
+
+/* ------------ Invoice products list ------------ */
+/* Used in CMD, PRD and PLPD pages */
+.invoice-products-list-wrapper {
+    padding: 20px;
+}
+
+.invoice-products-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.invoice-products-list__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.invoice-products-list__item .checkbox {
+    margin-top: 0;
+}
+
+/* ------------ /end Invoice products list ------------ */
