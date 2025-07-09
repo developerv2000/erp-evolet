@@ -9,12 +9,12 @@
                 <input
                     class="checkbox"
                     type="checkbox"
-                    name="products[]"
+                    name="order_products[]"
                     value="{{ $orderProduct->id }}"
                     @disabled($disabled)
-                    @checked($record->products->contains('id', $orderProduct->id))>
+                    @checked($record->orderProducts->contains('id', $orderProduct->id))>
 
-                {{ $orderProduct->process->full_trademark_en_with_id }}
+                {{ $orderProduct->process->full_trademark_en }}
             </label>
         @endforeach
     </div>

@@ -43,18 +43,18 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('invoice_process', function (Blueprint $table) {
+        Schema::create('invoice_order_product', function (Blueprint $table) {
             $table->unsignedSmallInteger('invoice_id')
                 ->foreign()
                 ->references('id')
                 ->on('invoices');
 
-            $table->unsignedSmallInteger('process_id')
+            $table->unsignedSmallInteger('order_product_id')
                 ->foreign()
                 ->references('id')
-                ->on('processes');
+                ->on('order_products');
 
-            $table->primary(['invoice_id', 'process_id']);
+            $table->primary(['invoice_id', 'order_product_id']);
         });
     }
 
@@ -64,6 +64,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('invoices');
-        Schema::dropIfExists('invoice_process');
+        Schema::dropIfExists('invoice_order_product');
     }
 };

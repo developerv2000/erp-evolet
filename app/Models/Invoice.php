@@ -76,9 +76,9 @@ class Invoice extends BaseModel implements HasTitle
         return $this->belongsTo(InvoicePaymentType::class, 'payment_type_id');
     }
 
-    public function products()
+    public function orderProducts()
     {
-        return $this->belongsToMany(Process::class);
+        return $this->belongsToMany(OrderProduct::class);
     }
 
     /*
@@ -308,9 +308,9 @@ class Invoice extends BaseModel implements HasTitle
             $this->save();
         }
 
-        // Update products
-        $selectedProducts = $request->input('products', []);
-        $this->products()->sync($selectedProducts);
+        // Update orderProducts
+        $selectedOrderProducts = $request->input('order_products', []);
+        $this->orderProducts()->sync($selectedOrderProducts);
 
         // Upload SWIFT file
         $this->uploadFile('payment_confirmation_document', public_path(self::PAYMENT_CONFIRMATION_DOCUMENT_PATH), uniqid());
