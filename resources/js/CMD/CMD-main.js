@@ -36,6 +36,18 @@ ordersTable?.querySelectorAll('button[data-click-action="toggle-orders-is-sent-t
     });
 });
 
+ordersTable?.querySelectorAll('button[data-click-action="toggle-orders-production-is-started-attribute"]').forEach(button => {
+    button.addEventListener('click', (evt) => {
+        functions.toggleOrdersProductionIsStartedAttribute(evt);
+    });
+});
+
+ordersTable?.querySelectorAll('button[data-click-action="toggle-orders-production-is-finished-attribute"]').forEach(button => {
+    button.addEventListener('click', (evt) => {
+        functions.toggleOrdersProductionIsFinishedAttribute(evt);
+    });
+});
+
 invoicesTable?.querySelectorAll('button[data-click-action="toggle-invoices-is-sent-for-payment-attribute"]').forEach(button => {
     button.addEventListener('click', (evt) => {
         functions.toggleInvoicesIsSentForPaymentAttribute(evt);

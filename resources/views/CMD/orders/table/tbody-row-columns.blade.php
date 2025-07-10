@@ -121,6 +121,42 @@
         @endif
     @break
 
+    @case('Production start date')
+        @if ($record->production_is_started)
+            {{ $record->production_start_date->isoformat('DD MMM Y') }}
+        @elseif($record->invoices_count > 0)
+            <x-misc.button
+                style="transparent"
+                class="button--arrowed-link button--margined-bottom"
+                icon="line_end_arrow_notch"
+                data-click-action="toggle-orders-production-is-started-attribute"
+                data-action-type="start"
+                data-record-id="{{ $record->id }}">
+                {{ __('Start production process') }}
+            </x-misc.button>
+        @endif
+    @break
+
+    @case('Production status')
+        <x-tables.partials.td.max-lines-limited-text :text="$record->production_status" />
+    @break
+
+    @case('Production end date')
+        @if ($record->production_is_finished)
+            {{ $record->production_end_date->isoformat('DD MMM Y') }}
+        @elseif($record->production_is_started)
+            <x-misc.button
+                style="transparent"
+                class="button--arrowed-link button--margined-bottom"
+                icon="line_end_arrow_notch"
+                data-click-action="toggle-orders-production-is-finished-attribute"
+                data-action-type="finish"
+                data-record-id="{{ $record->id }}">
+                {{ __('Finish production process') }}
+            </x-misc.button>
+        @endif
+    @break
+
     @case('Date of creation')
         {{ $record->created_at->isoformat('DD MMM Y') }}
     @break

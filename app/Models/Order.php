@@ -71,6 +71,8 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         'sent_to_confirmation_date' => 'datetime',
         'confirmation_date' => 'datetime',
         'sent_to_manufacturer_date' => 'datetime',
+        'production_start_date' => 'datetime',
+        'production_end_date' => 'datetime',
     ];
 
     /*
@@ -128,6 +130,16 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     public function getIsSentToManufacturerAttribute(): bool
     {
         return !is_null($this->sent_to_manufacturer_date);
+    }
+
+    public function getProductionIsStartedAttribute(): bool
+    {
+        return !is_null($this->production_start_date);
+    }
+
+    public function getProductionIsFinishedAttribute(): bool
+    {
+        return !is_null($this->production_end_date);
     }
 
     public function getStatusAttribute()
@@ -576,6 +588,32 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         }
     }
 
+    /**
+     * CMD BDM marks production process as started
+     */
+    public function toggleProductionIsStartedAttribute(Request $request)
+    {
+        $action = $request->input('action');
+
+        if ($action == 'start' && !$this->production_is_started) {
+            $this->production_start_date = now();
+            $this->save();
+        }
+    }
+
+    /**
+     * CMD BDM marks production process as finished
+     */
+    public function toggleProductionIsFinishedAttribute(Request $request)
+    {
+        $action = $request->input('action');
+
+        if ($action == 'finish' && !$this->production_is_finished) {
+            $this->production_end_date = now();
+            $this->save();
+        }
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Misc
@@ -650,6 +688,10 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Expected dispatch date', 'order' => $order++, 'width' => 190, 'visible' => 1],
             ['name' => 'Invoices', 'order' => $order++, 'width' => 120, 'visible' => 1],
 
+            ['name' => 'Production start date', 'order' => $order++, 'width' => 212, 'visible' => 1],
+            ['name' => 'Production status', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Production end date', 'order' => $order++, 'width' => 236, 'visible' => 1],
+
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
         );
@@ -696,6 +738,10 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
             ['name' => 'Expected dispatch date', 'order' => $order++, 'width' => 190, 'visible' => 1],
             ['name' => 'Invoices', 'order' => $order++, 'width' => 120, 'visible' => 1],
+
+            ['name' => 'Production start date', 'order' => $order++, 'width' => 244, 'visible' => 1],
+            ['name' => 'Production status', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Production end date', 'order' => $order++, 'width' => 270, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],

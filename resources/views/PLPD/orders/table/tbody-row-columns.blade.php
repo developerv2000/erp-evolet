@@ -119,6 +119,18 @@
         </x-misc.buttoned-link>
     @break
 
+    @case('Production start date')
+        {{ $record->production_start_date?->isoformat('DD MMM Y') }}
+    @break
+
+    @case('Production status')
+        <x-tables.partials.td.max-lines-limited-text :text="$record->production_status" />
+    @break
+
+    @case('Production end date')
+        {{ $record->production_end_date?->isoformat('DD MMM Y') }}
+    @break
+
     @case('Date of creation')
         {{ $record->created_at->isoformat('DD MMM Y') }}
     @break

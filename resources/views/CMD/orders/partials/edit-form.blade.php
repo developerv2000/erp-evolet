@@ -23,6 +23,15 @@
                     inputName="expected_dispatch_date" />
             @endif
         </div>
+
+        <div class="form__row">
+            @if ($record->production_is_started)
+                <x-form.inputs.record-field-input
+                    labelText="Production status"
+                    field="production_status"
+                    :model="$record" />
+            @endif
+        </div>
     </div>
 
     <div class="form__block">

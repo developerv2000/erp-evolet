@@ -57,6 +57,12 @@ return new class extends Migration
             // PLPD part
             $table->string('expected_dispatch_date')->nullable();
 
+            // Step 6:
+            // CMD part
+            $table->timestamp('production_start_date')->nullable(); // action
+            $table->text('production_status')->nullable();
+            $table->timestamp('production_end_date')->nullable(); // action
+
             $table->timestamps();
             $table->softDeletes();
         });

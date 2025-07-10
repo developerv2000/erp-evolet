@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('filename');
             $table->string('file_path');
             $table->string('file_type');
-            $table->unsignedMediumInteger('file_size');
+            $table->unsignedInteger('file_size');
             $table->unsignedInteger('attachable_id')->index();
             $table->string('attachable_type')->index();
             $table->timestamp('created_at');

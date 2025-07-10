@@ -13,6 +13,9 @@ Route::middleware('auth', 'auth.session')->prefix('cmd')->name('cmd.')->group(fu
 
         Route::post('/toggle-is-sent-to-confirmation-attribute', 'toggleIsSentToConfirmationAttribute');  // AJAX request
         Route::post('/toggle-is-sent-to-manufacturer-attribute', 'toggleIsSentToManufacturerAttribute');  // AJAX request
+
+        Route::post('/toggle-production-is-started-attribute', 'toggleProductionIsStartedAttribute');  // AJAX request
+        Route::post('/toggle-production-is-finished-attribute', 'toggleProductionIsFinishedAttribute');  // AJAX request
     });
 
     // Order products

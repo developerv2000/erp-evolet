@@ -36,7 +36,7 @@ class CMDOrderController extends Controller
                 $productsQuery->with([
                     'process' => function ($processQuery) {
                         $processQuery->withRelationsForOrderProduct();
-                            // ->withOnlyRequiredSelectsForOrderProduct(); not used because 'agreed_price' also required
+                        // ->withOnlyRequiredSelectsForOrderProduct(); not used because 'agreed_price' also required
                     },
                 ]);
             }
@@ -79,6 +79,34 @@ class CMDOrderController extends Controller
             'isSentToManufacturer' => $record->is_sent_to_manufacturer,
             'sentToManufacturerDate' => $record->sent_to_manufacturer_date?->isoFormat('DD MMM Y'),
             'statusHTML' => view('components.tables.partials.td.order-status-badge', ['status' => $record->status])->render(),
+        ]);
+    }
+
+    /**
+     * Ajax request
+     */
+    public function toggleProductionIsStartedAttribute(Request $request)
+    {
+        $record = Order::withTrashed()->findOrFail($request->input('record_id'));
+        $record->toggleProductionIsStartedAttribute($request);
+
+        return response()->json([
+            'productionIsStarted' => $record->production_is_started,
+            'productionStartDate' => $record->production_start_date?->isoFormat('DD MMM Y'),
+        ]);
+    }
+
+    /**
+     * Ajax request
+     */
+    public function toggleProductionIsFinishedAttribute(Request $request)
+    {
+        $record = Order::withTrashed()->findOrFail($request->input('record_id'));
+        $record->toggleProductionIsFinishedAttribute($request);
+
+        return response()->json([
+            'productionIsFinished' => $record->production_is_finished,
+            'productionEndDate' => $record->production_end_date?->isoFormat('DD MMM Y'),
         ]);
     }
 }

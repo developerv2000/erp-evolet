@@ -353,5 +353,11 @@
     "Completed": "Завершена",
     "Below invoice payment has been completed": "Оплата данного инвойса была завершена",
 
+    "Production start date": "Дата начало производства",
+    "Production status": "Статус производства",
+    "Production end date": "Дата окончания производства",
+    "Start production process": "Начать процесс производства",
+    "Finish production process": "Завершить процесс производства",
+
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }
