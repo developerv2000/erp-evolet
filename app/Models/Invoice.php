@@ -285,7 +285,7 @@ class Invoice extends BaseModel implements HasTitle
 
         // Attach products
         $productIDs = $order->products->pluck('id')->toArray();
-        $record->products()->attach($productIDs);
+        $record->orderProducts()->attach($productIDs);
 
         // Upload PDF file
         $record->uploadFile('pdf', public_path(self::PDF_PATH), uniqid());
