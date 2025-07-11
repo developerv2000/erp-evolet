@@ -491,7 +491,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             // Store product comments
             if (isset($product['comment']) && $product['comment']) {
                 $newProduct->comments()->create([
-                    'body' => $product['comment'],
+                    'body' => '<p>' . $product['comment'] . '</p>',
                     'user_id' => auth()->user()->id,
                 ]);
             }
