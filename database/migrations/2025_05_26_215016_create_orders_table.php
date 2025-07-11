@@ -60,7 +60,6 @@ return new class extends Migration
             // Step 6:
             // CMD part
             $table->timestamp('production_start_date')->nullable(); // action
-            $table->text('production_status')->nullable();
             $table->timestamp('production_end_date')->nullable(); // action
 
             $table->timestamps();

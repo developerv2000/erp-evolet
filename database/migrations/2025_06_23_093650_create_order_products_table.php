@@ -42,6 +42,10 @@ return new class extends Migration
             $table->string('box_article')->nullable();
             $table->date('layout_approved_date')->nullable(); // manually filled (similar to action)
 
+            // Step 6:
+            // CMD part
+            $table->text('production_status')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
         });

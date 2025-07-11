@@ -147,6 +147,10 @@
         {{ $record->layout_approved_date?->isoformat('DD MMM Y') }}
     @break
 
+    @case('Production status')
+        <x-tables.partials.td.max-lines-limited-text :text="$record->production_status" />
+    @break
+
     @case('Date of creation')
         {{ $record->created_at->isoformat('DD MMM Y') }}
     @break

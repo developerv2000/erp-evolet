@@ -560,6 +560,8 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Box article', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Layout approved date', 'order' => $order++, 'width' => 188, 'visible' => 1],
 
+            ['name' => 'Production status', 'order' => $order++, 'width' => 160, 'visible' => 1],
+
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
         );
@@ -620,6 +622,8 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Print proof receive date', 'order' => $order++, 'width' => 228, 'visible' => 1],
             ['name' => 'Box article', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Layout approved date', 'order' => $order++, 'width' => 188, 'visible' => 1],
+
+            ['name' => 'Production status', 'order' => $order++, 'width' => 160, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],

@@ -23,15 +23,6 @@
                     inputName="expected_dispatch_date" />
             @endif
         </div>
-
-        <div class="form__row">
-            @if ($record->production_is_started)
-                <x-form.inputs.record-field-input
-                    labelText="Production status"
-                    field="production_status"
-                    :model="$record" />
-            @endif
-        </div>
     </div>
 
     <div class="form__block">
@@ -51,11 +42,13 @@
                     :initial-value="$product->process->MAH->name"
                     readonly />
 
-                <x-form.inputs.default-input
-                    labelText="Quantity"
-                    inputName="readonly_quantity"
-                    :initial-value="$product->quantity"
-                    readonly />
+                @if (!$record->production_is_started)
+                    <x-form.inputs.default-input
+                        labelText="Quantity"
+                        inputName="readonly_quantity"
+                        :initial-value="$product->quantity"
+                        readonly />
+                @endif
 
                 <x-form.inputs.record-field-input
                     labelText="Price"
@@ -66,6 +59,14 @@
                     step="0.01"
                     min="0.00"
                     :isRequired="true" />
+
+                @if ($record->production_is_started)
+                    <x-form.inputs.record-field-input
+                        labelText="Production status"
+                        :input-name="'products[' . $product->id . '][production_status]'"
+                        field="production_status"
+                        :model="$product" />
+                @endif
             </div>
         @endforeach
     </div>

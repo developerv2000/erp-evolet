@@ -124,7 +124,7 @@
     @case('Production start date')
         @if ($record->production_is_started)
             {{ $record->production_start_date->isoformat('DD MMM Y') }}
-        @elseif($record->invoices_count > 0)
+        @elseif($record->is_sent_to_manufacturer)
             <x-misc.button
                 style="transparent"
                 class="button--arrowed-link button--margined-bottom"
@@ -135,10 +135,6 @@
                 {{ __('Start production process') }}
             </x-misc.button>
         @endif
-    @break
-
-    @case('Production status')
-        <x-tables.partials.td.max-lines-limited-text :text="$record->production_status" />
     @break
 
     @case('Production end date')

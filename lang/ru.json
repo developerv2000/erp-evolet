@@ -358,6 +358,8 @@
     "Production end date": "Дата окончания производства",
     "Start production process": "Начать процесс производства",
     "Finish production process": "Завершить процесс производства",
+    "Production started": "Производство началось",
+    "Production finished": "Производство завершено",
 
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

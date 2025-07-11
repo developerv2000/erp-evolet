@@ -31,6 +31,15 @@
                 min="0.00"
                 :isRequired="true" />
         </div>
+
+        @if ($record->order->production_is_started)
+            <div class="form__row">
+                <x-form.inputs.record-field-input
+                    labelText="Production status"
+                    field="production_status"
+                    :model="$record" />
+            </div>
+        @endif
     </div>
 
     <div class="form__block">

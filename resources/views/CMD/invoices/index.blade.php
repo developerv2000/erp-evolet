@@ -22,7 +22,7 @@
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
-                @can('edit-cmd-invoices')
+                @can('edit-CMD-invoices')
                     <x-misc.button
                         class="toolbar__button"
                         style="shadowed"
@@ -55,7 +55,7 @@
     </div>
 
     {{-- Modals --}}
-    @can('edit-cmd-invoices')
+    @can('edit-CMD-invoices')
         <x-modals.multiple-delete
             form-action="{{ route('cmd.invoices.destroy') }}"
             :forceDelete="true" />

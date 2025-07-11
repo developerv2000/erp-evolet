@@ -20,5 +20,9 @@
         min="0"
         :is-required="true" />
 
+    <x-form.inputs.default-input
+        labelText="Comment"
+        :input-name="'products[' . $inputsIndex . '][comment]'" />
+
     <x-form.misc.remove-row-button />
 </div>

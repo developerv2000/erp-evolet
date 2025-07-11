@@ -55,6 +55,8 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     const STATUS_IS_SENT_TO_CONFIRMATION_NAME = 'Sent to confirmation';
     const STATUS_IS_CONFIRMED_NAME = 'Confirmed';
     const STATUS_IS_SENT_TO_MANUFACTURER_NAME = 'Sent to manufacturer';
+    const STATUS_PRODUCTION_IS_STARTED_NAME = 'Production started';
+    const STATUS_PRODUCTION_IS_FINISHED_NAME = 'Production finished';
 
     /*
     |--------------------------------------------------------------------------
@@ -144,9 +146,13 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     public function getStatusAttribute()
     {
-        if ($this->is_sent_to_manufacturer) {
+        if ($this->production_is_finished) {
+            return self::STATUS_PRODUCTION_IS_FINISHED_NAME;
+        } else if ($this->production_is_started) {
+            return self::STATUS_PRODUCTION_IS_STARTED_NAME;
+        } else if ($this->is_sent_to_manufacturer) {
             return self::STATUS_IS_SENT_TO_MANUFACTURER_NAME;
-        } elseif ($this->is_confirmed) {
+        } else if ($this->is_confirmed) {
             return self::STATUS_IS_CONFIRMED_NAME;
         } else if ($this->is_sent_to_confirmation) {
             return self::STATUS_IS_SENT_TO_CONFIRMATION_NAME;
@@ -381,6 +387,9 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             self::STATUS_IS_SENT_TO_BDM_NAME,
             self::STATUS_IS_SENT_TO_CONFIRMATION_NAME,
             self::STATUS_IS_CONFIRMED_NAME,
+            self::STATUS_IS_SENT_TO_MANUFACTURER_NAME,
+            self::STATUS_PRODUCTION_IS_STARTED_NAME,
+            self::STATUS_PRODUCTION_IS_FINISHED_NAME,
         ];
     }
 
@@ -403,7 +412,10 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             self::STATUS_CREATED_NAME => fn($q) => $q->whereNull('sent_to_bdm_date'),
             self::STATUS_IS_SENT_TO_BDM_NAME => fn($q) => $q->whereNotNull('sent_to_bdm_date')->whereNull('sent_to_confirmation_date'),
             self::STATUS_IS_SENT_TO_CONFIRMATION_NAME => fn($q) => $q->whereNotNull('sent_to_confirmation_date')->whereNull('confirmation_date'),
-            self::STATUS_IS_CONFIRMED_NAME => fn($q) => $q->whereNotNull('confirmation_date'),
+            self::STATUS_IS_CONFIRMED_NAME => fn($q) => $q->whereNotNull('confirmation_date')->whereNull('sent_to_manufacturer_date'),
+            self::STATUS_IS_SENT_TO_MANUFACTURER_NAME => fn($q) => $q->whereNotNull('sent_to_manufacturer_date')->whereNull('production_start_date'),
+            self::STATUS_PRODUCTION_IS_STARTED_NAME => fn($q) => $q->whereNotNull('production_start_date')->whereNull('production_end_date'),
+            self::STATUS_PRODUCTION_IS_FINISHED_NAME => fn($q) => $q->whereNotNull('production_end_date'),
             default => null,
         };
 
@@ -471,10 +483,18 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $products = $request->input('products', []);
 
         foreach ($products as $product) {
-            $record->products()->create([
+            $newProduct = $record->products()->create([
                 'process_id' => $product['process_id'],
                 'quantity' => $product['quantity'],
             ]);
+
+            // Store product comments
+            if (isset($product['comment']) && $product['comment']) {
+                $newProduct->comments()->create([
+                    'body' => $product['comment'],
+                    'user_id' => auth()->user()->id,
+                ]);
+            }
         }
     }
 
@@ -508,6 +528,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
             $orderProduct->update([
                 'price' => $product['price'],
+                'production_status' => $product['production_status'],
             ]);
         }
     }
@@ -689,7 +710,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Invoices', 'order' => $order++, 'width' => 120, 'visible' => 1],
 
             ['name' => 'Production start date', 'order' => $order++, 'width' => 212, 'visible' => 1],
-            ['name' => 'Production status', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Production end date', 'order' => $order++, 'width' => 236, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
@@ -740,7 +760,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Invoices', 'order' => $order++, 'width' => 120, 'visible' => 1],
 
             ['name' => 'Production start date', 'order' => $order++, 'width' => 244, 'visible' => 1],
-            ['name' => 'Production status', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Production end date', 'order' => $order++, 'width' => 270, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
