@@ -189,6 +189,18 @@ class Permission extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | MSD permissions
+    |--------------------------------------------------------------------------
+    */
+
+    // View
+    const CAN_VIEW_MSD_ORDER_PRODUCTS_NAME = 'can view MSD order products';
+
+    // Edit
+    const CAN_EDIT_MSD_ORDER_PRODUCTS_NAME = 'can edit MSD order products';
+
+    /*
+    |--------------------------------------------------------------------------
     | Properties
     |--------------------------------------------------------------------------
     */
@@ -415,6 +427,14 @@ class Permission extends Model
 
             // Shared
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_INVOICE_IS_SENT_FOR_PAYMENT,
+        ];
+    }
+
+    public static function getMSDSerializerPermissionNames()
+    {
+        return [
+            self::CAN_VIEW_MSD_ORDER_PRODUCTS_NAME,
+            self::CAN_EDIT_MSD_ORDER_PRODUCTS_NAME,
         ];
     }
 }

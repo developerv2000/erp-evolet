@@ -49,6 +49,17 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     const DEFAULT_PRD_ORDER_TYPE = 'desc';
     const DEFAULT_PRD_PAGINATION_LIMIT = 50;
 
+    // MSD
+    const SETTINGS_MSD_SERIALIZED_BY_MANUFACTURER_TABLE_COLUMNS_KEY = 'MSD_order_products_serialized_by_manufacturer_table_columns';
+    const DEFAULT_MSD_SERIALIZED_BY_MANUFACTURER_ORDER_BY = 'order_production_end_date';
+    const DEFAULT_MSD_SERIALIZED_BY_MANUFACTURER_ORDER_TYPE = 'desc';
+    const DEFAULT_MSD_SERIALIZED_BY_MANUFACTURER_PAGINATION_LIMIT = 50;
+
+    const SETTINGS_MSD_SERIALIZED_BY_US_TABLE_COLUMNS_KEY = 'MSD_order_products_serialized_by_us_table_columns';
+    const DEFAULT_MSD_SERIALIZED_BY_US_ORDER_BY = 'order_production_end_date';
+    const DEFAULT_MSD_SERIALIZED_BY_US_ORDER_TYPE = 'desc';
+    const DEFAULT_MSD_SERIALIZED_BY_US_PAGINATION_LIMIT = 50;
+
     /*
     |--------------------------------------------------------------------------
     | Properties
@@ -183,6 +194,13 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         });
     }
 
+    public function scopeOnlyProductionIsFinished($query)
+    {
+        return $query->whereHas('order', function ($orderQuery) {
+            $orderQuery->onlyProductionIsFinished();
+        });
+    }
+
     public function scopeOnlyWithInvoicesSentForPayment($query)
     {
         return $query->whereHas('order', function ($orderQuery) {
@@ -212,6 +230,18 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return $query
             ->join('orders', 'orders.id', '=', 'order_products.order_id')
             ->selectRaw('orders.sent_to_manufacturer_date as order_sent_to_manufacturer_date');
+    }
+
+    /**
+     * Add 'order_production_end_date' attribute.
+     *
+     * Used while ordering products by 'order_production_end_date'
+     */
+    public function scopeWithOrderProductionEndDateAttribute($query)
+    {
+        return $query
+            ->join('orders', 'orders.id', '=', 'order_products.order_id')
+            ->selectRaw('orders.production_end_date as order_production_end_date');
     }
 
     /*
@@ -399,6 +429,16 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             'DEFAULT_PRD_ORDER_BY',
             'DEFAULT_PRD_ORDER_TYPE',
             'DEFAULT_PRD_PAGINATION_LIMIT',
+        );
+    }
+
+    public static function addDefaultMSDSerializedByUsQueryParamsToRequest(Request $request)
+    {
+        self::addDefaultQueryParamsToRequest(
+            $request,
+            'DEFAULT_MSD_SERIALIZED_BY_US_ORDER_BY',
+            'DEFAULT_MSD_SERIALIZED_BY_US_ORDER_TYPE',
+            'DEFAULT_MSD_SERIALIZED_BY_US_PAGINATION_LIMIT',
         );
     }
 
@@ -685,7 +725,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public static function getDefaultPRDTableColumnsForUser($user)
     {
-        if (Gate::forUser($user)->denies('view-PRD-orders')) {
+        if (Gate::forUser($user)->denies('view-PRD-order-products')) {
             return null;
         }
 
@@ -729,6 +769,40 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Print proof receive date', 'order' => $order++, 'width' => 228, 'visible' => 1],
             ['name' => 'Box article', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Layout approved date', 'order' => $order++, 'width' => 188, 'visible' => 1],
+
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
+        );
+
+        return $columns;
+    }
+
+    public static function getDefaultMSDSerializedByManufacturerTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-MSD-order-products')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        array_push(
+            $columns,
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Production end date', 'order' => $order++, 'width' => 236, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+
+            ['name' => 'Serialization codes request date', 'order' => $order++, 'width' => 262, 'visible' => 1],
+            ['name' => 'Serialization codes sent', 'order' => $order++, 'width' => 254, 'visible' => 1],
+            ['name' => 'Serialization report received', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Report sent to hub', 'order' => $order++, 'width' => 184, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],

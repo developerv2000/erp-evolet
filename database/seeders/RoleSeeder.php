@@ -175,5 +175,24 @@ class RoleSeeder extends Seeder
         foreach ($permissionNames as $permissionName) {
             $role->permissions()->attach(Permission::findByName($permissionName)->id);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | MSD roles
+        |--------------------------------------------------------------------------
+        */
+
+        // MSD Serializer
+        $role = new Role();
+        $role->name = Role::MSD_SERIALIZER_NAME;
+        $role->description = "Not fully implemented yet!";
+        $role->department_id = Department::findByName(Department::MSD_NAME)->id;
+        $role->save();
+
+        $permissionNames = Permission::getMSDSerializerPermissionNames();
+
+        foreach ($permissionNames as $permissionName) {
+            $role->permissions()->attach(Permission::findByName($permissionName)->id);
+        }
     }
 }

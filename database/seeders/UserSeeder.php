@@ -218,6 +218,32 @@ class UserSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
+        | MSD users
+        |--------------------------------------------------------------------------
+        */
+
+        $msdID = Department::findByName(Department::MSD_NAME)->id;
+        $serializerRoleID = Role::findByName(Role::MSD_SERIALIZER_NAME);
+
+        $serializers = [
+            ['name' => 'Serializer man', 'email' => 'serializer@mail.com', 'photo' => 'bdm.png'],
+        ];
+
+        // Create MSD Serializers
+        foreach ($serializers as $user) {
+            $newUser = User::create([
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'photo' => $user['photo'],
+                'department_id' => $msdID,
+                'password' => bcrypt($password),
+            ]);
+
+            $newUser->roles()->attach($serializerRoleID);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
         | Reset all user settings to default
         |--------------------------------------------------------------------------
         */

@@ -367,6 +367,7 @@ class User extends Authenticatable
         $this->resetCMDTablesColumnSettings($settings);
         $this->resetDDTablesColumnSettings($settings);
         $this->resetPRDTablesColumnSettings($settings);
+        $this->resetMSDTablesColumnSettings($settings);
     }
 
     /**
@@ -446,6 +447,19 @@ class User extends Authenticatable
     }
 
     /**
+     * Reset users MSD tables column settings
+     */
+    public function resetMSDTablesColumnSettings($settings)
+    {
+        $this->refresh();
+        $settings = $this->settings;
+        $settings[OrderProduct::SETTINGS_MSD_SERIALIZED_BY_MANUFACTURER_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultMSDSerializedByManufacturerTableColumnsForUser($this);
+
+        $this->settings = $settings;
+        $this->save();
+    }
+
+    /**
      * Reset all settings to default for all users
      *
      * Used via artisan command line
@@ -487,6 +501,9 @@ class User extends Authenticatable
             'PRD_orders_table_columns' => Order::getDefaultPRDTableColumnsForUser($this),
             'PRD_order_products_table_columns' => OrderProduct::getDefaultPRDTableColumnsForUser($this),
             'PRD_invoices_table_columns' => Invoice::getDefaultPRDTableColumnsForUser($this),
+
+            'MSD_order_products_serialized_by_manufacturer_table_columns' =>
+            OrderProduct::getDefaultMSDSerializedByManufacturerTableColumnsForUser($this),
 
             default => throw new InvalidArgumentExceptio("Unknown key: $key"),
         };
@@ -748,6 +765,9 @@ class User extends Authenticatable
             'prd.invoices.index' => 'view-PRD-invoices',
             'prd.orders.index' => 'view-PRD-orders',
             'prd.order-products.index' => 'view-PRD-order-products',
+
+            // MSD
+            'msd.order-products.serialized-by-manufacturer.index' => 'view-MSD-order-products',
         ];
 
         foreach ($homepageRoutes as $routeName => $gate) {

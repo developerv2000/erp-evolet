@@ -46,6 +46,13 @@ return new class extends Migration
             // CMD part
             $table->text('production_status')->nullable();
 
+            // Step 7:
+            // MSD part
+            $table->timestamp('serialization_codes_request_date')->nullable();
+            $table->timestamp('serialization_codes_sent_date')->nullable();
+            $table->timestamp('serialization_report_recieved_date')->nullable();
+            $table->timestamp('report_sent_to_hub_date')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
         });

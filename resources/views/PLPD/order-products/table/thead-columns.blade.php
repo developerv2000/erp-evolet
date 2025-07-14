@@ -13,20 +13,12 @@
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="order_id" />
     @break
 
-    @case('PO №')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="name" />
-    @break
-
     @case('Sent to BDM')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="order_sent_to_bdm_date" />
     @break
 
     @case('Sent to manufacturer')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="order_sent_to_manufacturer_date" />
-    @break
-
-    @case('Currency')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="currency_id" />
     @break
 
     @case('Date of creation')

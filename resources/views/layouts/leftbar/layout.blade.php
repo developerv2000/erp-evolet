@@ -11,6 +11,7 @@
         @include('layouts.leftbar.navs.CMD')
         @include('layouts.leftbar.navs.PRD')
         @include('layouts.leftbar.navs.DD')
+        @include('layouts.leftbar.navs.MSD')
         @include('layouts.leftbar.navs.MGMT')
     </div>
 </aside>

@@ -207,6 +207,26 @@ class PermissionSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
+        | MSD permissions
+        |--------------------------------------------------------------------------
+        */
+
+        $departmentID = Department::findByName(Department::MSD_NAME)->id;
+
+        $msds = [
+            Permission::CAN_VIEW_MSD_ORDER_PRODUCTS_NAME,
+            Permission::CAN_EDIT_MSD_ORDER_PRODUCTS_NAME,
+        ];
+
+        foreach ($msds as $msd) {
+            Permission::create([
+                'name' => $msd,
+                'department_id' => $departmentID,
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
         | Shared order-based permissions
         |--------------------------------------------------------------------------
         */

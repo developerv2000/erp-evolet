@@ -52,6 +52,9 @@ class Role extends Model
     // PRD
     const PRD_FINANCIER_NAME = 'PRD Financier';                 // Not fully implemented yet!
 
+    // MSD
+    const MSD_SERIALIZER_NAME = 'MSD Serializer';                 // Not fully implemented yet!
+
     /*
     |--------------------------------------------------------------------------
     | Properties

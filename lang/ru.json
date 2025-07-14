@@ -361,5 +361,12 @@
     "Production started": "Производство началось",
     "Production finished": "Производство завершено",
 
+    "Factory": "Завод",
+    "Riga": "Рига",
+    "Serialization codes request date": "Дата запроса кодов сериализации",
+    "Serialization codes sent": "Коды сериализации отправлены",
+    "Serialization report received": "Отчет о сериализации получен",
+    "Report sent to hub": "Отчет отправлен в хаб",
+
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

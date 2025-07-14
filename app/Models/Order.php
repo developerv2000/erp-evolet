@@ -259,6 +259,11 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $query->whereNotNull('sent_to_manufacturer_date');
     }
 
+    public function scopeOnlyProductionIsFinished($query)
+    {
+        return $query->whereNotNull('production_end_date');
+    }
+
     public function scopeOnlyWithInvoicesSentForPayment($query)
     {
         return $query->whereHas('invoices', function ($invoicesQuery) {
