@@ -3,7 +3,11 @@
 namespace App\Support\Helpers;
 
 use App\Models\Atx;
+use App\Models\Comment;
 use App\Models\Inn;
+use App\Models\Invoice;
+use App\Models\Order;
+use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\ProductForm;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -68,5 +72,12 @@ class Archive
                 }
             }
         });
+    }
+
+    public static function deleteOrderComments()
+    {
+        Comment::where('commentable_type', Order::class)->delete();
+        Comment::where('commentable_type', OrderProduct::class)->delete();
+        Comment::where('commentable_type', Invoice::class)->delete();
     }
 }
