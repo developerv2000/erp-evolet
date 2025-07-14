@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
             ProductSearchSeeder::class,
             MeetingSeeder::class,
             InvoicePaymentTypeSeeder::class,
+            SerializationTypeSeeder::class,
         ]);
     }
 }

@@ -1,44 +1,33 @@
-<x-form-templates.edit-template :action="route('dd.order-products.update', $record->id)">
+<x-form-templates.edit-template :action="route('msd.order-products.serialized-by-manufacturer.update', $record->id)">
     <div class="form__block">
         <div class="form__row">
-            <x-form.selects.selectize.boolean-select.record-field-select
-                labelText="Layout status"
-                field="new_layout"
+            <x-form.inputs.record-field-input
+                labelText="Serialization codes request date"
+                field="serialization_codes_request_date"
                 :model="$record"
-                :true-option-label="__('New')"
-                :false-option-label="__('No changes')"
-                :isRequired="true" />
+                type="datetime-local"
+                :initial-value="$record->formatForDateTimeInput('serialization_codes_request_date')" />
 
             <x-form.inputs.record-field-input
-                labelText="Layout sent date"
-                field="date_of_sending_new_layout_to_manufacturer"
+                labelText="Serialization codes sent"
+                field="serialization_codes_sent_date"
                 :model="$record"
-                type="date"
-                :initial-value="$record->date_of_sending_new_layout_to_manufacturer?->format('Y-m-d')" />
+                type="datetime-local"
+                :initial-value="$record->formatForDateTimeInput('serialization_codes_sent_date')" />
 
             <x-form.inputs.record-field-input
-                labelText="Box article"
-                field="box_article"
-                :model="$record" />
-        </div>
-
-        <div class="form__row">
-            <x-form.inputs.record-field-input
-                labelText="Layout approved date"
-                field="layout_approved_date"
+                labelText="Serialization report received"
+                field="serialization_report_recieved_date"
                 :model="$record"
-                type="date"
-                :initial-value="$record->layout_approved_date?->format('Y-m-d')" />
+                type="datetime-local"
+                :initial-value="$record->formatForDateTimeInput('serialization_report_recieved_date')" />
 
             <x-form.inputs.record-field-input
-                :form-group-class="$record->new_layout ? null : 'form-group--hidden-visibility'"
-                labelText="Print proof receive date"
-                field="date_of_receiving_print_proof_from_manufacturer"
+                labelText="Report sent to hub"
+                field="report_sent_to_hub_date"
                 :model="$record"
-                type="date"
-                :initial-value="$record->date_of_receiving_print_proof_from_manufacturer?->format('Y-m-d')" />
-
-            <div class="form-group"></div>
+                type="datetime-local"
+                :initial-value="$record->formatForDateTimeInput('report_sent_to_hub_date')" />
         </div>
     </div>
 

@@ -50,5 +50,5 @@
 @endsection
 
 @section('rightbar')
-    {{-- @include('MSD.order-products.serialized-by-manufacturer.partials.filter') --}}
+    @include('MSD.order-products.serialized-by-manufacturer.partials.filter')
 @endsection

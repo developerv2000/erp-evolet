@@ -7,6 +7,7 @@ use App\Support\Contracts\Model\CanExportRecordsAsExcel;
 use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\Commentable;
+use App\Support\Traits\Model\FormatsAttributeForDateTimeInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     use HasFactory;
     use SoftDeletes; // No manual trashing/restoring. Trashed when order parent is trashed.
     use Commentable;
+    use FormatsAttributeForDateTimeInput;
 
     /*
     |--------------------------------------------------------------------------
@@ -60,6 +62,13 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     const DEFAULT_MSD_SERIALIZED_BY_US_ORDER_TYPE = 'desc';
     const DEFAULT_MSD_SERIALIZED_BY_US_PAGINATION_LIMIT = 50;
 
+    // Statuses
+    const STATUS_PRODUCTION_IS_FINISHED_NAME = 'Production is finished';
+    const STATUS_SERIALIZATION_CODES_REQUESTED_NAME = 'Serialization codes requested';
+    const STATUS_SERIALIZATION_CODES_SENT_NAME = 'Serialization codes sent';
+    const STATUS_SERIALIZATION_REPORT_RECEIVED_NAME = 'Serialization report received';
+    const STATUS_REPORT_SENT_TO_HUB_NAME = 'Report sent to hub';
+
     /*
     |--------------------------------------------------------------------------
     | Properties
@@ -72,6 +81,10 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         'date_of_sending_new_layout_to_manufacturer' => 'date',
         'date_of_receiving_print_proof_from_manufacturer' => 'date',
         'layout_approved_date' => 'date',
+        'serialization_codes_request_date' => 'datetime',
+        'serialization_codes_sent_date' => 'datetime',
+        'serialization_report_recieved_date' => 'datetime',
+        'report_sent_to_hub_date' => 'datetime',
     ];
 
     /*
@@ -102,6 +115,11 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         )->withTrashedParents()->withTrashed();
     }
 
+    public function serializationType()
+    {
+        return $this->belongsTo(SerializationType::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes
@@ -118,6 +136,21 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         $total = $this->quantity * $this->price;
 
         return floor($total * 100) / 100;
+    }
+
+    public function getSerializationStatusAttribute()
+    {
+        if ($this->report_sent_to_hub_date) {
+            return self::STATUS_REPORT_SENT_TO_HUB_NAME;
+        } else if ($this->serialization_report_recieved_date) {
+            return self::STATUS_SERIALIZATION_REPORT_RECEIVED_NAME;
+        } else if ($this->serialization_codes_sent_date) {
+            return self::STATUS_SERIALIZATION_CODES_SENT_NAME;
+        } else if ($this->serialization_codes_request_date) {
+            return self::STATUS_SERIALIZATION_CODES_REQUESTED_NAME;
+        }
+
+        return self::STATUS_PRODUCTION_IS_FINISHED_NAME;
     }
 
     /*
@@ -147,6 +180,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     {
         return $query->with([
             'lastComment',
+            'serializationType',
 
             'order' => function ($orderQuery) {
                 $orderQuery->with([ // ->withBasicRelations not used because of redundant 'lastComment'
@@ -208,6 +242,13 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         });
     }
 
+    public function scopeOnlySerializedByManufacturer($query)
+    {
+        $serializationTypeId = SerializationType::findByName(SerializationType::BY_MANUFACTURER_TYPE_NAME)->id;
+
+        return $query->where('serialization_type_id', $serializationTypeId);
+    }
+
     /**
      * Add 'order_sent_to_bdm_date' attribute.
      *
@@ -253,10 +294,31 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     /**
      * Implement method defined in BaseModel abstract class.
      *
-     * Used by 'PLPD', 'CDM', 'DD' departments.
+     * Used by 'PLPD', 'CDM', 'DD', 'MSD' departments.
+     *
+     * Special breadcrumbs for 'MSD'.
      */
     public function generateBreadcrumbs($department = null): array
     {
+        // Special breadcrumbs for 'MSD'.
+        if ($department && $department == 'MSD') {
+            $lowercasedDepartment = strtolower($department);
+
+            // Generate index page breadcrumb omptions
+            $indexPageLink = route('msd.order-products.serialized-by-us.index');
+            $indexPageTitle = __('Riga');
+
+            if ($this->serializationType->name == SerializationType::BY_MANUFACTURER_TYPE_NAME) {
+                $indexPageLink = route('msd.order-products.serialized-by-manufacturer.index');
+                $indexPageTitle = __('Factory');
+            }
+
+            return [
+                ['link' => $indexPageLink, 'text' => $indexPageTitle],
+                ['link' => url()->current(), 'text' => $this->title],
+            ];
+        }
+
         // If department is declared
         if ($department) {
             $lowercasedDepartment = strtolower($department);
@@ -493,6 +555,16 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         $this->storeCommentFromRequest($request);
     }
 
+    // MSD part
+
+    function updateByMSDFromRequest($request)
+    {
+        $this->update($request->all());
+
+        // HasMany relations
+        $this->storeCommentFromRequest($request);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Misc
@@ -510,6 +582,10 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
         if ($request->input('order_by') == 'order_sent_to_manufacturer_date') {
             $query->withOrderSentToManufacturerDateAttribute();
+        }
+
+        if ($request->input('order_by') == 'order_production_end_date') {
+            $query->withOrderProductionEndDateAttribute();
         }
 
         return $query;
@@ -575,6 +651,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
             ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'Serialization type', 'order' => $order++, 'width' => 156, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
@@ -786,10 +863,17 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         $order = 1;
         $columns = array();
 
+        if (Gate::forUser($user)->allows('edit-MSD-order-products')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
         array_push(
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
-            ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 144, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],

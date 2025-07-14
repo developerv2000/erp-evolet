@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => $record->title . ' — ' . __('Products'),
-    'pageName' => 'dd-order-products-edit',
+    'pageTitle' => $record->title . ' — ' . __('Factory'),
+    'pageName' => 'msd-serialized-by-manufacturer-edit',
     'mainAutoOverflowed' => false,
 ])
 
@@ -8,7 +8,7 @@
     <div class="main-box">
         {{-- Toolbar --}}
         <div class="toolbar">
-            <x-layouts.breadcrumbs :crumbs="$record->generateBreadcrumbs('DD')" />
+            <x-layouts.breadcrumbs :crumbs="$record->generateBreadcrumbs('MSD')" />
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
@@ -22,11 +22,8 @@
             </div>
         </div>
 
-        {{-- About order --}}
-        @include('DD.order-products.partials.about-order', ['order' => $record->order])
-
         {{-- Edit form --}}
-        @include('DD.order-products.partials.edit-form')
+        @include('MSD.order-products.serialized-by-manufacturer.partials.edit-form')
     </div>
 
 @endsection

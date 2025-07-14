@@ -28,6 +28,12 @@ return new class extends Migration
                 ->references('id')
                 ->on('processes');
 
+            $table->unsignedSmallInteger('serialization_type_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('serialization_types');
+
             $table->unsignedMediumInteger('quantity');
 
             // Step 2:

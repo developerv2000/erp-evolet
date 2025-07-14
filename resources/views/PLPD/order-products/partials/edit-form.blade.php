@@ -27,6 +27,13 @@
                 type="number"
                 min="0"
                 :isRequired="true" />
+
+            <x-form.selects.selectize.id-based-single-select.record-field-select
+                labelText="Serialization type"
+                field="serialization_type_id"
+                :model="$record"
+                :options="$serializationTypes"
+                :isRequired="true" />
         </div>
 
         {{-- CMD part --}}

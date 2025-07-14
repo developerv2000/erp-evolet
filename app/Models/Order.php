@@ -491,6 +491,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             $newProduct = $record->products()->create([
                 'process_id' => $product['process_id'],
                 'quantity' => $product['quantity'],
+                'serialization_type_id' => $product['serialization_type_id'],
             ]);
 
             // Store product comments
@@ -533,7 +534,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
             $orderProduct->update([
                 'price' => $product['price'],
-                'production_status' => $product['production_status'],
             ]);
         }
     }

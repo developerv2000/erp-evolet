@@ -361,6 +361,7 @@
     "Production started": "Производство началось",
     "Production finished": "Производство завершено",
 
+    "Serialization type": "Тип сериализации",
     "Factory": "Завод",
     "Riga": "Рига",
     "Serialization codes request date": "Дата запроса кодов сериализации",

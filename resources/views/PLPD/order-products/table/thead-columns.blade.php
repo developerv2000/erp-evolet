@@ -9,6 +9,10 @@
         <x-tables.partials.th.id />
     @break
 
+    @case('Serialization type')
+        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="serialization_type_id" />
+    @break
+
     @case('Order')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="order_id" />
     @break

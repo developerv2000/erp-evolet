@@ -53,6 +53,10 @@
         <x-tables.partials.td.formatted-price :price="$record->quantity" />
     @break
 
+    @case('Serialization type')
+        {{ $record->serializationType->name }}
+    @break
+
     @case('Comments')
         <x-tables.partials.td.model-comments-link :record="$record" />
     @break

@@ -24,5 +24,11 @@
         labelText="Comment"
         :input-name="'products[' . $inputsIndex . '][comment]'" />
 
+    <x-form.selects.selectize.id-based-single-select.default-select
+        labelText="Serialization type"
+        :input-name="'products[' . $inputsIndex . '][serialization_type_id]'"
+        :options="$serializationTypes"
+        :is-required="true" />
+
     <x-form.misc.remove-row-button />
 </div>

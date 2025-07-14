@@ -23,6 +23,12 @@
                 type="number"
                 min="0"
                 :is-required="true" />
+
+            <x-form.selects.selectize.id-based-single-select.default-select
+                labelText="Serialization type"
+                inputName="serialization_type_id"
+                :options="$serializationTypes"
+                :is-required="true" />
         </div>
     </div>
 

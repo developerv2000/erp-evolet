@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderStoreByPLPDRequest;
 use App\Http\Requests\OrderUpdateByPLPDRequest;
 use App\Models\Process;
+use App\Models\SerializationType;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
 use App\Support\Traits\Controller\DestroysModelRecords;
@@ -90,11 +91,13 @@ class PLPDOrderController extends Controller
         }
 
         // Return row with ready for order processes
+        $serializationTypes = SerializationType::defaultOrdered()->get();
+
         return response()->json([
             'success' => true,
             'row' => view(
                 'PLPD.orders.partials.create-form-dynamic-rows-list-item',
-                compact('readyForOrderProcesses', 'inputsIndex')
+                compact('readyForOrderProcesses', 'inputsIndex', 'serializationTypes')
             )->render(),
         ]);
     }

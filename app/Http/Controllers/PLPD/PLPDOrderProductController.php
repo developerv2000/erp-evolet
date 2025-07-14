@@ -8,6 +8,7 @@ use App\Http\Requests\OrderProductStoreByPLPDRequest;
 use App\Http\Requests\OrderProductUpdateByPLPDRequest;
 use App\Models\Order;
 use App\Models\Process;
+use App\Models\SerializationType;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
 use App\Support\Traits\Controller\DestroysModelRecords;
@@ -49,7 +50,9 @@ class PLPDOrderProductController extends Controller
             true
         );
 
-        return view('PLPD.order-products.create', compact('order', 'readyForOrderProcesses'));
+        $serializationTypes = SerializationType::defaultOrdered()->get();
+
+        return view('PLPD.order-products.create', compact('order', 'readyForOrderProcesses', 'serializationTypes'));
     }
 
     public function store(OrderProductStoreByPLPDRequest $request)
@@ -68,8 +71,9 @@ class PLPDOrderProductController extends Controller
         );
 
         $processWithItSimilarRecords = $record->process->getProcessWithItSimilarRecordsForOrder(true);
+        $serializationTypes = SerializationType::defaultOrdered()->get();
 
-        return view('PLPD.order-products.edit', compact('record', 'readyForOrderProcesses', 'processWithItSimilarRecords'));
+        return view('PLPD.order-products.edit', compact('record', 'readyForOrderProcesses', 'processWithItSimilarRecords', 'serializationTypes'));
     }
 
     public function update(OrderProductUpdateByPLPDRequest $request, OrderProduct $record)

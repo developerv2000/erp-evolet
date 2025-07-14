@@ -1,6 +1,6 @@
 @switch($column['name'])
     @case('Edit')
-        <x-tables.partials.td.edit :link="route('cmd.order-products.edit', $record->id)" />
+        <x-tables.partials.td.edit :link="route('msd.order-products.serialized-by-manufacturer.edit', $record->id)" />
     @break
 
     @case('ID')
@@ -8,9 +8,16 @@
     @break
 
     @case('Status')
-        <div class="td__order-status">
-            {{-- <x-tables.partials.td.order-status-badge :status="$record->order->status" /> --}}
-        </div>
+        <span @class([
+            'badge',
+            'badge--grey' => $record->serialization_status == App\Models\OrderProduct::STATUS_PRODUCTION_IS_FINISHED_NAME,
+            'badge--pink' => $record->serialization_status == App\Models\OrderProduct::STATUS_SERIALIZATION_CODES_REQUESTED_NAME,
+            'badge--yellow' => $record->serialization_status == App\Models\OrderProduct::STATUS_SERIALIZATION_CODES_SENT_NAME,
+            'badge--orange' => $record->serialization_status == App\Models\OrderProduct::STATUS_SERIALIZATION_REPORT_RECEIVED_NAME,
+            'badge--green' => $record->serialization_status == App\Models\OrderProduct::STATUS_REPORT_SENT_TO_HUB_NAME,
+        ])>
+            {{ $record->serialization_status }}
+        </span>
     @break
 
     @case('Manufacturer')
