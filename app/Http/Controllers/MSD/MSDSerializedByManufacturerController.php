@@ -20,6 +20,7 @@ class MSDSerializedByManufacturerController extends Controller
         // Get finalized records paginated
         $query = OrderProduct::onlyProductionIsFinished()
             ->onlySerializedByManufacturer()
+            ->whereHas('invoices')
             ->withBasicRelations()
             ->withBasicRelationCounts();
 

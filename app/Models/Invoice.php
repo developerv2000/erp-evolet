@@ -271,7 +271,7 @@ class Invoice extends BaseModel implements HasTitle
     // CMD part
     public static function createByCMDFromRequest($request)
     {
-        // Merge 'payment_type_id', if order should have invoice of final payment type
+        // Merge 'payment_type_id', if order should have invoice of FINAL_PAYMENT type
         $order = Order::findorfail($request->input('order_id'));
 
         if ($order->shouldHaveInvoiceOfFinalPaymentType()) {
@@ -283,8 +283,16 @@ class Invoice extends BaseModel implements HasTitle
         // Create invoice
         $record = self::create($request->all());
 
-        // Attach products
-        $productIDs = $order->products->pluck('id')->toArray();
+        // Attach orderProducts to new created invoice of FINAL_PAYMENT type,
+        // by syncing orderProducts from related PREPAYMENT invoice.
+        if ($record->payment_type_id == InvoicePaymentType::FINAL_PAYMENT_ID) {
+            $record->syncOrderProductsFromRelatedPrepaymentInvoice();
+        } else {
+            // Attach all products of order,
+            // for invoices of PREPAYMENT and FULL_PAYMENT types.
+            $productIDs = $order->products()->pluck('id')->toArray();
+        }
+
         $record->orderProducts()->attach($productIDs);
 
         // Upload PDF file
@@ -308,9 +316,17 @@ class Invoice extends BaseModel implements HasTitle
             $this->save();
         }
 
-        // Update orderProducts
-        $selectedOrderProducts = $request->input('order_products', []);
-        $this->orderProducts()->sync($selectedOrderProducts);
+        // Update orderProducts for PREPAYMENT or FULL_PAYMENT invoices
+        if ($this->payment_type_id != InvoicePaymentType::FINAL_PAYMENT_ID) {
+            $selectedOrderProducts = $request->input('order_products', []);
+            $this->orderProducts()->sync($selectedOrderProducts);
+
+            // Sync orderProducts with related FINAL_PAYMENT invoice,
+            // for invoice of PREPAYMENT type.
+            if ($this->payment_type_id == InvoicePaymentType::PREPAYMENT_ID) {
+                $this->syncOrderProductsWithRelatedFinalPaymentInvoice();
+            }
+        }
 
         // Upload SWIFT file
         $this->uploadFile('payment_confirmation_document', public_path(self::PAYMENT_CONFIRMATION_DOCUMENT_PATH), uniqid());
@@ -321,6 +337,23 @@ class Invoice extends BaseModel implements HasTitle
     | Attribute togglings
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * CMD BDM sends invoice to PRD Financier for payment
+     */
+    public function toggleIsSentForPaymentAttribute(Request $request)
+    {
+        $action = $request->input('action');
+
+        if ($action == 'send' && !$this->is_sent_for_payment) {
+            $this->sent_for_payment_date = now();
+            $this->save();
+
+            // Notify specific users
+            $notification = new InvoiceIsSentForPayment($this);
+            User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-CMD-invoice-is-sent-for-payment');
+        }
+    }
 
     /**
      * PRD Financier accepts invoice from CMD BDM
@@ -359,19 +392,48 @@ class Invoice extends BaseModel implements HasTitle
     */
 
     /**
-     * CMD BDM sends invoice to PRD Financier for payment
+     * Sync orderProducts between invoices based on payment type.
+     *
+     * This method syncs FINAL_PAYMENT invoice's orderProducts from a PREPAYMENT invoice.
+     * Used by `createByCMDFromRequest`.
      */
-    public function toggleIsSentForPaymentAttribute(Request $request)
+    public function syncOrderProductsFromRelatedPrepaymentInvoice(): void
     {
-        $action = $request->input('action');
+        $this->refresh();
 
-        if ($action == 'send' && !$this->is_sent_for_payment) {
-            $this->sent_for_payment_date = now();
-            $this->save();
+        if ($this->payment_type_id !== InvoicePaymentType::FINAL_PAYMENT_ID) {
+            return;
+        }
 
-            // Notify specific users
-            $notification = new InvoiceIsSentForPayment($this);
-            User::notifyUsersBasedOnPermission($notification, 'receive-notification-when-CMD-invoice-is-sent-for-payment');
+        $prepaymentInvoice = $this->order->invoices()
+            ->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID)
+            ->first();
+
+        if ($prepaymentInvoice) {
+            $this->orderProducts()->sync($prepaymentInvoice->orderProducts->pluck('id')->all());
+        }
+    }
+
+    /**
+     * Sync orderProducts between invoices based on payment type.
+     *
+     * This method syncs a PREPAYMENT invoice's orderProducts to a FINAL_PAYMENT invoice.
+     * Used by `updateByPRDFromRequest`.
+     */
+    public function syncOrderProductsWithRelatedFinalPaymentInvoice(): void
+    {
+        $this->refresh();
+
+        if ($this->payment_type_id !== InvoicePaymentType::PREPAYMENT_ID) {
+            return;
+        }
+
+        $finalPaymentInvoice = $this->order->invoices()
+            ->where('payment_type_id', InvoicePaymentType::FINAL_PAYMENT_ID)
+            ->first();
+
+        if ($finalPaymentInvoice) {
+            $finalPaymentInvoice->orderProducts()->sync($this->orderProducts->pluck('id')->all());
         }
     }
 

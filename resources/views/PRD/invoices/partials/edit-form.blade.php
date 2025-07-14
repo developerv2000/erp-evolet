@@ -32,5 +32,8 @@
         </div>
     </div>
 
-    <x-misc.invoice-products-list :order-products="$orderProducts" :record="$record" />
+    <x-misc.invoice-products-list
+        :order-products="$orderProducts"
+        :record="$record"
+        :disabled="$record->payment_type_id == App\Models\InvoicePaymentType::FINAL_PAYMENT_ID" />
 </x-form-templates.edit-template>
