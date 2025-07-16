@@ -172,27 +172,35 @@
     @break
 
     @case('Packing list')
-        <a class="main-link" href="{{ $record->packing_list_asset_url }}" target="_blank">
-            {{ $record->packing_list_file }}
-        </a>
+        @if ($record->packing_list_file)
+            <a class="main-link" href="{{ $record->packing_list_asset_url }}" target="_blank">
+                {{ $record->packing_list_file }}
+            </a>
+        @endif
     @break
 
     @case('COA')
-        <a class="main-link" href="{{ $record->coa_asset_url }}" target="_blank">
-            {{ $record->coa_file }}
-        </a>
+        @if ($record->coa_file)
+            <a class="main-link" href="{{ $record->coa_asset_url }}" target="_blank">
+                {{ $record->coa_file }}
+            </a>
+        @endif
     @break
 
     @case('COO')
-        <a class="main-link" href="{{ $record->coo_asset_url }}" target="_blank">
-            {{ $record->coo_file }}
-        </a>
+        @if ($record->coo_file)
+            <a class="main-link" href="{{ $record->coo_asset_url }}" target="_blank">
+                {{ $record->coo_file }}
+            </a>
+        @endif
     @break
 
     @case('Declaration for EUR1')
-        <a class="main-link" href="{{ $record->declaration_for_europe_asset_url }}" target="_blank">
-            {{ $record->coo_file }}
-        </a>
+        @if ($record->declaration_for_europe_file)
+            <a class="main-link" href="{{ $record->declaration_for_europe_asset_url }}" target="_blank">
+                {{ $record->declaration_for_europe_file }}
+            </a>
+        @endif
     @break
 
     @case('Ready for shipment')
