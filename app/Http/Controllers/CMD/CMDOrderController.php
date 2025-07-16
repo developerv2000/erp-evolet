@@ -95,18 +95,4 @@ class CMDOrderController extends Controller
             'productionStartDate' => $record->production_start_date?->isoFormat('DD MMM Y'),
         ]);
     }
-
-    /**
-     * Ajax request
-     */
-    public function toggleProductionIsFinishedAttribute(Request $request)
-    {
-        $record = Order::withTrashed()->findOrFail($request->input('record_id'));
-        $record->toggleProductionIsFinishedAttribute($request);
-
-        return response()->json([
-            'productionIsFinished' => $record->production_is_finished,
-            'productionEndDate' => $record->production_end_date?->isoFormat('DD MMM Y'),
-        ]);
-    }
 }

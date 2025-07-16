@@ -51,6 +51,7 @@ return new class extends Migration
             // Step 6:
             // CMD part
             $table->text('production_status')->nullable();
+            $table->timestamp('production_end_date')->nullable(); // action
 
             // Step 7:
             // MSD part
@@ -58,6 +59,14 @@ return new class extends Migration
             $table->timestamp('serialization_codes_sent_date')->nullable();
             $table->timestamp('serialization_report_recieved_date')->nullable();
             $table->timestamp('report_sent_to_hub_date')->nullable();
+
+            // Step 8:
+            // CMD part
+            $table->string('packing_list_file')->nullable();
+            $table->string('coa_file')->nullable();
+            $table->string('coo_file')->nullable();
+            $table->string('declaration_for_europe_file')->nullable();
+            $table->timestamp('readiness_for_shipment_date')->nullable(); // action
 
             $table->timestamps();
             $table->softDeletes();

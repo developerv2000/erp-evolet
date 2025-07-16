@@ -15,6 +15,9 @@ import * as functions from './CMD-functions';
 // Orders table
 const ordersTable = document.querySelector('.cmd-orders-table');
 
+// Order prodcuts
+const orderProductsTable = document.querySelector('.cmd-order-products-table');
+
 // Invoices table
 const invoicesTable = document.querySelector('.cmd-invoices-table');
 
@@ -42,9 +45,15 @@ ordersTable?.querySelectorAll('button[data-click-action="toggle-orders-productio
     });
 });
 
-ordersTable?.querySelectorAll('button[data-click-action="toggle-orders-production-is-finished-attribute"]').forEach(button => {
+orderProductsTable?.querySelectorAll('button[data-click-action="toggle-order-products-production-is-finished-attribute"]').forEach(button => {
     button.addEventListener('click', (evt) => {
-        functions.toggleOrdersProductionIsFinishedAttribute(evt);
+        functions.toggleOrdersProductsProductionIsFinishedAttribute(evt);
+    });
+});
+
+orderProductsTable?.querySelectorAll('button[data-click-action="toggle-order-products-is-ready-for-shipment-attribute"]').forEach(button => {
+    button.addEventListener('click', (evt) => {
+        functions.toggleOrdersProductsIsReadyForShipmentAttribute(evt);
     });
 });
 

@@ -41,4 +41,34 @@ class CMDOrderProductController extends Controller
 
         return redirect($request->input('previous_url'));
     }
+
+    /**
+     * Ajax request
+     */
+    public function toggleProductionIsFinishedAttribute(Request $request)
+    {
+        $record = OrderProduct::withTrashed()->findOrFail($request->input('record_id'));
+        $record->toggleProductionIsFinishedAttribute($request);
+
+        $record->order->validateProductionIsFinishedAttribute();
+
+        return response()->json([
+            'productionIsFinished' => $record->production_is_finished,
+            'productionEndDate' => $record->production_end_date?->isoFormat('DD MMM Y'),
+        ]);
+    }
+
+    /**
+     * Ajax request
+     */
+    public function toggleIsReadyForShipmentAttribute(Request $request)
+    {
+        $record = OrderProduct::withTrashed()->findOrFail($request->input('record_id'));
+        $record->toggleIsReadyForShipmentAttribute($request);
+
+        return response()->json([
+            'isReadyForShipment' => $record->is_ready_for_shipment,
+            'readinessForShipmentDate' => $record->readiness_for_shipment_date?->isoFormat('DD MMM Y'),
+        ]);
+    }
 }

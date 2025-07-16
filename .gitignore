@@ -30,6 +30,9 @@ yarn-error.log
 
 /public/private/invoices/*
 /public/private/payment-confirmation-documents/*
+/public/private/packing-lists/*
+/public/private/COAs/*
+/public/private/COOs/*
 
 /public/attachments/Manufacturer/*
 /public/attachments/Product/*

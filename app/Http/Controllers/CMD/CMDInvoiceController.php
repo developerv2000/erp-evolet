@@ -50,7 +50,7 @@ class CMDInvoiceController extends Controller
     {
         Invoice::createByCMDFromRequest($request);
 
-        return to_route('cmd.invoices.index', $request->input('order_id'));
+        return to_route('cmd.invoices.index', ['order_id[]' => $request->input('order_id')]);
     }
 
     public function edit(Request $request, Invoice $record)

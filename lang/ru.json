@@ -369,5 +369,10 @@
     "Serialization report received": "Отчет о сериализации получен",
     "Report sent to hub": "Отчет отправлен в хаб",
 
+    "Packing list": "Упаковочный лист",
+    "Declaration for EUR1": "Декларация для EUR1",
+    "Ready for shipment": "Готов к отгрузке",
+    "Prepare for shipment": "Подготовить к отгрузке",
+
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

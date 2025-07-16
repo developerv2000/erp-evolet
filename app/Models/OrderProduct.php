@@ -8,6 +8,7 @@ use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\Commentable;
 use App\Support\Traits\Model\FormatsAttributeForDateTimeInput;
+use App\Support\Traits\Model\UploadsFile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
@@ -20,12 +21,19 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     use SoftDeletes; // No manual trashing/restoring. Trashed when order parent is trashed.
     use Commentable;
     use FormatsAttributeForDateTimeInput;
+    use UploadsFile;
 
     /*
     |--------------------------------------------------------------------------
     | Constants
     |--------------------------------------------------------------------------
     */
+
+    // Files
+    const PACKING_LIST_FILE_PATH = 'private/packing-lists';
+    const COA_FILE_PATH = 'private/COAs';
+    const COO_FILE_PATH = 'private/COOs';
+    const DECLARATION_FOR_EUROPE_FILE_PATH = 'private/declarations-for-europe';
 
     // PLPD
     const SETTINGS_PLPD_TABLE_COLUMNS_KEY = 'PLPD_order_products_table_columns';
@@ -85,6 +93,8 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         'serialization_codes_sent_date' => 'datetime',
         'serialization_report_recieved_date' => 'datetime',
         'report_sent_to_hub_date' => 'datetime',
+        'production_end_date' => 'datetime',
+        'readiness_for_shipment_date' => 'datetime',
     ];
 
     /*
@@ -143,6 +153,16 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return floor($total * 100) / 100;
     }
 
+    public function getProductionIsFinishedAttribute(): bool
+    {
+        return !is_null($this->production_end_date);
+    }
+
+    public function getIsReadyForShipmentAttribute(): bool
+    {
+        return !is_null($this->readiness_for_shipment_date);
+    }
+
     public function getSerializationStatusAttribute()
     {
         if ($this->report_sent_to_hub_date) {
@@ -156,6 +176,64 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         }
 
         return self::STATUS_PRODUCTION_IS_FINISHED_NAME;
+    }
+
+    public function getCanBePreparedForShippingAttribute(): bool
+    {
+        return $this->invoices()
+            ->whereIn('payment_type_id', [
+                InvoicePaymentType::FULL_PAYMENT_ID,
+                InvoicePaymentType::FINAL_PAYMENT_ID,
+            ])
+            ->whereNotNull('sent_for_payment_date')
+            ->exists();
+    }
+
+    public function getCanBeMarkedAsReadyForShipmentAttribute(): bool
+    {
+        return $this->packing_list_file
+            && $this->coa_file
+            && $this->coo_file;
+    }
+
+    public function getPackingListAssetUrlAttribute(): string
+    {
+        return asset(self::PACKING_LIST_FILE_PATH . '/' . $this->packing_list_file);
+    }
+
+    public function getPackingListFilePathAttribute()
+    {
+        return public_path(self::PACKING_LIST_FILE_PATH . '/' . $this->packing_list_file);
+    }
+
+    public function getCoaAssetUrlAttribute(): string
+    {
+        return asset(self::COA_FILE_PATH . '/' . $this->coa_file);
+    }
+
+    public function getCoaFilePathAttribute()
+    {
+        return public_path(self::COA_FILE_PATH . '/' . $this->coa_file);
+    }
+
+    public function getCooAssetUrlAttribute(): string
+    {
+        return asset(self::COO_FILE_PATH . '/' . $this->coo_file);
+    }
+
+    public function getCooFilePathAttribute()
+    {
+        return public_path(self::COO_FILE_PATH . '/' . $this->coo_file);
+    }
+
+    public function getDeclarationForEuropeAssetUrlAttribute(): string
+    {
+        return asset(self::DECLARATION_FOR_EUROPE_FILE_PATH . '/' . $this->declaration_for_europe_file);
+    }
+
+    public function getDeclarationForEuropeFilePathAttribute()
+    {
+        return public_path(self::DECLARATION_FOR_EUROPE_FILE_PATH . '/' . $this->declaration_for_europe_file);
     }
 
     /*
@@ -172,6 +250,10 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
         static::updated(function ($record) {
             $record->syncPriceWithRelatedProcess();
+        });
+
+        static::forceDeleting(function ($record) {
+            $record->invoices()->detach();
         });
     }
 
@@ -235,9 +317,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public function scopeOnlyProductionIsFinished($query)
     {
-        return $query->whereHas('order', function ($orderQuery) {
-            $orderQuery->onlyProductionIsFinished();
-        });
+        return $query->whereNotNull('order_products.production_end_date');
     }
 
     public function scopeOnlyWithInvoicesSentForPayment($query)
@@ -541,6 +621,12 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
         // HasMany relations
         $this->storeCommentFromRequest($request);
+
+        // Upload files
+        $this->uploadFile('packing_list_file', public_path(self::PACKING_LIST_FILE_PATH), uniqid());
+        $this->uploadFile('coa_file', public_path(self::COA_FILE_PATH), uniqid());
+        $this->uploadFile('coo_file', public_path(self::COO_FILE_PATH), uniqid());
+        $this->uploadFile('declaration_for_europe_file', public_path(self::DECLARATION_FOR_EUROPE_FILE_PATH), uniqid());
     }
 
     // DD part
@@ -568,6 +654,38 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
         // HasMany relations
         $this->storeCommentFromRequest($request);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Attribute togglings
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * CMD BDM marks production process as finished
+     */
+    public function toggleProductionIsFinishedAttribute(Request $request)
+    {
+        $action = $request->input('action');
+
+        if ($action == 'finish' && !$this->production_is_finished) {
+            $this->production_end_date = now();
+            $this->save();
+        }
+    }
+
+    /**
+     * CMD BDM marks product as ready for shipment
+     */
+    public function toggleIsReadyForShipmentAttribute(Request $request)
+    {
+        $action = $request->input('action');
+
+        if ($action == 'prepare' && !$this->is_ready_for_shipment) {
+            $this->readiness_for_shipment_date = now();
+            $this->save();
+        }
     }
 
     /*
@@ -745,7 +863,15 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Box article', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Layout approved date', 'order' => $order++, 'width' => 188, 'visible' => 1],
 
+            ['name' => 'Production start date', 'order' => $order++, 'width' => 212, 'visible' => 1],
             ['name' => 'Production status', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Production end date', 'order' => $order++, 'width' => 270, 'visible' => 1],
+
+            ['name' => 'Packing list', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'COA', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'COO', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Declaration for EUR1', 'order' => $order++, 'width' => 170, 'visible' => 1],
+            ['name' => 'Ready for shipment', 'order' => $order++, 'width' => 160, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],

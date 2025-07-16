@@ -147,8 +147,68 @@
         {{ $record->layout_approved_date?->isoformat('DD MMM Y') }}
     @break
 
+    @case('Production start date')
+        {{ $record->order->production_start_date?->isoformat('DD MMM Y') }}
+    @break
+
     @case('Production status')
         <x-tables.partials.td.max-lines-limited-text :text="$record->production_status" />
+    @break
+
+    @case('Production end date')
+        @if ($record->production_is_finished)
+            {{ $record->production_end_date->isoformat('DD MMM Y') }}
+        @elseif($record->order->production_is_started)
+            <x-misc.button
+                style="transparent"
+                class="button--arrowed-link button--margined-bottom"
+                icon="line_end_arrow_notch"
+                data-click-action="toggle-order-products-production-is-finished-attribute"
+                data-action-type="finish"
+                data-record-id="{{ $record->id }}">
+                {{ __('Finish production process') }}
+            </x-misc.button>
+        @endif
+    @break
+
+    @case('Packing list')
+        <a class="main-link" href="{{ $record->packing_list_asset_url }}" target="_blank">
+            {{ $record->packing_list_file }}
+        </a>
+    @break
+
+    @case('COA')
+        <a class="main-link" href="{{ $record->coa_asset_url }}" target="_blank">
+            {{ $record->coa_file }}
+        </a>
+    @break
+
+    @case('COO')
+        <a class="main-link" href="{{ $record->coo_asset_url }}" target="_blank">
+            {{ $record->coo_file }}
+        </a>
+    @break
+
+    @case('Declaration for EUR1')
+        <a class="main-link" href="{{ $record->declaration_for_europe_asset_url }}" target="_blank">
+            {{ $record->coo_file }}
+        </a>
+    @break
+
+    @case('Ready for shipment')
+        @if ($record->is_ready_for_shipment)
+            {{ $record->readiness_for_shipment_date->isoformat('DD MMM Y') }}
+        @elseif($record->can_be_marked_as_ready_for_shipment)
+            <x-misc.button
+                style="transparent"
+                class="button--arrowed-link button--margined-bottom"
+                icon="line_end_arrow_notch"
+                data-click-action="toggle-order-products-is-ready-for-shipment-attribute"
+                data-action-type="prepare"
+                data-record-id="{{ $record->id }}">
+                {{ __('Ready for shipment') }}
+            </x-misc.button>
+        @endif
     @break
 
     @case('Date of creation')
@@ -158,4 +218,5 @@
     @case('Update date')
         {{ $record->updated_at->isoformat('DD MMM Y') }}
     @break
+
 @endswitch

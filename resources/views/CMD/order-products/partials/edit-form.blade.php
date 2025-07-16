@@ -42,6 +42,34 @@
         @endif
     </div>
 
+    @if ($record->can_be_prepared_for_shipping)
+        <div class="form__block">
+            <h2 class="main-title main-title--marginless">{{ __('Prepare for shipment') }}</h2>
+
+            <div class="form__row">
+                <x-form.inputs.default-input
+                    labelText="Packing list"
+                    inputName="packing_list_file"
+                    type="file" />
+
+                <x-form.inputs.default-input
+                    labelText="COA"
+                    inputName="coa_file"
+                    type="file" />
+
+                <x-form.inputs.default-input
+                    labelText="COO"
+                    inputName="coo_file"
+                    type="file" />
+
+                <x-form.inputs.default-input
+                    labelText="Declaration for EUR1"
+                    inputName="declaration_for_europe_file"
+                    type="file" />
+            </div>
+        </div>
+    @endif
+
     <div class="form__block">
         <x-form.misc.comment-inputs-on-model-edit :record="$record" />
     </div>

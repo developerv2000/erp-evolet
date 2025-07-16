@@ -68,7 +68,7 @@
     @case('Sent to confirmation')
         @if ($record->is_sent_to_confirmation)
             {{ $record->sent_to_confirmation_date->isoformat('DD MMM Y') }}
-        @else
+        @elseif($record->name)
             <x-misc.button
                 style="transparent"
                 class="button--arrowed-link button--margined-bottom"
@@ -138,19 +138,7 @@
     @break
 
     @case('Production end date')
-        @if ($record->production_is_finished)
-            {{ $record->production_end_date->isoformat('DD MMM Y') }}
-        @elseif($record->production_is_started)
-            <x-misc.button
-                style="transparent"
-                class="button--arrowed-link button--margined-bottom"
-                icon="line_end_arrow_notch"
-                data-click-action="toggle-orders-production-is-finished-attribute"
-                data-action-type="finish"
-                data-record-id="{{ $record->id }}">
-                {{ __('Finish production process') }}
-            </x-misc.button>
-        @endif
+        {{ $record->production_end_date?->isoformat('DD MMM Y') }}
     @break
 
     @case('Date of creation')

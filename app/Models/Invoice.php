@@ -119,6 +119,19 @@ class Invoice extends BaseModel implements HasTitle
 
     /*
     |--------------------------------------------------------------------------
+    | Events
+    |--------------------------------------------------------------------------
+    */
+
+    protected static function booted(): void
+    {
+        static::forceDeleting(function ($record) {
+            $record->orderProducts()->detach();
+        });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | Scopes
     |--------------------------------------------------------------------------
     */
@@ -291,12 +304,14 @@ class Invoice extends BaseModel implements HasTitle
             // Attach all products of order,
             // for invoices of PREPAYMENT and FULL_PAYMENT types.
             $productIDs = $order->products()->pluck('id')->toArray();
+            $record->orderProducts()->attach($productIDs);
         }
-
-        $record->orderProducts()->attach($productIDs);
 
         // Upload PDF file
         $record->uploadFile('pdf', public_path(self::PDF_PATH), uniqid());
+
+        // Validate orders 'production_end_date' attribute
+        $order->validateProductionIsFinishedAttribute();
     }
 
     public function updateByCMDFromRequest($request)
@@ -330,6 +345,9 @@ class Invoice extends BaseModel implements HasTitle
 
         // Upload SWIFT file
         $this->uploadFile('payment_confirmation_document', public_path(self::PAYMENT_CONFIRMATION_DOCUMENT_PATH), uniqid());
+
+        // Validate related orders 'production_end_date' attribute
+        $this->order->validateProductionIsFinishedAttribute();
     }
 
     /*

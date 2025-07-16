@@ -261,7 +261,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     public function scopeOnlyProductionIsFinished($query)
     {
-        return $query->whereNotNull('production_end_date');
+        return $query->whereNotNull('orders.production_end_date');
     }
 
     public function scopeOnlyWithInvoicesSentForPayment($query)
@@ -534,6 +534,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
             $orderProduct->update([
                 'price' => $product['price'],
+                'production_status' => isset($product['production_status']) ? $product['production_status'] : null,
             ]);
         }
     }
@@ -627,19 +628,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         }
     }
 
-    /**
-     * CMD BDM marks production process as finished
-     */
-    public function toggleProductionIsFinishedAttribute(Request $request)
-    {
-        $action = $request->input('action');
-
-        if ($action == 'finish' && !$this->production_is_finished) {
-            $this->production_end_date = now();
-            $this->save();
-        }
-    }
-
     /*
     |--------------------------------------------------------------------------
     | Misc
@@ -672,6 +660,43 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
         return $this->invoices->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID)->count() > 0
             && $this->invoices->where('payment_type_id', InvoicePaymentType::FINAL_PAYMENT_ID)->count() == 0;
+    }
+
+    /**
+     * Used in below actions:
+     *
+     * 1) After toggling 'production_is_finished' attribute of related products by CMD.
+     * 2) After creating invoice by CMD.
+     * 3) After toggling orderProducts of invoice by PRD.
+     */
+    public function validateProductionIsFinishedAttribute(): void
+    {
+        $this->fresh();
+
+        // Get only products of order which have at least one invoice
+        $products = $this->products()->whereHas('invoices')->get();
+
+        // Exit early if there are no products
+        if ($products->isEmpty()) {
+            $this->production_end_date = null;
+            $this->save();
+            return;
+        }
+
+        // If all products are marked as production finished
+        $allFinished = $products->every(fn($product) => $product->production_is_finished);
+
+        // Set production_end_date if not already set
+        if ($allFinished && is_null($this->production_end_date)) {
+            $this->production_end_date = now();
+            $this->save();
+        }
+
+        // Reset the date when not all are finished
+        else if (!$allFinished) {
+            $this->production_end_date = null;
+            $this->save();
+        }
     }
 
     public static function getDefaultPLPDTableColumnsForUser($user)
@@ -765,7 +790,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Invoices', 'order' => $order++, 'width' => 120, 'visible' => 1],
 
             ['name' => 'Production start date', 'order' => $order++, 'width' => 244, 'visible' => 1],
-            ['name' => 'Production end date', 'order' => $order++, 'width' => 270, 'visible' => 1],
+            ['name' => 'Production end date', 'order' => $order++, 'width' => 236, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
