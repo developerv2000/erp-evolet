@@ -40,7 +40,11 @@ export function handleOrderProductsEditLayoutStatusChange(newLayout) {
 
     if (newLayout == 1) {
         formGroup.classList.remove('form-group--hidden-visibility');
+        formGroup.classList.remove('order-3');
+        formGroup.classList.add('order-2');
     } else {
+        formGroup.classList.remove('order-2');
         formGroup.classList.add('form-group--hidden-visibility');
+        formGroup.classList.add('order-3');
     }
 }

@@ -41,7 +41,7 @@
     @break
 
     @case('Production end date')
-        {{ $record->order->production_end_date->isoformat('DD MMM Y') }}
+        {{ $record->order->production_end_date?->isoformat('DD MMM Y') }}
     @break
 
     @case('Serialization codes request date')

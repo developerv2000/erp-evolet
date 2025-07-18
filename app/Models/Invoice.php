@@ -99,7 +99,7 @@ class Invoice extends BaseModel implements HasTitle
 
     public function getPaymentConfirmationDocumentAssetUrlAttribute(): string
     {
-        return asset(self::PDF_PATH . '/' . $this->pdf);
+        return asset(self::PAYMENT_CONFIRMATION_DOCUMENT_PATH . '/' . $this->pdf);
     }
 
     public function getIsSentForPaymentAttribute(): bool

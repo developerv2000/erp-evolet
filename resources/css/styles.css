@@ -163,6 +163,34 @@ a {
 
 /* ------------ /end Text utilities ------------ */
 
+
+/* ------------ Order utilities ------------ */
+.order-1 {
+    order: 1;
+}
+
+.order-2 {
+    order: 2;
+}
+
+.order-3 {
+    order: 3;
+}
+
+.order-4 {
+    order: 4;
+}
+
+/* ------------ /end Order utilities ------------ */
+
+
+/* ------------ Transition utilities ------------ */
+.transition-0 {
+    transition: 0s;
+}
+/* ------------ /end Transition utilities ------------ */
+
+
 /* ------------ Buttons ------------ */
 .button {
     display: flex;
