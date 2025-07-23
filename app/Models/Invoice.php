@@ -156,6 +156,13 @@ class Invoice extends BaseModel implements HasTitle
         ]);
     }
 
+    public function scopeWithBasicRelationCounts($query)
+    {
+        return $query->withCount([
+            'orderProducts',
+        ]);
+    }
+
     public function scopeOnlySentForPayment($query)
     {
         return $query->whereNotNull('sent_for_payment_date');
@@ -234,6 +241,14 @@ class Invoice extends BaseModel implements HasTitle
                 [
                     'name' => 'order',
                     'attribute' => 'country_id',
+                ],
+            ],
+
+            'relationEqualAmbiguous' => [
+                [
+                    'name' => 'orderProducts',
+                    'attribute' => 'order_product_id',
+                    'ambiguousAttribute' => 'order_products.id',
                 ],
             ],
         ];
@@ -463,6 +478,7 @@ class Invoice extends BaseModel implements HasTitle
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Payment type', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Products', 'order' => $order++, 'width' => 82, 'visible' => 1],
             ['name' => 'Sent for payment date', 'order' => $order++, 'width' => 198, 'visible' => 1],
             ['name' => 'Payment completed', 'order' => $order++, 'width' => 158, 'visible' => 1],
             ['name' => 'PDF', 'order' => $order++, 'width' => 144, 'visible' => 100],

@@ -15,6 +15,10 @@
         {{ $record->paymentType->name }}
     @break
 
+    @case('Products')
+        {{ $record->order_products_count }}
+    @break
+
     @case('Payment completed')
         {{ $record->payment_completed_date?->isoformat('DD MMM Y') }}
     @break

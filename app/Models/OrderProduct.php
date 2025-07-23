@@ -291,6 +291,12 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
                 $processQuery->withRelationsForOrderProduct()
                     ->withOnlyRequiredSelectsForOrderProduct();
             },
+
+            'invoices' => function ($invoicesQuery) {
+                $invoicesQuery->with([
+                    'paymentType',
+                ]);
+            },
         ]);
     }
 
@@ -854,6 +860,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
             ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'Invoices', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],

@@ -26,7 +26,7 @@ class CMDInvoiceController extends Controller
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
-        $query = Invoice::withBasicRelations();
+        $query = Invoice::withBasicRelations()->withBasicRelationCounts();
         $filteredQuery = Invoice::filterQueryForRequest($query, $request);
         $records = Invoice::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 

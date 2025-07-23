@@ -36,6 +36,10 @@
         :options="$countriesOrderedByProcessesCount"
         optionCaptionField="code" />
 
+    <x-form.inputs.request-based-input
+        :label-text="__('Product') . ' ' . __('ID')"
+        inputName="order_product_id" />
+
     {{-- Default filter inputs --}}
     <x-filter.partials.default-inputs />
 </x-filter.layout>

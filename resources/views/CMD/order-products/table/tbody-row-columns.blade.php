@@ -19,6 +19,16 @@
         </a>
     @break
 
+    @case('Invoices')
+        @foreach ($record->invoices as $invoice)
+            <a
+                class="main-link"
+                href="{{ route('cmd.invoices.index', ['order_product_id' => $record->id, 'payment_type_id' => $invoice->paymentType->id]) }}">
+                {{ $invoice->paymentType->name }}
+            </a>
+        @endforeach
+    @break
+
     @case('Status')
         <div class="td__order-status">
             <x-tables.partials.td.order-status-badge :status="$record->order->status" />

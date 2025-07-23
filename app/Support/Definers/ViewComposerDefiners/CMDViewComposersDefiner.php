@@ -65,13 +65,6 @@ class CMDViewComposersDefiner
 
     private static function defineInvoicesComposers()
     {
-        View::composer('CMD.invoices.create', function ($view) {
-            $view->with([
-                'paymentTypes' => InvoicePaymentType::withoutFinalPayment()->orderBy('id')->get(),
-                'finalPaymentTypeName' => InvoicePaymentType::FINAL_PAYMENT_NAME,
-            ]);
-        });
-
         View::composer('CMD.invoices.partials.filter', function ($view) {
             $view->with([
                 'paymentTypes' => InvoicePaymentType::orderBy('id')->get(),
