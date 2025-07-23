@@ -284,41 +284,43 @@ class Invoice extends BaseModel implements HasTitle
     // CMD part
     public static function createByCMDFromRequest($request)
     {
-        // Merge 'payment_type_id', if order should have invoice of FINAL_PAYMENT type
         $order = Order::findorfail($request->input('order_id'));
-
-        if ($order->shouldHaveInvoiceOfFinalPaymentType()) {
-            $request->merge([
-                'payment_type_id' => InvoicePaymentType::FINAL_PAYMENT_ID,
-            ]);
-        }
 
         // Create invoice
         $record = self::create($request->all());
 
-        // Attach orderProducts to new created invoice of FINAL_PAYMENT type,
-        // by syncing orderProducts from related PREPAYMENT invoice.
-        if ($record->payment_type_id == InvoicePaymentType::FINAL_PAYMENT_ID) {
-            $record->syncOrderProductsFromRelatedPrepaymentInvoice();
-        } else {
-            // Attach all products of order,
-            // for invoices of PREPAYMENT and FULL_PAYMENT types.
+        // Attach all products of order, for invoice of PREPAYMENT type
+        if ($record->payment_type_id == InvoicePaymentType::PREPAYMENT_ID) {
             $productIDs = $order->products()->pluck('id')->toArray();
             $record->orderProducts()->attach($productIDs);
+        } else {
+            // Attach only selected products for invoices of
+            // FULL_PAYMENT and FINAL_PAYMENT types
+            $selectedOrderProducts = $request->input('order_products', []);
+            $record->orderProducts()->attach($selectedOrderProducts);
         }
-
-        // Upload PDF file
-        $record->uploadFile('pdf', public_path(self::PDF_PATH), uniqid());
 
         // Validate orders 'production_end_date' attribute
         $order->validateProductionIsFinishedAttribute();
+
+        // Upload PDF file
+        $record->uploadFile('pdf', public_path(self::PDF_PATH));
     }
 
     public function updateByCMDFromRequest($request)
     {
         $this->update($request->all());
 
-        $this->uploadFile('pdf', public_path(self::PDF_PATH), uniqid());
+        // Sycn orderProducts
+        $selectedOrderProducts = $request->input('order_products', []);
+        $this->orderProducts()->sync($selectedOrderProducts);
+
+        // Validate related orders 'production_end_date' attribute,
+        // because orderProducts might have changed
+        $this->order->validateProductionIsFinishedAttribute();
+
+        // Upload PDF file
+        $this->uploadFile('pdf', public_path(self::PDF_PATH));
     }
 
     public function updateByPRDFromRequest($request)
@@ -331,23 +333,8 @@ class Invoice extends BaseModel implements HasTitle
             $this->save();
         }
 
-        // Update orderProducts for PREPAYMENT or FULL_PAYMENT invoices
-        if ($this->payment_type_id != InvoicePaymentType::FINAL_PAYMENT_ID) {
-            $selectedOrderProducts = $request->input('order_products', []);
-            $this->orderProducts()->sync($selectedOrderProducts);
-
-            // Sync orderProducts with related FINAL_PAYMENT invoice,
-            // for invoice of PREPAYMENT type.
-            if ($this->payment_type_id == InvoicePaymentType::PREPAYMENT_ID) {
-                $this->syncOrderProductsWithRelatedFinalPaymentInvoice();
-            }
-        }
-
         // Upload SWIFT file
-        $this->uploadFile('payment_confirmation_document', public_path(self::PAYMENT_CONFIRMATION_DOCUMENT_PATH), uniqid());
-
-        // Validate related orders 'production_end_date' attribute
-        $this->order->validateProductionIsFinishedAttribute();
+        $this->uploadFile('payment_confirmation_document', public_path(self::PAYMENT_CONFIRMATION_DOCUMENT_PATH));
     }
 
     /*

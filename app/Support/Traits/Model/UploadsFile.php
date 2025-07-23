@@ -13,11 +13,11 @@ trait UploadsFile
      *
      * @param string $attribute The model attribute where the filename should be stored.
      * @param string $path The path where the file will be uploaded.
-     * @param string $name The desired filename (without extension).
+     * @param string|null $name The desired filename (without extension).
      * @param Request|null $request Optional request object. Falls back to the global request if null.
      * @return string|null The full path to the uploaded file on success, or null on failure.
      */
-    public function uploadFile(string $attribute, string $path, string $name, ?Request $request = null): ?string
+    public function uploadFile(string $attribute, string $path, ?string $name = null, ?Request $request = null): ?string
     {
         // Use the provided request object or fall back to the global request.
         $request = $request ?? request();

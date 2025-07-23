@@ -1,22 +1,15 @@
 <x-form-templates.create-template class="cmd-invoices-create-form" :action="route('cmd.invoices.store')">
     <input type="hidden" name="order_id" value="{{ $order->id }}">
+    <input type="hidden" name="payment_type_id" value="{{ $paymentType->id }}">
 
     <div class="form__block">
         <div class="form__row">
-            @if ($order->shouldHaveInvoiceOfFinalPaymentType())
-                <x-form.inputs.default-input
-                    labelText="Payment type"
-                    inputName="readonly_payment_type"
-                    :initial-value="$finalPaymentTypeName"
-                    :isRequired="true"
-                    readonly />
-            @else
-                <x-form.selects.selectize.id-based-single-select.default-select
-                    labelText="Payment type"
-                    inputName="payment_type_id"
-                    :options="$paymentTypes"
-                    :is-required="true" />
-            @endif
+            <x-form.inputs.default-input
+                labelText="Payment type"
+                inputName="readonly_payment_type"
+                :initial-value="$paymentType->name"
+                :isRequired="true"
+                readonly />
 
             <x-form.inputs.default-input
                 labelText="Receive date"
@@ -32,4 +25,6 @@
                 :isRequired="true" />
         </div>
     </div>
+
+    @include('CMD.invoices.partials.create-form-order-products-list')
 </x-form-templates.create-template>

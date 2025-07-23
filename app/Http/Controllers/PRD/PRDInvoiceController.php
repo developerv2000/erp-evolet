@@ -30,9 +30,7 @@ class PRDInvoiceController extends Controller
 
     public function edit(Request $request, Invoice $record)
     {
-        $orderProducts = $record->order->products()->withBasicRelations()->get();
-
-        return view('PRD.invoices.edit', compact('record', 'orderProducts'));
+        return view('PRD.invoices.edit', compact('record'));
     }
 
     public function update(Request $request, Invoice $record)

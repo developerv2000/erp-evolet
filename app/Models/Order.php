@@ -634,40 +634,42 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     |--------------------------------------------------------------------------
     */
 
-    public function canAttachNewInvoice()
+    public function canAddNewProduct(): bool
     {
-        // Order must be sent to manufacturer
-        if (!$this->is_sent_to_manufacturer) {
-            return false;
-        }
+        // Use eager-loaded count if available, otherwise fallback to counting the relation
+        $invoiceCount = $this->invoices_count ?? $this->invoices()->count();
 
-        // Order shouldn`t have final or full invoice payment types
-        if ($this->invoices->whereIn('payment_type_id', [
-            InvoicePaymentType::FINAL_PAYMENT_ID,
-            InvoicePaymentType::FULL_PAYMENT_ID,
-        ])->count()) {
-            return false;
-        }
-
-        return true;
+        return $invoiceCount === 0;
     }
 
-    public function shouldHaveInvoiceOfFinalPaymentType()
+    public function canAttachNewInvoice(): bool
     {
-        if ($this->invoices->count() == 0) {
-            return false;
-        }
+        return $this->is_sent_to_manufacturer
+            && $this->products->contains->canAttachNewInvoice();
+    }
 
-        return $this->invoices->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID)->count() > 0
-            && $this->invoices->where('payment_type_id', InvoicePaymentType::FINAL_PAYMENT_ID)->count() == 0;
+    public function canAttachInvoiceOFPrepaymentType(): bool
+    {
+        return $this->invoices->count() == 0;
+    }
+
+    public function canAttachInvoiceOfFinalPaymentType(): bool
+    {
+        return $this->products->contains->canAttachInvoiceOfFinalPaymentType();
+    }
+
+    public function canAttachInvoiceOfFullPaymentType(): bool
+    {
+        return $this->products->contains->canAttachInvoiceOfFullPaymentType();
     }
 
     /**
      * Used in below actions:
      *
      * 1) After toggling 'production_is_finished' attribute of related products by CMD.
-     * 2) After creating invoice by CMD.
-     * 3) After toggling orderProducts of invoice by PRD.
+     * 2) After creating invoice by CMD, because new invoices are attached for orderProducts.
+     * 3) After updating invoice by CMD, for invoices of FINAL_PAYMENT and FULL_PAYMENT types,
+     * because CMD can toggle orderProducts of invoices.
      */
     public function validateProductionIsFinishedAttribute(): void
     {
@@ -787,7 +789,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Sent to manufacturer', 'order' => $order++, 'width' => 164, 'visible' => 1],
 
             ['name' => 'Expected dispatch date', 'order' => $order++, 'width' => 190, 'visible' => 1],
-            ['name' => 'Invoices', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Invoices', 'order' => $order++, 'width' => 208, 'visible' => 1],
 
             ['name' => 'Production start date', 'order' => $order++, 'width' => 244, 'visible' => 1],
             ['name' => 'Production end date', 'order' => $order++, 'width' => 236, 'visible' => 1],

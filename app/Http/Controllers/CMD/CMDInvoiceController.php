@@ -4,7 +4,9 @@ namespace App\Http\Controllers\CMD;
 
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
+use App\Models\InvoicePaymentType;
 use App\Models\Order;
+use App\Models\OrderProduct;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
 use App\Support\Traits\Controller\DestroysModelRecords;
@@ -43,11 +45,35 @@ class CMDInvoiceController extends Controller
             abort(404);
         }
 
-        return view('CMD.invoices.create', compact('order'));
+        // Get available orderProducts based on payment type
+        $paymentType = InvoicePaymentType::findOrFail($request->input('payment_type_id'));
+
+        switch ($paymentType->name) {
+            case InvoicePaymentType::PREPAYMENT_NAME:
+                // Display all orderProducts as 'readonly' for invoice of PREPAYMENT type
+                $availabeOrderProducts = $order->products;
+                break;
+            case InvoicePaymentType::FINAL_PAYMENT_NAME:
+                // Display toggleable orderProducts list for invoice of FINAL_PAYMENT type
+                $availabeOrderProducts = $order->products->filter(fn($product) => $product->canAttachInvoiceOfFinalPaymentType());
+                break;
+            case InvoicePaymentType::FULL_PAYMENT_NAME:
+                // Display toggleable orderProducts list for invoice of FULL_PAYMENT type
+                $availabeOrderProducts = $order->products->filter(fn($product) => $product->canAttachInvoiceOfFullPaymentType());
+                break;
+        }
+
+        return view('CMD.invoices.create', compact('order', 'availabeOrderProducts', 'paymentType'));
     }
 
     public function store(Request $request)
     {
+        $order = Order::findOrFail($request->input('order_id'));
+
+        if (!$order->canAttachNewInvoice()) {
+            abort(404);
+        }
+
         Invoice::createByCMDFromRequest($request);
 
         return to_route('cmd.invoices.index', ['order_id[]' => $request->input('order_id')]);
@@ -55,9 +81,25 @@ class CMDInvoiceController extends Controller
 
     public function edit(Request $request, Invoice $record)
     {
-        $orderProducts = $record->order->products()->withBasicRelations()->get();
+        // Get available orderProducts for toggling based on payment type
+        switch ($record->payment_type_id) {
+            case InvoicePaymentType::PREPAYMENT_ID:
+                // Display all orderProducts as 'readonly' for invoice of PREPAYMENT type
+                $availableOrderProducts = $record->orderProducts;
+                break;
+            case InvoicePaymentType::FINAL_PAYMENT_ID:
+                // Display toggleable orderProducts list for invoice of FINAL_PAYMENT type.
+                // Concat attached invoice products and order products which can also be attached.
+                $availableOrderProducts = $record->orderProducts->concat($record->order->products->filter(fn(OrderProduct $product) => $product->canAttachInvoiceOfFinalPaymentType()));
+                break;
+            case InvoicePaymentType::FULL_PAYMENT_NAME:
+                // Display toggleable orderProducts list for invoice of FULL_PAYMENT type.
+                // Concat attached invoice products and order products which can also be attached.
+                $availableOrderProducts = $record->orderProducts->concat($record->order->products->filter(fn(OrderProduct $product) => $product->canAttachInvoiceOfFullPaymentType()));
+                break;
+        }
 
-        return view('CMD.invoices.edit', compact('record', 'orderProducts'));
+        return view('CMD.invoices.edit', compact('record', 'availableOrderProducts'));
     }
 
     public function update(Request $request, Invoice $record)

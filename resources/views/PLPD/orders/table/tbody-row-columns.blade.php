@@ -40,9 +40,11 @@
             {{ $record->products_count }} {{ __('Products') }}
         </x-misc.buttoned-link>
 
-        <a class="main-link" href="{{ route('plpd.order-products.create', ['order_id' => $record->id]) }}">
-            {{ __('New') }} <span class="text-lowercase">{{ __('Product') }}</span>
-        </a>
+        @if ($record->canAddNewProduct())
+            <a class="main-link" href="{{ route('plpd.order-products.create', ['order_id' => $record->id]) }}">
+                {{ __('New') }} <span class="text-lowercase">{{ __('Product') }}</span>
+            </a>
+        @endif
     @break
 
     @case('Comments')

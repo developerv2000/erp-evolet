@@ -115,9 +115,26 @@
         </x-misc.buttoned-link>
 
         @if ($record->canAttachNewInvoice())
-            <a class="main-link" href="{{ route('cmd.invoices.create', ['order_id' => $record->id]) }}">
-                {{ __('New') }} <span class="text-lowercase">{{ __('Invoice') }}</span>
-            </a>
+            @if ($record->canAttachInvoiceOFPrepaymentType())
+                <a class="main-link"
+                    href="{{ route('cmd.invoices.create', ['order_id' => $record->id, 'payment_type_id' => App\Models\InvoicePaymentType::PREPAYMENT_ID]) }}">
+                    {{ __('Add prepayment') }}
+                </a>
+            @endif
+
+            @if ($record->canAttachInvoiceOfFinalPaymentType())
+                <a class="main-link"
+                    href="{{ route('cmd.invoices.create', ['order_id' => $record->id, 'payment_type_id' => App\Models\InvoicePaymentType::FINAL_PAYMENT_ID]) }}">
+                    {{ __('Add final payment') }}
+                </a>
+            @endif
+
+            @if ($record->canAttachInvoiceOfFullPaymentType())
+                <a class="main-link"
+                    href="{{ route('cmd.invoices.create', ['order_id' => $record->id, 'payment_type_id' => App\Models\InvoicePaymentType::FULL_PAYMENT_ID]) }}">
+                    {{ __('Add full payment') }}
+                </a>
+            @endif
         @endif
     @break
 

@@ -328,6 +328,10 @@
     "Sent for payment date": "Дата отправки на оплату",
     "Send for payment": "Отправить на оплату",
 
+    "Add prepayment": "Добавить предоплату",
+    "Add final payment": "Добавить финальную оплату",
+    "Add full payment": "Добавить полную оплату",
+
     "Sent to manufacturer": "Отправлено заводу",
     "Send to manufacturer": "Отправить заводу",
     "Below order has been sent to manufacturer": "Данный заказ отправлен производителю",

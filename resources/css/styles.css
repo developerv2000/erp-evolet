@@ -1504,24 +1504,24 @@ a {
 
 /* ------------ Invoice products list ------------ */
 /* Used in CMD, PRD and PLPD pages */
-.invoice-products-list-wrapper {
+.order-products-list-wrapper {
     padding: 20px;
 }
 
-.invoice-products-list {
+.order-products-list {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
 }
 
-.invoice-products-list__item {
+.order-products-list__item {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.invoice-products-list__item .checkbox {
+.order-products-list__item .checkbox {
     margin-top: 0;
 }
 

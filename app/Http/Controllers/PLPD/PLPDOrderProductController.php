@@ -44,6 +44,10 @@ class PLPDOrderProductController extends Controller
     {
         $order = Order::withTrashed()->findOrFail($request->order_id);
 
+        if (!$order->canAddNewProduct()) {
+            abort(404);
+        }
+
         $readyForOrderProcesses = Process::getReadyForOrderRecordsOfManufacturer(
             $order->manufacturer_id,
             $order->country_id,
@@ -57,6 +61,12 @@ class PLPDOrderProductController extends Controller
 
     public function store(OrderProductStoreByPLPDRequest $request)
     {
+        $order = Order::withTrashed()->findOrFail($request->order_id);
+
+        if (!$order->canAddNewProduct()) {
+            abort(404);
+        }
+
         OrderProduct::createByPLPDFromRequest($request);
 
         return to_route('plpd.order-products.index', ['order_id' => $request->order_id]);

@@ -25,5 +25,8 @@
         </div>
     </div>
 
-    <x-misc.invoice-products-list :order-products="$orderProducts" :record="$record" :disabled="true" />
+    <x-misc.invoices-toggleable-order-products-list
+        :invoice="$record"
+        :available-order-products="$availableOrderProducts"
+        :disabled="$record->payment_type_id == App\Models\InvoicePaymentType::PREPAYMENT_ID" />
 </x-form-templates.edit-template>

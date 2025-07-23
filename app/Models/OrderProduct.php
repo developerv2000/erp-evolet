@@ -623,10 +623,10 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         $this->storeCommentFromRequest($request);
 
         // Upload files
-        $this->uploadFile('packing_list_file', public_path(self::PACKING_LIST_FILE_PATH), uniqid());
-        $this->uploadFile('coa_file', public_path(self::COA_FILE_PATH), uniqid());
-        $this->uploadFile('coo_file', public_path(self::COO_FILE_PATH), uniqid());
-        $this->uploadFile('declaration_for_europe_file', public_path(self::DECLARATION_FOR_EUROPE_FILE_PATH), uniqid());
+        $this->uploadFile('packing_list_file', public_path(self::PACKING_LIST_FILE_PATH));
+        $this->uploadFile('coa_file', public_path(self::COA_FILE_PATH));
+        $this->uploadFile('coo_file', public_path(self::COO_FILE_PATH));
+        $this->uploadFile('declaration_for_europe_file', public_path(self::DECLARATION_FOR_EUROPE_FILE_PATH));
     }
 
     // DD part
@@ -693,6 +693,29 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     | Misc
     |--------------------------------------------------------------------------
     */
+
+    public function canAttachNewInvoice(): bool
+    {
+        return $this->canAttachInvoiceOFPrepaymentType()
+            || $this->canAttachInvoiceOfFinalPaymentType()
+            || $this->canAttachInvoiceOfFullPaymentType();
+    }
+
+    public function canAttachInvoiceOFPrepaymentType(): bool
+    {
+        return $this->invoices->count() == 0;
+    }
+
+    public function canAttachInvoiceOfFinalPaymentType(): bool
+    {
+        return $this->invoices->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID)->count() > 0
+            && $this->invoices->where('payment_type_id', InvoicePaymentType::FINAL_PAYMENT_ID)->count() == 0;
+    }
+
+    public function canAttachInvoiceOfFullPaymentType(): bool
+    {
+        return $this->invoices->count() == 0;
+    }
 
     /**
      * Used on order-products.index pages for ordering.
