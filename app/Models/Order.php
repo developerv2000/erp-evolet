@@ -676,7 +676,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $this->fresh();
 
         // Get only products of order which have at least one invoice
-        $products = $this->products()->whereHas('invoices')->get();
+        $products = $this->products()->get();
 
         // Exit early if there are no products
         if ($products->isEmpty()) {
