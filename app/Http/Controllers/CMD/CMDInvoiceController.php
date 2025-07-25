@@ -92,7 +92,7 @@ class CMDInvoiceController extends Controller
                 // Concat attached invoice products and order products which can also be attached.
                 $availableOrderProducts = $record->orderProducts->concat($record->order->products->filter(fn(OrderProduct $product) => $product->canAttachInvoiceOfFinalPaymentType()));
                 break;
-            case InvoicePaymentType::FULL_PAYMENT_NAME:
+            case InvoicePaymentType::FULL_PAYMENT_ID:
                 // Display toggleable orderProducts list for invoice of FULL_PAYMENT type.
                 // Concat attached invoice products and order products which can also be attached.
                 $availableOrderProducts = $record->orderProducts->concat($record->order->products->filter(fn(OrderProduct $product) => $product->canAttachInvoiceOfFullPaymentType()));
