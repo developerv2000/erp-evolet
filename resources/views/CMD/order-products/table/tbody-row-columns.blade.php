@@ -31,6 +31,12 @@
 
     @case('Status')
         <div class="td__order-status">
+            @if ($record->production_is_finished)
+                <span class="badge badge--blue">
+                    Production finished
+                </span>
+            @endif
+
             <x-tables.partials.td.order-status-badge :status="$record->order->status" />
         </div>
     @break
