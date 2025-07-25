@@ -18,14 +18,6 @@
         </div>
 
         <div class="form__row">
-            <x-form.inputs.record-field-input
-                labelText="MOQ"
-                field="moq"
-                type="number"
-                min="0"
-                :model="$product"
-                :isRequired="true" />
-
             <x-form.inputs.default-input
                 labelText="Dossier status"
                 inputName="dossier_status" />
@@ -33,18 +25,19 @@
             <x-form.inputs.default-input
                 labelText="Year Cr/Be"
                 inputName="clinical_trial_year" />
-        </div>
 
-        <div class="form__row">
             <x-form.selects.selectize.id-based-multiple-select.default-select
                 labelText="Countries Cr/Be"
                 inputName="clinicalTrialCountries[]"
                 :options="$countriesOrderedByName" />
+        </div>
 
+        <div class="form__row">
             <x-form.inputs.default-input
                 labelText="Country ich"
                 inputName="clinical_trial_ich_country" />
 
+            <div class="form-group"></div>
             <div class="form-group"></div>
         </div>
     </div>

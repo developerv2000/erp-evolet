@@ -52,14 +52,6 @@
 
         <div class="form__row">
             <x-form.inputs.record-field-input
-                labelText="MOQ"
-                field="moq"
-                type="number"
-                min="0"
-                :model="$product"
-                :isRequired="true" />
-
-            <x-form.inputs.record-field-input
                 labelText="Dossier status"
                 field="dossier_status"
                 :model="$record" />
@@ -68,20 +60,21 @@
                 labelText="Year Cr/Be"
                 field="clinical_trial_year"
                 :model="$record" />
-        </div>
 
-        <div class="form__row">
             <x-form.selects.selectize.id-based-multiple-select.record-relation-select
                 labelText="Countries Cr/Be"
                 inputName="clinicalTrialCountries[]"
                 :model="$record"
                 :options="$countriesOrderedByName" />
+        </div>
 
+        <div class="form__row">
             <x-form.inputs.record-field-input
                 labelText="Country ich"
                 field="clinical_trial_ich_country"
                 :model="$record" />
 
+            <div class="form-group"></div>
             <div class="form-group"></div>
         </div>
     </div>

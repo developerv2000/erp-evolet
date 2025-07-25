@@ -37,6 +37,12 @@
             :options="$productClasses"
             :isRequired="true" />
 
-        <div class="form-group"></div>
+        <x-form.inputs.record-field-input
+            labelText="MOQ"
+            field="moq"
+            type="number"
+            min="0"
+            :model="$product"
+            :isRequired="true" />
     </div>
 </div>
