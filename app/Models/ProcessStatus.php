@@ -36,6 +36,8 @@ class ProcessStatus extends Model
         9, // ПцКк
     ];
 
+    const DEADLINE_DAYS = 15;
+
     /*
     |--------------------------------------------------------------------------
     | Properties
@@ -58,21 +60,6 @@ class ProcessStatus extends Model
     public function processes()
     {
         return $this->hasMany(Process::class, 'status_id');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Additional attributes
-    |--------------------------------------------------------------------------
-    */
-
-    public function getDeadlineDaysAttribute()
-    {
-        if (!$this->hasDeadline()) {
-            return null;
-        }
-
-        return 15;
     }
 
     /*

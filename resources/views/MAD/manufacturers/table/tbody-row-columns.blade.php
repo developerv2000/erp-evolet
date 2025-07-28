@@ -106,7 +106,7 @@
     @break
 
     @case('Update date')
-        {{ $record->updated_at->isoformat('DD MMM Y') }}
+        {{ $record->updated_at->isoformat('DD MMM Y H:i:s') }}
     @break
 
     @case('Meetings')

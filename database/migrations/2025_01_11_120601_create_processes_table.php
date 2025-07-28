@@ -42,8 +42,8 @@ return new class extends Migration
                 ->on('process_responsible_people');
 
             // auto
-            $table->smallInteger('order_priority') // used in deadline status
-                ->default(0);
+            $table->decimal('order_priority', 8, 3) // used in deadline status
+                ->default(0.000);
 
             // Stage 1 (ВП)
             // required and immutable after stage 1

@@ -51,6 +51,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     const DEADLINE_EXPIRED_STATUS_NAME = 'Expired';
     const DEADLINE_NOT_EXPIRED_STATUS_NAME = 'Not expired';
     const DEADLINE_STOPPED_STATUS_NAME = 'Stopped';
+    const NO_DEADLINE_STATUS_NAME = 'No deadline';
 
     /*
     |--------------------------------------------------------------------------
@@ -159,10 +160,21 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     {
         if ($this->order_priority == -1) {
             return self::DEADLINE_STOPPED_STATUS_NAME;
-        } else if ($this->order_priority == 0) {
+        } else if (!$this->status->hasDeadline()) {
+            return self::NO_DEADLINE_STATUS_NAME;
+        } else if ($this->order_priority < ProcessStatus::DEADLINE_DAYS + 1) {
             return self::DEADLINE_NOT_EXPIRED_STATUS_NAME;
         } else {
             return self::DEADLINE_EXPIRED_STATUS_NAME;
+        }
+    }
+
+    public function getDeadlineStatusDaysInfoAttribute()
+    {
+        if ($this->deadline_status == self::DEADLINE_NOT_EXPIRED_STATUS_NAME) {
+            return intval($this->order_priority) . ' ' . __('days past');
+        } else if ($this->deadline_status == self::DEADLINE_EXPIRED_STATUS_NAME) {
+            return (intval($this->order_priority) - ProcessStatus::DEADLINE_DAYS) . ' ' . __('days');
         }
     }
 
@@ -906,11 +918,14 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                 break;
 
             case trans(self::DEADLINE_NOT_EXPIRED_STATUS_NAME):
-                return $query->where('order_priority', 0);
+                return $query->where(function ($subquery) {
+                    $subquery->where('order_priority', '>', -1)
+                        ->where('order_priority', '<', ProcessStatus::DEADLINE_DAYS + 1);
+                });
                 break;
 
             case trans(self::DEADLINE_EXPIRED_STATUS_NAME):
-                return $query->where('order_priority', '>', 1);
+                return $query->where('order_priority', '>=', ProcessStatus::DEADLINE_DAYS + 1);
                 break;
         }
     }
@@ -1341,10 +1356,14 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
      * This method is typically called on model 'created'/'updated' events,
      * after storing comments and on 'updating' event of ProcessStatusHistory model.
      *
+     * Ordered by 'order_priority' attirubute as 'DESC',
+     * when order by priority is requested.
+     *
      * It assigns 'order_priority' based on the following logic:
      * - **-1**: For records with a 'stopped' status.
-     * - **0**: For records that either have no deadline or whose deadline has not yet expired.
-     * - **Days past deadline**: For records with an expired deadline, it's set to the number of days past the deadline.
+     * - **0**: For records that have no deadline.
+     * - **[0 to 15]**: For records whose deadline is coming but has not yet expired. it's set to the number of days past the last activity.
+     * - **[16 and bigger]**: For records with an expired deadline, it's set to the number of days past the last activity.
      *
      * @return void
      */
@@ -1369,21 +1388,15 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             return;
         }
 
-        // Initialize order_priority to 0 as a default for non-stopped statuses.
-        // This covers cases where there's no deadline or the deadline hasn't passed.
+        // Initialize order_priority to 0, as a default value,
+        // for non-stopped statuses which don`t have deadline.
         $this->order_priority = 0;
 
-        // If the status has a deadline, calculate priority based on deadline expiration.
+        // If the status has a deadline, calculate priority based on days past.
         if ($this->status->hasDeadline()) {
-            $deadlineDays = $this->status->deadline_days;
             $lastActivityDate = $this->getLastActivityDateByStatusUpdateOrCommentCreate();
-            $diffInDays = $lastActivityDate->diffInDays(now());
-
-            // If the difference in days exceeds the deadline days,
-            // set order_priority to the number of days past the deadline.
-            if ($diffInDays > $deadlineDays) {
-                $this->order_priority = $diffInDays - $deadlineDays;
-            }
+            $daysPast = $lastActivityDate->diffInDays(now());
+            $this->order_priority = $daysPast;
         }
 
         // Save the model silently without updating timestamps.

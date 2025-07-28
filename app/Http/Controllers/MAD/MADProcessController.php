@@ -26,6 +26,7 @@ class MADProcessController extends Controller
 
     public function index(Request $request)
     {
+        // Process::validateAllOrderPriorityAttributes();
         // Preapare request for valid model querying
         Process::addDefaultQueryParamsToRequest($request);
         Process::addOrderByPriorityQueryParamToRequest($request);
