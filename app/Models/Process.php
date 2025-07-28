@@ -1676,7 +1676,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Status date', 'order' => $order++, 'width' => 100, 'visible' => 1],
-            ['name' => 'Deadline', 'order' => $order++, 'width' => 118, 'visible' => 1],
+            ['name' => 'Deadline', 'order' => $order++, 'width' => 122, 'visible' => 1],
         );
 
         if (Gate::forUser($user)->allows('control-MAD-ASP-processes')) {
