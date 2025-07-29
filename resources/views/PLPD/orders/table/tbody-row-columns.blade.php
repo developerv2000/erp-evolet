@@ -13,12 +13,6 @@
             title="{{ $record->manufacturer->bdm->name }}" />
     @break
 
-    @case('Status')
-        <div class="td__order-status">
-            <x-tables.partials.td.order-status-badge :status="$record->status" />
-        </div>
-    @break
-
     @case('Receive date')
         {{ $record->receive_date->isoformat('DD MMM Y') }}
     @break
@@ -55,6 +49,12 @@
         <x-tables.partials.td.max-lines-limited-text :text="$record->lastComment?->plain_text" />
     @break
 
+    @case('Status')
+        <div class="td__order-status">
+            <x-tables.partials.td.order-status-badge :status="$record->status" />
+        </div>
+    @break
+
     @case('Sent to BDM')
         @if ($record->is_sent_to_bdm)
             {{ $record->sent_to_bdm_date->isoformat('DD MMM Y') }}
@@ -79,14 +79,6 @@
         {{ $record->name }}
     @break
 
-    @case('Currency')
-        {{ $record->currency?->name }}
-    @break
-
-    @case('Sent to confirmation')
-        {{ $record->sent_to_confirmation_date?->isoformat('DD MMM Y') }}
-    @break
-
     @case('Confirmation date')
         @if ($record->is_confirmed)
             {{ $record->confirmation_date->isoformat('DD MMM Y') }}
@@ -105,36 +97,6 @@
 
     @case('Sent to manufacturer')
         {{ $record->sent_to_manufacturer_date?->isoformat('DD MMM Y') }}
-    @break
-
-    @case('Expected dispatch date')
-        {{ $record->expected_dispatch_date }}
-    @break
-
-    @case('Invoices')
-        <x-misc.buttoned-link
-            style="transparent"
-            class="button--arrowed-link button--margined-bottom text-lowercase"
-            icon="arrow_forward"
-            :link="route('plpd.invoices.index', ['order_id[]' => $record->id])">
-            {{ $record->invoices_count }} {{ __('Invoices') }}
-        </x-misc.buttoned-link>
-    @break
-
-    @case('Production start date')
-        {{ $record->production_start_date?->isoformat('DD MMM Y') }}
-    @break
-
-    @case('Production end date')
-        {{ $record->production_end_date?->isoformat('DD MMM Y') }}
-    @break
-
-    @case('Date of creation')
-        {{ $record->created_at->isoformat('DD MMM Y') }}
-    @break
-
-    @case('Update date')
-        {{ $record->updated_at->isoformat('DD MMM Y') }}
     @break
 
 @endswitch

@@ -29,7 +29,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('invoice_payment_types');
 
-            $table->timestamp('sent_for_payment_date')->nullable(); // action
+            $table->timestamp('sent_for_payment_date')->nullable(); // action (by BDM)
 
             // PRD part
             $table->timestamp('accepted_by_financier_date')->nullable();

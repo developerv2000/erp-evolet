@@ -721,31 +721,19 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
             ['name' => 'Products', 'order' => $order++, 'width' => 126, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
             ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],
 
-            ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
-            ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
-            ['name' => 'Sent to confirmation', 'order' => $order++, 'width' => 244, 'visible' => 1],
+            ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Confirmation date', 'order' => $order++, 'width' => 172, 'visible' => 1],
-
             ['name' => 'Sent to manufacturer', 'order' => $order++, 'width' => 164, 'visible' => 1],
-
-            ['name' => 'Expected dispatch date', 'order' => $order++, 'width' => 190, 'visible' => 1],
-            ['name' => 'Invoices', 'order' => $order++, 'width' => 120, 'visible' => 1],
-
-            ['name' => 'Production start date', 'order' => $order++, 'width' => 212, 'visible' => 1],
-            ['name' => 'Production end date', 'order' => $order++, 'width' => 236, 'visible' => 1],
-
-            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
         );
 
         return $columns;

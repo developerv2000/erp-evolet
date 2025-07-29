@@ -232,7 +232,7 @@
     "Reason for stop": "Причина стопа",
     "Deadline": "Дедлайн",
     "Expired": "Просрочен",
-    "Not expired": "Не просрочен",
+    "Not expired": "Непросрочен",
     "No deadline": "Без дедлайна",
     "days past": "дней прошло",
     "Order by deadline": "Сортировать по дедлайну",
@@ -310,6 +310,9 @@
     "Please select manufacturer and country": "Пожалуйста, выберите производителя и страну",
     "No products found for the given manufacturer and country": "Для указанного производителя и страны не найдено ни одного продукта",
     "There are no available products for given order": "Нет доступных продуктов для данного заказа",
+    "Prepayment payment date": "Дата оплаты предоплаты",
+    "Final payment request date": "Дата запроса финальной оплаты",
+    "Final payment due date": "Дата завершения финальной оплаты",
 
     "PO №": "Номер заявки",
     "PO date": "Дата заявки",
