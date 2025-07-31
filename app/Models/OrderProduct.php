@@ -61,12 +61,12 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     // MSD
     const SETTINGS_MSD_SERIALIZED_BY_MANUFACTURER_TABLE_COLUMNS_KEY = 'MSD_order_products_serialized_by_manufacturer_table_columns';
-    const DEFAULT_MSD_SERIALIZED_BY_MANUFACTURER_ORDER_BY = 'order_production_end_date';
+    const DEFAULT_MSD_SERIALIZED_BY_MANUFACTURER_ORDER_BY = 'order_production_start_date';
     const DEFAULT_MSD_SERIALIZED_BY_MANUFACTURER_ORDER_TYPE = 'desc';
     const DEFAULT_MSD_SERIALIZED_BY_MANUFACTURER_PAGINATION_LIMIT = 50;
 
     const SETTINGS_MSD_SERIALIZED_BY_US_TABLE_COLUMNS_KEY = 'MSD_order_products_serialized_by_us_table_columns';
-    const DEFAULT_MSD_SERIALIZED_BY_US_ORDER_BY = 'order_production_end_date';
+    const DEFAULT_MSD_SERIALIZED_BY_US_ORDER_BY = 'order_production_start_date';
     const DEFAULT_MSD_SERIALIZED_BY_US_ORDER_TYPE = 'desc';
     const DEFAULT_MSD_SERIALIZED_BY_US_PAGINATION_LIMIT = 50;
 
@@ -398,15 +398,15 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     }
 
     /**
-     * Add 'order_production_end_date' attribute.
+     * Add 'order_production_start_date' attribute.
      *
-     * Used while ordering products by 'order_production_end_date'
+     * Used while ordering products by 'order_production_start_date'
      */
-    public function scopeWithOrderProductionEndDateAttribute($query)
+    public function scopeWithOrderProductionStartDateAttribute($query)
     {
         return $query
             ->join('orders', 'orders.id', '=', 'order_products.order_id')
-            ->selectRaw('orders.production_end_date as order_production_end_date');
+            ->selectRaw('orders.production_start_date as order_production_start_date');
     }
 
     /*
@@ -803,8 +803,8 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             $query->withOrderSentToManufacturerDateAttribute();
         }
 
-        if ($request->input('order_by') == 'order_production_end_date') {
-            $query->withOrderProductionEndDateAttribute();
+        if ($request->input('order_by') == 'order_production_start_date') {
+            $query->withOrderProductionStartDateAttribute();
         }
 
         return $query;
