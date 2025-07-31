@@ -350,6 +350,11 @@ a {
     color: var(--theme-green-badge-text-color);
 }
 
+.badge--purple {
+    background-color: var(--theme-purple-badge-background);
+    color: var(--theme-purple-badge-text-color);
+}
+
 /* ------------ /end Badges ------------ */
 
 

@@ -10,7 +10,7 @@
     @case('Status')
         <span @class([
             'badge',
-            'badge--grey' => $record->serialization_status == App\Models\OrderProduct::STATUS_PRODUCTION_IS_FINISHED_NAME,
+            'badge--grey' => $record->serialization_status == App\Models\Order::STATUS_PRODUCTION_IS_STARTED_NAME,
             'badge--pink' => $record->serialization_status == App\Models\OrderProduct::STATUS_SERIALIZATION_CODES_REQUESTED_NAME,
             'badge--yellow' => $record->serialization_status == App\Models\OrderProduct::STATUS_SERIALIZATION_CODES_SENT_NAME,
             'badge--orange' => $record->serialization_status == App\Models\OrderProduct::STATUS_SERIALIZATION_REPORT_RECEIVED_NAME,

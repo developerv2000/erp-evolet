@@ -47,12 +47,8 @@
 
     @case('Status')
         <div class="td__order-status">
-            <x-tables.partials.td.order-status-badge :status="$record->order->status" />
+            <x-tables.partials.td.order-status-badge :status="$record->status" />
         </div>
-    @break
-
-    @case('Comments')
-        <x-tables.partials.td.model-comments-link :record="$record" />
     @break
 
     @case('Last comment')

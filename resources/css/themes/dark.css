@@ -63,6 +63,9 @@
     --theme-green-badge-background: #002a18;
     --theme-green-badge-text-color: #5ce2aa;
 
+    --theme-purple-badge-background: #512DA8;
+    --theme-purple-badge-text-color: #c6b5eb;
+
     /* Theme backgrounded texts. Especially used in tables */
     --theme-backgrounded-text-bg-color-1: #163968;
     --theme-backgrounded-text-color-1: #88BFFF;

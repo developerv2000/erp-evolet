@@ -56,7 +56,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     const STATUS_IS_CONFIRMED_NAME = 'Confirmed';
     const STATUS_IS_SENT_TO_MANUFACTURER_NAME = 'Sent to manufacturer';
     const STATUS_PRODUCTION_IS_STARTED_NAME = 'Production started';
-    const STATUS_PRODUCTION_IS_FINISHED_NAME = 'Production finished';
 
     /*
     |--------------------------------------------------------------------------
@@ -139,15 +138,30 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return !is_null($this->production_start_date);
     }
 
-    public function getProductionIsFinishedAttribute(): bool
+    public function getAllProductsProductionIsFinishedAttribute(): bool
     {
-        return !is_null($this->production_end_date);
+        if ($this->products->isEmpty()) {
+            return false;
+        }
+
+        return $this->products->every(fn($product) => $product->production_is_finished);
+    }
+
+    public function getAllProductsAreReadyForShipmentAttribute(): bool
+    {
+        if ($this->products->isEmpty()) {
+            return false;
+        }
+
+        return $this->products->every(fn($product) => $product->is_ready_for_shipment);
     }
 
     public function getStatusAttribute()
     {
-        if ($this->production_is_finished) {
-            return self::STATUS_PRODUCTION_IS_FINISHED_NAME;
+        if ($this->all_products_are_ready_for_shipment) {
+            return OrderProduct::STATUS_IS_READY_FOR_SHIPMENT_NAME;
+        } else if ($this->all_products_production_is_finished) {
+            return OrderProduct::STATUS_PRODUCTION_IS_FINISHED_NAME;
         } else if ($this->production_is_started) {
             return self::STATUS_PRODUCTION_IS_STARTED_NAME;
         } else if ($this->is_sent_to_manufacturer) {
@@ -220,6 +234,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             'country',
             'currency',
             'lastComment',
+            'products',
 
             'manufacturer' => function ($manufacturersQuery) {
                 $manufacturersQuery->select(
@@ -259,9 +274,9 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $query->whereNotNull('sent_to_manufacturer_date');
     }
 
-    public function scopeOnlyProductionIsFinished($query)
+    public function scopeOnlyProductionIsStarted($query)
     {
-        return $query->whereNotNull('orders.production_end_date');
+        return $query->whereNotNull('production_start_date');
     }
 
     public function scopeOnlyWithInvoicesSentForPayment($query)
@@ -394,7 +409,8 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             self::STATUS_IS_CONFIRMED_NAME,
             self::STATUS_IS_SENT_TO_MANUFACTURER_NAME,
             self::STATUS_PRODUCTION_IS_STARTED_NAME,
-            self::STATUS_PRODUCTION_IS_FINISHED_NAME,
+            OrderProduct::STATUS_PRODUCTION_IS_FINISHED_NAME,
+            OrderProduct::STATUS_IS_READY_FOR_SHIPMENT_NAME,
         ];
     }
 
@@ -413,21 +429,57 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             return;
         }
 
-        $conditions = match ($status) {
-            self::STATUS_CREATED_NAME => fn($q) => $q->whereNull('sent_to_bdm_date'),
-            self::STATUS_IS_SENT_TO_BDM_NAME => fn($q) => $q->whereNotNull('sent_to_bdm_date')->whereNull('sent_to_confirmation_date'),
-            self::STATUS_IS_SENT_TO_CONFIRMATION_NAME => fn($q) => $q->whereNotNull('sent_to_confirmation_date')->whereNull('confirmation_date'),
-            self::STATUS_IS_CONFIRMED_NAME => fn($q) => $q->whereNotNull('confirmation_date')->whereNull('sent_to_manufacturer_date'),
-            self::STATUS_IS_SENT_TO_MANUFACTURER_NAME => fn($q) => $q->whereNotNull('sent_to_manufacturer_date')->whereNull('production_start_date'),
-            self::STATUS_PRODUCTION_IS_STARTED_NAME => fn($q) => $q->whereNotNull('production_start_date')->whereNull('production_end_date'),
-            self::STATUS_PRODUCTION_IS_FINISHED_NAME => fn($q) => $q->whereNotNull('production_end_date'),
-            default => null,
-        };
+        $filters = [
+            self::STATUS_CREATED_NAME => fn($q) =>
+            $q->whereNull('sent_to_bdm_date'),
 
-        if ($conditions) {
-            $conditions($query);
+            self::STATUS_IS_SENT_TO_BDM_NAME => fn($q) =>
+            $q->whereNotNull('sent_to_bdm_date')->whereNull('sent_to_confirmation_date'),
+
+            self::STATUS_IS_SENT_TO_CONFIRMATION_NAME => fn($q) =>
+            $q->whereNotNull('sent_to_confirmation_date')->whereNull('confirmation_date'),
+
+            self::STATUS_IS_CONFIRMED_NAME => fn($q) =>
+            $q->whereNotNull('confirmation_date')->whereNull('sent_to_manufacturer_date'),
+
+            self::STATUS_IS_SENT_TO_MANUFACTURER_NAME => fn($q) =>
+            $q->whereNotNull('sent_to_manufacturer_date')->whereNull('production_start_date'),
+
+            self::STATUS_PRODUCTION_IS_STARTED_NAME => fn($q) =>
+            $q->whereNotNull('production_start_date')
+                ->whereHas(
+                    'products',
+                    fn($pq) =>
+                    $pq->whereNotNull('production_end_date')
+                ),
+
+            OrderProduct::STATUS_PRODUCTION_IS_FINISHED_NAME => fn($q) =>
+            $q->whereDoesntHave(
+                'products',
+                fn($pq) =>
+                $pq->whereNull('production_end_date')
+            )->whereHas(
+                'products',
+                fn($pq) =>
+                $pq->whereNotNull('readiness_for_shipment_date')
+            ),
+
+            OrderProduct::STATUS_IS_READY_FOR_SHIPMENT_NAME => fn($q) =>
+            $q->whereDoesntHave(
+                'products',
+                fn($pq) =>
+                $pq->whereNull('readiness_for_shipment_date')
+            ),
+        ];
+
+        // Apply the matched filter or fallback to default (e.g., no filter)
+        $filter = $filters[$status] ?? null;
+
+        if ($filter) {
+            $filter($query);
         }
     }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -663,44 +715,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $this->products->contains->canAttachInvoiceOfFullPaymentType();
     }
 
-    /**
-     * Used in below actions:
-     *
-     * 1) After toggling 'production_is_finished' attribute of related products by CMD.
-     * 2) After creating invoice by CMD, because new invoices are attached for orderProducts.
-     * 3) After updating invoice by CMD, for invoices of FINAL_PAYMENT and FULL_PAYMENT types,
-     * because CMD can toggle orderProducts of invoices.
-     */
-    public function validateProductionIsFinishedAttribute(): void
-    {
-        $this->fresh();
-
-        // Get only products of order which have at least one invoice
-        $products = $this->products()->get();
-
-        // Exit early if there are no products
-        if ($products->isEmpty()) {
-            $this->production_end_date = null;
-            $this->save();
-            return;
-        }
-
-        // If all products are marked as production finished
-        $allFinished = $products->every(fn($product) => $product->production_is_finished);
-
-        // Set production_end_date if not already set
-        if ($allFinished && is_null($this->production_end_date)) {
-            $this->production_end_date = now();
-            $this->save();
-        }
-
-        // Reset the date when not all are finished
-        else if (!$allFinished) {
-            $this->production_end_date = null;
-            $this->save();
-        }
-    }
-
     public static function getDefaultPLPDTableColumnsForUser($user)
     {
         if (Gate::forUser($user)->denies('view-PLPD-orders')) {
@@ -725,7 +739,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
             ['name' => 'Products', 'order' => $order++, 'width' => 126, 'visible' => 1],
-            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
             ['name' => 'Sent to BDM', 'order' => $order++, 'width' => 160, 'visible' => 1],

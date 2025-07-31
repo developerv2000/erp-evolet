@@ -72,10 +72,13 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     // Statuses
     const STATUS_PRODUCTION_IS_FINISHED_NAME = 'Production is finished';
+    const STATUS_IS_READY_FOR_SHIPMENT_NAME = 'Ready to dispatch';
+
+    // Serialization statuses
+    const STATUS_REPORT_SENT_TO_HUB_NAME = 'Report sent to hub';
     const STATUS_SERIALIZATION_CODES_REQUESTED_NAME = 'Serialization codes requested';
     const STATUS_SERIALIZATION_CODES_SENT_NAME = 'Serialization codes sent';
     const STATUS_SERIALIZATION_REPORT_RECEIVED_NAME = 'Serialization report received';
-    const STATUS_REPORT_SENT_TO_HUB_NAME = 'Report sent to hub';
 
     /*
     |--------------------------------------------------------------------------
@@ -180,6 +183,17 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return !is_null($this->readiness_for_shipment_date);
     }
 
+    public function getStatusAttribute()
+    {
+        if ($this->is_ready_for_shipment) {
+            return self::STATUS_IS_READY_FOR_SHIPMENT_NAME;
+        } else if ($this->production_is_finished) {
+            return self::STATUS_PRODUCTION_IS_FINISHED_NAME;
+        }
+
+        return $this->order->status;
+    }
+
     public function getSerializationStatusAttribute()
     {
         if ($this->report_sent_to_hub_date) {
@@ -192,7 +206,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             return self::STATUS_SERIALIZATION_CODES_REQUESTED_NAME;
         }
 
-        return self::STATUS_PRODUCTION_IS_FINISHED_NAME;
+        return Order::STATUS_PRODUCTION_IS_STARTED_NAME;
     }
 
     public function getCanBePreparedForShippingAttribute(): bool
@@ -338,9 +352,11 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         });
     }
 
-    public function scopeOnlyProductionIsFinished($query)
+    public function scopeOnlyProductionIsStarted($query)
     {
-        return $query->whereNotNull('order_products.production_end_date');
+        return $query->whereHas('order', function ($orderQuery) {
+            $orderQuery->onlyProductionIsStarted();
+        });
     }
 
     public function scopeOnlyWithInvoicesSentForPayment($query)
@@ -543,7 +559,9 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     }
 
     /**
-     * Applies a status-based filter to the query.
+     * Applies a status-based filter to the OrderProduct query.
+     *
+     * Some filters are delegated to Order model filter.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query   The query builder instance.
      * @param \Illuminate\Http\Request              $request The incoming request containing filters.
@@ -551,9 +569,41 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
      */
     public static function applyStatusFilter($query, Request $request): void
     {
-        $query->whereHas('order', function ($orderQuery) use ($request) {
-            Order::applyStatusFilter($orderQuery, $request);
-        });
+        $status = $request->input('status');
+
+        if (!$status) {
+            return;
+        }
+
+        $filters = [
+            Order::STATUS_PRODUCTION_IS_STARTED_NAME => fn($q) =>
+            $q->whereHas(
+                'order',
+                fn($oq) =>
+                $oq->whereNotNull('production_start_date')
+            )
+                ->whereNull('production_end_date'),
+
+            self::STATUS_PRODUCTION_IS_FINISHED_NAME => fn($q) =>
+            $q->whereNotNull('production_end_date')
+                ->whereNull('readiness_for_shipment_date'),
+
+            self::STATUS_IS_READY_FOR_SHIPMENT_NAME => fn($q) =>
+            $q->whereNotNull('readiness_for_shipment_date'),
+        ];
+
+        $filter = $filters[$status] ?? null;
+
+        if ($filter) {
+            $filter($query);
+        } else {
+            // Delegate filter to Order model
+            $query->whereHas(
+                'order',
+                fn($orderQuery) =>
+                Order::applyStatusFilter($orderQuery, $request)
+            );
+        }
     }
 
     /*

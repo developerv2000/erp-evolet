@@ -315,9 +315,6 @@ class Invoice extends BaseModel implements HasTitle
             $record->orderProducts()->attach($selectedOrderProducts);
         }
 
-        // Validate orders 'production_end_date' attribute
-        $order->validateProductionIsFinishedAttribute();
-
         // Upload PDF file
         $record->uploadFile('pdf', public_path(self::PDF_PATH));
     }
@@ -329,10 +326,6 @@ class Invoice extends BaseModel implements HasTitle
         // Sycn orderProducts
         $selectedOrderProducts = $request->input('order_products', []);
         $this->orderProducts()->sync($selectedOrderProducts);
-
-        // Validate related orders 'production_end_date' attribute,
-        // because orderProducts might have changed
-        $this->order->validateProductionIsFinishedAttribute();
 
         // Upload PDF file
         $this->uploadFile('pdf', public_path(self::PDF_PATH));

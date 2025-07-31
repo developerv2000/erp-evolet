@@ -18,7 +18,7 @@ class MSDSerializedByManufacturerController extends Controller
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
-        $query = OrderProduct::onlyProductionIsFinished()
+        $query = OrderProduct::onlyProductionIsStarted()
             ->onlySerializedByManufacturer()
             ->whereHas('invoices')
             ->withBasicRelations()

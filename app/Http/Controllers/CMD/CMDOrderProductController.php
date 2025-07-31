@@ -50,8 +50,6 @@ class CMDOrderProductController extends Controller
         $record = OrderProduct::withTrashed()->findOrFail($request->input('record_id'));
         $record->toggleProductionIsFinishedAttribute($request);
 
-        $record->order->validateProductionIsFinishedAttribute();
-
         return response()->json([
             'productionIsFinished' => $record->production_is_finished,
             'productionEndDate' => $record->production_end_date?->isoFormat('DD MMM Y'),

@@ -63,9 +63,6 @@ return new class extends Migration
             // Production starts for all products of the order at the same time,
             // but can be finished at the different times.
             $table->timestamp('production_start_date')->nullable(); // action
-            
-            // Auto filled when all productions of the order products are finished
-            $table->timestamp('production_end_date')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
