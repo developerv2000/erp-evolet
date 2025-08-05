@@ -1131,6 +1131,11 @@ a {
     text-overflow: ellipsis;
 }
 
+.main-table:not(.main-table--th-text-nowrap) th {
+    line-height: 1.1;
+    text-align: center;
+}
+
 .main-table th:first-child {
     padding-left: var(--main-table-side-paddings);
 }
