@@ -1,4 +1,4 @@
-<x-tables.template.main-template class="plpd-invoices-table" :records="$records">
+<x-tables.template.main-template class="plpd-invoices-table" :th-text-nowrap="false" :records="$records">
     {{-- thead titles --}}
     <x-slot:thead-rows>
         <tr>

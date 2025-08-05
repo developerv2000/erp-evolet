@@ -1,7 +1,12 @@
-@props(['records', 'includePagination' => true])
+@props(['records', 'includePagination' => true, 'thTextNowrap' => true])
 
-<div class="main-table-wrapper thin-scrollbar @if (!$includePagination || ($records && !$records->hasPages())) main-table-wrapper--without-pagination @endif">
-    <table {{ $attributes->merge(['class' => 'main-table']) }}>
+<div @class([
+    'main-table-wrapper',
+    'thin-scrollbar',
+    'main-table-wrapper--without-pagination' =>
+        !$includePagination || ($records && !$records->hasPages()),
+])>
+    <table {{ $attributes->merge(['class' => 'main-table' . ($thTextNowrap ? ' main-table--th-text-nowrap' : '')]) }}>
         <thead>
             {{ $theadRows }}
         </thead>

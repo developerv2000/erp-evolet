@@ -1123,6 +1123,9 @@ a {
     vertical-align: middle;
     padding: 8px;
     font-weight: 400;
+}
+
+.main-table--th-text-nowrap th {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

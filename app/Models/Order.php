@@ -745,7 +745,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'Confirmation date', 'order' => $order++, 'width' => 172, 'visible' => 1],
-            ['name' => 'Sent to manufacturer', 'order' => $order++, 'width' => 164, 'visible' => 1],
+            ['name' => 'Sent to manufacturer', 'order' => $order++, 'width' => 180, 'visible' => 1],
         );
 
         return $columns;
