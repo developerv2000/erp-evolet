@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
-            $table->string('body', 6000);
+            $table->text('body');
 
             $table->unsignedInteger('commentable_id')->index();
             $table->string('commentable_type')->index();

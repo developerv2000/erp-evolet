@@ -33,6 +33,7 @@ yarn-error.log
 /public/private/packing-lists/*
 /public/private/COAs/*
 /public/private/COOs/*
+/public/private/declarations-for-europe/*
 
 /public/attachments/Manufacturer/*
 /public/attachments/Product/*

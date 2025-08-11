@@ -54,7 +54,7 @@ return new class extends Migration
             $table->timestamp('sent_to_manufacturer_date')->nullable(); // action
 
             // Step 5:
-            // PLPD part
+            // CMD part
             $table->string('expected_dispatch_date')->nullable();
 
             // Step 6:

@@ -154,10 +154,6 @@
         @endif
     @break
 
-    @case('Production end date')
-        {{ $record->production_end_date?->isoformat('DD MMM Y') }}
-    @break
-
     @case('Date of creation')
         {{ $record->created_at->isoformat('DD MMM Y') }}
     @break

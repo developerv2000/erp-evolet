@@ -124,7 +124,7 @@
     @break
 
     @case('Confirmation date')
-        {{ $record->confirmation_date?->isoformat('DD MMM Y') }}
+        {{ $record->order->confirmation_date?->isoformat('DD MMM Y') }}
     @break
 
     @case('Sent to manufacturer')

@@ -861,7 +861,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             $columns,
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
-            ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],

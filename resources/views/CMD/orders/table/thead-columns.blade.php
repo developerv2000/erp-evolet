@@ -45,10 +45,6 @@
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="production_start_date" />
     @break
 
-    @case('Production end date')
-        <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="production_end_date" />
-    @break
-
     @case('Date of creation')
         <x-tables.partials.th.order-link text="{{ $column['name'] }}" order-by="created_at" />
     @break
