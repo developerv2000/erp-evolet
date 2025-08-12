@@ -42,7 +42,6 @@
             field="moq"
             type="number"
             min="0"
-            :model="$product"
-            :isRequired="true" />
+            :model="$product" />
     </div>
 </div>
