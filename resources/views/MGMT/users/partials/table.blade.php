@@ -2,6 +2,7 @@
     {{-- thead titles --}}
     <x-slot:thead-rows>
         <tr>
+            <th width="50"><x-tables.partials.th.select-all /></th>
             <th width="90">{{ __('Photo') }}</th>
 
             <th width="40">
@@ -38,6 +39,8 @@
     <x-slot:tbody-rows>
         @foreach ($records as $record)
             <tr>
+                <td><x-tables.partials.td.checkbox :value="$record->id" /></td>
+
                 <td>
                     <img class="users-index__photo" src="{{ $record->photo_asset_url }}">
                 </td>

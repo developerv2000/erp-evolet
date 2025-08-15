@@ -5,6 +5,9 @@
 ])
 
 @section('content')
+    {{-- Errors --}}
+    @include('layouts.errors')
+
     <div class="main-box styled-box">
         {{-- Toolbar --}}
         <div class="toolbar toolbar--joined toolbar--for-table">
@@ -31,6 +34,14 @@
                 <x-misc.button
                     class="toolbar__button"
                     style="shadowed"
+                    icon="close"
+                    data-click-action="show-modal"
+                    data-modal-selector=".multiple-delete-modal">{{ __('Delete selected') }}
+                </x-misc.button>
+
+                <x-misc.button
+                    class="toolbar__button"
+                    style="shadowed"
                     icon="fullscreen"
                     data-click-action="request-fullscreen"
                     data-target-selector="{{ '.main-wrapper' }}">{{ __('Fullscreen') }}
@@ -41,6 +52,10 @@
         {{-- Table --}}
         @include('MGMT.users.partials.table')
     </div>
+
+    <x-modals.multiple-delete
+        form-action="{{ route('users.destroy') }}"
+        :forceDelete="false" />
 @endsection
 
 @section('rightbar')

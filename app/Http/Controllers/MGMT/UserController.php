@@ -8,10 +8,16 @@ use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
+use App\Support\Traits\Controller\DestroysModelRecords;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    use DestroysModelRecords;
+
+    // used in multiple destroy trait
+    public static $model = User::class;
+
     public function index(Request $request)
     {
         // Preapare request for valid model querying

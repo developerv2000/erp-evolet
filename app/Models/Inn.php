@@ -85,7 +85,6 @@ class Inn extends Model implements TracksUsageCount
     public function getUsageCountAttribute()
     {
         return $this->products_count
-            + $this->product_searches_count
-            + $this->atxes_count;
+            + $this->product_searches_count;
     }
 }

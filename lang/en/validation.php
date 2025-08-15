@@ -184,7 +184,7 @@ return [
         ],
 
         'users' => [
-            'is_in_use' => 'User is use, please replace it with another user and retry again.',
+            'is_in_use' => 'User :name is use, please replace it with another user and retry again.',
         ],
 
         'process_status_history' => [

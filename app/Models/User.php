@@ -16,6 +16,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\ValidationException;
 use InvalidArgumentException;
 
 class User extends Authenticatable
@@ -117,9 +118,14 @@ class User extends Authenticatable
         return $this->hasMany(Manufacturer::class, 'analyst_user_id');
     }
 
+    public function manufacturersAsBdm()
+    {
+        return $this->hasMany(Manufacturer::class, 'bdm_user_id');
+    }
+
     public function productSearches()
     {
-        return $this->hasMany(ProductSearch::class);
+        return $this->hasMany(ProductSearch::class, 'analyst_user_id');
     }
 
     /*
@@ -128,14 +134,59 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    public function getPhotoAssetUrlAttribute(): string
+    public function getUsageCountAttribute()
     {
-        return asset(self::PHOTO_PATH . '/' . $this->photo);
+        return $this->manufacturers_as_analyst_count
+            + $this->manufacturers_as_bdm_count
+            + $this->product_searches_count;
     }
 
     public function getPhotoFilePathAttribute()
     {
         return public_path(self::PHOTO_PATH . '/' . $this->photo);
+    }
+
+    public function getPhotoAssetUrlAttribute(): string
+    {
+        return asset(self::PHOTO_PATH . '/' . $this->photo);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Events
+    |--------------------------------------------------------------------------
+    */
+
+    protected static function booted(): void
+    {
+        static::deleting(function ($record) {
+            // Load counts
+            $record->loadCount('manufacturersAsAnalyst', 'manufacturersAsBdm', 'productSearches');
+
+            // Throw error if user is in use
+            if ($record->usage_count > 0) {
+                throw ValidationException::withMessages([
+                    'user_deletion' => trans('validation.custom.users.is_in_use', ['name' => $record->name]),
+                ]);
+            }
+
+            // Delete relations
+            foreach ($record->manufacturersAsAnalyst()->withTrashed()->get() as $manufacturer) {
+                $manufacturer->forceDelete();
+            }
+
+            foreach ($record->manufacturersAsBdm()->withTrashed()->get() as $manufacturer) {
+                $manufacturer->forceDelete();
+            }
+
+            foreach ($record->productSearches()->withTrashed()->get() as $productSearch) {
+                $productSearch->forceDelete();
+            }
+
+            $record->roles()->detach();
+            $record->permissions()->detach();
+            $record->responsibleCountries()->detach();
+        });
     }
 
     /*
