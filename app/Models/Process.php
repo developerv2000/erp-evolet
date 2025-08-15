@@ -1308,6 +1308,11 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
     public static function addOrderByPriorityQueryParamToRequest($request, $orderByPriority = true)
     {
+        // Set as default 'false' for "Фирдавс Киличбеков"
+        if (auth()->user()->id == 1 && !$request->has('order_by_priority')) {
+            $orderByPriority = false;
+        }
+
         $request->mergeIfMissing([
             'order_by_priority' => $request->input('order_by_priority', $orderByPriority),
         ]);
