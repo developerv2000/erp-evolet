@@ -222,7 +222,8 @@ class MADProcessController extends Controller
         // Get finalized records query
         $query = Process::withRelationsForExport();
         $filteredQuery = Process::filterQueryForRequest($query, $request);
-        $records = Process::finalizeQueryForRequest($filteredQuery, $request, 'query');
+        $joinedQuery = Process::addJoinsForOrdering($filteredQuery, $request); // add joins if joined ordering requested
+        $records = Process::finalizeQueryForRequest($joinedQuery, $request, 'query');
 
         // Export records
         return Process::exportRecordsAsExcel($records);
