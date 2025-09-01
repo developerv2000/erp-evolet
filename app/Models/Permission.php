@@ -201,6 +201,20 @@ class Permission extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | ELD permissions
+    |--------------------------------------------------------------------------
+    */
+
+    // View
+    const CAN_VIEW_ELD_ORDER_PRODUCTS_NAME = 'can view ELD order products';
+    const CAN_VIEW_ELD_INVOICES_NAME = 'can view ELD invoices';
+
+    // Edit
+    const CAN_EDIT_ELD_ORDER_PRODUCTS_NAME = 'can edit ELD order products';
+    const CAN_EDIT_ELD_INVOICES_NAME = 'can edit ELD invoices';
+
+    /*
+    |--------------------------------------------------------------------------
     | Properties
     |--------------------------------------------------------------------------
     */
@@ -435,6 +449,14 @@ class Permission extends Model
         return [
             self::CAN_VIEW_MSD_ORDER_PRODUCTS_NAME,
             self::CAN_EDIT_MSD_ORDER_PRODUCTS_NAME,
+        ];
+    }
+
+    public static function getELDLogisticianPermissionNames()
+    {
+        return [
+            self::CAN_VIEW_ELD_ORDER_PRODUCTS_NAME,
+            self::CAN_EDIT_ELD_ORDER_PRODUCTS_NAME,
         ];
     }
 }

@@ -55,6 +55,9 @@ class Role extends Model
     // MSD
     const MSD_SERIALIZER_NAME = 'MSD Serializer';                 // Not fully implemented yet!
 
+    // ELD
+    const ELD_LOGISTICIAN_NAME = 'ELD Logistician';                 // Not fully implemented yet!
+
     /*
     |--------------------------------------------------------------------------
     | Properties

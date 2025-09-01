@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('serialization_types', function (Blueprint $table) {
+        Schema::create('shipment_types', function (Blueprint $table) {
             $table->unsignedTinyInteger('id')->autoIncrement();
             $table->string('name')->unique();
         });
@@ -22,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('serialization_types');
+        Schema::dropIfExists('shipment_types');
     }
 };

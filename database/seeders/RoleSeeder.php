@@ -194,5 +194,24 @@ class RoleSeeder extends Seeder
         foreach ($permissionNames as $permissionName) {
             $role->permissions()->attach(Permission::findByName($permissionName)->id);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | ELD roles
+        |--------------------------------------------------------------------------
+        */
+
+        // ELD logistician
+        $role = new Role();
+        $role->name = Role::ELD_LOGISTICIAN_NAME;
+        $role->description = "Not fully implemented yet!";
+        $role->department_id = Department::findByName(Department::ELD_NAME)->id;
+        $role->save();
+
+        $permissionNames = Permission::getELDLogisticianPermissionNames();
+
+        foreach ($permissionNames as $permissionName) {
+            $role->permissions()->attach(Permission::findByName($permissionName)->id);
+        }
     }
 }

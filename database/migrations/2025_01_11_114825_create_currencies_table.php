@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('currencies', function (Blueprint $table) {
-            $table->unsignedSmallInteger('id')->autoIncrement();
+            $table->unsignedTinyInteger('id')->autoIncrement();
             $table->string('name')->unique();
             $table->decimal('usd_ratio', 8, 4);
         });

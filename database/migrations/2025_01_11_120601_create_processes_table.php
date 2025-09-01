@@ -67,7 +67,7 @@ return new class extends Migration
             $table->string('down_payment_condition')->nullable(); // nullable until the end
 
             // Stage 3 (АЦ)
-            $table->unsignedSmallInteger('currency_id')
+            $table->unsignedTinyInteger('currency_id')
                 ->index()
                 ->foreign()
                 ->references('id')

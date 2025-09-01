@@ -39,8 +39,11 @@ class DatabaseSeeder extends Seeder
             PortfolioManagerSeeder::class,
             ProductSearchSeeder::class,
             MeetingSeeder::class,
+            InvoiceTypeSeeder::class,
             InvoicePaymentTypeSeeder::class,
             SerializationTypeSeeder::class,
+            ShipmentTypeSeeder::class,
+            ShipmentDestinationSeeder::class,
         ]);
     }
 }

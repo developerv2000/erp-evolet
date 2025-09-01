@@ -28,7 +28,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('processes');
 
-            $table->unsignedSmallInteger('serialization_type_id')
+            $table->unsignedTinyInteger('serialization_type_id')
                 ->index()
                 ->foreign()
                 ->references('id')
@@ -67,6 +67,44 @@ return new class extends Migration
             $table->string('coo_file')->nullable();
             $table->string('declaration_for_europe_file')->nullable();
             $table->timestamp('readiness_for_shipment_date')->nullable(); // action
+
+            // Step 9:
+            // ELD part
+            $table->timestamp('shipment_from_manufacturer_start_date')->nullable();
+            $table->string('shipment_id')->nullable();
+            $table->unsignedTinyInteger('shipment_volume')->nullable();
+            $table->string('shipment_packs')->nullable();
+
+            $table->unsignedTinyInteger('shipment_type_id') // 'Auto', 'Air' or 'Sea'
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('shipment_types')
+                ->nullable();
+
+            $table->unsignedTinyInteger('shipment_destination_id') // 'Riga' or 'Destination country
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('shipment_destinations')
+                ->nullable();
+
+            // Step 10:
+            // ELD part
+            $table->timestamp('delivery_to_warehouse_request_date')->nullable(); // action
+            $table->timestamp('delivery_to_warehouse_rate_approved_date')->nullable(); // manually filled (similar to action)
+            $table->string('delivery_to_warehouse_forwarder')->nullable();
+            $table->unsignedMediumInteger('delivery_to_warehouse_price')->nullable();
+
+            $table->unsignedTinyInteger('delivery_to_warehouse_currency_id')
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('currencies')
+                ->nullable();
+
+            $table->timestamp('delivery_to_warehouse_loading_confirmed_date')->nullable();
+            $table->timestamp('shipment_from_manufacturer_end_date')->nullable(); // action
 
             $table->timestamps();
             $table->softDeletes();

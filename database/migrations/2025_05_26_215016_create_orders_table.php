@@ -36,7 +36,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->date('purchase_date')->nullable(); // auto filled when field 'name' filled
 
-            $table->unsignedSmallInteger('currency_id')
+            $table->unsignedTinyInteger('currency_id')
                 ->index()
                 ->foreign()
                 ->references('id')
