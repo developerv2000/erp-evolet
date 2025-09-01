@@ -138,6 +138,21 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return $this->belongsTo(SerializationType::class);
     }
 
+    public function shipmentType()
+    {
+        return $this->belongsTo(ShipmentType::class);
+    }
+
+    public function shipmentDestination()
+    {
+        return $this->belongsTo(ShipmentDestination::class);
+    }
+
+    public function deliveryToWarehouseCurrency()
+    {
+        return $this->belongsTo(Currency::class, 'delivery_to_warehouse_currency_id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes

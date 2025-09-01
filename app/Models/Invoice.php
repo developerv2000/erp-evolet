@@ -66,14 +66,19 @@ class Invoice extends BaseModel implements HasTitle
     |--------------------------------------------------------------------------
     */
 
-    public function order()
+    public function type()
     {
-        return $this->belongsTo(Order::class)->withTrashed();
+        return $this->belongsTo(InvoiceType::class, 'type_id');
     }
 
     public function paymentType()
     {
         return $this->belongsTo(InvoicePaymentType::class, 'payment_type_id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class)->withTrashed();
     }
 
     public function orderProducts()

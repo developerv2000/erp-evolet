@@ -13,16 +13,16 @@ class InvoiceTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        // $name = [
-        //     InvoiceType::BY_MANUFACTURER_TYPE_NAME,
-        //     InvoiceType::BY_US_TYPE_NAME,
-        //     InvoiceType::NO_SERIALIZATION_TYPE_NAME,
-        // ];
+        $name = [
+            InvoiceType::PRODUCTION_TYPE_NAME,
+            InvoiceType::DELIVERY_TO_WAREHOUSE_TYPE_NAME,
+            InvoiceType::EXPORT_TYPE_NAME,
+        ];
 
-        // for ($i = 0; $i < count($name); $i++) {
-        //     $item = new InvoiceType();
-        //     $item->name = $name[$i];
-        //     $item->save();
-        // }
+        for ($i = 0; $i < count($name); $i++) {
+            $item = new InvoiceType();
+            $item->name = $name[$i];
+            $item->save();
+        }
     }
 }

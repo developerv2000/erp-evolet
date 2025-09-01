@@ -82,7 +82,7 @@ return new class extends Migration
                 ->on('shipment_types')
                 ->nullable();
 
-            $table->unsignedTinyInteger('shipment_destination_id') // 'Riga' or 'Destination country
+            $table->unsignedTinyInteger('shipment_destination_id') // 'Riga' or 'Destination country'
                 ->index()
                 ->foreign()
                 ->references('id')
