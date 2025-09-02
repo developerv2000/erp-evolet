@@ -70,6 +70,12 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     const DEFAULT_MSD_SERIALIZED_BY_US_ORDER_TYPE = 'desc';
     const DEFAULT_MSD_SERIALIZED_BY_US_PAGINATION_LIMIT = 50;
 
+    // ELD
+    const SETTINGS_ELD_TABLE_COLUMNS_KEY = 'ELD_order_products_table_columns';
+    const DEFAULT_ELD_ORDER_BY = 'readiness_for_shipment_date';
+    const DEFAULT_ELD_ORDER_TYPE = 'desc';
+    const DEFAULT_ELD_PAGINATION_LIMIT = 50;
+
     // Statuses
     const STATUS_PRODUCTION_IS_FINISHED_NAME = 'Production is finished';
     const STATUS_IS_READY_FOR_SHIPMENT_NAME = 'Ready to dispatch';

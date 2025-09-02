@@ -456,7 +456,10 @@ class Permission extends Model
     {
         return [
             self::CAN_VIEW_ELD_ORDER_PRODUCTS_NAME,
+            self::CAN_VIEW_ELD_INVOICES_NAME,
+
             self::CAN_EDIT_ELD_ORDER_PRODUCTS_NAME,
+            self::CAN_EDIT_ELD_INVOICES_NAME,
         ];
     }
 }

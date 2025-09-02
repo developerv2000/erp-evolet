@@ -244,6 +244,32 @@ class UserSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
+        | ELD users
+        |--------------------------------------------------------------------------
+        */
+
+        $eldID = Department::findByName(Department::ELD_NAME)->id;
+        $logisticianRoleID = Role::findByName(Role::ELD_LOGISTICIAN_NAME);
+
+        $logisticians = [
+            ['name' => 'Europe logistic', 'email' => 'europe_logistic@mail.com', 'photo' => 'bdm.png'],
+        ];
+
+        // Create ELD Logisticians
+        foreach ($logisticians as $user) {
+            $newUser = User::create([
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'photo' => $user['photo'],
+                'department_id' => $eldID,
+                'password' => bcrypt($password),
+            ]);
+
+            $newUser->roles()->attach($logisticianRoleID);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
         | Reset all user settings to default
         |--------------------------------------------------------------------------
         */

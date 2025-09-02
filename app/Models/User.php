@@ -128,6 +128,11 @@ class User extends Authenticatable
         return $this->hasMany(ProductSearch::class, 'analyst_user_id');
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes
@@ -181,6 +186,10 @@ class User extends Authenticatable
 
             foreach ($record->productSearches()->withTrashed()->get() as $productSearch) {
                 $productSearch->forceDelete();
+            }
+
+            foreach ($record->comments as $comment) {
+                $comment->delete();
             }
 
             $record->roles()->detach();
@@ -819,6 +828,10 @@ class User extends Authenticatable
 
             // MSD
             'msd.order-products.serialized-by-manufacturer.index' => 'view-MSD-order-products',
+
+            // ELD
+            'eld.order-products.index' => 'view-ELD-order-products',
+            'eld.invoices.index' => 'view-ELD-invoices',
         ];
 
         foreach ($homepageRoutes as $routeName => $gate) {

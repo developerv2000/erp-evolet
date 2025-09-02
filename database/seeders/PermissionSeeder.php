@@ -227,6 +227,28 @@ class PermissionSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
+        | ELD permissions
+        |--------------------------------------------------------------------------
+        */
+
+        $departmentID = Department::findByName(Department::ELD_NAME)->id;
+
+        $elds = [
+            Permission::CAN_VIEW_ELD_ORDER_PRODUCTS_NAME,
+            Permission::CAN_VIEW_ELD_INVOICES_NAME,
+            Permission::CAN_EDIT_ELD_ORDER_PRODUCTS_NAME,
+            Permission::CAN_EDIT_ELD_INVOICES_NAME,
+        ];
+
+        foreach ($elds as $eld) {
+            Permission::create([
+                'name' => $eld,
+                'department_id' => $departmentID,
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
         | Shared order-based permissions
         |--------------------------------------------------------------------------
         */

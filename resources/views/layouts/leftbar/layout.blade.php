@@ -13,5 +13,6 @@
         @include('layouts.leftbar.navs.DD')
         @include('layouts.leftbar.navs.MSD')
         @include('layouts.leftbar.navs.MGMT')
+        @include('layouts.leftbar.navs.ELD')
     </div>
 </aside>
