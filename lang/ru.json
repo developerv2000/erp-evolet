@@ -384,5 +384,17 @@
     "Ready for shipment": "Готов к отгрузке",
     "Prepare for shipment": "Подготовить к отгрузке",
 
+    "Shipment ID": "Номер отгрузки",
+    "Volume": "Объем",
+    "Packs": "Упаковки",
+    "Method of shipment": "Способ доставки",
+    "Destination": "Место назначения",
+    "Transportation request": "Запрос на транспортировку",
+    "Rate approved": "Ставка одобрена",
+    "Forwarder": "Перевозчик",
+    "Rate": "Ставка",
+    "Loading confirmed": "Объем",
+    "Shipment date from Manufacturer": "Дата отгрузки от производителя",
+
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

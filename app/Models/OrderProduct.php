@@ -683,6 +683,16 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         );
     }
 
+    public static function addDefaultELDQueryParamsToRequest(Request $request)
+    {
+        self::addDefaultQueryParamsToRequest(
+            $request,
+            'DEFAULT_ELD_ORDER_BY',
+            'DEFAULT_ELD_ORDER_TYPE',
+            'DEFAULT_ELD_PAGINATION_LIMIT',
+        );
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Create & Update
@@ -1117,6 +1127,63 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Serialization report received', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Report sent to hub', 'order' => $order++, 'width' => 184, 'visible' => 1],
 
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
+        );
+
+        return $columns;
+    }
+
+    public static function getDefaultELDTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-ELD-orders')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        if (Gate::forUser($user)->allows('edit-ELD-orders')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+
+            ['name' => 'Packing list', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'COA', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'COO', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Declaration for EUR1', 'order' => $order++, 'width' => 170, 'visible' => 1],
+            ['name' => 'Ready for shipment', 'order' => $order++, 'width' => 160, 'visible' => 1],
+
+            ['name' => 'Shipment ID', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Manufacturer country', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Volume', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Packs', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Method of shipment', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Destination', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Transportation request', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Rate approved', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Forwarder', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Rate', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
+            ['name' => 'Loading confirmed', 'order' => $order++, 'width' => 84, 'visible' => 1],
+            ['name' => 'Dispatched date from Manufacturer', 'order' => $order++, 'width' => 84, 'visible' => 1],
+
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
         );

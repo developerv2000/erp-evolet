@@ -188,10 +188,6 @@ class User extends Authenticatable
                 $productSearch->forceDelete();
             }
 
-            foreach ($record->comments as $comment) {
-                $comment->delete();
-            }
-
             $record->roles()->detach();
             $record->permissions()->detach();
             $record->responsibleCountries()->detach();
@@ -422,21 +418,23 @@ class User extends Authenticatable
         $this->save();
 
         // Table settings
-        $this->resetMADTablesColumnSettings($settings);
-        $this->resetPLPDTablesColumnSettings($settings);
-        $this->resetCMDTablesColumnSettings($settings);
-        $this->resetDDTablesColumnSettings($settings);
-        $this->resetPRDTablesColumnSettings($settings);
-        $this->resetMSDTablesColumnSettings($settings);
+        $this->resetMADTablesColumnSettings();
+        $this->resetPLPDTablesColumnSettings();
+        $this->resetCMDTablesColumnSettings();
+        $this->resetDDTablesColumnSettings();
+        $this->resetPRDTablesColumnSettings();
+        $this->resetMSDTablesColumnSettings();
+        $this->resetELDTablesColumnSettings();
     }
 
     /**
      * Reset users MAD tables column settings
      */
-    public function resetMADTablesColumnSettings($settings)
+    public function resetMADTablesColumnSettings()
     {
         $this->refresh();
         $settings = $this->settings;
+
         $settings[Manufacturer::SETTINGS_MAD_TABLE_COLUMNS_KEY] = Manufacturer::getDefaultMADTableColumnsForUser($this);
         $settings[Product::SETTINGS_MAD_TABLE_COLUMNS_KEY] = Product::getDefaultMADTableColumnsForUser($this);
         $settings[Process::SETTINGS_MAD_TABLE_COLUMNS_KEY] = Process::getDefaultMADTableColumnsForUser($this);
@@ -451,7 +449,7 @@ class User extends Authenticatable
     /**
      * Reset users PLPD tables column settings
      */
-    public function resetPLPDTablesColumnSettings($settings)
+    public function resetPLPDTablesColumnSettings()
     {
         $this->refresh();
         $settings = $this->settings;
@@ -466,7 +464,7 @@ class User extends Authenticatable
     /**
      * Reset users CMD tables column settings
      */
-    public function resetCMDTablesColumnSettings($settings)
+    public function resetCMDTablesColumnSettings()
     {
         $this->refresh();
         $settings = $this->settings;
@@ -481,7 +479,7 @@ class User extends Authenticatable
     /**
      * Reset users DD tables column settings
      */
-    public function resetDDTablesColumnSettings($settings)
+    public function resetDDTablesColumnSettings()
     {
         $this->refresh();
         $settings = $this->settings;
@@ -494,7 +492,7 @@ class User extends Authenticatable
     /**
      * Reset users PRD tables column settings
      */
-    public function resetPRDTablesColumnSettings($settings)
+    public function resetPRDTablesColumnSettings()
     {
         $this->refresh();
         $settings = $this->settings;
@@ -509,11 +507,25 @@ class User extends Authenticatable
     /**
      * Reset users MSD tables column settings
      */
-    public function resetMSDTablesColumnSettings($settings)
+    public function resetMSDTablesColumnSettings()
     {
         $this->refresh();
         $settings = $this->settings;
         $settings[OrderProduct::SETTINGS_MSD_SERIALIZED_BY_MANUFACTURER_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultMSDSerializedByManufacturerTableColumnsForUser($this);
+
+        $this->settings = $settings;
+        $this->save();
+    }
+
+    /**
+     * Reset users ELD tables column settings
+     */
+    public function resetELDTablesColumnSettings()
+    {
+        $this->refresh();
+        $settings = $this->settings;
+        $settings[OrderProduct::SETTINGS_ELD_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultELDTableColumnsForUser($this);
+        $settings[Invoice::SETTINGS_ELD_TABLE_COLUMNS_KEY] = Invoice::getDefaultELDTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -564,6 +576,9 @@ class User extends Authenticatable
 
             'MSD_order_products_serialized_by_manufacturer_table_columns' =>
             OrderProduct::getDefaultMSDSerializedByManufacturerTableColumnsForUser($this),
+
+            'ELD_order_products_table_columns' => OrderProduct::getDefaultELDTableColumnsForUser($this),
+            'ELD_invoices_table_columns' => Invoice::getDefaultELDTableColumnsForUser($this),
 
             default => throw new InvalidArgumentExceptio("Unknown key: $key"),
         };
