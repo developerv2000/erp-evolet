@@ -182,6 +182,21 @@ class Invoice extends BaseModel implements HasTitle
         return $query->whereNotNull('sent_for_payment_date');
     }
 
+    public function scopeOnlyProductionType($query)
+    {
+        return $query->where('type_id', InvoiceType::PRODUCTION_TYPE_ID);
+    }
+
+    public function scopeOnlyDeliveryToWarehouseType($query)
+    {
+        return $query->where('type_id', InvoiceType::DELIVERY_TO_WAREHOUSE_TYPE_ID);
+    }
+
+    public function scopeOnlyExportType($query)
+    {
+        return $query->where('type_id', InvoiceType::EXPORT_TYPE_ID);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Contracts
@@ -314,6 +329,9 @@ class Invoice extends BaseModel implements HasTitle
     public static function createByCMDFromRequest($request)
     {
         $order = Order::findorfail($request->input('order_id'));
+
+        // Set invoice type
+        $request->merge(['type_id' => InvoiceType::PRODUCTION_TYPE_ID]);
 
         // Create invoice
         $record = self::create($request->all());

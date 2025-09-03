@@ -12,7 +12,7 @@
         @include('layouts.leftbar.navs.PRD')
         @include('layouts.leftbar.navs.DD')
         @include('layouts.leftbar.navs.MSD')
-        @include('layouts.leftbar.navs.MGMT')
         @include('layouts.leftbar.navs.ELD')
+        @include('layouts.leftbar.navs.MGMT')
     </div>
 </aside>

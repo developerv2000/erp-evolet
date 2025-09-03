@@ -19,6 +19,10 @@ class InvoiceType extends Model
     const DELIVERY_TO_WAREHOUSE_TYPE_NAME = 'Delivery to warehouse';
     const EXPORT_TYPE_NAME = 'Export';
 
+    const PRODUCTION_TYPE_ID = 1;
+    const DELIVERY_TO_WAREHOUSE_TYPE_ID = 2;
+    const EXPORT_TYPE_ID = 3;
+
     /*
     |--------------------------------------------------------------------------
     | Properties

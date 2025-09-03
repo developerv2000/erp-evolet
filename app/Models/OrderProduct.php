@@ -330,10 +330,12 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
                         $manufacturersQuery->select(
                             'manufacturers.id',
                             'manufacturers.name',
+                            'manufacturers.country_id',
                             'bdm_user_id',
                         )
                             ->with([
                                 'bdm:id,name,photo',
+                                'country',
                             ]);
                     },
                 ]);
@@ -378,6 +380,11 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return $query->whereHas('order', function ($orderQuery) {
             $orderQuery->onlyProductionIsStarted();
         });
+    }
+
+    public function scopeOnlyReadyForShipment($query)
+    {
+        return $query->whereNotNull('readiness_for_shipment_date');
     }
 
     public function scopeOnlyWithInvoicesSentForPayment($query)
@@ -1181,7 +1188,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Rate', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
             ['name' => 'Loading confirmed', 'order' => $order++, 'width' => 84, 'visible' => 1],
-            ['name' => 'Dispatched date from Manufacturer', 'order' => $order++, 'width' => 84, 'visible' => 1],
+            ['name' => 'Shipment date from Manufacturer', 'order' => $order++, 'width' => 84, 'visible' => 1],
 
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],

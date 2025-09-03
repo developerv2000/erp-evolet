@@ -18,7 +18,7 @@ class ELDOrderProductController extends Controller
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
-        $query = OrderProduct::onlySentToBdm()->withBasicRelations()->withBasicRelationCounts();
+        $query = OrderProduct::onlyReadyForShipment()->withBasicRelations()->withBasicRelationCounts();
         $filteredQuery = OrderProduct::filterQueryForRequest($query, $request);
         $joinedQuery = OrderProduct::addJoinsForOrdering($filteredQuery, $request); // add joins if joined ordering requested
         $records = OrderProduct::finalizeQueryForRequest($joinedQuery, $request, 'paginate');
