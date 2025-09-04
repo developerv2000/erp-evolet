@@ -14,6 +14,9 @@ Route::middleware('auth', 'auth.session')->prefix('eld')->name('eld.')->group(fu
             'can:view-ELD-order-products',
             'can:edit-ELD-order-products'
         );
+
+        Route::post('/start-shipment-from-manufacturer/{record}', 'startShipmentFromManufacturer')->name('start-shipment-from-manufacturer');
+        Route::post('/request-delivery-to-warehouse/{record}', 'requestDeliveryToWarehouse')->name('request-delivery-to-warehouse');
     });
 
     // Invoices

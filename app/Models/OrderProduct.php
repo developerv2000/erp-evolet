@@ -104,6 +104,11 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         'report_sent_to_hub_date' => 'datetime',
         'production_end_date' => 'datetime',
         'readiness_for_shipment_date' => 'datetime',
+        'shipment_from_manufacturer_start_date' => 'datetime',
+        'delivery_to_warehouse_request_date' => 'datetime',
+        'delivery_to_warehouse_rate_approved_date' => 'date',
+        'delivery_to_warehouse_loading_confirmed_date' => 'date',
+        'shipment_from_manufacturer_end_date' => 'datetime',
     ];
 
     /*
@@ -246,6 +251,34 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return $this->packing_list_file
             && $this->coa_file
             && $this->coo_file;
+    }
+
+    public function getShipmentFromManufacturerStartedAttribute(): bool
+    {
+        return !is_null($this->shipment_from_manufacturer_start_date);
+    }
+
+    public function getDeliveryToWarehouseRequestedAttribute(): bool
+    {
+        return !is_null($this->delivery_to_warehouse_request_date);
+    }
+
+    public function getCanRequestDeliveryToWarehouseAttribute(): bool
+    {
+        return !$this->delivery_to_warehouse_requested
+            && $this->shipment_from_manufacturer_started;
+    }
+
+    public function getShipmentFromManufacturerEndedAttribute(): bool
+    {
+        return !is_null($this->shipment_from_manufacturer_end_date);
+    }
+
+    public function getCanEndShipmentFromManufacturerAttribute(): bool
+    {
+        return !$this->shipment_from_manufacturer_ended
+            && $this->shipment_from_manufacturer_started
+            && !is_null($this->delivery_to_warehouse_loading_confirmed_date);
     }
 
     public function getPackingListAssetUrlAttribute(): string
@@ -446,7 +479,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     /**
      * Implement method defined in BaseModel abstract class.
      *
-     * Used by 'PLPD', 'CDM', 'DD', 'MSD' departments.
+     * Used by 'PLPD', 'CDM', 'DD', 'MSD', 'ELD' departments.
      *
      * Special breadcrumbs for 'MSD'.
      */
@@ -707,7 +740,6 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     */
 
     // PLPD part
-
     public static function createByPLPDFromRequest($request)
     {
         $record = self::create($request->all());
@@ -725,7 +757,6 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     }
 
     // CMD part
-
     public function updateByCMDFromRequest($request)
     {
         $this->update($request->all());
@@ -741,7 +772,6 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     }
 
     // DD part
-
     function updateByDDFromRequest($request)
     {
         $this->fill($request->safe()->all());
@@ -758,8 +788,16 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     }
 
     // MSD part
-
     function updateByMSDFromRequest($request)
+    {
+        $this->update($request->all());
+
+        // HasMany relations
+        $this->storeCommentFromRequest($request);
+    }
+
+    // ELD part
+    function updateByELDFromRequest($request)
     {
         $this->update($request->all());
 
@@ -1174,21 +1212,22 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'COA', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'COO', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Declaration for EUR1', 'order' => $order++, 'width' => 170, 'visible' => 1],
-            ['name' => 'Ready for shipment', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Ready for shipment', 'order' => $order++, 'width' => 130, 'visible' => 1],
 
-            ['name' => 'Shipment ID', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Manufacturer country', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Volume', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Packs', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Method of shipment', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Destination', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Transportation request', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Rate approved', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Forwarder', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Rate', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Shipment from manufacturer start date', 'order' => $order++, 'width' => 230, 'visible' => 1],
+            ['name' => 'Shipment ID', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Manufacturer country', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Volume', 'order' => $order++, 'width' => 80, 'visible' => 1],
+            ['name' => 'Packs', 'order' => $order++, 'width' => 90, 'visible' => 1],
+            ['name' => 'Method of shipment', 'order' => $order++, 'width' => 124, 'visible' => 1],
+            ['name' => 'Destination', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Transportation request', 'order' => $order++, 'width' => 204, 'visible' => 1],
+            ['name' => 'Rate approved', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Forwarder', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Rate', 'order' => $order++, 'width' => 90, 'visible' => 1],
             ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
-            ['name' => 'Loading confirmed', 'order' => $order++, 'width' => 84, 'visible' => 1],
-            ['name' => 'Shipment date from Manufacturer', 'order' => $order++, 'width' => 84, 'visible' => 1],
+            ['name' => 'Loading confirmed', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Shipment from manufacturer end date', 'order' => $order++, 'width' => 250, 'visible' => 1],
 
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],

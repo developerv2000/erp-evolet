@@ -92,7 +92,7 @@ return new class extends Migration
             // Step 10:
             // ELD part
             $table->timestamp('delivery_to_warehouse_request_date')->nullable(); // action
-            $table->timestamp('delivery_to_warehouse_rate_approved_date')->nullable(); // manually filled (similar to action)
+            $table->date('delivery_to_warehouse_rate_approved_date')->nullable(); // manually filled (similar to action)
             $table->string('delivery_to_warehouse_forwarder')->nullable();
             $table->unsignedMediumInteger('delivery_to_warehouse_price')->nullable();
 
@@ -103,7 +103,7 @@ return new class extends Migration
                 ->on('currencies')
                 ->nullable();
 
-            $table->timestamp('delivery_to_warehouse_loading_confirmed_date')->nullable();
+            $table->date('delivery_to_warehouse_loading_confirmed_date')->nullable();
             $table->timestamp('shipment_from_manufacturer_end_date')->nullable(); // action
 
             $table->timestamps();

@@ -79,6 +79,23 @@
         {{ $record->readiness_for_shipment_date->isoformat('DD MMM Y') }}
     @break
 
+    @case('Shipment from manufacturer start date')
+        @if ($record->shipment_from_manufacturer_started)
+            {{ $record->shipment_from_manufacturer_start_date->isoformat('DD MMM Y') }}
+        @else
+            <form action="{{ route('eld.order-products.start-shipment-from-manufacturer', $record->id) }}" method="POST">
+                @csrf
+
+                <x-misc.button
+                    style="transparent"
+                    class="button--arrowed-link button--margined-bottom"
+                    icon="line_end_arrow_notch">
+                    {{ __('Start shipment') }}
+                </x-misc.button>
+            </form>
+        @endif
+    @break
+
     @case('Shipment ID')
         {{ $record->shipment_id }}
     @break
@@ -104,7 +121,20 @@
     @break
 
     @case('Transportation request')
-        {{ $record->delivery_to_warehouse_request_date?->isoformat('DD MMM Y') }}
+        @if ($record->delivery_to_warehouse_requested)
+            {{ $record->delivery_to_warehouse_request_date->isoformat('DD MMM Y') }}
+        @elseif($record->can_request_delivery_to_warehouse)
+            <form action="{{ route('eld.order-products.request-delivery-to-warehouse', $record->id) }}" method="POST">
+                @csrf
+
+                <x-misc.button
+                    style="transparent"
+                    class="button--arrowed-link button--margined-bottom"
+                    icon="line_end_arrow_notch">
+                    {{ __('Request sent') }}
+                </x-misc.button>
+            </form>
+        @endif
     @break
 
     @case('Rate approved')
@@ -127,8 +157,20 @@
         {{ $record->delivery_to_warehouse_loading_confirmed_date?->isoformat('DD MMM Y') }}
     @break
 
-    @case('Shipment date from Manufacturer')
-        {{ $record->shipment_from_manufacturer_end_date?->isoformat('DD MMM Y') }}
+    @case('Shipment from Manufacturer end date')
+        @if ($record->shipment_from_manufacturer_ended)
+            {{ $record->shipment_from_manufacturer_end_date?->isoformat('DD MMM Y') }}
+        @elseif($record->can_end_shipment_from_manufacturer)
+            <x-misc.button
+                style="transparent"
+                class="button--arrowed-link button--margined-bottom"
+                icon="line_end_arrow_notch"
+                data-click-action="toggle-order-products-shipment-from-manufacturer-end-date-attribute"
+                data-action-type="end"
+                data-record-id="{{ $record->id }}">
+                {{ __('End shipment') }}
+            </x-misc.button>
+        @endif
     @break
 
     @case('ID')

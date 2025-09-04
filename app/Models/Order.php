@@ -302,7 +302,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
      * Used by 'PLPD', 'CDM' and 'PRD' departments.
      *
      * Trash page is available only for 'PLPD'.
-     * No orders pages for 'DD'.
+     * No orders pages for 'DD' and 'ELD'.
      * No orders.edit page for 'PRD'.
      */
     public function generateBreadcrumbs($department = null): array
@@ -310,7 +310,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         // If department is declared
         if ($department) {
             // No order pages for 'DD'
-            if ($department == 'DD') return [];
+            if ($department == 'DD' || $department == 'ELD') return [];
 
             // Generate breadcrumbs for other departments
             $lowercasedDepartment = strtolower($department);

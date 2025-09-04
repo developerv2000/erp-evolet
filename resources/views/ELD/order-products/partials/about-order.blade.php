@@ -1,18 +1,8 @@
-<div class="about-order-block styled-box">
-    <h2 class="main-title">{{ __('About order') }}</h2>
+<div class="about-product-block styled-box">
+    <h2 class="main-title">{{ __('About product') }}</h2>
 
     <table class="secondary-table">
         <tbody>
-            <tr>
-                <td>{{ __('Order') }}:</td>
-                <td>{{ $order->title }}</td>
-            </tr>
-
-            <tr>
-                <td>{{ __('Receive date') }}:</td>
-                <td>{{ $order->receive_date->isoformat('DD MMM Y') }}</td>
-            </tr>
-
             <tr>
                 <td>{{ __('Manufacturer') }}:</td>
                 <td>{{ $order->manufacturer->name }}</td>
@@ -21,6 +11,16 @@
             <tr>
                 <td>{{ __('Country') }}:</td>
                 <td>{{ $order->country->code }}</td>
+            </tr>
+
+            <tr>
+                <td>{{ __('Brand Eng') }}:</td>
+                <td>{{ $record->process->full_trademark_en }}</td>
+            </tr>
+
+            <tr>
+                <td>{{ __('MAH') }}:</td>
+                <td>{{ $record->process->MAH->name }}</td>
             </tr>
         </tbody>
     </table>

@@ -42,17 +42,19 @@ class ELDOrderProductController extends Controller
         return redirect($request->input('previous_url'));
     }
 
-    /**
-     * Ajax request
-     */
-    public function toggleProductionIsFinishedAttribute(Request $request)
+    public function startShipmentFromManufacturer(OrderProduct $record)
     {
-        $record = OrderProduct::withTrashed()->findOrFail($request->input('record_id'));
-        $record->toggleProductionIsFinishedAttribute($request);
+        $record->shipment_from_manufacturer_start_date = now();
+        $record->save();
 
-        return response()->json([
-            'productionIsFinished' => $record->production_is_finished,
-            'productionEndDate' => $record->production_end_date?->isoFormat('DD MMM Y'),
-        ]);
+        return redirect()->route('eld.order-products.edit', $record->id);
+    }
+
+    public function requestDeliveryToWarehouse(OrderProduct $record)
+    {
+        $record->delivery_to_warehouse_request_date = now();
+        $record->save();
+
+        return redirect()->route('eld.order-products.edit', $record->id);
     }
 }
