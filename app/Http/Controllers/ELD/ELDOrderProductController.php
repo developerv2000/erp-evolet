@@ -57,4 +57,18 @@ class ELDOrderProductController extends Controller
 
         return redirect()->route('eld.order-products.edit', $record->id);
     }
+
+    /**
+     * Ajax request
+     */
+    public function endShipmentFromManufacturer(Request $request, OrderProduct $record)
+    {
+        $record->shipment_from_manufacturer_end_date = now();
+        $record->save();
+
+        return response()->json([
+            'shipmentFromManufacturerEnded' => $record->shipment_from_manufacturer_ended,
+            'shipmentFromManufacturerEndDate' => $record->shipment_from_manufacturer_end_date?->isoFormat('DD MMM Y'),
+        ]);
+    }
 }

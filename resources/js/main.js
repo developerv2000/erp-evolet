@@ -10,6 +10,7 @@ import './PLPD/PLPD-main'; // initialize PLPD part
 import './CMD/CMD-main'; // initialize CMD part
 import './DD/DD-main'; // initialize DD part
 import './PRD/PRD-main'; // initialize PRD part
+import './ELD/ELD-main'; // initialize ELD part
 import { showSpinner } from '../custom-components/script';
 import * as functions from './main-functions';
 

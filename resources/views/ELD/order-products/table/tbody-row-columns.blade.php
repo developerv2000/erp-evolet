@@ -157,7 +157,7 @@
         {{ $record->delivery_to_warehouse_loading_confirmed_date?->isoformat('DD MMM Y') }}
     @break
 
-    @case('Shipment from Manufacturer end date')
+    @case('Shipment from manufacturer end date')
         @if ($record->shipment_from_manufacturer_ended)
             {{ $record->shipment_from_manufacturer_end_date?->isoformat('DD MMM Y') }}
         @elseif($record->can_end_shipment_from_manufacturer)
@@ -165,8 +165,7 @@
                 style="transparent"
                 class="button--arrowed-link button--margined-bottom"
                 icon="line_end_arrow_notch"
-                data-click-action="toggle-order-products-shipment-from-manufacturer-end-date-attribute"
-                data-action-type="end"
+                data-click-action="end-shipment-from-manufacturer"
                 data-record-id="{{ $record->id }}">
                 {{ __('End shipment') }}
             </x-misc.button>
