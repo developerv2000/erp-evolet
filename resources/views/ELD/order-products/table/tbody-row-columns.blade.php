@@ -172,6 +172,14 @@
         @endif
     @break
 
+    @case('Invoice')
+        @if ($record->canAttachDeliveryToWarehouseInvoice())
+            <a href="{{ route('eld.invoices.create', ['order_product_id' => $record->id]) }}" class="main-link">
+                {{ __('Create invoice') }}
+            </a>
+        @endif
+    @break
+
     @case('ID')
         {{ $record->id }}
     @break

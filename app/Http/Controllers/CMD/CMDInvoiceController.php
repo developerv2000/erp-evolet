@@ -26,7 +26,7 @@ class CMDInvoiceController extends Controller
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
-        $query = Invoice::withBasicRelations()->withBasicRelationCounts();
+        $query = Invoice::onlyProductionType()->withBasicRelations()->withBasicRelationCounts();
         $filteredQuery = Invoice::filterQueryForRequest($query, $request);
         $records = Invoice::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
@@ -90,12 +90,12 @@ class CMDInvoiceController extends Controller
             case InvoicePaymentType::FINAL_PAYMENT_ID:
                 // Display toggleable orderProducts list for invoice of FINAL_PAYMENT type.
                 // Concat attached invoice products and order products which can also be attached.
-                $availableOrderProducts = $record->orderProducts->concat($record->order->products->filter(fn(OrderProduct $product) => $product->canAttachInvoiceOfFinalPaymentType()));
+                $availableOrderProducts = $record->orderProducts->concat($record->order->products->filter(fn(OrderProduct $product) => $product->canAttachProductionInvoiceOfFinalPaymentType()));
                 break;
             case InvoicePaymentType::FULL_PAYMENT_ID:
                 // Display toggleable orderProducts list for invoice of FULL_PAYMENT type.
                 // Concat attached invoice products and order products which can also be attached.
-                $availableOrderProducts = $record->orderProducts->concat($record->order->products->filter(fn(OrderProduct $product) => $product->canAttachInvoiceOfFullPaymentType()));
+                $availableOrderProducts = $record->orderProducts->concat($record->order->products->filter(fn(OrderProduct $product) => $product->canAttachProductionInvoiceOfFullPaymentType()));
                 break;
         }
 

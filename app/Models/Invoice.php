@@ -153,6 +153,7 @@ class Invoice extends BaseModel implements HasTitle
     public function scopeWithBasicRelations($query)
     {
         return $query->with([
+            'type',
             'paymentType',
 
             'order' => function ($orderQuery) {
@@ -545,12 +546,14 @@ class Invoice extends BaseModel implements HasTitle
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Invoice type', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Payment type', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Sent for payment date', 'order' => $order++, 'width' => 198, 'visible' => 1],
             ['name' => 'Payment completed', 'order' => $order++, 'width' => 158, 'visible' => 1],
             ['name' => 'PDF', 'order' => $order++, 'width' => 144, 'visible' => 100],
 
             ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'Payment company', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
 

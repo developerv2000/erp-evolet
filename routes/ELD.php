@@ -23,7 +23,7 @@ Route::middleware('auth', 'auth.session')->prefix('eld')->name('eld.')->group(fu
     // Invoices
     Route::prefix('/invoices')->controller(ELDInvoiceController::class)->name('invoices.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesOnly(
-            ['index', 'edit', 'update'],
+            ['index', 'create', 'store', 'edit', 'update'],
             'id',
             'can:view-ELD-invoices',
             'can:edit-ELD-invoices'

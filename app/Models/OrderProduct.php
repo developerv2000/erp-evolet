@@ -144,6 +144,12 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return $this->belongsToMany(Invoice::class);
     }
 
+    public function productionInvoices()
+    {
+        return $this->belongsToMany(Invoice::class)
+            ->onlyProductionType();
+    }
+
     public function serializationType()
     {
         return $this->belongsTo(SerializationType::class);
@@ -170,16 +176,18 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     |--------------------------------------------------------------------------
     */
 
-    public function getPrepaymentInvoiceAttribute()
+    public function getProductionPrepaymentInvoiceAttribute()
     {
         return $this->invoices
+            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
             ->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID)
             ->first();
     }
 
-    public function getFinalOrFullPaymentInvoiceAttribute()
+    public function getProductionFinalOrFullPaymentInvoiceAttribute()
     {
         return $this->invoices
+            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
             ->whereIn('payment_type_id', [
                 InvoicePaymentType::FINAL_PAYMENT_ID,
                 InvoicePaymentType::FULL_PAYMENT_ID,
@@ -238,6 +246,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     public function getCanBePreparedForShippingAttribute(): bool
     {
         return $this->invoices()
+            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
             ->whereIn('payment_type_id', [
                 InvoicePaymentType::FULL_PAYMENT_ID,
                 InvoicePaymentType::FINAL_PAYMENT_ID,
@@ -486,7 +495,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     public function generateBreadcrumbs($department = null): array
     {
         // Special breadcrumbs for 'MSD'.
-        if ($department && $department == 'MSD') {
+        if ($department == 'MSD') {
             $lowercasedDepartment = strtolower($department);
 
             // Generate index page breadcrumb omptions
@@ -843,27 +852,45 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     |--------------------------------------------------------------------------
     */
 
-    public function canAttachNewInvoice(): bool
+    public function canAttachNewProductionInvoice(): bool
     {
-        return $this->canAttachInvoiceOFPrepaymentType()
-            || $this->canAttachInvoiceOfFinalPaymentType()
-            || $this->canAttachInvoiceOfFullPaymentType();
+        return $this->canAttachProductionInvoiceOFPrepaymentType()
+            || $this->canAttachProductionInvoiceOfFinalPaymentType()
+            || $this->canAttachProductionInvoiceOfFullPaymentType();
     }
 
-    public function canAttachInvoiceOFPrepaymentType(): bool
+    public function canAttachProductionInvoiceOFPrepaymentType(): bool
     {
-        return $this->invoices->count() == 0;
+        return $this->invoices
+            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
+            ->count() == 0;
     }
 
-    public function canAttachInvoiceOfFinalPaymentType(): bool
+    public function canAttachProductionInvoiceOfFinalPaymentType(): bool
     {
-        return $this->invoices->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID)->count() > 0
-            && $this->invoices->where('payment_type_id', InvoicePaymentType::FINAL_PAYMENT_ID)->count() == 0;
+        return $this->invoices
+            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
+            ->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID)
+            ->count() > 0
+
+            && $this->invoices
+            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
+            ->where('payment_type_id', InvoicePaymentType::FINAL_PAYMENT_ID)
+            ->count() == 0;
     }
 
-    public function canAttachInvoiceOfFullPaymentType(): bool
+    public function canAttachProductionInvoiceOfFullPaymentType(): bool
     {
-        return $this->invoices->count() == 0;
+        return $this->invoices
+            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
+            ->count() == 0;
+    }
+
+    public function canAttachDeliveryToWarehouseInvoice(): bool
+    {
+        return $this->invoices
+            ->where('type_id', InvoiceType::DELIVERY_TO_WAREHOUSE_TYPE_ID)
+            ->count() == 0;
     }
 
     /**
@@ -1228,6 +1255,8 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
             ['name' => 'Loading confirmed', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'Shipment from manufacturer end date', 'order' => $order++, 'width' => 250, 'visible' => 1],
+
+            ['name' => 'Invoice', 'order' => $order++, 'width' => 124, 'visible' => 1],
 
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],

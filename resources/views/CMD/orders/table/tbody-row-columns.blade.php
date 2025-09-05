@@ -114,22 +114,22 @@
             {{ $record->invoices_count }} {{ __('Invoices') }}
         </x-misc.buttoned-link>
 
-        @if ($record->canAttachNewInvoice())
-            @if ($record->canAttachInvoiceOFPrepaymentType())
+        @if ($record->canAttachNewProductionInvoice())
+            @if ($record->canAttachProductionInvoiceOFPrepaymentType())
                 <a class="main-link"
                     href="{{ route('cmd.invoices.create', ['order_id' => $record->id, 'payment_type_id' => App\Models\InvoicePaymentType::PREPAYMENT_ID]) }}">
                     {{ __('Add prepayment') }}
                 </a>
             @endif
 
-            @if ($record->canAttachInvoiceOfFinalPaymentType())
+            @if ($record->canAttachProductionInvoiceOfFinalPaymentType())
                 <a class="main-link"
                     href="{{ route('cmd.invoices.create', ['order_id' => $record->id, 'payment_type_id' => App\Models\InvoicePaymentType::FINAL_PAYMENT_ID]) }}">
                     {{ __('Add final payment') }}
                 </a>
             @endif
 
-            @if ($record->canAttachInvoiceOfFullPaymentType())
+            @if ($record->canAttachProductionInvoiceOfFullPaymentType())
                 <a class="main-link"
                     href="{{ route('cmd.invoices.create', ['order_id' => $record->id, 'payment_type_id' => App\Models\InvoicePaymentType::FULL_PAYMENT_ID]) }}">
                     {{ __('Add full payment') }}

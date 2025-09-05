@@ -11,6 +11,10 @@
         {{ $record->receive_date->isoformat('DD MMM Y') }}
     @break
 
+    @case('Invoice type')
+        {{ $record->type->name }}
+    @break
+
     @case('Payment type')
         {{ $record->paymentType->name }}
     @break
@@ -45,6 +49,10 @@
         <a class="main-link" href="{{ route('prd.orders.index', ['id[]' => $record->order_id]) }}">
             {{ $record->order->title }}
         </a>
+    @break
+
+    @case('Payment company')
+        {{ $record->payment_company }}
     @break
 
     @case('Manufacturer')

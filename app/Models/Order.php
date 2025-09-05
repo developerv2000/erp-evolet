@@ -106,6 +106,20 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $this->hasMany(Invoice::class)->withTrashed(); // No manual trashing/restoring
     }
 
+    public function productionInvoices()
+    {
+        return $this->hasMany(Invoice::class)
+            ->onlyProductionType()
+            ->withTrashed(); // No manual trashing/restoring
+    }
+
+    public function deliveryToWarehouseInvoices()
+    {
+        return $this->hasMany(Invoice::class)
+            ->onlyDeliveryToWarehouseType()
+            ->withTrashed(); // No manual trashing/restoring
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes
@@ -248,6 +262,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
             'invoices' => function ($invoicesQuery) {
                 $invoicesQuery->with([
+                    'type',
                     'paymentType',
                 ]);
             },
@@ -693,25 +708,25 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $invoiceCount === 0;
     }
 
-    public function canAttachNewInvoice(): bool
+    public function canAttachNewProductionInvoice(): bool
     {
         return $this->is_sent_to_manufacturer
-            && $this->products->contains->canAttachNewInvoice();
+            && $this->products->contains->canAttachNewProductionInvoice();
     }
 
-    public function canAttachInvoiceOFPrepaymentType(): bool
+    public function canAttachProductionInvoiceOFPrepaymentType(): bool
     {
         return $this->invoices->count() == 0;
     }
 
-    public function canAttachInvoiceOfFinalPaymentType(): bool
+    public function canAttachProductionInvoiceOfFinalPaymentType(): bool
     {
-        return $this->products->contains->canAttachInvoiceOfFinalPaymentType();
+        return $this->products->contains->canAttachProductionInvoiceOfFinalPaymentType();
     }
 
-    public function canAttachInvoiceOfFullPaymentType(): bool
+    public function canAttachProductionInvoiceOfFullPaymentType(): bool
     {
-        return $this->products->contains->canAttachInvoiceOfFullPaymentType();
+        return $this->products->contains->canAttachProductionInvoiceOfFullPaymentType();
     }
 
     public static function getDefaultPLPDTableColumnsForUser($user)

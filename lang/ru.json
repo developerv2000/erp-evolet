@@ -330,6 +330,7 @@
     "Invoice": "Инвойс",
     "Invoices": "Инвойсы",
     "File": "Файл",
+    "Invoice type": "Тип инвойса",
     "Payment type": "Тип оплаты",
     "Sent for payment date": "Дата отправки на оплату",
     "Send for payment": "Отправить на оплату",
@@ -400,6 +401,8 @@
     "Start shipment": "Начать отгрузку",
     "End shipment": "Завершить отгрузку",
     "Request sent": "Запрос отправлен",
+    "Payment company": "Платежная компания",
+    "Create invoice": "Создать инвойс",
 
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }
