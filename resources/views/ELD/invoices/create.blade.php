@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => __('Create new') . ' — ' . __('Invoices'),
-    'pageName' => 'cmd-invoices-create',
+    'pageName' => 'eld-invoices-create',
     'mainAutoOverflowed' => false,
 ])
 
@@ -11,9 +11,8 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ...$order->generateBreadcrumbs('CMD'),
-                    ['link' => route('cmd.invoices.index', ['order_id[]' => $order->id]), 'text' => __('Invoices')],
-                    ['link' => null, 'text' => __('Create new record')],
+                    ...$orderProduct->generateBreadcrumbs('ELD'),
+                    ['link' => null, 'text' => __('Create invoice')],
                 ];
             @endphp
             {{-- blade-formatter-enable --}}
@@ -33,6 +32,6 @@
         </div>
 
         {{-- Create form --}}
-        @include('CMD.invoices.partials.create-form')
+        @include('ELD.invoices.partials.create-form')
     </div>
 @endsection

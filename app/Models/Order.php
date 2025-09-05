@@ -113,13 +113,6 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ->withTrashed(); // No manual trashing/restoring
     }
 
-    public function deliveryToWarehouseInvoices()
-    {
-        return $this->hasMany(Invoice::class)
-            ->onlyDeliveryToWarehouseType()
-            ->withTrashed(); // No manual trashing/restoring
-    }
-
     /*
     |--------------------------------------------------------------------------
     | Additional attributes

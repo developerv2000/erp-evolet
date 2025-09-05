@@ -139,15 +139,22 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         )->withTrashedParents()->withTrashed();
     }
 
-    public function invoices()
-    {
-        return $this->belongsToMany(Invoice::class);
-    }
-
     public function productionInvoices()
     {
         return $this->belongsToMany(Invoice::class)
             ->onlyProductionType();
+    }
+
+    public function deliveryToWarehouseInvoice()
+    {
+        return $this->hasOne(Invoice::class)
+            ->onlyDeliveryToWarehouseType();
+    }
+
+    public function exportInvoice()
+    {
+        return $this->hasOne(Invoice::class)
+            ->onlyExportType();
     }
 
     public function serializationType()

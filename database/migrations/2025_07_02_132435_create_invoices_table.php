@@ -14,15 +14,14 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->unsignedMediumInteger('id')->autoIncrement();
 
+            // CMD and ELD part
             $table->unsignedTinyInteger('type_id') // 'Production', 'Delivery to warehouse' or 'Export'
                 ->foreign()
                 ->references('id')
                 ->on('invoice_types');
 
-            // CMD or ELD part
             $table->timestamp('receive_date')->nullable();
             $table->string('pdf');
-            $table->string('payment_company')->nullable(); // only for invoices of 'Delivery to warehouse' and 'Export' type
 
             $table->unsignedMediumInteger('order_id')
                 ->index()
@@ -31,12 +30,22 @@ return new class extends Migration
                 ->on('orders');
 
             $table->unsignedTinyInteger('payment_type_id') // 'Prepayment', 'Final payment' or 'Full payment'.
-                ->index()                                  // Always 'Full payment' for invoices of
-                ->foreign()                                // 'Delivery to warehouse' and 'Export' type
-                ->references('id')
+                ->index()
+                ->foreign()                                // Always 'Full payment' for invoices of
+                ->references('id')                         // 'Delivery to warehouse' and 'Export' types
                 ->on('invoice_payment_types');
 
-            $table->timestamp('sent_for_payment_date')->nullable(); // action (by BDM or ELD)
+            $table->timestamp('sent_for_payment_date')->nullable(); // action (by CMD or ELD)
+
+            // Only ELD part
+            $table->string('payment_company')->nullable(); // only for invoices of 'Delivery to warehouse' and 'Export' types
+
+            $table->unsignedMediumInteger('order_product_id') // only for invoices of 'Delivery to warehouse' and 'Export' types
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('order_products')
+                ->nullable();
 
             // PRD part
             $table->timestamp('accepted_by_financier_date')->nullable();

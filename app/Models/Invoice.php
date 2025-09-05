@@ -90,9 +90,20 @@ class Invoice extends BaseModel implements HasTitle
         return $this->belongsTo(Order::class)->withTrashed();
     }
 
+    /**
+     * Only for invoices of 'Production' type!
+     */
     public function orderProducts()
     {
         return $this->belongsToMany(OrderProduct::class);
+    }
+
+    /**
+     * Only for invoices of 'Delivery to warehouse' and 'Export' types!
+     */
+    public function orderProduct()
+    {
+        return $this->belongsTo(OrderProduct::class);
     }
 
     /*
@@ -364,6 +375,7 @@ class Invoice extends BaseModel implements HasTitle
         $this->uploadFile('pdf', public_path(self::PDF_PATH));
     }
 
+    // PRD part
     public function updateByPRDFromRequest($request)
     {
         $this->update($request->all());
@@ -376,6 +388,25 @@ class Invoice extends BaseModel implements HasTitle
 
         // Upload SWIFT file
         $this->uploadFile('payment_confirmation_document', public_path(self::PAYMENT_CONFIRMATION_DOCUMENT_PATH));
+    }
+
+    // ELD part
+    public static function createByELDFromRequest($request)
+    {
+        $orderProduct = OrderProduct::findorfail($request->input('order_product_id'));
+
+        // Merge invoice type and order
+        $request->merge([
+            'type_id' => InvoiceType::DELIVERY_TO_WAREHOUSE_TYPE_ID,
+            'order_id' => $orderProduct->order_id,
+        ]);
+
+        // Create invoice and attach product
+        $record = self::create($request->all());
+        $record->orderProducts()->attach($orderProduct->id);
+
+        // Upload PDF file
+        $record->uploadFile('pdf', public_path(self::PDF_PATH));
     }
 
     /*

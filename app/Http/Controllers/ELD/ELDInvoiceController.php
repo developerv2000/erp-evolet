@@ -34,9 +34,7 @@ class ELDInvoiceController extends Controller
             abort(404);
         }
 
-        dd($orderProduct);
-
-        return view('eld.invoices.create', compact('orderProduct'));
+        return view('ELD.invoices.create', compact('orderProduct'));
     }
 
     public function store(Request $request)
