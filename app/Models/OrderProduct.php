@@ -185,16 +185,14 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public function getProductionPrepaymentInvoiceAttribute()
     {
-        return $this->invoices
-            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
+        return $this->productionInvoices
             ->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID)
             ->first();
     }
 
     public function getProductionFinalOrFullPaymentInvoiceAttribute()
     {
-        return $this->invoices
-            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
+        return $this->productionInvoices
             ->whereIn('payment_type_id', [
                 InvoicePaymentType::FINAL_PAYMENT_ID,
                 InvoicePaymentType::FULL_PAYMENT_ID,
@@ -252,8 +250,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public function getCanBePreparedForShippingAttribute(): bool
     {
-        return $this->invoices()
-            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
+        return $this->productionInvoices()
             ->whereIn('payment_type_id', [
                 InvoicePaymentType::FULL_PAYMENT_ID,
                 InvoicePaymentType::FINAL_PAYMENT_ID,
@@ -868,36 +865,32 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public function canAttachProductionInvoiceOFPrepaymentType(): bool
     {
-        return $this->invoices
-            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
-            ->count() == 0;
+        return $this->productionInvoices->count() == 0;
     }
 
     public function canAttachProductionInvoiceOfFinalPaymentType(): bool
     {
-        return $this->invoices
-            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
+        return $this->productionInvoices
             ->where('payment_type_id', InvoicePaymentType::PREPAYMENT_ID)
             ->count() > 0
 
-            && $this->invoices
-            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
+            && $this->productionInvoices
             ->where('payment_type_id', InvoicePaymentType::FINAL_PAYMENT_ID)
             ->count() == 0;
     }
 
     public function canAttachProductionInvoiceOfFullPaymentType(): bool
     {
-        return $this->invoices
-            ->where('type_id', InvoiceType::PRODUCTION_TYPE_ID)
-            ->count() == 0;
+        return $this->productionInvoices->count() == 0;
     }
 
     public function canAttachDeliveryToWarehouseInvoice(): bool
     {
-        return $this->invoices
-            ->where('type_id', InvoiceType::DELIVERY_TO_WAREHOUSE_TYPE_ID)
-            ->count() == 0;
+        if ($this->relationLoaded('deliveryToWarehouseInvoice')) {
+            return $this->deliveryToWarehouseInvoice === null;
+        }
+
+        return !$this->deliveryToWarehouseInvoice()->exists();
     }
 
     /**
