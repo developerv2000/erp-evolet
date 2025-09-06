@@ -103,7 +103,8 @@ class Invoice extends BaseModel implements HasTitle
      */
     public function orderProduct()
     {
-        return $this->belongsTo(OrderProduct::class);
+        return $this->belongsTo(OrderProduct::class)
+            ->where('order_id', $this->order_id);
     }
 
     /*
@@ -264,7 +265,7 @@ class Invoice extends BaseModel implements HasTitle
     private static function getFilterConfig(): array
     {
         return [
-            'whereEqual' => ['payment_type_id', 'number'],
+            'whereEqual' => ['payment_type_id', 'number', 'order_product_id'],
             'whereIn' => ['id', 'order_id'],
             'dateRange' => [
                 'receive_date',
@@ -395,15 +396,16 @@ class Invoice extends BaseModel implements HasTitle
     {
         $orderProduct = OrderProduct::findorfail($request->input('order_product_id'));
 
-        // Merge invoice type and order
+        // Merge required attributes
         $request->merge([
             'type_id' => InvoiceType::DELIVERY_TO_WAREHOUSE_TYPE_ID,
+            'payment_type_id' => InvoicePaymentType::FULL_PAYMENT_ID,
             'order_id' => $orderProduct->order_id,
+            'order_product_id' => $orderProduct->id,
         ]);
 
-        // Create invoice and attach product
+        // Create invoice
         $record = self::create($request->all());
-        $record->orderProducts()->attach($orderProduct->id);
 
         // Upload PDF file
         $record->uploadFile('pdf', public_path(self::PDF_PATH));

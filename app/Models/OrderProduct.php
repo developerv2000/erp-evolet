@@ -142,19 +142,22 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     public function productionInvoices()
     {
         return $this->belongsToMany(Invoice::class)
-            ->onlyProductionType();
+            ->onlyProductionType()
+            ->where('order_id', $this->order_id);
     }
 
     public function deliveryToWarehouseInvoice()
     {
         return $this->hasOne(Invoice::class)
-            ->onlyDeliveryToWarehouseType();
+            ->onlyDeliveryToWarehouseType()
+            ->where('order_id', $this->order_id);
     }
 
     public function exportInvoice()
     {
         return $this->hasOne(Invoice::class)
-            ->onlyExportType();
+            ->onlyExportType()
+            ->where('order_id', $this->order_id);
     }
 
     public function serializationType()
@@ -351,7 +354,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         });
 
         static::forceDeleting(function ($record) {
-            $record->invoices()->detach();
+            $record->productionInvoices()->detach();
         });
     }
 
@@ -392,7 +395,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
                     ->withOnlyRequiredSelectsForOrderProduct();
             },
 
-            'invoices' => function ($invoicesQuery) {
+            'productionInvoices' => function ($invoicesQuery) {
                 $invoicesQuery->with([
                     'paymentType',
                 ]);
@@ -523,7 +526,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
             return [
                 ...$this->order->generateBreadcrumbs($department),
-                ['link' => route($lowercasedDepartment . '.order-products.index', ['order_id' => $this->order_id]), 'text' => __('Products')],
+                ['link' => route($lowercasedDepartment . '.order-products.index'), 'text' => __('Products')],
                 ['link' => route($lowercasedDepartment . '.order-products.edit', $this->id), 'text' => $this->title],
             ];
         }
@@ -884,13 +887,19 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return $this->productionInvoices->count() == 0;
     }
 
-    public function canAttachDeliveryToWarehouseInvoice(): bool
+    public function hasDeliveryToWarehouseInvoice(): bool
     {
         if ($this->relationLoaded('deliveryToWarehouseInvoice')) {
-            return $this->deliveryToWarehouseInvoice === null;
+            return $this->deliveryToWarehouseInvoice != null;
         }
 
-        return !$this->deliveryToWarehouseInvoice()->exists();
+        return $this->deliveryToWarehouseInvoice()->exists();
+    }
+
+    public function canAddDeliveryToWarehouseInvoice(): bool
+    {
+        return !$this->hasDeliveryToWarehouseInvoice()
+            && $this->shipment_from_manufacturer_ended;
     }
 
     /**

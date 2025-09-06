@@ -108,9 +108,8 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     public function productionInvoices()
     {
-        return $this->hasMany(Invoice::class)
-            ->onlyProductionType()
-            ->withTrashed(); // No manual trashing/restoring
+        return $this->invoices()
+            ->onlyProductionType();
     }
 
     /*

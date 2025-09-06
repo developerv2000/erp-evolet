@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ELD;
 
 use App\Http\Controllers\Controller;
+use App\Models\Invoice;
 use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 
@@ -30,7 +31,7 @@ class ELDInvoiceController extends Controller
     {
         $orderProduct = OrderProduct::findOrFail($request->input('order_product_id'));
 
-        if (!$orderProduct->canAttachDeliveryToWarehouseInvoice()) {
+        if (!$orderProduct->canAddDeliveryToWarehouseInvoice()) {
             abort(404);
         }
 
@@ -39,15 +40,15 @@ class ELDInvoiceController extends Controller
 
     public function store(Request $request)
     {
-        $order = Order::findOrFail($request->input('order_id'));
+        $orderProduct = OrderProduct::findOrFail($request->input('order_product_id'));
 
-        if (!$order->canAttachNewInvoice()) {
+        if (!$orderProduct->canAddDeliveryToWarehouseInvoice()) {
             abort(404);
         }
 
-        Invoice::createByCMDFromRequest($request);
+        Invoice::createByELDFromRequest($request);
 
-        return to_route('cmd.invoices.index', ['order_id[]' => $request->input('order_id')]);
+        return to_route('eld.invoices.index', ['order_product_id' => $request->input('order_product_id')]);
     }
 
     public function edit(Request $request, Invoice $record)

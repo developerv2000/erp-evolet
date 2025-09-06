@@ -173,7 +173,11 @@
     @break
 
     @case('Invoice')
-        @if ($record->canAttachDeliveryToWarehouseInvoice())
+        @if ($record->hasDeliveryToWarehouseInvoice())
+            <a href="{{ route('eld.invoices.index', ['order_product_id' => $record->id]) }}" class="main-link">
+                {{ $record->deliveryToWarehouseInvoice->title }}
+            </a>
+        @elseif ($record->canAddDeliveryToWarehouseInvoice())
             <a href="{{ route('eld.invoices.create', ['order_product_id' => $record->id]) }}" class="main-link">
                 {{ __('Create invoice') }}
             </a>

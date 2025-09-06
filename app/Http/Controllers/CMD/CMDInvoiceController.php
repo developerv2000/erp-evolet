@@ -41,7 +41,7 @@ class CMDInvoiceController extends Controller
     {
         $order = Order::findOrFail($request->input('order_id'));
 
-        if (!$order->canAttachNewInvoice()) {
+        if (!$order->canAttachNewProductionInvoice()) {
             abort(404);
         }
 
@@ -55,11 +55,11 @@ class CMDInvoiceController extends Controller
                 break;
             case InvoicePaymentType::FINAL_PAYMENT_NAME:
                 // Display toggleable orderProducts list for invoice of FINAL_PAYMENT type
-                $availabeOrderProducts = $order->products->filter(fn($product) => $product->canAttachInvoiceOfFinalPaymentType());
+                $availabeOrderProducts = $order->products->filter(fn($product) => $product->canAttachProductionInvoiceOfFinalPaymentType());
                 break;
             case InvoicePaymentType::FULL_PAYMENT_NAME:
                 // Display toggleable orderProducts list for invoice of FULL_PAYMENT type
-                $availabeOrderProducts = $order->products->filter(fn($product) => $product->canAttachInvoiceOfFullPaymentType());
+                $availabeOrderProducts = $order->products->filter(fn($product) => $product->canAttachProductionInvoiceOfFullPaymentType());
                 break;
         }
 
@@ -70,7 +70,7 @@ class CMDInvoiceController extends Controller
     {
         $order = Order::findOrFail($request->input('order_id'));
 
-        if (!$order->canAttachNewInvoice()) {
+        if (!$order->canAttachNewProductionInvoice()) {
             abort(404);
         }
 
