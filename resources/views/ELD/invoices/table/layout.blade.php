@@ -1,4 +1,4 @@
-<x-tables.template.main-template class="cmd-invoices-table" :records="$records">
+<x-tables.template.main-template class="eld-invoices-table" :records="$records">
     {{-- thead titles --}}
     <x-slot:thead-rows>
         <tr>
@@ -11,7 +11,7 @@
 
             @foreach ($visibleTableColumns as $column)
                 <th width="{{ $column['width'] }}">
-                    @include('CMD.invoices.table.thead-columns')
+                    @include('ELD.invoices.table.thead-columns')
                 </th>
             @endforeach
         </tr>
@@ -25,12 +25,12 @@
 
                 @if ($trashedRecords)
                     <td>{{ $record->deleted_at->isoFormat('DD MMM Y') }}</td>
-                    <td><x-tables.partials.td.restore :form-action="route('cmd.invoices.restore')" :record-id="$record->id" /></td>
+                    <td><x-tables.partials.td.restore :form-action="route('eld.invoices.restore')" :record-id="$record->id" /></td>
                 @endif
 
                 @foreach ($visibleTableColumns as $column)
                     <td>
-                        @include('CMD.invoices.table.tbody-row-columns')
+                        @include('ELD.invoices.table.tbody-row-columns')
                     </td>
                 @endforeach
             </tr>

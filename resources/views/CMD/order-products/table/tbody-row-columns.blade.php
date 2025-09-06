@@ -23,7 +23,7 @@
         @foreach ($record->productionInvoices as $invoice)
             <a
                 class="main-link"
-                href="{{ route('cmd.invoices.index', ['order_product_id' => $record->id, 'payment_type_id' => $invoice->paymentType->id]) }}">
+                href="{{ route('cmd.invoices.index', ['order_relation_product_id' => $record->id, 'payment_type_id' => $invoice->paymentType->id]) }}">
                 {{ $invoice->paymentType->name }}
             </a>
         @endforeach

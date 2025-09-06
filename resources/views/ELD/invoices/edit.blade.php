@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'pageTitle' => $record->title . ' — ' . __('Invoices'),
-    'pageName' => 'cmd-invoices-edit',
+    'pageName' => 'eld-invoices-edit',
     'mainAutoOverflowed' => false,
 ])
 
@@ -8,7 +8,7 @@
     <div class="main-box">
         {{-- Toolbar --}}
         <div class="toolbar">
-            <x-layouts.breadcrumbs :crumbs="$record->generateBreadcrumbs('CMD')" />
+            <x-layouts.breadcrumbs :crumbs="$record->generateBreadcrumbs('ELD')" />
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
@@ -23,7 +23,7 @@
         </div>
 
         {{-- Edit form --}}
-        @include('CMD.invoices.partials.edit-form')
+        @include('ELD.invoices.partials.edit-form')
     </div>
 
 @endsection

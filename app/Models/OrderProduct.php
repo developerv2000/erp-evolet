@@ -142,8 +142,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     public function productionInvoices()
     {
         return $this->belongsToMany(Invoice::class)
-            ->onlyProductionType()
-            ->where('order_id', $this->order_id);
+            ->onlyProductionType();
     }
 
     public function deliveryToWarehouseInvoice()

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\ELD;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\OrderProduct;
+use App\Models\User;
+use App\Support\Helpers\UrlHelper;
 use Illuminate\Http\Request;
 
 class ELDInvoiceController extends Controller
@@ -12,19 +14,19 @@ class ELDInvoiceController extends Controller
     public function index(Request $request)
     {
         // Preapare request for valid model querying
-        Invoice::addDefaultCMDQueryParamsToRequest($request);
+        Invoice::addDefaultELDQueryParamsToRequest($request);
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
-        $query = Invoice::onlyProductionType()->withBasicRelations()->withBasicRelationCounts();
+        $query = Invoice::onlyDeliveryToWarehouseType()->withBasicRelations()->withBasicRelationCounts();
         $filteredQuery = Invoice::filterQueryForRequest($query, $request);
         $records = Invoice::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
         // Get all and only visible table columns
-        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Invoice::SETTINGS_CMD_TABLE_COLUMNS_KEY);
+        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Invoice::SETTINGS_ELD_TABLE_COLUMNS_KEY);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('CMD.invoices.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+        return view('ELD.invoices.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
     }
 
     public function create(Request $request)
@@ -53,30 +55,12 @@ class ELDInvoiceController extends Controller
 
     public function edit(Request $request, Invoice $record)
     {
-        // Get available orderProducts for toggling based on payment type
-        switch ($record->payment_type_id) {
-            case InvoicePaymentType::PREPAYMENT_ID:
-                // Display all orderProducts as 'readonly' for invoice of PREPAYMENT type
-                $availableOrderProducts = $record->orderProducts;
-                break;
-            case InvoicePaymentType::FINAL_PAYMENT_ID:
-                // Display toggleable orderProducts list for invoice of FINAL_PAYMENT type.
-                // Concat attached invoice products and order products which can also be attached.
-                $availableOrderProducts = $record->orderProducts->concat($record->order->products->filter(fn(OrderProduct $product) => $product->canAttachProductionInvoiceOfFinalPaymentType()));
-                break;
-            case InvoicePaymentType::FULL_PAYMENT_ID:
-                // Display toggleable orderProducts list for invoice of FULL_PAYMENT type.
-                // Concat attached invoice products and order products which can also be attached.
-                $availableOrderProducts = $record->orderProducts->concat($record->order->products->filter(fn(OrderProduct $product) => $product->canAttachProductionInvoiceOfFullPaymentType()));
-                break;
-        }
-
-        return view('CMD.invoices.edit', compact('record', 'availableOrderProducts'));
+        return view('ELD.invoices.edit', compact('record'));
     }
 
     public function update(Request $request, Invoice $record)
     {
-        $record->updateByCMDFromRequest($request);
+        $record->updateByELDFromRequest($request);
 
         return redirect($request->input('previous_url'));
     }

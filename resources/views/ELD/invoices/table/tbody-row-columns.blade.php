@@ -1,6 +1,6 @@
 @switch($column['name'])
     @case('Edit')
-        <x-tables.partials.td.edit :link="route('cmd.invoices.edit', $record->id)" />
+        <x-tables.partials.td.edit :link="route('eld.invoices.edit', $record->id)" />
     @break
 
     @case('ID')
@@ -11,12 +11,8 @@
         {{ $record->receive_date->isoformat('DD MMM Y') }}
     @break
 
-    @case('Payment type')
-        {{ $record->paymentType->name }}
-    @break
-
-    @case('Products')
-        {{ $record->order_products_count }}
+    @case('Payment company')
+        {{ $record->payment_company }}
     @break
 
     @case('Payment completed')
@@ -46,9 +42,7 @@
     @break
 
     @case('Order')
-        <a class="main-link" href="{{ route('cmd.orders.index', ['id[]' => $record->order_id]) }}">
-            {{ $record->order->title }}
-        </a>
+        {{ $record->order->title }}
     @break
 
     @case('Manufacturer')

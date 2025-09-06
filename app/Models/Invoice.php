@@ -289,7 +289,7 @@ class Invoice extends BaseModel implements HasTitle
             'relationEqualAmbiguous' => [
                 [
                     'name' => 'orderProducts',
-                    'attribute' => 'order_product_id',
+                    'attribute' => 'order_relation_product_id',
                     'ambiguousAttribute' => 'order_products.id',
                 ],
             ],
@@ -329,6 +329,16 @@ class Invoice extends BaseModel implements HasTitle
             'DEFAULT_PLPD_ORDER_BY',
             'DEFAULT_PLPD_ORDER_TYPE',
             'DEFAULT_PLPD_PAGINATION_LIMIT',
+        );
+    }
+
+    public static function addDefaultELDQueryParamsToRequest(Request $request)
+    {
+        self::addDefaultQueryParamsToRequest(
+            $request,
+            'DEFAULT_ELD_ORDER_BY',
+            'DEFAULT_ELD_ORDER_TYPE',
+            'DEFAULT_ELD_PAGINATION_LIMIT',
         );
     }
 
@@ -409,6 +419,14 @@ class Invoice extends BaseModel implements HasTitle
 
         // Upload PDF file
         $record->uploadFile('pdf', public_path(self::PDF_PATH));
+    }
+
+    public function updateByELDFromRequest($request)
+    {
+        $this->update($request->all());
+
+        // Upload PDF file
+        $this->uploadFile('pdf', public_path(self::PDF_PATH));
     }
 
     /*
@@ -647,11 +665,19 @@ class Invoice extends BaseModel implements HasTitle
         $order = 1;
         $columns = array();
 
+        if (Gate::forUser($user)->allows('edit-ELD-invoices')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
         array_push(
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
-            ['name' => 'Payment type', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Invoice №', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Payment company', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Sent for payment date', 'order' => $order++, 'width' => 198, 'visible' => 1],
             ['name' => 'Payment completed', 'order' => $order++, 'width' => 158, 'visible' => 1],
             ['name' => 'PDF', 'order' => $order++, 'width' => 144, 'visible' => 100],
@@ -663,7 +689,6 @@ class Invoice extends BaseModel implements HasTitle
             ['name' => 'Accepted date', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Payment request date', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'Payment date', 'order' => $order++, 'width' => 122, 'visible' => 1],
-            ['name' => 'Invoice №', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'SWIFT', 'order' => $order++, 'width' => 144, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
