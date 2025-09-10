@@ -11,8 +11,8 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('prd.orders.index'), 'text' => __('Orders')],
                     ['link' => url()->current(), 'text' => __('Invoices')],
+                    ['link' => null, 'text' => __($invoiceType->name)],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->count()]
                 ];
             @endphp

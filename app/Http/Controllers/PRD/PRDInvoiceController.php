@@ -4,28 +4,41 @@ namespace App\Http\Controllers\PRD;
 
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
+use App\Models\InvoiceType;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
 use Illuminate\Http\Request;
 
 class PRDInvoiceController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $invoiceTypeName)
     {
         // Preapare request for valid model querying
         Invoice::addDefaultPRDQueryParamsToRequest($request);
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
-        // Get finalized records paginated
+        // Prepare query
         $query = Invoice::onlySentForPayment()->withBasicRelations();
+
+        // Filter invoice type
+        $invoiceType = InvoiceType::where('name', $invoiceTypeName)->first();
+
+        // Get finalized records paginated
+        $query->where('type_id', $invoiceType->id);
         $filteredQuery = Invoice::filterQueryForRequest($query, $request);
         $records = Invoice::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
         // Get all and only visible table columns
-        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey(Invoice::SETTINGS_PRD_TABLE_COLUMNS_KEY);
+        $settingsKey = match ($invoiceType->name) {
+            InvoiceType::PRODUCTION_TYPE_NAME => Invoice::SETTINGS_PRD_PRODUCTION_TABLE_COLUMNS_KEY,
+            InvoiceType::DELIVERY_TO_WAREHOUSE_TYPE_NAME => Invoice::SETTINGS_PRD_DELIVERY_TO_WAREHOUSE_TABLE_COLUMNS_KEY,
+            InvoiceType::EXPORT_TYPE_NAME => Invoice::SETTINGS_PRD_EXPORT_TABLE_COLUMNS_KEY,
+        };
+
+        $allTableColumns = $request->user()->collectTableColumnsBySettingsKey($settingsKey);
         $visibleTableColumns = User::filterOnlyVisibleColumns($allTableColumns);
 
-        return view('PRD.invoices.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns'));
+        return view('PRD.invoices.index', compact('request', 'records', 'allTableColumns', 'visibleTableColumns', 'invoiceType'));
     }
 
     public function edit(Request $request, Invoice $record)

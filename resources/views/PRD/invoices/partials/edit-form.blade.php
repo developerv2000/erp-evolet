@@ -30,10 +30,23 @@
                 type="file"
                 accept=".pdf" />
         </div>
+
+        @if ($record->type_id == App\Models\InvoiceType::DELIVERY_TO_WAREHOUSE_TYPE_ID)
+            <div class="form__row">
+                <x-form.inputs.record-field-input
+                    labelText="Payment company"
+                    field="payment_company"
+                    :model="$record" />
+
+                <div class="form-group"></div>
+            </div>
+        @endif
     </div>
 
-    <x-misc.invoices-toggleable-order-products-list
-        :invoice="$record"
-        :available-order-products="$record->orderProducts"
-        :disabled="true" />
+    @if ($record->type_id == App\Models\InvoiceType::PRODUCTION_TYPE_ID)
+        <x-misc.invoices-toggleable-order-products-list
+            :invoice="$record"
+            :available-order-products="$record->orderProducts"
+            :disabled="true" />
+    @endif
 </x-form-templates.edit-template>

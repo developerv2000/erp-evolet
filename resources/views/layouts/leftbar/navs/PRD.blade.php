@@ -8,12 +8,43 @@
                 <a
                     @class([
                         'leftbar__nav-link',
-                        'leftbar__nav-link--active' => request()->routeIs('prd.invoices.*'),
+                        'leftbar__nav-link--active' =>
+                            request()->routeIs('prd.invoices.index') &&
+                            request()->route('invoiceType') ==
+                                App\Models\InvoiceType::PRODUCTION_TYPE_NAME,
                     ])
-                    href="{{ route('prd.invoices.index') }}">
+                    href="{{ route('prd.invoices.index', App\Models\InvoiceType::PRODUCTION_TYPE_NAME) }}">
 
                     <x-misc.material-symbol class="leftbar__nav-link-icon" icon="receipt_long" />
-                    <span class="leftbar__nav-link-text">{{ __('Invoices') }}</span>
+                    <span class="leftbar__nav-link-text">{{ __('Production') }}</span>
+                </a>
+
+                <a
+                    @class([
+                        'leftbar__nav-link',
+                        'leftbar__nav-link--active' =>
+                            request()->routeIs('prd.invoices.index') &&
+                            request()->route('invoiceType') ==
+                                App\Models\InvoiceType::DELIVERY_TO_WAREHOUSE_TYPE_NAME,
+                    ])
+                    href="{{ route('prd.invoices.index', App\Models\InvoiceType::DELIVERY_TO_WAREHOUSE_TYPE_NAME) }}">
+
+                    <x-misc.material-symbol class="leftbar__nav-link-icon" icon="receipt_long" />
+                    <span class="leftbar__nav-link-text">{{ __('Delivery to warehouse') }}</span>
+                </a>
+
+                <a
+                    @class([
+                        'leftbar__nav-link',
+                        'leftbar__nav-link--active' =>
+                            request()->routeIs('prd.invoices.index') &&
+                            request()->route('invoiceType') ==
+                                App\Models\InvoiceType::EXPORT_TYPE_NAME,
+                    ])
+                    href="{{ route('prd.invoices.index', App\Models\InvoiceType::EXPORT_TYPE_NAME) }}">
+
+                    <x-misc.material-symbol class="leftbar__nav-link-icon" icon="receipt_long" />
+                    <span class="leftbar__nav-link-text">{{ __('Export') }}</span>
                 </a>
             @endcan
 

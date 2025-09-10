@@ -35,7 +35,9 @@ class Invoice extends BaseModel implements HasTitle
     const DEFAULT_CMD_PAGINATION_LIMIT = 50;
 
     // PRD
-    const SETTINGS_PRD_TABLE_COLUMNS_KEY = 'PRD_invoices_table_columns';
+    const SETTINGS_PRD_PRODUCTION_TABLE_COLUMNS_KEY = 'PRD_production_invoices_table_columns';
+    const SETTINGS_PRD_DELIVERY_TO_WAREHOUSE_TABLE_COLUMNS_KEY = 'PRD_delivery_to_warehouse_invoices_table_columns';
+    const SETTINGS_PRD_EXPORT_TABLE_COLUMNS_KEY = 'PRD_export_invoices_table_columns';
     const DEFAULT_PRD_ORDER_BY = 'updated_at';
     const DEFAULT_PRD_ORDER_TYPE = 'desc';
     const DEFAULT_PRD_PAGINATION_LIMIT = 50;
@@ -219,6 +221,8 @@ class Invoice extends BaseModel implements HasTitle
     /**
      * Implement method defined in BaseModel abstract class.
      *
+     * Special index page for 'PRD'.
+     *
      * Used by 'PLPD', 'CMD' and 'PRD' departments.
      */
     public function generateBreadcrumbs($department = null): array
@@ -229,7 +233,7 @@ class Invoice extends BaseModel implements HasTitle
 
             return [
                 ...$this->order->generateBreadcrumbs($department),
-                ['link' => route($lowercasedDepartment . '.invoices.index', ['order_id[]' => $this->order_id]), 'text' => __('Invoices')],
+                ['link' => $department == 'PRD' ? null : route($lowercasedDepartment . '.invoices.index', ['order_id[]' => $this->order_id]), 'text' => __('Invoices')],
                 ['link' => route($lowercasedDepartment . '.invoices.edit', $this->id), 'text' => $this->title],
             ];
         }
@@ -577,7 +581,7 @@ class Invoice extends BaseModel implements HasTitle
         return $columns;
     }
 
-    public static function getDefaultPRDTableColumnsForUser($user)
+    public static function getDefaultPRDProductionTableColumnsForUser($user)
     {
         if (Gate::forUser($user)->denies('view-PRD-invoices')) {
             return null;
@@ -597,14 +601,12 @@ class Invoice extends BaseModel implements HasTitle
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
-            ['name' => 'Invoice type', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Payment type', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Sent for payment date', 'order' => $order++, 'width' => 198, 'visible' => 1],
             ['name' => 'Payment completed', 'order' => $order++, 'width' => 158, 'visible' => 1],
             ['name' => 'PDF', 'order' => $order++, 'width' => 144, 'visible' => 100],
 
             ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
-            ['name' => 'Payment company', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
 
@@ -612,6 +614,90 @@ class Invoice extends BaseModel implements HasTitle
             ['name' => 'Payment request date', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'Payment date', 'order' => $order++, 'width' => 122, 'visible' => 1],
             ['name' => 'Invoice №', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'SWIFT', 'order' => $order++, 'width' => 144, 'visible' => 1],
+
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
+        );
+
+        return $columns;
+    }
+
+    public static function getDefaultPRDDeliveryToWarehouseTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-PRD-invoices')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        if (Gate::forUser($user)->allows('edit-PRD-invoices')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
+            ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Invoice №', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Payment company', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Sent for payment date', 'order' => $order++, 'width' => 198, 'visible' => 1],
+            ['name' => 'Payment completed', 'order' => $order++, 'width' => 158, 'visible' => 1],
+            ['name' => 'PDF', 'order' => $order++, 'width' => 144, 'visible' => 100],
+
+            ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+
+            ['name' => 'Accepted date', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Payment request date', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Payment date', 'order' => $order++, 'width' => 122, 'visible' => 1],
+            ['name' => 'SWIFT', 'order' => $order++, 'width' => 144, 'visible' => 1],
+
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
+        );
+
+        return $columns;
+    }
+
+    public static function getDefaultPRDExportTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-PRD-invoices')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        if (Gate::forUser($user)->allows('edit-PRD-invoices')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
+            ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
+            ['name' => 'Invoice №', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Payment company', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Sent for payment date', 'order' => $order++, 'width' => 198, 'visible' => 1],
+            ['name' => 'Payment completed', 'order' => $order++, 'width' => 158, 'visible' => 1],
+            ['name' => 'PDF', 'order' => $order++, 'width' => 144, 'visible' => 100],
+
+            ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+
+            ['name' => 'Accepted date', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Payment request date', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Payment date', 'order' => $order++, 'width' => 122, 'visible' => 1],
             ['name' => 'SWIFT', 'order' => $order++, 'width' => 144, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],

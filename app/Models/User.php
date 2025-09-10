@@ -497,9 +497,13 @@ class User extends Authenticatable
     {
         $this->refresh();
         $settings = $this->settings;
+
+        $settings[Invoice::SETTINGS_PRD_PRODUCTION_TABLE_COLUMNS_KEY] = Invoice::getDefaultPRDProductionTableColumnsForUser($this);
+        $settings[Invoice::SETTINGS_PRD_DELIVERY_TO_WAREHOUSE_TABLE_COLUMNS_KEY] = Invoice::getDefaultPRDDeliveryToWarehouseTableColumnsForUser($this);
+        $settings[Invoice::SETTINGS_PRD_EXPORT_TABLE_COLUMNS_KEY] = Invoice::getDefaultPRDExportTableColumnsForUser($this);
+
         $settings[Order::SETTINGS_PRD_TABLE_COLUMNS_KEY] = Order::getDefaultPRDTableColumnsForUser($this);
         $settings[OrderProduct::SETTINGS_PRD_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultPRDTableColumnsForUser($this);
-        $settings[Invoice::SETTINGS_PRD_TABLE_COLUMNS_KEY] = Invoice::getDefaultPRDTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -571,9 +575,12 @@ class User extends Authenticatable
 
             'DD_order_products_table_columns' => OrderProduct::getDefaultDDTableColumnsForUser($this),
 
+            'PRD_production_invoices_table_columns' => Invoice::getDefaultPRDProductionTableColumnsForUser($this),
+            'PRD_delivery_to_warehouse_invoices_table_columns' => Invoice::getDefaultPRDDeliveryToWarehouseTableColumnsForUser($this),
+            'PRD_export_invoices_table_columns' => Invoice::getDefaultPRDExportTableColumnsForUser($this),
+
             'PRD_orders_table_columns' => Order::getDefaultPRDTableColumnsForUser($this),
             'PRD_order_products_table_columns' => OrderProduct::getDefaultPRDTableColumnsForUser($this),
-            'PRD_invoices_table_columns' => Invoice::getDefaultPRDTableColumnsForUser($this),
 
             'MSD_order_products_serialized_by_manufacturer_table_columns' =>
             OrderProduct::getDefaultMSDSerializedByManufacturerTableColumnsForUser($this),

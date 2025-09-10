@@ -403,6 +403,8 @@
     "Request sent": "Запрос отправлен",
     "Payment company": "Платежная компания",
     "Create invoice": "Создать инвойс",
+    "Production": "Производство",
+    "Delivery to warehouse": "Доставка в склад",
 
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }
