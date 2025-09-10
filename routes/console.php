@@ -29,3 +29,8 @@ Artisan::command('users:reset-specific-table-settings-for-all {key}', function (
         $this->error("Error: " . $e->getMessage());
     }
 })->describe('Reset a specific table column setting for all users');
+
+Artisan::command('users:delete-unnecessary-images', function () {
+    $deleted = User::deleteUnnecessaryImages();
+    $this->info("Removed {$deleted} unnecessary images!");
+})->purpose("Delete unnecessary user images");

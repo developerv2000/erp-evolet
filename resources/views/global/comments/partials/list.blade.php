@@ -8,8 +8,8 @@
                     <div class="comments-list__header">
                         <x-misc.ava
                             class="comments-list__ava"
-                            image="{{ $comment->user?->photo_asset_url }}"
-                            title="{{ $comment->user? $comment->user->name : __('Deleted user') }}"
+                            image="{{ $comment->user?->photo_asset_url ?? $DeletedUserImage }}"
+                            title="{{ $comment->user ? $comment->user->name : __('Deleted user') }}"
                             description="{{ $comment->created_at->diffForHumans() }}">
                         </x-misc.ava>
 

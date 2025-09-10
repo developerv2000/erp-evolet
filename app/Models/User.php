@@ -15,6 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
@@ -40,6 +41,7 @@ class User extends Authenticatable
     const DEFAULT_COLLAPSED_LEFTBAR = false;
     const DEFAULT_LOCALE = 'ru';
 
+    const DELETED_USER_PHOTO = 'deleted-user.png';
     const PHOTO_PATH = 'img/users';
     const PHOTO_WIDTH = 400;
     const PHOTO_HEIGHT = 400;
@@ -807,6 +809,38 @@ class User extends Authenticatable
     {
         $this->uploadFile('photo', public_path(self::PHOTO_PATH), $this->name);
         FileHelper::resizeImage($this->photo_file_path, self::PHOTO_WIDTH, self::PHOTO_HEIGHT);
+    }
+
+    public static function deleteUnnecessaryImages(): int
+    {
+        $directory = public_path(self::PHOTO_PATH);
+        $deleted = 0;
+
+        // get all files from the directory
+        $files = File::files($directory);
+
+        // Get all photos that are actually used in the database
+        $allUserPhotos = [
+            ...self::pluck('photo')->toArray(),
+            self::DELETED_USER_PHOTO,
+        ];
+
+        foreach ($files as $file) {
+            // get only filename for comparison
+            $filename = $file->getFilename();
+
+            if (!in_array($filename, $allUserPhotos)) {
+                File::delete($file->getPathname());
+                $deleted++;
+            }
+        }
+
+        return $deleted;
+    }
+
+    public static function getDeletedUserImage(): string
+    {
+        return asset('img/users/' . self::DELETED_USER_PHOTO);
     }
 
     /**
