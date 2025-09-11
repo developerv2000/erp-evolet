@@ -6,11 +6,11 @@
 
     // PRD
     if ($user->can('view-PRD-invoices')) {
-        $departmentRoute = route('prd.invoices.index', ['id[]' => $record->data['invoice_id']]);
+        $departmentRoute = route('prd.invoices.index', ['invoiceType' => App\Models\InvoiceType::PRODUCTION_TYPE_NAME, 'id[]' => $record->data['invoice_id']]);
     }
     // PLPD
     elseif ($user->can('view-PLPD-invoices')) {
-        $departmentRoute = route('plpd.invoices.index', ['id[]' => $record->data['invoice_id']]);
+        $departmentRoute = route('plpd.invoices.index', ['invoiceType' => App\Models\InvoiceType::PRODUCTION_TYPE_NAME, 'id[]' => $record->data['invoice_id']]);
     }
 @endphp
 
