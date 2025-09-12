@@ -652,8 +652,6 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
 
     /**
      * Implement method declared in ExportsProductSelection Interface.
-     *
-     * No eager loads are required for the product selection export.
      */
     public function scopeWithRelationsForProductSelection($query)
     {
@@ -661,11 +659,17 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             'product' => function ($productQuery) {
                 $productQuery->withRelationsForProductSelection();
             },
+            'status',
+            'currency',
         ])
             ->select(
                 'processes.id',
                 'product_id',
                 'country_id',
+                'status_id',
+                'currency_id',
+                'agreed_price',
+                'manufacturer_first_offered_price',
             );
     }
 

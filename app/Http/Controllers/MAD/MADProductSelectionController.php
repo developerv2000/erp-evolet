@@ -35,8 +35,8 @@ class MADProductSelectionController extends Controller
         'MM',
     ];
 
-    const FIRST_DEFAULT_COUNTRY_COLUMN_LETTER = 'J';
-    const LAST_DEFAULT_COUNTRY_COLUMN_LETTER = 'X';
+    const FIRST_DEFAULT_COUNTRY_COLUMN_LETTER = 'L';
+    const LAST_DEFAULT_COUNTRY_COLUMN_LETTER = 'Z';
     const TITLES_ROW = 2;
     const RECORDS_INSERT_START_ROW = 4;
 
@@ -155,29 +155,46 @@ class MADProductSelectionController extends Controller
         // Join default and additional countries
         $allCountries = collect(self::DEFAULT_COUNTRIES)->merge($additionalCountries);
 
+        // Get model basename
+        $modelBaseName = basename($model);
+
+        // Start records insert
         $row = self::RECORDS_INSERT_START_ROW;
         $recordsCounter = 1;
 
+        // Loop through records
         foreach ($records as $record) {
+            // Begin from 'A' column
             $columnIndex = 1;
 
+            // Insert record counter
             $sheet->setCellValue([$columnIndex++, $row], $recordsCounter);
 
+            // Get record column values, which are different for 'Product' and 'Process' models:
+            // Form, Dosage, Pack, MOQ, Shelf life, Price, Target price, Agreed price, Currency
             $columnValues = self::getRecordColumnValues($record, $model);
+
+            // Insert record column values (from 'B' to 'K')
             foreach ($columnValues as $value) {
                 $sheet->setCellValue([$columnIndex++, $row], $value);
             }
 
+            // Initialize dependencies
             $firstCountryColumnLetter = self::FIRST_DEFAULT_COUNTRY_COLUMN_LETTER;  // Reset value for each row
             $firstCountryColumnIndex = Coordinate::columnIndexFromString($firstCountryColumnLetter);
-            $countryColumnIndexCounter = $firstCountryColumnIndex; // used only for looping
+            $countryColumnIndexCounter = $firstCountryColumnIndex; // Used only for looping
 
+            // Loop through all countries
             foreach ($allCountries as $country) {
+                // Get country cell index (like 4L, 4M, etc) and its style
                 $countryCellIndex = [$countryColumnIndexCounter, $row];
                 $cellStyle = $sheet->getCell($countryCellIndex)->getStyle();
 
+                // Mark country as matched and highlight background color
                 if ($record->loaded_matched_product_searches->contains('country.code', $country)) {
-                    $sheet->setCellValue($countryCellIndex, '1');
+                    // Set 1 for 'Product' and status name for 'Process' models
+                    $countryValue = $modelBaseName == 'Product' ? 1 : $record->status->name;
+                    $sheet->setCellValue($countryCellIndex, $countryValue);
 
                     // Update cell styles
                     $cellStyle->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
@@ -187,11 +204,11 @@ class MADProductSelectionController extends Controller
                     $cellStyle->getFill()->getStartColor()->setARGB('FFFFFF');
                 }
 
-                $countryColumnIndexCounter++;
+                $countryColumnIndexCounter++; // Move to the next country
             }
 
-            $row++;
-            $recordsCounter++;
+            $row++; // Move to the next row
+            $recordsCounter++; // Increment record counter
             $sheet->insertNewRowBefore($row, 1);  // Insert new rows to escape rewriting default countries list
         }
 
@@ -220,6 +237,10 @@ class MADProductSelectionController extends Controller
                     $record->product->pack,
                     $record->product->moq,
                     $record->product->shelfLife->name,
+                    $record->manufacturer_first_offered_price,
+                    null, // Skip 'Target price'
+                    $record->agreed_price,
+                    $record->currency?->name,
                 ];
         }
     }
