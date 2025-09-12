@@ -661,6 +661,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
             },
             'status',
             'currency',
+            'searchCountry',
         ])
             ->select(
                 'processes.id',

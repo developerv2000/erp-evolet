@@ -42,7 +42,8 @@ class MADProductSelectionController extends Controller
 
     public function exportAsExcel(Request $request)
     {
-        $model = ModelHelper::addFullNamespaceToModelBasename($request->input('model'));
+        $modelBaseName = $request->input('model');
+        $model = ModelHelper::addFullNamespaceToModelBasename($modelBaseName);
 
         // Preapare request for valid model querying
         $model::addRefererQueryParamsToRequest($request);
@@ -60,13 +61,13 @@ class MADProductSelectionController extends Controller
         $finalizedQuery = $model::finalizeQueryForRequest($filteredQuery, $request, 'query');
 
         // Generate excel file
-        $filepath = self::generateExcelFileFromQuery($finalizedQuery, $model);
+        $filepath = self::generateExcelFileFromQuery($finalizedQuery, $model, $modelBaseName);
 
         // Return download response
         return response()->download($filepath);
     }
 
-    private static function generateExcelFileFromQuery($query, $model)
+    private static function generateExcelFileFromQuery($query, $model, $modelBaseName)
     {
         // Load Excel template
         $templatePath = storage_path(self::STORAGE_PATH_OF_EXCEL_TEMPLATE_FILE_FOR_EXPORT);
@@ -79,14 +80,22 @@ class MADProductSelectionController extends Controller
             $records = $records->merge($chunked);
         });
 
-        // Prepare records before export
-        self::loadRecordsMatchedProductSearches($records);
+        // Prepare 'Product' records before export
+        if ($modelBaseName == 'Product') {
+            self::loadProductsMatchedProductSearches($records);
+            $uniqueRecords = $records;
+        }
+
+        // Get only unique records by 'product_id' for 'Process' model
+        if ($modelBaseName == 'Process') {
+            $uniqueRecords = $records->unique('product_id');
+        }
 
         // Get additional country names
-        $additionalCountries = self::insertAdditionalCountriesIntoSheet($sheet, $records);
+        $additionalCountries = self::insertAdditionalCountriesIntoSheet($sheet, $records, $modelBaseName);
 
         // insert records into sheet
-        self::fillSheetWithRecords($sheet, $records, $model, $additionalCountries);
+        self::fillSheetWithRecords($sheet, $records, $uniqueRecords, $model, $modelBaseName, $additionalCountries);
 
         // Save modified spreadsheet
         $filepath = self::saveSpreadsheet($spreadsheet);
@@ -94,7 +103,7 @@ class MADProductSelectionController extends Controller
         return $filepath;
     }
 
-    private static function loadRecordsMatchedProductSearches($records)
+    private static function loadProductsMatchedProductSearches($records)
     {
         // Append matched ProductSearch`s manually, so it won`t load many times.
         // Append only active searches, skipping "canceled" ones.
@@ -109,9 +118,9 @@ class MADProductSelectionController extends Controller
         });
     }
 
-    private static function insertAdditionalCountriesIntoSheet($sheet, $records)
+    private static function insertAdditionalCountriesIntoSheet($sheet, $records, $modelBaseName)
     {
-        $additionalCountries = self::getAdditionalCountries($records);
+        $additionalCountries = self::getAdditionalCountries($records, $modelBaseName);
 
         // insert additional country titles between last default country and ZONE 4B columns
         $lastCountryColumnLetter = self::LAST_DEFAULT_COUNTRY_COLUMN_LETTER;
@@ -139,10 +148,12 @@ class MADProductSelectionController extends Controller
         return $additionalCountries;
     }
 
-    private static function getAdditionalCountries($records)
+    private static function getAdditionalCountries($records, $modelBaseName)
     {
         // Collect unique additional countries
-        $uniqueCountries = $records->flatMap->loaded_matched_product_searches->pluck('country.code')->unique();
+        $uniqueCountries = $modelBaseName == 'Product'
+            ? $records->flatMap->loaded_matched_product_searches->pluck('country.code')->unique()
+            : $records->pluck('searchCountry.code')->unique(); // Else if 'Process'
 
         // Remove countries which already present in default countries
         $additionalCountries = $uniqueCountries->diff(self::DEFAULT_COUNTRIES);
@@ -150,20 +161,17 @@ class MADProductSelectionController extends Controller
         return $additionalCountries;
     }
 
-    private static function fillSheetWithRecords($sheet, $records, $model, $additionalCountries)
+    private static function fillSheetWithRecords($sheet, $records, $uniqueRecords, $model, $modelBaseName, $additionalCountries)
     {
         // Join default and additional countries
         $allCountries = collect(self::DEFAULT_COUNTRIES)->merge($additionalCountries);
-
-        // Get model basename
-        $modelBaseName = basename($model);
 
         // Start records insert
         $row = self::RECORDS_INSERT_START_ROW;
         $recordsCounter = 1;
 
         // Loop through records
-        foreach ($records as $record) {
+        foreach ($uniqueRecords as $record) {
             // Begin from 'A' column
             $columnIndex = 1;
 
@@ -189,11 +197,26 @@ class MADProductSelectionController extends Controller
                 // Get country cell index (like 4L, 4M, etc) and its style
                 $countryCellIndex = [$countryColumnIndexCounter, $row];
                 $cellStyle = $sheet->getCell($countryCellIndex)->getStyle();
+                $countryValue = null;
 
                 // Mark country as matched and highlight background color
-                if ($record->loaded_matched_product_searches->contains('country.code', $country)) {
+                if ($modelBaseName == 'Product') {
+                    if ($record->loaded_matched_product_searches->contains('country.code', $country)) {
+                        $countryValue = 1;
+                    }
+                } else if ($modelBaseName == 'Process') {
+                    $matched = $records
+                        ->where('product_id', $record->product_id)
+                        ->where('searchCountry.code', $country)
+                        ->first();
+
+                    if ($matched) {
+                        $countryValue = $matched->status->name;
+                    }
+                }
+
+                if ($countryValue) {
                     // Set 1 for 'Product' and status name for 'Process' models
-                    $countryValue = $modelBaseName == 'Product' ? 1 : $record->status->name;
                     $sheet->setCellValue($countryCellIndex, $countryValue);
 
                     // Update cell styles
