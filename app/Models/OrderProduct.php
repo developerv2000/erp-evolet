@@ -78,7 +78,10 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     // Statuses
     const STATUS_PRODUCTION_IS_FINISHED_NAME = 'Production is finished';
-    const STATUS_IS_READY_FOR_SHIPMENT_NAME = 'Ready to dispatch';
+    const STATUS_IS_READY_FOR_SHIPMENT_FROM_MANUFACTURER_NAME = 'Ready for shipment from manufacturer';
+    const STATUS_SHIPMENT_FROM_MANUFACTURER_STARTED_NAME = 'Shipment from manufacturer started';
+    const STATUS_SHIPMENT_FROM_MANUFACTURER_FINISHED_NAME = 'Shipment from manufacturer finished';
+    const STATUS_ARRIVED_AT_WAREHOUSE_NAME = 'Arrived at warehouse';
 
     // Serialization statuses
     const STATUS_REPORT_SENT_TO_HUB_NAME = 'Report sent to hub';
@@ -226,8 +229,8 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public function getStatusAttribute()
     {
-        if ($this->is_ready_for_shipment) {
-            return self::STATUS_IS_READY_FOR_SHIPMENT_NAME;
+        if ($this->is_ready_for_shipment_from_manufacturer) {
+            return self::STATUS_IS_READY_FOR_SHIPMENT_FROM_MANUFACTURER_NAME;
         } else if ($this->production_is_finished) {
             return self::STATUS_PRODUCTION_IS_FINISHED_NAME;
         }
@@ -664,7 +667,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             $q->whereNotNull('production_end_date')
                 ->whereNull('readiness_for_shipment_date'),
 
-            self::STATUS_IS_READY_FOR_SHIPMENT_NAME => fn($q) =>
+            self::STATUS_IS_READY_FOR_SHIPMENT_FROM_MANUFACTURER_NAME => fn($q) =>
             $q->whereNotNull('readiness_for_shipment_date'),
         ];
 
@@ -842,11 +845,11 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     /**
      * CMD BDM marks product as ready for shipment
      */
-    public function toggleIsReadyForShipmentAttribute(Request $request)
+    public function toggleIsReadyForShipmentFromManufacturerAttribute(Request $request)
     {
         $action = $request->input('action');
 
-        if ($action == 'prepare' && !$this->is_ready_for_shipment) {
+        if ($action == 'prepare' && !$this->is_ready_for_shipment_from_manufacturer) {
             $this->readiness_for_shipment_date = now();
             $this->save();
         }

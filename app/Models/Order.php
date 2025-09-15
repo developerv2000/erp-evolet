@@ -152,19 +152,19 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         return $this->products->every(fn($product) => $product->production_is_finished);
     }
 
-    public function getAllProductsAreReadyForShipmentAttribute(): bool
+    public function getAllProductsAreReadyForShipmentFromManufacturerAttribute(): bool
     {
         if ($this->products->isEmpty()) {
             return false;
         }
 
-        return $this->products->every(fn($product) => $product->is_ready_for_shipment);
+        return $this->products->every(fn($product) => $product->is_ready_for_shipment_from_manufacturer);
     }
 
     public function getStatusAttribute()
     {
-        if ($this->all_products_are_ready_for_shipment) {
-            return OrderProduct::STATUS_IS_READY_FOR_SHIPMENT_NAME;
+        if ($this->all_products_are_ready_for_shipment_from_manufacturer) {
+            return OrderProduct::STATUS_IS_READY_FOR_SHIPMENT_FROM_MANUFACTURER_NAME;
         } else if ($this->all_products_production_is_finished) {
             return OrderProduct::STATUS_PRODUCTION_IS_FINISHED_NAME;
         } else if ($this->production_is_started) {
@@ -416,7 +416,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             self::STATUS_IS_SENT_TO_MANUFACTURER_NAME,
             self::STATUS_PRODUCTION_IS_STARTED_NAME,
             OrderProduct::STATUS_PRODUCTION_IS_FINISHED_NAME,
-            OrderProduct::STATUS_IS_READY_FOR_SHIPMENT_NAME,
+            OrderProduct::STATUS_IS_READY_FOR_SHIPMENT_FROM_MANUFACTURER_NAME,
         ];
     }
 
@@ -470,7 +470,7 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
                 $pq->whereNotNull('readiness_for_shipment_date')
             ),
 
-            OrderProduct::STATUS_IS_READY_FOR_SHIPMENT_NAME => fn($q) =>
+            OrderProduct::STATUS_IS_READY_FOR_SHIPMENT_FROM_MANUFACTURER_NAME => fn($q) =>
             $q->whereDoesntHave(
                 'products',
                 fn($pq) =>

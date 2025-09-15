@@ -97,7 +97,7 @@
     @break
 
     @case('Shipment ID')
-        {{ $record->shipment_id }}
+        {{ $record->shipment_from_manufacturer_id }}
     @break
 
     @case('Manufacturer country')
@@ -105,11 +105,11 @@
     @break
 
     @case('Volume')
-        {{ $record->shipment_volume }}
+        {{ $record->shipment_from_manufacturer_volume }}
     @break
 
     @case('Packs')
-        {{ $record->shipment_packs }}
+        {{ $record->shipment_from_manufacturer_packs }}
     @break
 
     @case('Method of shipment')

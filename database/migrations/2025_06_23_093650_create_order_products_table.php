@@ -71,18 +71,18 @@ return new class extends Migration
             // Step 9:
             // ELD part
             $table->timestamp('shipment_from_manufacturer_start_date')->nullable();
-            $table->string('shipment_id')->nullable();
-            $table->unsignedTinyInteger('shipment_volume')->nullable();
-            $table->string('shipment_packs')->nullable();
+            $table->string('shipment_from_manufacturer_id')->nullable();
+            $table->unsignedTinyInteger('shipment_from_manufacturer_volume')->nullable();
+            $table->string('shipment_from_manufacturer_packs')->nullable();
 
-            $table->unsignedTinyInteger('shipment_type_id') // 'Auto', 'Air' or 'Sea'
+            $table->unsignedTinyInteger('shipment_from_manufacturer_type_id') // 'Auto', 'Air' or 'Sea'
                 ->index()
                 ->foreign()
                 ->references('id')
                 ->on('shipment_types')
                 ->nullable();
 
-            $table->unsignedTinyInteger('shipment_destination_id') // 'Riga' or 'Destination country'
+            $table->unsignedTinyInteger('shipment_from_manufacturer_destination_id') // 'Riga' or 'Destination country'
                 ->index()
                 ->foreign()
                 ->references('id')
@@ -105,6 +105,10 @@ return new class extends Migration
 
             $table->date('delivery_to_warehouse_loading_confirmed_date')->nullable();
             $table->timestamp('shipment_from_manufacturer_end_date')->nullable(); // action
+
+            // Step 11:
+            // ELD part
+            $table->timestamp('warehouse_arrival_date')->nullable(); // action
 
             $table->timestamps();
             $table->softDeletes();

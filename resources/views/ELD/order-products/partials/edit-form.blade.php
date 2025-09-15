@@ -6,33 +6,34 @@
             <div class="form__row">
                 <x-form.inputs.record-field-input
                     labelText="Shipment ID"
-                    field="shipment_id"
+                    field="shipment_from_manufacturer_id"
                     :model="$record" />
 
                 <x-form.inputs.record-field-input
                     labelText="Volume"
-                    field="shipment_volume"
+                    field="shipment_from_manufacturer_volume"
                     type="number"
                     :model="$record"
-                    min="1" />
+                    min="1.00"
+                    step="0.01" />
 
                 <x-form.inputs.record-field-input
                     labelText="Packs"
-                    field="shipment_packs"
+                    field="shipment_from_manufacturer_packs"
                     :model="$record" />
             </div>
 
             <div class="form__row">
                 <x-form.selects.selectize.id-based-single-select.record-field-select
                     labelText="Method of shipment"
-                    field="shipment_type_id"
+                    field="shipment_from_manufacturer_type_id"
                     :model="$record"
                     :options="$shipmentTypes"
                     :isRequired="true" />
 
                 <x-form.selects.selectize.id-based-single-select.record-field-select
                     labelText="Destination"
-                    field="shipment_destination_id"
+                    field="shipment_from_manufacturer_destination_id"
                     :model="$record"
                     :options="$shipmentDestinations"
                     :isRequired="true" />
