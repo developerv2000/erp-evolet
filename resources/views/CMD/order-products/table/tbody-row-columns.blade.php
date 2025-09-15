@@ -215,8 +215,8 @@
 
     @case('Ready for shipment')
         @if ($record->is_ready_for_shipment_from_manufacturer)
-            {{ $record->readiness_for_shipment_date->isoformat('DD MMM Y') }}
-        @elseif($record->can_be_marked_as_ready_for_shipment)
+            {{ $record->readiness_for_shipment_from_manufacturer_date->isoformat('DD MMM Y') }}
+        @elseif($record->can_be_marked_as_ready_for_shipment_from_manufacturer)
             <x-misc.button
                 style="transparent"
                 class="button--arrowed-link button--margined-bottom"

@@ -88,6 +88,6 @@
     @break
 
     @case('Ready for shipment')
-        {{ $record->readiness_for_shipment_date?->isoformat('DD MMM Y') }}
+        {{ $record->readiness_for_shipment_from_manufacturer_date?->isoformat('DD MMM Y') }}
     @break
 @endswitch

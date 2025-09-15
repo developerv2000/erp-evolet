@@ -76,7 +76,7 @@
     @break
 
     @case('Ready for shipment')
-        {{ $record->readiness_for_shipment_date->isoformat('DD MMM Y') }}
+        {{ $record->readiness_for_shipment_from_manufacturer_date->isoformat('DD MMM Y') }}
     @break
 
     @case('Shipment from manufacturer start date')
@@ -113,11 +113,11 @@
     @break
 
     @case('Method of shipment')
-        {{ $record->shipmentType?->name }}
+        {{ $record->shipmentFromManufacturerType?->name }}
     @break
 
     @case('Destination')
-        {{ $record->shipmentDestination?->name }}
+        {{ $record->shipmentFromManufacturerDestination?->name }}
     @break
 
     @case('Transportation request')

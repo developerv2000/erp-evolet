@@ -72,7 +72,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     // ELD
     const SETTINGS_ELD_TABLE_COLUMNS_KEY = 'ELD_order_products_table_columns';
-    const DEFAULT_ELD_ORDER_BY = 'readiness_for_shipment_date';
+    const DEFAULT_ELD_ORDER_BY = 'readiness_for_shipment_from_manufacturer_date';
     const DEFAULT_ELD_ORDER_TYPE = 'desc';
     const DEFAULT_ELD_PAGINATION_LIMIT = 50;
 
@@ -106,12 +106,13 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         'serialization_report_recieved_date' => 'datetime',
         'report_sent_to_hub_date' => 'datetime',
         'production_end_date' => 'datetime',
-        'readiness_for_shipment_date' => 'datetime',
+        'readiness_for_shipment_from_manufacturer_date' => 'datetime',
         'shipment_from_manufacturer_start_date' => 'datetime',
         'delivery_to_warehouse_request_date' => 'datetime',
         'delivery_to_warehouse_rate_approved_date' => 'date',
         'delivery_to_warehouse_loading_confirmed_date' => 'date',
         'shipment_from_manufacturer_end_date' => 'datetime',
+        'warehouse_arrival_date' => 'datetime',
     ];
 
     /*
@@ -167,14 +168,14 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return $this->belongsTo(SerializationType::class);
     }
 
-    public function shipmentType()
+    public function shipmentFromManufacturerType()
     {
-        return $this->belongsTo(ShipmentType::class);
+        return $this->belongsTo(ShipmentType::class, 'shipment_from_manufacturer_type_id');
     }
 
-    public function shipmentDestination()
+    public function shipmentFromManufacturerDestination()
     {
-        return $this->belongsTo(ShipmentDestination::class);
+        return $this->belongsTo(ShipmentDestination::class, 'shipment_from_manufacturer_destination_id');
     }
 
     public function deliveryToWarehouseCurrency()
@@ -222,9 +223,9 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return !is_null($this->production_end_date);
     }
 
-    public function getIsReadyForShipmentAttribute(): bool
+    public function getIsReadyForShipmentFromManufacturerAttribute(): bool
     {
-        return !is_null($this->readiness_for_shipment_date);
+        return !is_null($this->readiness_for_shipment_from_manufacturer_date);
     }
 
     public function getStatusAttribute()
@@ -253,7 +254,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return Order::STATUS_PRODUCTION_IS_STARTED_NAME;
     }
 
-    public function getCanBePreparedForShippingAttribute(): bool
+    public function getCanBePreparedForShippingFromManufacturerAttribute(): bool
     {
         return $this->productionInvoices()
             ->whereIn('payment_type_id', [
@@ -264,7 +265,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ->exists();
     }
 
-    public function getCanBeMarkedAsReadyForShipmentAttribute(): bool
+    public function getCanBeMarkedAsReadyForShipmentFromManufacturerAttribute(): bool
     {
         return $this->packing_list_file
             && $this->coa_file
@@ -433,9 +434,9 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         });
     }
 
-    public function scopeOnlyReadyForShipment($query)
+    public function scopeOnlyReadyForShipmentFromManufacturer($query)
     {
-        return $query->whereNotNull('readiness_for_shipment_date');
+        return $query->whereNotNull('readiness_for_shipment_from_manufacturer_date');
     }
 
     public function scopeOnlyWithInvoicesSentForPayment($query)
@@ -665,10 +666,10 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
             self::STATUS_PRODUCTION_IS_FINISHED_NAME => fn($q) =>
             $q->whereNotNull('production_end_date')
-                ->whereNull('readiness_for_shipment_date'),
+                ->whereNull('readiness_for_shipment_from_manufacturer_date'),
 
             self::STATUS_IS_READY_FOR_SHIPMENT_FROM_MANUFACTURER_NAME => fn($q) =>
-            $q->whereNotNull('readiness_for_shipment_date'),
+            $q->whereNotNull('readiness_for_shipment_from_manufacturer_date'),
         ];
 
         $filter = $filters[$status] ?? null;
@@ -850,7 +851,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         $action = $request->input('action');
 
         if ($action == 'prepare' && !$this->is_ready_for_shipment_from_manufacturer) {
-            $this->readiness_for_shipment_date = now();
+            $this->readiness_for_shipment_from_manufacturer_date = now();
             $this->save();
         }
     }

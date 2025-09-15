@@ -42,7 +42,7 @@
         @endif
     </div>
 
-    @if ($record->can_be_prepared_for_shipping)
+    @if ($record->can_be_prepared_for_shipping_from_manufacturer)
         <div class="form__block">
             <h2 class="main-title main-title--marginless">{{ __('Prepare for shipment') }}</h2>
 

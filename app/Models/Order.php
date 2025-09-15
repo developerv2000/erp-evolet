@@ -467,14 +467,14 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             )->whereHas(
                 'products',
                 fn($pq) =>
-                $pq->whereNotNull('readiness_for_shipment_date')
+                $pq->whereNotNull('readiness_for_shipment_from_manufacturer_date')
             ),
 
             OrderProduct::STATUS_IS_READY_FOR_SHIPMENT_FROM_MANUFACTURER_NAME => fn($q) =>
             $q->whereDoesntHave(
                 'products',
                 fn($pq) =>
-                $pq->whereNull('readiness_for_shipment_date')
+                $pq->whereNull('readiness_for_shipment_from_manufacturer_date')
             ),
         ];
 

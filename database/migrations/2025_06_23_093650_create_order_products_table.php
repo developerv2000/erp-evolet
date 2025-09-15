@@ -66,7 +66,7 @@ return new class extends Migration
             $table->string('coa_file')->nullable();
             $table->string('coo_file')->nullable();
             $table->string('declaration_for_europe_file')->nullable();
-            $table->timestamp('readiness_for_shipment_date')->nullable(); // action
+            $table->timestamp('readiness_for_shipment_from_manufacturer_date')->nullable(); // action
 
             // Step 9:
             // ELD part

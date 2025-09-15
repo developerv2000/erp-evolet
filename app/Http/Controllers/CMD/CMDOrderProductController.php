@@ -66,7 +66,7 @@ class CMDOrderProductController extends Controller
 
         return response()->json([
             'isReadyForShipment' => $record->is_ready_for_shipment_from_manufacturer,
-            'readinessForShipmentDate' => $record->readiness_for_shipment_date?->isoFormat('DD MMM Y'),
+            'readinessForShipmentDate' => $record->readiness_for_shipment_from_manufacturer_date?->isoFormat('DD MMM Y'),
         ]);
     }
 }
