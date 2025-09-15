@@ -40,37 +40,39 @@ class MADProductSelectionController extends Controller
     const TITLES_ROW = 2;
     const RECORDS_INSERT_START_ROW = 4;
 
+    private $model, $baseModel;
+
     public function exportAsExcel(Request $request)
     {
-        $modelBaseName = $request->input('model');
-        $model = ModelHelper::addFullNamespaceToModelBasename($modelBaseName);
+        $this->baseModel = $request->input('model');
+        $this->model = ModelHelper::addFullNamespaceToModelBasename($this->baseModel);
 
         // Preapare request for valid model querying
-        $model::addRefererQueryParamsToRequest($request);
-        $model::addDefaultQueryParamsToRequest($request);
+        $this->model::addRefererQueryParamsToRequest($request);
+        $this->model::addDefaultQueryParamsToRequest($request);
 
         // Get finalized records query
-        $query = $model::withRelationsForProductSelection();
-        $filteredQuery = $model::filterQueryForRequest($query, $request);
+        $query = $this->model::withRelationsForProductSelection();
+        $filteredQuery = $this->model::filterQueryForRequest($query, $request);
 
         // Add joins if joined ordering requested
-        if (method_exists($model, 'addJoinsForOrdering')) {
-            $filteredQuery = $model::addJoinsForOrdering($filteredQuery, $request);
+        if (method_exists($this->model, 'addJoinsForOrdering')) {
+            $filteredQuery = $this->model::addJoinsForOrdering($filteredQuery, $request);
         }
 
-        $finalizedQuery = $model::finalizeQueryForRequest($filteredQuery, $request, 'query');
+        $finalizedQuery = $this->model::finalizeQueryForRequest($filteredQuery, $request, 'query');
 
         // Generate excel file
-        $filepath = self::generateExcelFileFromQuery($finalizedQuery, $model, $modelBaseName);
+        $filepath = $this::generateExcelFileFromQuery($finalizedQuery, $this->model, $this->baseModel);
 
         // Return download response
         return response()->download($filepath);
     }
 
-    private static function generateExcelFileFromQuery($query, $model, $modelBaseName)
+    private function generateExcelFileFromQuery($query)
     {
         // Load Excel template
-        $templatePath = storage_path(self::STORAGE_PATH_OF_EXCEL_TEMPLATE_FILE_FOR_EXPORT);
+        $templatePath = storage_path($this::STORAGE_PATH_OF_EXCEL_TEMPLATE_FILE_FOR_EXPORT);
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -81,29 +83,29 @@ class MADProductSelectionController extends Controller
         });
 
         // Prepare 'Product' records before export
-        if ($modelBaseName == 'Product') {
-            self::loadProductsMatchedProductSearches($records);
+        if ($this->baseModel == 'Product') {
+            $this::loadProductsMatchedProductSearches($records);
             $uniqueRecords = $records;
         }
 
         // Get only unique records by 'product_id' for 'Process' model
-        if ($modelBaseName == 'Process') {
+        if ($this->baseModel == 'Process') {
             $uniqueRecords = $records->unique('product_id');
         }
 
         // Get additional country names
-        $additionalCountries = self::insertAdditionalCountriesIntoSheet($sheet, $records, $modelBaseName);
+        $additionalCountries = $this::insertAdditionalCountriesIntoSheet($sheet, $records, $this->baseModel);
 
         // insert records into sheet
-        self::fillSheetWithRecords($sheet, $records, $uniqueRecords, $model, $modelBaseName, $additionalCountries);
+        $this::fillSheetWithRecords($sheet, $records, $uniqueRecords, $this->model, $this->baseModel, $additionalCountries);
 
         // Save modified spreadsheet
-        $filepath = self::saveSpreadsheet($spreadsheet);
+        $filepath = $this::saveSpreadsheet($spreadsheet);
 
         return $filepath;
     }
 
-    private static function loadProductsMatchedProductSearches($records)
+    private function loadProductsMatchedProductSearches($records)
     {
         // Append matched ProductSearch`s manually, so it won`t load many times.
         // Append only active searches, skipping "canceled" ones.
@@ -118,12 +120,12 @@ class MADProductSelectionController extends Controller
         });
     }
 
-    private static function insertAdditionalCountriesIntoSheet($sheet, $records, $modelBaseName)
+    private function insertAdditionalCountriesIntoSheet($sheet, $records)
     {
-        $additionalCountries = self::getAdditionalCountries($records, $modelBaseName);
+        $additionalCountries = $this::getAdditionalCountries($records, $this->baseModel);
 
         // insert additional country titles between last default country and ZONE 4B columns
-        $lastCountryColumnLetter = self::LAST_DEFAULT_COUNTRY_COLUMN_LETTER;
+        $lastCountryColumnLetter = $this::LAST_DEFAULT_COUNTRY_COLUMN_LETTER;
         $lastCountryColumnIndex = Coordinate::columnIndexFromString($lastCountryColumnLetter);
 
         foreach ($additionalCountries as $country) {
@@ -134,7 +136,7 @@ class MADProductSelectionController extends Controller
 
             $insertedColumnIndex = $nextColumnIndex;
             $insertedColumnLetter = $nextColumnLetter;
-            $insertedCellCoordinates = [$insertedColumnIndex, self::TITLES_ROW];
+            $insertedCellCoordinates = [$insertedColumnIndex, $this::TITLES_ROW];
             $sheet->setCellValue($insertedCellCoordinates, $country);
 
             // Update cell styles
@@ -148,26 +150,26 @@ class MADProductSelectionController extends Controller
         return $additionalCountries;
     }
 
-    private static function getAdditionalCountries($records, $modelBaseName)
+    private function getAdditionalCountries($records)
     {
         // Collect unique additional countries
-        $uniqueCountries = $modelBaseName == 'Product'
+        $uniqueCountries = $this->baseModel == 'Product'
             ? $records->flatMap->loaded_matched_product_searches->pluck('country.code')->unique()
             : $records->pluck('searchCountry.code')->unique(); // Else if 'Process'
 
         // Remove countries which already present in default countries
-        $additionalCountries = $uniqueCountries->diff(self::DEFAULT_COUNTRIES);
+        $additionalCountries = $uniqueCountries->diff($this::DEFAULT_COUNTRIES);
 
         return $additionalCountries;
     }
 
-    private static function fillSheetWithRecords($sheet, $records, $uniqueRecords, $model, $modelBaseName, $additionalCountries)
+    private function fillSheetWithRecords($sheet, $records, $uniqueRecords, $additionalCountries)
     {
         // Join default and additional countries
-        $allCountries = collect(self::DEFAULT_COUNTRIES)->merge($additionalCountries);
+        $allCountries = collect($this::DEFAULT_COUNTRIES)->merge($additionalCountries);
 
         // Start records insert
-        $row = self::RECORDS_INSERT_START_ROW;
+        $row = $this::RECORDS_INSERT_START_ROW;
         $recordsCounter = 1;
 
         // Loop through records
@@ -180,7 +182,7 @@ class MADProductSelectionController extends Controller
 
             // Get record column values, which are different for 'Product' and 'Process' models:
             // Form, Dosage, Pack, MOQ, Shelf life, Price, Target price, Agreed price, Currency
-            $columnValues = self::getRecordColumnValues($record, $model);
+            $columnValues = $this::getRecordColumnValues($record, $this->model);
 
             // Insert record column values (from 'B' to 'K')
             foreach ($columnValues as $value) {
@@ -188,7 +190,7 @@ class MADProductSelectionController extends Controller
             }
 
             // Initialize dependencies
-            $firstCountryColumnLetter = self::FIRST_DEFAULT_COUNTRY_COLUMN_LETTER;  // Reset value for each row
+            $firstCountryColumnLetter = $this::FIRST_DEFAULT_COUNTRY_COLUMN_LETTER;  // Reset value for each row
             $firstCountryColumnIndex = Coordinate::columnIndexFromString($firstCountryColumnLetter);
             $countryColumnIndexCounter = $firstCountryColumnIndex; // Used only for looping
 
@@ -200,11 +202,11 @@ class MADProductSelectionController extends Controller
                 $countryValue = null;
 
                 // Mark country as matched and highlight background color
-                if ($modelBaseName == 'Product') {
+                if ($this->baseModel == 'Product') {
                     if ($record->loaded_matched_product_searches->contains('country.code', $country)) {
                         $countryValue = 1;
                     }
-                } else if ($modelBaseName == 'Process') {
+                } else if ($this->baseModel == 'Process') {
                     $matched = $records
                         ->where('product_id', $record->product_id)
                         ->where('searchCountry.code', $country)
@@ -235,12 +237,12 @@ class MADProductSelectionController extends Controller
             $sheet->insertNewRowBefore($row, 1);  // Insert new rows to escape rewriting default countries list
         }
 
-        self::removeRedundantRow($sheet, $records, $row);
+        $this::removeRedundantRow($sheet, $records, $row);
     }
 
-    private static function getRecordColumnValues($record, $model)
+    private function getRecordColumnValues($record)
     {
-        switch ($model) {
+        switch ($this->model) {
             case 'App\Models\Product':
                 return [
                     $record->inn->name,
@@ -268,7 +270,7 @@ class MADProductSelectionController extends Controller
         }
     }
 
-    private static function removeRedundantRow($sheet, $records, $row)
+    private function removeRedundantRow($sheet, $records, $row)
     {
         // Remove last inserted redundant row
         if ($records->isNotEmpty()) {
@@ -276,13 +278,13 @@ class MADProductSelectionController extends Controller
         }
     }
 
-    private static function saveSpreadsheet($spreadsheet)
+    private function saveSpreadsheet($spreadsheet)
     {
         // Create a writer and generate a unique filename for the export
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $filename = date('Y-m-d H-i-s') . '.xlsx';
-        $filename = FileHelper::ensureUniqueFilename($filename, storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES));
-        $filePath = storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES  . '/' . $filename);
+        $filename = FileHelper::ensureUniqueFilename($filename, storage_path($this::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES));
+        $filePath = storage_path($this::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES  . '/' . $filename);
 
         // Save the Excel file
         $writer->save($filePath);
