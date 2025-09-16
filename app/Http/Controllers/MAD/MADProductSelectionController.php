@@ -63,7 +63,7 @@ class MADProductSelectionController extends Controller
         $finalizedQuery = $this->model::finalizeQueryForRequest($filteredQuery, $request, 'query');
 
         // Generate excel file
-        $filepath = $this::generateExcelFileFromQuery($finalizedQuery, $this->model, $this->baseModel);
+        $filepath = $this->generateExcelFileFromQuery($finalizedQuery);
 
         // Return download response
         return response()->download($filepath);
@@ -72,7 +72,7 @@ class MADProductSelectionController extends Controller
     private function generateExcelFileFromQuery($query)
     {
         // Load Excel template
-        $templatePath = storage_path($this::STORAGE_PATH_OF_EXCEL_TEMPLATE_FILE_FOR_EXPORT);
+        $templatePath = storage_path(self::STORAGE_PATH_OF_EXCEL_TEMPLATE_FILE_FOR_EXPORT);
         $spreadsheet = IOFactory::load($templatePath);
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -84,7 +84,7 @@ class MADProductSelectionController extends Controller
 
         // Prepare 'Product' records before export
         if ($this->baseModel == 'Product') {
-            $this::loadProductsMatchedProductSearches($records);
+            self::loadProductsMatchedProductSearches($records);
             $uniqueRecords = $records;
         }
 
@@ -94,18 +94,18 @@ class MADProductSelectionController extends Controller
         }
 
         // Get additional country names
-        $additionalCountries = $this::insertAdditionalCountriesIntoSheet($sheet, $records, $this->baseModel);
+        $additionalCountries = $this->insertAdditionalCountriesIntoSheet($sheet, $records);
 
         // insert records into sheet
-        $this::fillSheetWithRecords($sheet, $records, $uniqueRecords, $this->model, $this->baseModel, $additionalCountries);
+        $this->fillSheetWithRecords($sheet, $records, $uniqueRecords, $additionalCountries);
 
         // Save modified spreadsheet
-        $filepath = $this::saveSpreadsheet($spreadsheet);
+        $filepath = self::saveSpreadsheet($spreadsheet);
 
         return $filepath;
     }
 
-    private function loadProductsMatchedProductSearches($records)
+    private static function loadProductsMatchedProductSearches($records)
     {
         // Append matched ProductSearch`s manually, so it won`t load many times.
         // Append only active searches, skipping "canceled" ones.
@@ -122,10 +122,10 @@ class MADProductSelectionController extends Controller
 
     private function insertAdditionalCountriesIntoSheet($sheet, $records)
     {
-        $additionalCountries = $this::getAdditionalCountries($records, $this->baseModel);
+        $additionalCountries = $this->getAdditionalCountries($records);
 
         // insert additional country titles between last default country and ZONE 4B columns
-        $lastCountryColumnLetter = $this::LAST_DEFAULT_COUNTRY_COLUMN_LETTER;
+        $lastCountryColumnLetter = self::LAST_DEFAULT_COUNTRY_COLUMN_LETTER;
         $lastCountryColumnIndex = Coordinate::columnIndexFromString($lastCountryColumnLetter);
 
         foreach ($additionalCountries as $country) {
@@ -136,7 +136,7 @@ class MADProductSelectionController extends Controller
 
             $insertedColumnIndex = $nextColumnIndex;
             $insertedColumnLetter = $nextColumnLetter;
-            $insertedCellCoordinates = [$insertedColumnIndex, $this::TITLES_ROW];
+            $insertedCellCoordinates = [$insertedColumnIndex, self::TITLES_ROW];
             $sheet->setCellValue($insertedCellCoordinates, $country);
 
             // Update cell styles
@@ -158,7 +158,7 @@ class MADProductSelectionController extends Controller
             : $records->pluck('searchCountry.code')->unique(); // Else if 'Process'
 
         // Remove countries which already present in default countries
-        $additionalCountries = $uniqueCountries->diff($this::DEFAULT_COUNTRIES);
+        $additionalCountries = $uniqueCountries->diff(self::DEFAULT_COUNTRIES);
 
         return $additionalCountries;
     }
@@ -166,10 +166,10 @@ class MADProductSelectionController extends Controller
     private function fillSheetWithRecords($sheet, $records, $uniqueRecords, $additionalCountries)
     {
         // Join default and additional countries
-        $allCountries = collect($this::DEFAULT_COUNTRIES)->merge($additionalCountries);
+        $allCountries = collect(self::DEFAULT_COUNTRIES)->merge($additionalCountries);
 
         // Start records insert
-        $row = $this::RECORDS_INSERT_START_ROW;
+        $row = self::RECORDS_INSERT_START_ROW;
         $recordsCounter = 1;
 
         // Loop through records
@@ -182,7 +182,7 @@ class MADProductSelectionController extends Controller
 
             // Get record column values, which are different for 'Product' and 'Process' models:
             // Form, Dosage, Pack, MOQ, Shelf life, Price, Target price, Agreed price, Currency
-            $columnValues = $this::getRecordColumnValues($record, $this->model);
+            $columnValues = $this->getRecordColumnValues($record);
 
             // Insert record column values (from 'B' to 'K')
             foreach ($columnValues as $value) {
@@ -190,7 +190,7 @@ class MADProductSelectionController extends Controller
             }
 
             // Initialize dependencies
-            $firstCountryColumnLetter = $this::FIRST_DEFAULT_COUNTRY_COLUMN_LETTER;  // Reset value for each row
+            $firstCountryColumnLetter = self::FIRST_DEFAULT_COUNTRY_COLUMN_LETTER;  // Reset value for each row
             $firstCountryColumnIndex = Coordinate::columnIndexFromString($firstCountryColumnLetter);
             $countryColumnIndexCounter = $firstCountryColumnIndex; // Used only for looping
 
@@ -237,7 +237,7 @@ class MADProductSelectionController extends Controller
             $sheet->insertNewRowBefore($row, 1);  // Insert new rows to escape rewriting default countries list
         }
 
-        $this::removeRedundantRow($sheet, $records, $row);
+        self::removeRedundantRow($sheet, $records, $row);
     }
 
     private function getRecordColumnValues($record)
@@ -270,7 +270,7 @@ class MADProductSelectionController extends Controller
         }
     }
 
-    private function removeRedundantRow($sheet, $records, $row)
+    private static function removeRedundantRow($sheet, $records, $row)
     {
         // Remove last inserted redundant row
         if ($records->isNotEmpty()) {
@@ -278,13 +278,13 @@ class MADProductSelectionController extends Controller
         }
     }
 
-    private function saveSpreadsheet($spreadsheet)
+    private static function saveSpreadsheet($spreadsheet)
     {
         // Create a writer and generate a unique filename for the export
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $filename = date('Y-m-d H-i-s') . '.xlsx';
-        $filename = FileHelper::ensureUniqueFilename($filename, storage_path($this::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES));
-        $filePath = storage_path($this::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES  . '/' . $filename);
+        $filename = FileHelper::ensureUniqueFilename($filename, storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES));
+        $filePath = storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES  . '/' . $filename);
 
         // Save the Excel file
         $writer->save($filePath);

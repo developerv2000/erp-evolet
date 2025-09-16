@@ -109,6 +109,13 @@ return new class extends Migration
             // Step 11:
             // ELD part
             $table->timestamp('warehouse_arrival_date')->nullable(); // action
+            $table->string('warehouse_invoice_number')->nullable();
+            $table->unsignedTinyInteger('payer_company_id')->nullable();
+            $table->string('customs_code')->nullable();
+            $table->unsignedMediumInteger('factual_quantity');
+            $table->unsignedMediumInteger('full_packs_in_boxes');
+            $table->unsignedMediumInteger('part_packs_in_box');
+            $table->unsignedMediumInteger('defects_quantity');
 
             $table->timestamps();
             $table->softDeletes();
