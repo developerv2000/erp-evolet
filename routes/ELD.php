@@ -18,6 +18,7 @@ Route::middleware('auth', 'auth.session')->prefix('eld')->name('eld.')->group(fu
         Route::post('/start-shipment-from-manufacturer/{record}', 'startShipmentFromManufacturer')->name('start-shipment-from-manufacturer');
         Route::post('/request-delivery-to-warehouse/{record}', 'requestDeliveryToWarehouse')->name('request-delivery-to-warehouse');
         Route::post('/end-shipment-from-manufacturer/{record}', 'endShipmentFromManufacturer')->name('end-shipment-from-manufacturer'); // AJAX request
+        Route::post('/mark-as-arrived-at-warehouse/{record}', 'markAsArrivedAtWarehouse')->name('mark-as-arrived-at-warehouse'); // AJAX request
     });
 
     // Invoices

@@ -62,7 +62,7 @@ class CMDOrderProductController extends Controller
     public function toggleIsReadyForShipmentAttribute(Request $request)
     {
         $record = OrderProduct::withTrashed()->findOrFail($request->input('record_id'));
-        $record->toggleIsReadyForShipmentAttribute($request);
+        $record->toggleIsReadyForShipmentFromManufacturerAttribute($request);
 
         return response()->json([
             'isReadyForShipment' => $record->is_ready_for_shipment_from_manufacturer,

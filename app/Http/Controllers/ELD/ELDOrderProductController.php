@@ -71,4 +71,18 @@ class ELDOrderProductController extends Controller
             'shipmentFromManufacturerEndDate' => $record->shipment_from_manufacturer_end_date?->isoFormat('DD MMM Y'),
         ]);
     }
+
+    /**
+     * Ajax request
+     */
+    public function markAsArrivedAtWarehouse(Request $request, OrderProduct $record)
+    {
+        $record->warehouse_arrival_date = now();
+        $record->save();
+
+        return response()->json([
+            'arrivedAtWarehouse' => $record->arrived_at_warehouse,
+            'warehouseArrivalDate' => $record->warehouse_arrival_date?->isoFormat('DD MMM Y'),
+        ]);
+    }
 }

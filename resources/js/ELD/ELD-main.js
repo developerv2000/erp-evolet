@@ -30,6 +30,12 @@ orderProductsTable?.querySelectorAll('button[data-click-action="end-shipment-fro
     });
 });
 
+orderProductsTable?.querySelectorAll('button[data-click-action="mark-as-arrived-at-warehouse"]').forEach(button => {
+    button.addEventListener('click', (evt) => {
+        functions.markAsArrivedAtWarehouseOrdersProducts(evt);
+    });
+});
+
 invoicesTable?.querySelectorAll('button[data-click-action="toggle-invoices-is-sent-for-payment-attribute"]').forEach(button => {
     button.addEventListener('click', (evt) => {
         functions.toggleInvoicesIsSentForPaymentAttribute(evt);

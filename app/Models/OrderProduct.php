@@ -183,6 +183,16 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return $this->belongsTo(Currency::class, 'delivery_to_warehouse_currency_id');
     }
 
+    public function payerCompany()
+    {
+        return $this->belongsTo(PayerCompany::class);
+    }
+
+    public function batches()
+    {
+        return $this->hasMany(ProductBatch::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes
@@ -230,7 +240,13 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public function getStatusAttribute()
     {
-        if ($this->is_ready_for_shipment_from_manufacturer) {
+        if ($this->is_arrived_at_warehouse) {
+            return self::STATUS_ARRIVED_AT_WAREHOUSE_NAME;
+        } else if ($this->shipment_from_manufacturer_ended) {
+            return self::STATUS_SHIPMENT_FROM_MANUFACTURER_FINISHED_NAME;
+        } else if ($this->shipment_from_manufacturer_started) {
+            return self::STATUS_SHIPMENT_FROM_MANUFACTURER_STARTED_NAME;
+        } else if ($this->is_ready_for_shipment_from_manufacturer) {
             return self::STATUS_IS_READY_FOR_SHIPMENT_FROM_MANUFACTURER_NAME;
         } else if ($this->production_is_finished) {
             return self::STATUS_PRODUCTION_IS_FINISHED_NAME;
@@ -291,6 +307,11 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     public function getShipmentFromManufacturerEndedAttribute(): bool
     {
         return !is_null($this->shipment_from_manufacturer_end_date);
+    }
+
+    public function getArrivedAtWarehouseAttribute(): bool
+    {
+        return !is_null($this->warehouse_arrival_date);
     }
 
     public function getCanEndShipmentFromManufacturerAttribute(): bool
@@ -357,7 +378,21 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         });
 
         static::forceDeleting(function ($record) {
+            // Detach 'productionInvoices'
             $record->productionInvoices()->detach();
+
+            // Delete hasOne 'deliveryToWarehouse' and 'Export' relations
+            $invoices = Invoice::where('order_product_id', $record->id)
+                ->where('order_id', $this->order_id);
+
+            foreach ($invoices as $invoice) {
+                $invoice->delete();
+            }
+
+            // Delete batches
+            foreach ($record->batches as $batch) {
+                $batch->delete();
+            }
         });
     }
 
@@ -984,7 +1019,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Price', 'order' => $order++, 'width' => 70, 'visible' => 1],
             ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
             ['name' => 'Total price', 'order' => $order++, 'width' => 130, 'visible' => 1],
-            ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Serialization type', 'order' => $order++, 'width' => 156, 'visible' => 1],
@@ -1020,7 +1055,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'Invoices', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
@@ -1136,7 +1171,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             $columns,
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'BDM', 'order' => $order++, 'width' => 142, 'visible' => 1],
-            ['name' => 'Status', 'order' => $order++, 'width' => 114, 'visible' => 1],
+            ['name' => 'Status', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
@@ -1236,6 +1271,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
         array_push(
             $columns,
+            ['name' => 'Status', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
@@ -1269,6 +1305,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Shipment from manufacturer end date', 'order' => $order++, 'width' => 250, 'visible' => 1],
 
             ['name' => 'Invoice', 'order' => $order++, 'width' => 124, 'visible' => 1],
+            ['name' => 'Arrived at warehouse', 'order' => $order++, 'width' => 124, 'visible' => 1],
 
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],

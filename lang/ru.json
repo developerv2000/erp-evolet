@@ -405,6 +405,8 @@
     "Create invoice": "Создать инвойс",
     "Production": "Производство",
     "Delivery to warehouse": "Доставка в склад",
+    "Arrived at warehouse": "Прибыл в склад",
+    "Arrived": "Прибыл",
 
     "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
 }

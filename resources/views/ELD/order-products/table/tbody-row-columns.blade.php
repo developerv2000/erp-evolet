@@ -3,6 +3,12 @@
         <x-tables.partials.td.edit :link="route('eld.order-products.edit', $record->id)" />
     @break
 
+    @case('Status')
+        <div class="td__order-status">
+            <x-tables.partials.td.order-status-badge :status="$record->status" />
+        </div>
+    @break
+
     @case('Manufacturer')
         {{ $record->order->manufacturer->name }}
     @break
@@ -159,7 +165,7 @@
 
     @case('Shipment from manufacturer end date')
         @if ($record->shipment_from_manufacturer_ended)
-            {{ $record->shipment_from_manufacturer_end_date?->isoformat('DD MMM Y') }}
+            {{ $record->shipment_from_manufacturer_end_date->isoformat('DD MMM Y') }}
         @elseif($record->can_end_shipment_from_manufacturer)
             <x-misc.button
                 style="transparent"
@@ -181,6 +187,21 @@
             <a href="{{ route('eld.invoices.create', ['order_product_id' => $record->id]) }}" class="main-link">
                 {{ __('Create invoice') }}
             </a>
+        @endif
+    @break
+
+    @case('Arrived at warehouse')
+        @if ($record->arrived_at_warehouse)
+            {{ $record->warehouse_arrival_date->isoformat('DD MMM Y') }}
+        @elseif($record->shipment_from_manufacturer_ended)
+            <x-misc.button
+                style="transparent"
+                class="button--arrowed-link button--margined-bottom"
+                icon="line_end_arrow_notch"
+                data-click-action="mark-as-arrived-at-warehouse"
+                data-record-id="{{ $record->id }}">
+                {{ __('Arrived') }}
+            </x-misc.button>
         @endif
     @break
 

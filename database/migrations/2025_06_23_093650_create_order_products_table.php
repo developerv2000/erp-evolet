@@ -112,11 +112,12 @@ return new class extends Migration
             $table->string('warehouse_invoice_number')->nullable();
             $table->unsignedTinyInteger('payer_company_id')->nullable();
             $table->string('customs_code')->nullable();
-            $table->unsignedMediumInteger('factual_quantity');
-            $table->unsignedMediumInteger('full_packs_in_boxes');
-            $table->unsignedMediumInteger('part_packs_in_box');
-            $table->unsignedMediumInteger('defects_quantity');
+            $table->unsignedMediumInteger('factual_quantity')->nullable();
+            $table->unsignedMediumInteger('full_packs_in_boxes')->nullable();
+            $table->unsignedMediumInteger('part_packs_in_box')->nullable();
+            $table->unsignedMediumInteger('defects_quantity')->nullable();
 
+            // Timestamps
             $table->timestamps();
             $table->softDeletes();
         });
