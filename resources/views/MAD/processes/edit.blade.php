@@ -6,6 +6,10 @@
 
 @section('content')
     <div class="main-box">
+        @error('responsible_person_id')
+            @include('layouts.errors')
+        @enderror
+
         {{-- Toolbar --}}
         <div class="toolbar">
             <x-layouts.breadcrumbs :crumbs="$record->generateBreadcrumbs()" />

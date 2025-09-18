@@ -20,6 +20,7 @@ use App\Support\Definers\ViewComposerDefiners\MGMTViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\MSDViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\PLPDViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\PRDViewComposersDefiner;
+use App\Support\Definers\ViewComposerDefiners\WarehouseViewComposersDefiner;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -58,5 +59,6 @@ class AppServiceProvider extends ServiceProvider
         PRDViewComposersDefiner::defineAll();
         MSDViewComposersDefiner::defineAll();
         ELDViewComposersDefiner::defineAll();
+        WarehouseViewComposersDefiner::defineAll();
     }
 }

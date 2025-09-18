@@ -36,8 +36,7 @@ class MADProcessController extends Controller
         $filteredQuery = Process::filterQueryForRequest($query, $request);
         $joinedQuery = Process::addJoinsForOrdering($filteredQuery, $request); // add joins if joined ordering requested
         $records = Process::finalizeQueryOrderedByPriorityForRequest($joinedQuery, $request, 'paginate'); // order by priority
-        // $matched = $records->where('searchCountry.id', 214)->first();
-        // dd($matched);
+
         // Add 'general_status_periods' for records
         Process::addGeneralStatusPeriodsForRecords($records);
 
@@ -171,6 +170,8 @@ class MADProcessController extends Controller
      */
     public function update(ProcessUpdateRequest $request, $record)
     {
+        $request->ensureResponsiblePersonIsUpdated();
+
         $record = Process::withTrashed()->findOrFail($record);
         $record->updateFromRequest($request);
 

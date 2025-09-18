@@ -17,6 +17,7 @@
     "ELD": "ОЛЕ",
     "MSD": "ОМС",
     "DD": "ОД",
+    "Warehouse": "Склад",
 
     "EPP": "ЕПП",
     "IVP": "ИВП",
@@ -28,6 +29,7 @@
     "Misc": "Разное",
     "Ready for order": "Готовые к заказу",
     "Orders": "Заказы",
+    "Batches": "Партии",
 
     "Departments": "Отделы",
     "Department": "Отдел",
@@ -408,5 +410,13 @@
     "Arrived at warehouse": "Прибыл в склад",
     "Arrived": "Прибыл",
 
-    "AAAAAAAAAAAAAAAAA": "BBBBBBBBBBBBBBB"
+    "Original invoice": "Оригинальный инвойс",
+    "Seller": "Продавец",
+    "Customs code": "Таможенный код",
+    "Factual quantity": "Фактическое количество",
+    "Packs in boxes": "Упаковки в боксах",
+    "Packs in box": "Упаковки в боксе",
+    "Defects quantity": "Дефектное количество",
+
+    "AAAAAAAA": "BBBBBBBB"
 }

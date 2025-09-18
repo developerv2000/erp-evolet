@@ -426,6 +426,8 @@ class User extends Authenticatable
         $this->resetPRDTablesColumnSettings();
         $this->resetMSDTablesColumnSettings();
         $this->resetELDTablesColumnSettings();
+
+        $this->resetWarehouseTablesColumnSettings();
     }
 
     /**
@@ -537,6 +539,19 @@ class User extends Authenticatable
     }
 
     /**
+     * Reset users warehouse tables column settings
+     */
+    public function resetWarehouseTablesColumnSettings()
+    {
+        $this->refresh();
+        $settings = $this->settings;
+        $settings[OrderProduct::SETTINGS_WAREHOUSE_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultWarehouseTableColumnsForUser($this);
+
+        $this->settings = $settings;
+        $this->save();
+    }
+
+    /**
      * Reset all settings to default for all users
      *
      * Used via artisan command line
@@ -587,6 +602,8 @@ class User extends Authenticatable
 
             'ELD_order_products_table_columns' => OrderProduct::getDefaultELDTableColumnsForUser($this),
             'ELD_invoices_table_columns' => Invoice::getDefaultELDTableColumnsForUser($this),
+
+            'warehouse_products_table_columns' => OrderProduct::getDefaultWarehouseTableColumnsForUser($this),
 
             default => throw new InvalidArgumentExceptio("Unknown key: $key"),
         };

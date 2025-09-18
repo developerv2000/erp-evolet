@@ -249,7 +249,7 @@ class PermissionSeeder extends Seeder
 
         /*
         |--------------------------------------------------------------------------
-        | Shared order-based permissions
+        | Shared order-based permissions (global)
         |--------------------------------------------------------------------------
         */
 
@@ -262,6 +262,26 @@ class PermissionSeeder extends Seeder
         foreach ($sharedPerms as $shared) {
             Permission::create([
                 'name' => $shared,
+                'global' => true,
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Warehouse permissions (global)
+        |--------------------------------------------------------------------------
+        */
+
+        $warehousePerms = [
+            Permission::CAN_VIEW_WAREHOUSE_PRODUCTS_NAME,
+            Permission::CAN_EDIT_WAREHOUSE_PRODUCTS_NAME,
+            Permission::CAN_VIEW_WAREHOUSE_PRODUCT_BATCHES_NAME,
+            Permission::CAN_EDIT_WAREHOUSE_PRODUCT_BATCHES_NAME,
+        ];
+
+        foreach ($warehousePerms as $warehouse) {
+            Permission::create([
+                'name' => $warehouse,
                 'global' => true,
             ]);
         }

@@ -40,7 +40,7 @@ class Permission extends Model
 
     /*
     |--------------------------------------------------------------------------
-    | Share permissions
+    | Shared permissions (global)
     |--------------------------------------------------------------------------
     */
 
@@ -52,6 +52,19 @@ class Permission extends Model
 
     // PLPD and CMD permissions
     const CAN_RECEIVE_NOTIFICATION_WHEN_PRD_INVOICE_PAYMENT_IS_COMPLETED = 'can receive notification when PRD invoice payment is completed';
+
+    /*
+    |--------------------------------------------------------------------------
+    | Warehouse permissions (global)
+    |--------------------------------------------------------------------------
+    */
+
+    // PLPD and ELD permissions
+    const CAN_VIEW_WAREHOUSE_PRODUCTS_NAME = 'can view warehouse products';
+    const CAN_EDIT_WAREHOUSE_PRODUCTS_NAME = 'can edit warehouse products';
+
+    const CAN_VIEW_WAREHOUSE_PRODUCT_BATCHES_NAME = 'can view warehouse product batches';
+    const CAN_EDIT_WAREHOUSE_PRODUCT_BATCHES_NAME = 'can edit warehouse product batches';
 
     /*
     |--------------------------------------------------------------------------
@@ -397,6 +410,10 @@ class Permission extends Model
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_TO_MANUFACTURER,
             self::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_INVOICE_IS_SENT_FOR_PAYMENT,
             self::CAN_RECEIVE_NOTIFICATION_WHEN_PRD_INVOICE_PAYMENT_IS_COMPLETED,
+
+            // Warehouse
+            self::CAN_VIEW_WAREHOUSE_PRODUCTS_NAME,
+            self::CAN_VIEW_WAREHOUSE_PRODUCT_BATCHES_NAME,
         ];
     }
 
@@ -460,6 +477,12 @@ class Permission extends Model
 
             self::CAN_EDIT_ELD_ORDER_PRODUCTS_NAME,
             self::CAN_EDIT_ELD_INVOICES_NAME,
+
+            // Warehouse
+            self::CAN_VIEW_WAREHOUSE_PRODUCTS_NAME,
+            self::CAN_EDIT_WAREHOUSE_PRODUCTS_NAME,
+            self::CAN_VIEW_WAREHOUSE_PRODUCT_BATCHES_NAME,
+            self::CAN_EDIT_WAREHOUSE_PRODUCT_BATCHES_NAME,
         ];
     }
 }

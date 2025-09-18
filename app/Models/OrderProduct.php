@@ -76,6 +76,12 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     const DEFAULT_ELD_ORDER_TYPE = 'desc';
     const DEFAULT_ELD_PAGINATION_LIMIT = 50;
 
+    // Warehouse
+    const SETTINGS_WAREHOUSE_TABLE_COLUMNS_KEY = 'warehouse_products_table_columns';
+    const DEFAULT_WAREHOUSE_ORDER_BY = 'warehouse_arrival_date';
+    const DEFAULT_WAREHOUSE_ORDER_TYPE = 'desc';
+    const DEFAULT_WAREHOUSE_PAGINATION_LIMIT = 50;
+
     // Statuses
     const STATUS_PRODUCTION_IS_FINISHED_NAME = 'Production is finished';
     const STATUS_IS_READY_FOR_SHIPMENT_FROM_MANUFACTURER_NAME = 'Ready for shipment from manufacturer';
@@ -240,7 +246,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public function getStatusAttribute()
     {
-        if ($this->is_arrived_at_warehouse) {
+        if ($this->arrived_at_warehouse) {
             return self::STATUS_ARRIVED_AT_WAREHOUSE_NAME;
         } else if ($this->shipment_from_manufacturer_ended) {
             return self::STATUS_SHIPMENT_FROM_MANUFACTURER_FINISHED_NAME;
@@ -486,6 +492,11 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         $serializationTypeId = SerializationType::findByName(SerializationType::BY_MANUFACTURER_TYPE_NAME)->id;
 
         return $query->where('serialization_type_id', $serializationTypeId);
+    }
+
+    public function scopeOnlyArrivedAtWarehouse($query)
+    {
+        return $query->whereNotNull('warehouse_arrival_date');
     }
 
     /**
@@ -787,6 +798,16 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         );
     }
 
+    public static function addDefaultWarehouseQueryParamsToRequest(Request $request)
+    {
+        self::addDefaultQueryParamsToRequest(
+            $request,
+            'DEFAULT_WAREHOUSE_ORDER_BY',
+            'DEFAULT_WAREHOUSE_ORDER_TYPE',
+            'DEFAULT_WAREHOUSE_PAGINATION_LIMIT',
+        );
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Create & Update
@@ -852,6 +873,15 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     // ELD part
     function updateByELDFromRequest($request)
+    {
+        $this->update($request->all());
+
+        // HasMany relations
+        $this->storeCommentFromRequest($request);
+    }
+
+    // Warehouse part
+    function updateFromWarehouseRequest($request)
     {
         $this->update($request->all());
 
@@ -1306,6 +1336,54 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
             ['name' => 'Invoice', 'order' => $order++, 'width' => 124, 'visible' => 1],
             ['name' => 'Arrived at warehouse', 'order' => $order++, 'width' => 124, 'visible' => 1],
+
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 164, 'visible' => 1],
+        );
+
+        return $columns;
+    }
+
+    public static function getDefaultWarehouseTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-warehouse-products')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        if (Gate::forUser($user)->allows('edit-warehouse-products')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
+            ['name' => 'Status', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
+            ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
+            ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+
+            ['name' => 'Arrived at warehouse', 'order' => $order++, 'width' => 124, 'visible' => 1],
+            ['name' => 'Original invoice', 'order' => $order++, 'width' => 166, 'visible' => 1],
+            ['name' => 'Seller', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Customs code', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Factual quantity', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Packs in boxes', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Packs in box', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Defects quantity', 'order' => $order++, 'width' => 170, 'visible' => 1],
+            ['name' => 'Batches', 'order' => $order++, 'width' => 120, 'visible' => 1],
 
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
