@@ -327,17 +327,21 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             && !is_null($this->delivery_to_warehouse_loading_confirmed_date);
     }
 
-    public function getBatchesTotalQuantityAttribute(): int
+    public function getTotalQuantityOfAllBatchesAttribute(): int
     {
         return $this->batches->count()
             ? $this->batches->sum('quantity')
             : 0;
     }
 
+    public function getRemainingQuantityForBatchesAttribute(): int
+    {
+        return $this->factual_quantity - $this->total_quantity_of_all_batches;
+    }
+
     public function getCanCreateBatchAttribute(): bool
     {
-        return $this->factual_quantity > 0
-            && $this->batches_total_quantity < $this->factual_quantity;
+        return $this->remaining_quantity_for_batches > 0;
     }
 
     public function getPackingListAssetUrlAttribute(): string

@@ -190,6 +190,7 @@ class Invoice extends BaseModel implements HasTitle
     public function scopeWithBasicRelationCounts($query)
     {
         return $query->withCount([
+            'comments',
             'orderProducts',
         ]);
     }

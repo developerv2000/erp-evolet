@@ -7,10 +7,16 @@ use App\Models\OrderProduct;
 use App\Models\ProductBatch;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
+use App\Support\Traits\Controller\DestroysModelRecords;
 use Illuminate\Http\Request;
 
 class WarehouseProductBatchController extends Controller
 {
+    use DestroysModelRecords;
+
+    // used in multiple destroy traits
+    public static $model = ProductBatch::class;
+
     public function index(Request $request)
     {
         // Preapare request for valid model querying

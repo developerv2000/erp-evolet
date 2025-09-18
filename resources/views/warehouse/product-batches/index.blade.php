@@ -22,6 +22,16 @@
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
+                @can('edit-warehouse-product-batches')
+                    <x-misc.button
+                        class="toolbar__button"
+                        style="shadowed"
+                        icon="close"
+                        data-click-action="show-modal"
+                        data-modal-selector=".multiple-delete-modal">{{ __('Delete selected') }}
+                    </x-misc.button>
+                @endcan
+
                 <x-misc.button
                     class="toolbar__button"
                     style="shadowed"
@@ -48,8 +58,14 @@
     <x-modals.edit-table-columns
         form-action="{{ route('settings.update-table-columns', 'warehouse_product_batches_table_columns') }}"
         :columns="$allTableColumns" />
+
+    @can('edit-warehouse-product-batches')
+        <x-modals.multiple-delete
+            form-action="{{ route('warehouse.product-batches.destroy') }}"
+            :forceDelete="false" />
+    @endcan
 @endsection
 
-@section('rightbar')
-    {{-- @include('warehouse.product-batches.partials.filter') --}}
-@endsection
+{{-- @section('rightbar')
+    @include('warehouse.product-batches.partials.filter')
+@endsection --}}

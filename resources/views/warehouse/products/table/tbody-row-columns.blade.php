@@ -74,7 +74,7 @@
     @break
 
     @case('Sum of batches')
-        {{ $record->batches_total_quantity }}
+        {{ $record->total_quantity_of_all_batches }}
     @break
 
     @case('Packs in boxes')

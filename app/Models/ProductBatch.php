@@ -47,7 +47,7 @@ class ProductBatch extends BaseModel implements HasTitle
 
     public function product()
     {
-        return $this->belongsTo(OrderProduct::class)->withTrashed();
+        return $this->belongsTo(OrderProduct::class, 'order_product_id')->withTrashed();
     }
 
     /*
@@ -77,7 +77,9 @@ class ProductBatch extends BaseModel implements HasTitle
 
     public function scopeWithBasicRelationCounts($query)
     {
-        return $query->withCount([]);
+        return $query->withCount([
+            'comments'
+        ]);
     }
 
     /*

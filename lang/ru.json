@@ -423,6 +423,8 @@
     "Series": "Серия",
     "Manufacturing date": "Дата производства",
     "Expiration date": "Дата истечения",
+    "Remaining quantity for batches": "Остаток для партий",
+    "Available quantity": "Доступное количество",
 
     "AAAAAAAA": "BBBBBBBB"
 }
