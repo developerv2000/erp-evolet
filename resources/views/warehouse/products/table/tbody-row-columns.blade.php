@@ -73,6 +73,10 @@
         {{ $record->factual_quantity }}
     @break
 
+    @case('Sum of batches')
+        {{ $record->batches_total_quantity }}
+    @break
+
     @case('Packs in boxes')
         {{ $record->full_packs_in_boxes }}
     @break
@@ -86,7 +90,20 @@
     @break
 
     @case('Batches')
-        Add
+        <x-misc.buttoned-link
+            style="transparent"
+            class="button--arrowed-link button--margined-bottom text-lowercase"
+            icon="arrow_forward"
+            :link="route('warehouse.product-batches.index', ['order_product_id[]' => $record->id])">
+            {{ $record->batches_count }} {{ __('Batches') }}<br>
+        </x-misc.buttoned-link>
+
+        @if ($record->can_create_batch)
+            <a class="main-link"
+                href="{{ route('warehouse.product-batches.create', ['order_product_id' => $record->id]) }}">
+                {{ __('Add batch') }}
+            </a>
+        @endif
     @break
 
     @case('Date of creation')
@@ -96,4 +113,5 @@
     @case('Update date')
         {{ $record->updated_at->isoformat('DD MMM Y') }}
     @break
+
 @endswitch

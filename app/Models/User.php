@@ -546,6 +546,7 @@ class User extends Authenticatable
         $this->refresh();
         $settings = $this->settings;
         $settings[OrderProduct::SETTINGS_WAREHOUSE_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultWarehouseTableColumnsForUser($this);
+        $settings[ProductBatch::SETTINGS_WAREHOUSE_TABLE_COLUMNS_KEY] = ProductBatch::getDefaultWarehouseTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -604,6 +605,7 @@ class User extends Authenticatable
             'ELD_invoices_table_columns' => Invoice::getDefaultELDTableColumnsForUser($this),
 
             'warehouse_products_table_columns' => OrderProduct::getDefaultWarehouseTableColumnsForUser($this),
+            'warehouse_product_batches_table_columns' => ProductBatch::getDefaultWarehouseTableColumnsForUser($this),
 
             default => throw new InvalidArgumentExceptio("Unknown key: $key"),
         };

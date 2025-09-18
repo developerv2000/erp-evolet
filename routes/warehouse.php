@@ -19,7 +19,7 @@ Route::prefix('/warehouse')->middleware('auth', 'auth.session')->name('warehouse
     // Batches
     Route::prefix('/product-batches')->controller(WarehouseProductBatchController::class)->name('product-batches.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesOnly(
-            ['index', 'edit', 'update'],
+            ['index', 'create', 'store', 'edit', 'update'],
             'id',
             'can:view-warehouse-product-batches',
             'can:edit-warehouse-product-batches'

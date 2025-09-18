@@ -7,6 +7,7 @@ use App\Notifications\InvoicePaymentIsCompleted;
 use App\Support\Abstracts\BaseModel;
 use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\QueryFilterHelper;
+use App\Support\Traits\Model\Commentable;
 use App\Support\Traits\Model\FormatsAttributeForDateTimeInput;
 use App\Support\Traits\Model\UploadsFile;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,6 +19,7 @@ class Invoice extends BaseModel implements HasTitle
     use SoftDeletes; // No manual trashing/restoring. Trashed when order parent is trashed.
     use UploadsFile;
     use FormatsAttributeForDateTimeInput;
+    use Commentable;
 
     /*
     |--------------------------------------------------------------------------
