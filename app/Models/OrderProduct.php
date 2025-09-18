@@ -406,7 +406,8 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
             // Delete hasOne 'deliveryToWarehouse' and 'Export' relations
             $invoices = Invoice::where('order_product_id', $record->id)
-                ->where('order_id', $record->order_id);
+                ->where('order_id', $record->order_id)
+                ->get();
 
             foreach ($invoices as $invoice) {
                 $invoice->delete();
