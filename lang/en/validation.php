@@ -194,10 +194,6 @@ return [
         'misc_models' => [
             'record_is_in_use' => 'The ":name" cannot be removed because it is used by other tables.',
         ],
-
-        'vps' => [
-            'responsible_person_should_be_changed' => 'Please update the responsible person when making changes to the product.',
-        ],
     ],
 
     /*

@@ -170,8 +170,6 @@ class MADProcessController extends Controller
      */
     public function update(ProcessUpdateRequest $request, $record)
     {
-        $request->ensureResponsiblePersonIsUpdated();
-
         $record = Process::withTrashed()->findOrFail($record);
         $record->updateFromRequest($request);
 
