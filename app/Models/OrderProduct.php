@@ -327,6 +327,23 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             && !is_null($this->delivery_to_warehouse_loading_confirmed_date);
     }
 
+    public function getTotalQuantityOfAllBatchesAttribute(): int
+    {
+        return $this->batches->count()
+            ? $this->batches->sum('quantity')
+            : 0;
+    }
+
+    public function getRemainingQuantityForBatchesAttribute(): int
+    {
+        return $this->factual_quantity - $this->total_quantity_of_all_batches;
+    }
+
+    public function getCanCreateBatchAttribute(): bool
+    {
+        return $this->remaining_quantity_for_batches > 0;
+    }
+
     public function getPackingListAssetUrlAttribute(): string
     {
         return asset(self::PACKING_LIST_FILE_PATH . '/' . $this->packing_list_file);
@@ -450,6 +467,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
     public function scopeWithBasicRelationCounts($query)
     {
         return $query->withCount([
+            'batches',
             'comments',
         ]);
     }
@@ -1377,13 +1395,14 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
             ['name' => 'Arrived at warehouse', 'order' => $order++, 'width' => 124, 'visible' => 1],
             ['name' => 'Original invoice', 'order' => $order++, 'width' => 166, 'visible' => 1],
-            ['name' => 'Seller', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Seller', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'Customs code', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Factual quantity', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Batches', 'order' => $order++, 'width' => 136, 'visible' => 1],
+            ['name' => 'Sum of batches', 'order' => $order++, 'width' => 104, 'visible' => 1],
             ['name' => 'Packs in boxes', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Packs in box', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Defects quantity', 'order' => $order++, 'width' => 170, 'visible' => 1],
-            ['name' => 'Batches', 'order' => $order++, 'width' => 120, 'visible' => 1],
 
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],

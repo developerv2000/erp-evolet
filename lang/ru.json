@@ -417,6 +417,14 @@
     "Packs in boxes": "Упаковки в боксах",
     "Packs in box": "Упаковки в боксе",
     "Defects quantity": "Дефектное количество",
+    "Add batch": "Добавить партию",
+    "Sum of batches": "Сумма партий",
+
+    "Series": "Серия",
+    "Manufacturing date": "Дата производства",
+    "Expiration date": "Дата истечения",
+    "Remaining quantity for batches": "Остаток для партий",
+    "Available quantity": "Доступное количество",
 
     "AAAAAAAA": "BBBBBBBB"
 }
