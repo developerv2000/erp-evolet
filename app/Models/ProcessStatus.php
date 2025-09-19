@@ -36,7 +36,7 @@ class ProcessStatus extends Model
         9, // ПцКк
     ];
 
-    const DEADLINE_DAYS = 15;
+    const DEADLINE_DAYS = 20;
 
     /*
     |--------------------------------------------------------------------------
