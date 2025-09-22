@@ -574,9 +574,6 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             $lowercasedDepartment = strtolower($department);
 
             // Generate index page breadcrumb omptions
-            $indexPageLink = route('msd.order-products.serialized-by-us.index');
-            $indexPageTitle = __('Riga');
-
             if ($this->serializationType->name == SerializationType::BY_MANUFACTURER_TYPE_NAME) {
                 $indexPageLink = route('msd.order-products.serialized-by-manufacturer.index');
                 $indexPageTitle = __('Factory');
@@ -1304,14 +1301,14 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public static function getDefaultELDTableColumnsForUser($user)
     {
-        if (Gate::forUser($user)->denies('view-ELD-orders')) {
+        if (Gate::forUser($user)->denies('view-ELD-order-products')) {
             return null;
         }
 
         $order = 1;
         $columns = array();
 
-        if (Gate::forUser($user)->allows('edit-ELD-orders')) {
+        if (Gate::forUser($user)->allows('edit-ELD-order-products')) {
             array_push(
                 $columns,
                 ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],

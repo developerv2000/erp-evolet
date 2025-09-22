@@ -6,7 +6,7 @@
                 field="serialization_start_date"
                 :model="$record"
                 type="date"
-                :initial-value="$record->serialization_start_date->format('Y-m-d')" />
+                :initial-value="$record->serialization_start_date?->format('Y-m-d')" />
 
             <x-form.inputs.record-field-input
                 labelText="Factual quantity"
@@ -25,7 +25,7 @@
                 field="serialization_end_date"
                 :model="$record"
                 type="date"
-                :initial-value="$record->serialization_end_date->format('Y-m-d')" />
+                :initial-value="$record->serialization_end_date?->format('Y-m-d')" />
         </div>
 
         <div class="form__row">

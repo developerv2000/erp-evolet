@@ -8,7 +8,7 @@
                 @class([
                     'leftbar__nav-link',
                     'leftbar__nav-link--active' => request()->routeIs(
-                        'msd.order-products.serialized-by-manufacturer.index'),
+                        'msd.order-products.serialized-by-manufacturer.*'),
                 ])
                 href="{{ route('msd.order-products.serialized-by-manufacturer.index') }}">
 
