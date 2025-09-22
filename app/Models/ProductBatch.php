@@ -299,10 +299,15 @@ class ProductBatch extends BaseModel implements HasTitle
             ['name' => 'Series', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'Manufacturing date', 'order' => $order++, 'width' => 144, 'visible' => 1],
             ['name' => 'Expiration date', 'order' => $order++, 'width' => 122, 'visible' => 1],
-            ['name' => 'Quantity', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Quantity', 'order' => $order++, 'width' => 150, 'visible' => 1],
 
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
+
+            ['name' => 'Number of boxes (full)', 'order' => $order++, 'width' => 212, 'visible' => 1],
+            ['name' => 'Number of packages in box (full)', 'order' => $order++, 'width' => 260, 'visible' => 1],
+            ['name' => 'Number of boxes (incomplete)', 'order' => $order++, 'width' => 230, 'visible' => 1],
+            ['name' => 'Number of packages in box (incomplete)', 'order' => $order++, 'width' => 274, 'visible' => 1],
 
             ['name' => 'Start date of work', 'order' => $order++, 'width' => 170, 'visible' => 1],
             ['name' => 'Factual quantity', 'order' => $order++, 'width' => 182, 'visible' => 1],

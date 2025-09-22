@@ -341,6 +341,13 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             : 0;
     }
 
+    public function getTotalDefectsQuantityOfAllBatchesAttribute(): int
+    {
+        return $this->batches->count()
+            ? $this->batches->sum('defects_quantity')
+            : 0;
+    }
+
     public function getRemainingQuantityForBatchesAttribute(): int
     {
         return $this->factual_quantity - $this->total_quantity_of_all_batches;
@@ -1404,7 +1411,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Customs code', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Factual quantity', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'Batches', 'order' => $order++, 'width' => 136, 'visible' => 1],
-            ['name' => 'Sum of batches', 'order' => $order++, 'width' => 108, 'visible' => 1],
+            ['name' => 'Sum of batches', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Packs in boxes', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Packs in box', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Defects quantity', 'order' => $order++, 'width' => 170, 'visible' => 1],

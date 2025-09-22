@@ -74,7 +74,9 @@
     @break
 
     @case('Sum of batches')
-        {{ $record->total_quantity_of_all_batches }} - {{ $record->total_factual_quantity_of_all_batches ?: 0 }} {{ __('marked') }}
+        {{ __('Total') }}: {{ $record->total_quantity_of_all_batches }} <br>
+        {{ __('Marked') }}: {{ $record->total_factual_quantity_of_all_batches ?: 0 }} <br>
+        {{ __('Defects') }}: {{ $record->total_defects_quantity_of_all_batches ?: 0 }}
     @break
 
     @case('Packs in boxes')

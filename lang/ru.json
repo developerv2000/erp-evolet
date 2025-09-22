@@ -435,7 +435,8 @@
     "Serialization request": "Запрос на сериализацию",
     "Start date of work": "Дата начало работ",
     "End date of work": "Дата завершения работ",
-    "marked": "маркированы",
+    "Marked": "Маркированы",
+    "Defects": "Браки",
     "Additional comment": "Дополнительный комментарий",
 
     "AAAAAAAA": "BBBBBBBB"

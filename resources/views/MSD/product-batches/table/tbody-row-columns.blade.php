@@ -27,6 +27,22 @@
         <x-tables.partials.td.max-lines-limited-text :text="$record->product->process->full_trademark_en" />
     @break
 
+    @case('Number of boxes (full)')
+        {{ $record->number_of_full_boxes }}
+    @break
+
+    @case('Number of packages in box (full)')
+        {{ $record->number_of_packages_in_full_box }}
+    @break
+
+    @case('Number of boxes (incomplete)')
+        {{ $record->number_of_incomplete_boxes }}
+    @break
+
+    @case('Number of packages in box (incomplete)')
+        {{ $record->number_of_packages_in_incomplete_box }}
+    @break
+
     @case('Comments')
         <x-tables.partials.td.model-comments-link :record="$record" />
     @break
