@@ -239,7 +239,7 @@ class ProductBatch extends BaseModel implements HasTitle
             ['name' => 'Series', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'Manufacturing date', 'order' => $order++, 'width' => 144, 'visible' => 1],
             ['name' => 'Expiration date', 'order' => $order++, 'width' => 122, 'visible' => 1],
-            ['name' => 'Quantity', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'Quantity', 'order' => $order++, 'width' => 150, 'visible' => 1],
 
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
@@ -299,7 +299,7 @@ class ProductBatch extends BaseModel implements HasTitle
             ['name' => 'Series', 'order' => $order++, 'width' => 100, 'visible' => 1],
             ['name' => 'Manufacturing date', 'order' => $order++, 'width' => 144, 'visible' => 1],
             ['name' => 'Expiration date', 'order' => $order++, 'width' => 122, 'visible' => 1],
-            ['name' => 'Quantity', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Quantity', 'order' => $order++, 'width' => 120, 'visible' => 1],
 
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
