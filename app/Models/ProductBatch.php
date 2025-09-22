@@ -163,9 +163,13 @@ class ProductBatch extends BaseModel implements HasTitle
         self::create($request->all());
     }
 
+    /**
+     * By ELD or PLPD
+     */
     public function updateFromWarehouseRequest($request)
     {
         $this->update($request->all());
+        $this->recalculateIncompleteBox();
     }
 
     public function updateByMSDFromRequest($request)
@@ -194,6 +198,25 @@ class ProductBatch extends BaseModel implements HasTitle
     | Misc
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Used while updating 'number_of_full_boxes' and 'number_of_packages_in_full_boxes' by PLPD
+     */
+    public function recalculateIncompleteBox()
+    {
+        if (!$this->number_of_full_boxes || !$this->number_of_packages_in_full_box) {
+            $this->number_of_incomplete_boxes = null;
+            $this->number_of_packages_in_incomplete_box = null;
+            $this->saveQuietly();
+
+            return;
+        }
+
+        $remained = $this->quantity - ($this->number_of_full_boxes * $this->number_of_packages_in_full_box);
+        $this->number_of_incomplete_boxes = $remained ? 1 : null;
+        $this->number_of_packages_in_incomplete_box = $remained ?: null;
+        $this->save();
+    }
 
     public static function getDefaultWarehouseTableColumnsForUser($user)
     {
@@ -237,8 +260,11 @@ class ProductBatch extends BaseModel implements HasTitle
             array_push(
                 $columns,
                 ['name' => 'Serialization request date', 'order' => $order++, 'width' => 202, 'visible' => 1],
-                ['name' => 'Number of boxes', 'order' => $order++, 'width' => 152, 'visible' => 1],
-                ['name' => 'Number of packages in box', 'order' => $order++, 'width' => 198, 'visible' => 1],
+                ['name' => 'Number of boxes (full)', 'order' => $order++, 'width' => 212, 'visible' => 1],
+                ['name' => 'Number of packages in box (full)', 'order' => $order++, 'width' => 260, 'visible' => 1],
+                ['name' => 'Number of boxes (incomplete)', 'order' => $order++, 'width' => 230, 'visible' => 1],
+                ['name' => 'Number of packages in box (incomplete)', 'order' => $order++, 'width' => 274, 'visible' => 1],
+                ['name' => 'Additional comment', 'order' => $order++, 'width' => 220, 'visible' => 1],
             );
         }
 

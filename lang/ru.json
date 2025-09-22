@@ -427,12 +427,16 @@
     "Available quantity": "Доступное количество",
 
     "Serialization request date": "Дата запроса сериализации",
-    "Number of boxes": "Количество коробок",
-    "Number of packages in box": "Кол-во упаковок в коробке",
+    "Number of boxes (full)": "Количество коробок (полное)",
+    "Number of packages in box (full)": "Кол-во упаковок в коробке (полное)",
+    "Number of boxes (incomplete)": "Количество коробок (неполное)",
+    "Number of packages in box (incomplete)": "Кол-во упаковок в коробке (неполное)",
     "Request": "Запросить",
     "Serialization request": "Запрос на сериализацию",
     "Start date of work": "Дата начало работ",
     "End date of work": "Дата завершения работ",
+    "marked": "маркированы",
+    "Additional comment": "Дополнительный комментарий",
 
     "AAAAAAAA": "BBBBBBBB"
 }

@@ -30,8 +30,13 @@ return new class extends Migration
             // Step 2:
             // PLPD part
             $table->timestamp('serialization_request_date')->nullable(); // action
-            $table->unsignedMediumInteger('number_of_boxes')->nullable();
-            $table->unsignedMediumInteger('number_of_packages_in_box')->nullable();
+            $table->unsignedMediumInteger('number_of_full_boxes')->nullable();
+            $table->unsignedMediumInteger('number_of_packages_in_full_box')->nullable();
+
+            $table->unsignedMediumInteger('number_of_incomplete_boxes')->nullable(); // auto (0 or 1)
+            $table->unsignedMediumInteger('number_of_packages_in_incomplete_box')->nullable(); // auto
+
+            $table->string('additional_comment')->nullable();
 
             // Step 3:
             // MSD part

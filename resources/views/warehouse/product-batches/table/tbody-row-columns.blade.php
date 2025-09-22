@@ -16,7 +16,7 @@
     @break
 
     @case('Quantity')
-        {{ $record->quantity }}
+        {{ $record->quantity }} - {{ $record->factual_quantity ?: 0 }} {{ __('marked') }}
     @break
 
     @case('Manufacturer')
@@ -80,12 +80,24 @@
         @endif
     @break
 
-    @case('Number of boxes')
-        {{ $record->number_of_boxes }}
+    @case('Number of boxes (full)')
+        {{ $record->number_of_full_boxes }}
     @break
 
-    @case('Number of packages in box')
-        {{ $record->number_of_packages_in_box }}
+    @case('Number of packages in box (full)')
+        {{ $record->number_of_packages_in_full_box }}
+    @break
+
+    @case('Number of boxes (incomplete)')
+        {{ $record->number_of_incomplete_boxes }}
+    @break
+
+    @case('Number of packages in box (incomplete)')
+        {{ $record->number_of_packages_in_incomplete_box }}
+    @break
+
+    @case('Additional comment')
+        <x-tables.partials.td.max-lines-limited-text :text="$record->additional_comment" />
     @break
 
     @case('ID')
