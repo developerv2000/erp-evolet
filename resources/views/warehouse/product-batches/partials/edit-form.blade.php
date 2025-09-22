@@ -38,6 +38,32 @@
         </div>
     </div>
 
+    @if ($record->serialization_requested)
+        @can('request-serialization-for-product-batches')
+            <div class="form__block">
+                <h1 class="main-title main-title--marginless">
+                    {{ __('Serialization request') }}
+                </h1>
+
+                <div class="form__row">
+                    <x-form.inputs.record-field-input
+                        labelText="Number of boxes"
+                        field="number_of_boxes"
+                        :model="$record"
+                        :isRequired="true"
+                        type="number" />
+
+                    <x-form.inputs.record-field-input
+                        labelText="Number of packages in box"
+                        field="number_of_packages_in_box"
+                        :model="$record"
+                        :isRequired="true"
+                        type="number" />
+                </div>
+            </div>
+        @endcan
+    @endif
+
     <div class="form__block">
         <x-form.misc.comment-inputs-on-model-edit :record="$record" />
     </div>

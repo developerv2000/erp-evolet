@@ -24,5 +24,7 @@ Route::prefix('/warehouse')->middleware('auth', 'auth.session')->name('warehouse
             'can:view-warehouse-product-batches',
             'can:edit-warehouse-product-batches'
         );
+
+        Route::post('/request-serialization/{record}', 'requestSerialization')->name('request-serialization');
     });
 });

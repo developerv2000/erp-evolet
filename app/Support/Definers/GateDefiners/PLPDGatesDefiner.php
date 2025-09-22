@@ -60,5 +60,11 @@ class PLPDGatesDefiner
             fn($user) =>
             $user->hasPermission(Permission::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_FOR_CONFIRMATION)
         );
+
+        Gate::define(
+            'request-serialization-for-product-batches',
+            fn($user) =>
+            $user->hasPermission(Permission::CAN_REQUEST_SERIALIZATION_FOR_PRODUCT_BATCHES)
+        );
     }
 }

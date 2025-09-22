@@ -519,6 +519,7 @@ class User extends Authenticatable
         $this->refresh();
         $settings = $this->settings;
         $settings[OrderProduct::SETTINGS_MSD_SERIALIZED_BY_MANUFACTURER_TABLE_COLUMNS_KEY] = OrderProduct::getDefaultMSDSerializedByManufacturerTableColumnsForUser($this);
+        $settings[ProductBatch::SETTINGS_MSD_TABLE_COLUMNS_KEY] = ProductBatch::getDefaultMSDTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -600,6 +601,7 @@ class User extends Authenticatable
 
             'MSD_order_products_serialized_by_manufacturer_table_columns' =>
             OrderProduct::getDefaultMSDSerializedByManufacturerTableColumnsForUser($this),
+            'MSD_product_batches_table_columns' => ProductBatch::getDefaultMSDTableColumnsForUser($this),
 
             'ELD_order_products_table_columns' => OrderProduct::getDefaultELDTableColumnsForUser($this),
             'ELD_invoices_table_columns' => Invoice::getDefaultELDTableColumnsForUser($this),

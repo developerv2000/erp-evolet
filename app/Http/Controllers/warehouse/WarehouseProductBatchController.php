@@ -70,4 +70,12 @@ class WarehouseProductBatchController extends Controller
 
         return redirect($request->input('previous_url'));
     }
+
+    public function requestSerialization(ProductBatch $record)
+    {
+        $record->serialization_request_date = now();
+        $record->save();
+
+        return redirect()->route('warehouse.product-batches.edit', $record->id);
+    }
 }

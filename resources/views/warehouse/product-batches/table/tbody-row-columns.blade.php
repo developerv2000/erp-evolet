@@ -63,6 +63,31 @@
         <x-tables.partials.td.max-lines-limited-text :text="$record->lastComment?->plain_text" />
     @break
 
+    @case('Serialization request date')
+        @if ($record->serialization_requested)
+            {{ $record->serialization_request_date->isoformat('DD MMM Y') }}
+        @else
+            <form action="{{ route('warehouse.product-batches.request-serialization', $record->id) }}" method="POST">
+                @csrf
+
+                <x-misc.button
+                    style="transparent"
+                    class="button--arrowed-link button--margined-bottom"
+                    icon="line_end_arrow_notch">
+                    {{ __('Request') }}
+                </x-misc.button>
+            </form>
+        @endif
+    @break
+
+    @case('Number of boxes')
+        {{ $record->number_of_boxes }}
+    @break
+
+    @case('Number of packages in box')
+        {{ $record->number_of_packages_in_box }}
+    @break
+
     @case('ID')
         {{ $record->id }}
     @break
@@ -74,4 +99,5 @@
     @case('Update date')
         {{ $record->updated_at->isoformat('DD MMM Y') }}
     @break
+
 @endswitch

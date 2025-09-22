@@ -27,6 +27,24 @@ return new class extends Migration
             $table->date('expiration_date')->nullable();
             $table->unsignedMediumInteger('quantity');
 
+            // Step 2:
+            // PLPD part
+            $table->timestamp('serialization_request_date')->nullable(); // action
+            $table->unsignedMediumInteger('number_of_boxes')->nullable();
+            $table->unsignedMediumInteger('number_of_packages_in_box')->nullable();
+
+            // Step 3:
+            // MSD part
+            $table->date('serialization_start_date')->nullable();
+            $table->unsignedMediumInteger('factual_quantity')->nullable();
+            $table->unsignedMediumInteger('defects_quantity')->nullable();
+            $table->date('serialization_end_date')->nullable();
+
+            $table->timestamp('serialization_codes_request_date')->nullable();
+            $table->timestamp('serialization_codes_sent_date')->nullable();
+            $table->timestamp('serialization_report_recieved_date')->nullable();
+            $table->timestamp('report_sent_to_hub_date')->nullable();
+
             // Timestamps
             $table->timestamps();
         });

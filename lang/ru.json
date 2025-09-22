@@ -426,5 +426,13 @@
     "Remaining quantity for batches": "Остаток для партий",
     "Available quantity": "Доступное количество",
 
+    "Serialization request date": "Дата запроса сериализации",
+    "Number of boxes": "Количество коробок",
+    "Number of packages in box": "Кол-во упаковок в коробке",
+    "Request": "Запросить",
+    "Serialization request": "Запрос на сериализацию",
+    "Start date of work": "Дата начало работ",
+    "End date of work": "Дата завершения работ",
+
     "AAAAAAAA": "BBBBBBBB"
 }

@@ -20,9 +20,9 @@
                 @class([
                     'leftbar__nav-link',
                     'leftbar__nav-link--active' => request()->routeIs(
-                        'msd.order-products.serialized-by-us.index'),
+                        'msd.product-batches.*'),
                 ])
-                href="{{ route('msd.order-products.serialized-by-us.index') }}">
+                href="{{ route('msd.product-batches.index') }}">
 
                 <x-misc.material-symbol class="leftbar__nav-link-icon" icon="local_shipping" />
                 <span class="leftbar__nav-link-text">{{ __('Riga') }}</span>

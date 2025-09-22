@@ -125,6 +125,8 @@ class PermissionSeeder extends Seeder
 
             Permission::CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER,
             Permission::CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_FOR_CONFIRMATION,
+
+            Permission::CAN_REQUEST_SERIALIZATION_FOR_PRODUCT_BATCHES,
         ];
 
         foreach ($PLPDs as $plpd) {
@@ -215,7 +217,9 @@ class PermissionSeeder extends Seeder
 
         $msds = [
             Permission::CAN_VIEW_MSD_ORDER_PRODUCTS_NAME,
+            Permission::CAN_VIEW_MSD_PRODUCT_BATCHES_NAME,
             Permission::CAN_EDIT_MSD_ORDER_PRODUCTS_NAME,
+            Permission::CAN_EDIT_MSD_PRODUCT_BATCHES_NAME,
         ];
 
         foreach ($msds as $msd) {

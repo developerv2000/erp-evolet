@@ -154,6 +154,8 @@ class Permission extends Model
     const CAN_RECEIVE_NOTIFICATION_WHEN_MAD_VPS_IS_MARKED_AS_READY_FOR_ORDER = 'can receive notification when MAD VPS is marked as ready for order';
     const CAN_RECEIVE_NOTIFICATION_WHEN_CMD_ORDER_IS_SENT_FOR_CONFIRMATION = 'can receive notification when CMD order is sent for confirmation';
 
+    const CAN_REQUEST_SERIALIZATION_FOR_PRODUCT_BATCHES = 'can request serialization for product batches';
+
     /*
     |--------------------------------------------------------------------------
     | CMD permissions
@@ -208,9 +210,11 @@ class Permission extends Model
 
     // View
     const CAN_VIEW_MSD_ORDER_PRODUCTS_NAME = 'can view MSD order products';
+    const CAN_VIEW_MSD_PRODUCT_BATCHES_NAME = 'can view MSD product batches';
 
     // Edit
     const CAN_EDIT_MSD_ORDER_PRODUCTS_NAME = 'can edit MSD order products';
+    const CAN_EDIT_MSD_PRODUCT_BATCHES_NAME = 'can edit MSD product batches';
 
     /*
     |--------------------------------------------------------------------------
@@ -414,6 +418,8 @@ class Permission extends Model
             // Warehouse
             self::CAN_VIEW_WAREHOUSE_PRODUCTS_NAME,
             self::CAN_VIEW_WAREHOUSE_PRODUCT_BATCHES_NAME,
+            self::CAN_EDIT_WAREHOUSE_PRODUCT_BATCHES_NAME,
+            self::CAN_REQUEST_SERIALIZATION_FOR_PRODUCT_BATCHES,
         ];
     }
 
@@ -465,7 +471,10 @@ class Permission extends Model
     {
         return [
             self::CAN_VIEW_MSD_ORDER_PRODUCTS_NAME,
+            self::CAN_VIEW_MSD_PRODUCT_BATCHES_NAME,
+
             self::CAN_EDIT_MSD_ORDER_PRODUCTS_NAME,
+            self::CAN_EDIT_MSD_PRODUCT_BATCHES_NAME,
         ];
     }
 
