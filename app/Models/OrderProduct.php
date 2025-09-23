@@ -527,6 +527,13 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return $query->where('serialization_type_id', $serializationTypeId);
     }
 
+    public function scopeOnlySerializedByUs($query)
+    {
+        $serializationTypeId = SerializationType::findByName(SerializationType::BY_US_TYPE_NAME)->id;
+
+        return $query->where('serialization_type_id', $serializationTypeId);
+    }
+
     public function scopeOnlyArrivedAtWarehouse($query)
     {
         return $query->whereNotNull('warehouse_arrival_date');

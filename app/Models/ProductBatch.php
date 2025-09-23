@@ -101,9 +101,11 @@ class ProductBatch extends BaseModel implements HasTitle
         ]);
     }
 
-    public function scopeOnlySerializationRequested($query)
+    public function scopeOnlySerializedByUs($query)
     {
-        return $query->whereNotNull('serialization_request_date');
+        return $query->whereHas('product', function ($productQuery) {
+            $productQuery->onlySerializedByUs();
+        });
     }
 
     /*
