@@ -32,7 +32,7 @@ class ManufacturerFactory extends Factory
             'important' => fake()->boolean(),
             'bdm_user_id' => User::onlyCMDBDMs()->inRandomOrder()->first()->id,
             'analyst_user_id' => User::onlyMADAnalysts()->inRandomOrder()->first()->id,
-            'category_id' => rand(1, 2),
+            'category_id' => rand(1, 3),
             'country_id' => rand(1, Country::count()),
             'created_at' => fake()->dateTimeBetween('-2 year', 'now'),
         ];

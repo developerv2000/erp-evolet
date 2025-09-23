@@ -18,11 +18,7 @@
     @break
 
     @case('Category')
-        <span @class([
-            'badge',
-            'badge--blue' => $record->manufacturer->category->name == 'УДС',
-            'badge--yellow' => $record->manufacturer->category->name == 'НПП',
-        ])>
+        <span class="badge {{ $record->manufacturer->category->badge_class }}">
             {{ $record->manufacturer->category->name }}
         </span>
     @break

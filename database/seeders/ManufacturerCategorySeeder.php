@@ -13,7 +13,7 @@ class ManufacturerCategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $name = ['НПП', 'УДС'];
+        $name = ['НПП', 'БПП', 'НПП-'];
 
         for ($i = 0; $i < count($name); $i++) {
             $item = new ManufacturerCategory();
