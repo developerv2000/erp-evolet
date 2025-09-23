@@ -17,8 +17,7 @@ class MSDProductBatchController extends Controller
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
-        $query = ProductBatch::onlySerializationRequested()
-            ->withBasicRelations()
+        $query = ProductBatch::withBasicRelations()
             ->withBasicRelationCounts();
 
         $filteredQuery = ProductBatch::filterQueryForRequest($query, $request);
