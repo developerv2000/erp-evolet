@@ -56,7 +56,7 @@ class ManufacturerCategory extends Model implements TracksUsageCount
     public function getBadgeClassAttribute()
     {
         switch ($this->name) {
-            case 'БПП':
+            case 'УДС':
                 return 'badge--blue';
                 break;
             case 'НПП':
@@ -64,6 +64,9 @@ class ManufacturerCategory extends Model implements TracksUsageCount
                 break;
             case 'НПП-':
                 return 'badge--green';
+                break;
+            default:
+                return 'badge--gray';
                 break;
         }
     }
