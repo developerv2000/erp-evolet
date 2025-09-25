@@ -912,6 +912,10 @@ class User extends Authenticatable
 
         foreach ($homepageRoutes as $routeName => $gate) {
             if (Gate::allows($gate)) {
+                if ($routeName == 'prd.invoices.index') {
+                    return route('prd.invoices.index', ['invoiceType' => InvoiceType::PRODUCTION_TYPE_NAME]);
+                }
+
                 return route($routeName);
             }
         }
