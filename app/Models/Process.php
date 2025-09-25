@@ -671,6 +671,9 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
                 'currency_id',
                 'agreed_price',
                 'manufacturer_first_offered_price',
+                'forecast_year_1',
+                'forecast_year_2',
+                'forecast_year_3',
             );
     }
 

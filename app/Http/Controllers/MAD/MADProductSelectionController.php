@@ -15,6 +15,7 @@ use PhpOffice\PhpSpreadsheet\Style\Color;
 class MADProductSelectionController extends Controller
 {
     const STORAGE_PATH_OF_EXCEL_TEMPLATE_FILE_FOR_EXPORT = 'app/excel/export-templates/product-selection.xlsx';
+
     const STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES = 'app/excel/exports/product-selection';
 
     const DEFAULT_COUNTRIES = [
@@ -36,11 +37,18 @@ class MADProductSelectionController extends Controller
     ];
 
     const FIRST_DEFAULT_COUNTRY_COLUMN_LETTER = 'L';
+
     const LAST_DEFAULT_COUNTRY_COLUMN_LETTER = 'Z';
+
+    const CELLS_COUNT_FROM_ZONE_TO_FORECAST_YEAR_1 = 7;
+
     const TITLES_ROW = 2;
+
     const RECORDS_INSERT_START_ROW = 4;
 
-    private $model, $baseModel;
+    private $model;
+
+    private $baseModel;
 
     public function exportAsExcel(Request $request)
     {
@@ -85,19 +93,18 @@ class MADProductSelectionController extends Controller
         // Prepare 'Product' records before export
         if ($this->baseModel == 'Product') {
             self::loadProductsMatchedProductSearches($records);
-            $uniqueRecords = $records;
         }
 
-        // Get only unique records by 'product_id' for 'Process' model
-        if ($this->baseModel == 'Process') {
-            $uniqueRecords = $records->unique('product_id');
-        }
+        // // Get only unique records by 'product_id' for 'Process' model
+        // if ($this->baseModel == 'Process') {
+        // $uniqueRecords = $records;
+        // }
 
         // Get additional country names
         $additionalCountries = $this->insertAdditionalCountriesIntoSheet($sheet, $records);
 
         // insert records into sheet
-        $this->fillSheetWithRecords($sheet, $records, $uniqueRecords, $additionalCountries);
+        $this->fillSheetWithRecords($sheet, $records, $additionalCountries);
 
         // Save modified spreadsheet
         $filepath = self::saveSpreadsheet($spreadsheet);
@@ -114,7 +121,7 @@ class MADProductSelectionController extends Controller
         $records->each(function ($record) use ($canceledStatusID) {
             $matchedRecords = $record->matched_product_searches;
 
-            $activeMatchedRecords = $matchedRecords->filter(fn($record) => $record->status_id != $canceledStatusID);
+            $activeMatchedRecords = $matchedRecords->filter(fn ($record) => $record->status_id != $canceledStatusID);
 
             $record->loaded_matched_product_searches = $activeMatchedRecords;
         });
@@ -156,24 +163,26 @@ class MADProductSelectionController extends Controller
         $uniqueCountries = $this->baseModel == 'Product'
             ? $records->flatMap->loaded_matched_product_searches->pluck('country.code')->unique()
             : $records->pluck('searchCountry.code')->unique(); // Else if 'Process'
-
         // Remove countries which already present in default countries
         $additionalCountries = $uniqueCountries->diff(self::DEFAULT_COUNTRIES);
 
         return $additionalCountries;
     }
 
-    private function fillSheetWithRecords($sheet, $records, $uniqueRecords, $additionalCountries)
+    private function fillSheetWithRecords($sheet, $records, $additionalCountries)
     {
         // Join default and additional countries
         $allCountries = collect(self::DEFAULT_COUNTRIES)->merge($additionalCountries);
+
+        // Get forecast cell column start index
+        $firstForecastCellColumnIndex = $this->getFirstForecastCellColumnIndex($additionalCountries->count());
 
         // Start records insert
         $row = self::RECORDS_INSERT_START_ROW;
         $recordsCounter = 1;
 
         // Loop through records
-        foreach ($uniqueRecords as $record) {
+        foreach ($records as $record) {
             // Begin from 'A' column
             $columnIndex = 1;
 
@@ -206,7 +215,7 @@ class MADProductSelectionController extends Controller
                     if ($record->loaded_matched_product_searches->contains('country.code', $country)) {
                         $countryValue = 1;
                     }
-                } else if ($this->baseModel == 'Process') {
+                } elseif ($this->baseModel == 'Process') {
                     $matched = $records
                         ->where('product_id', $record->product_id)
                         ->where('searchCountry.code', $country)
@@ -232,6 +241,13 @@ class MADProductSelectionController extends Controller
                 $countryColumnIndexCounter++; // Move to the next country
             }
 
+            // Add forecasts only for Process model
+            if ($this->baseModel == 'Process') {
+                $sheet->setCellValue([$firstForecastCellColumnIndex, $row], $record->forecast_year_1);
+                $sheet->setCellValue([$firstForecastCellColumnIndex + 1, $row], $record->forecast_year_2);
+                $sheet->setCellValue([$firstForecastCellColumnIndex + 2, $row], $record->forecast_year_3);
+            }
+
             $row++; // Move to the next row
             $recordsCounter++; // Increment record counter
             $sheet->insertNewRowBefore($row, 1);  // Insert new rows to escape rewriting default countries list
@@ -242,8 +258,8 @@ class MADProductSelectionController extends Controller
 
     private function getRecordColumnValues($record)
     {
-        switch ($this->model) {
-            case 'App\Models\Product':
+        switch ($this->baseModel) {
+            case 'Product':
                 return [
                     $record->inn->name,
                     $record->form->name,
@@ -254,7 +270,7 @@ class MADProductSelectionController extends Controller
                 ];
                 break;
 
-            case 'App\Models\Process':
+            case 'Process':
                 return [
                     $record->product->inn->name,
                     $record->product->form->name,
@@ -263,7 +279,7 @@ class MADProductSelectionController extends Controller
                     $record->product->moq,
                     $record->product->shelfLife->name,
                     $record->manufacturer_first_offered_price,
-                    null, // Skip 'Target price'
+                    $record->our_first_offered_price,
                     $record->agreed_price,
                     $record->currency?->name,
                 ];
@@ -282,13 +298,21 @@ class MADProductSelectionController extends Controller
     {
         // Create a writer and generate a unique filename for the export
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $filename = date('Y-m-d H-i-s') . '.xlsx';
+        $filename = date('Y-m-d H-i-s').'.xlsx';
         $filename = FileHelper::ensureUniqueFilename($filename, storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES));
-        $filePath = storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES  . '/' . $filename);
+        $filePath = storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES.'/'.$filename);
 
         // Save the Excel file
         $writer->save($filePath);
 
         return $filePath;
+    }
+
+    private static function getFirstForecastCellColumnIndex($additionalCountriesCount): int
+    {
+        $lastCountryColumnLetter = self::LAST_DEFAULT_COUNTRY_COLUMN_LETTER;
+        $lastCountryColumnIndex = Coordinate::columnIndexFromString($lastCountryColumnLetter);
+
+        return $lastCountryColumnIndex + $additionalCountriesCount + self::CELLS_COUNT_FROM_ZONE_TO_FORECAST_YEAR_1;
     }
 }
