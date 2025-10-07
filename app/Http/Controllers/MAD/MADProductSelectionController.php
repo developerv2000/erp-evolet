@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\MAD;
 
 use App\Http\Controllers\Controller;
+use App\Models\Country;
 use App\Models\ProductSearchStatus;
 use App\Support\Helpers\FileHelper;
 use App\Support\Helpers\ModelHelper;
@@ -10,7 +11,9 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
 class MADProductSelectionController extends Controller
 {
@@ -93,18 +96,27 @@ class MADProductSelectionController extends Controller
         // Prepare 'Product' records before export
         if ($this->baseModel == 'Product') {
             self::loadProductsMatchedProductSearches($records);
+            $uniqueRecords = $records;
         }
 
-        // // Get only unique records by 'product_id' for 'Process' model
-        // if ($this->baseModel == 'Process') {
-        // $uniqueRecords = $records;
-        // }
+        // Get only unique records by 'product_id' for 'Process' model
+        if ($this->baseModel == 'Process') {
+            $uniqueRecords = $records->unique('product_id');
+        }
 
         // Get additional country names
         $additionalCountries = $this->insertAdditionalCountriesIntoSheet($sheet, $records);
 
+        // Add forecast headers
+        $this->addForecastHeaders($additionalCountries, $sheet);
+
         // insert records into sheet
-        $this->fillSheetWithRecords($sheet, $records, $additionalCountries);
+        $this->fillSheetWithRecords($sheet, $records, $uniqueRecords, $additionalCountries);
+
+        // Feel forecasts for 'Process' model
+        if ($this->baseModel == 'Process') {
+            $this->fillSheetForecasts($sheet, $records, $uniqueRecords, $additionalCountries);
+        }
 
         // Save modified spreadsheet
         $filepath = self::saveSpreadsheet($spreadsheet);
@@ -121,7 +133,7 @@ class MADProductSelectionController extends Controller
         $records->each(function ($record) use ($canceledStatusID) {
             $matchedRecords = $record->matched_product_searches;
 
-            $activeMatchedRecords = $matchedRecords->filter(fn ($record) => $record->status_id != $canceledStatusID);
+            $activeMatchedRecords = $matchedRecords->filter(fn($record) => $record->status_id != $canceledStatusID);
 
             $record->loaded_matched_product_searches = $activeMatchedRecords;
         });
@@ -169,20 +181,85 @@ class MADProductSelectionController extends Controller
         return $additionalCountries;
     }
 
-    private function fillSheetWithRecords($sheet, $records, $additionalCountries)
+    private function addForecastHeaders($additionalCountries, $sheet)
+    {
+        // Merge default countries with the additional countries provided
+        $allCountries = collect(self::DEFAULT_COUNTRIES)->merge($additionalCountries);
+
+        // Determine the starting column index for the first forecast based on the number of additional countries
+        $forecastStartIndex = $this->getFirstForecastCellColumnIndex($additionalCountries->count());
+
+        // Loop through all countries to add forecast columns and headers
+        foreach ($allCountries as $country) {
+            $startColumnIndex = $forecastStartIndex;
+            $endColumnIndex = $forecastStartIndex + 2;
+
+            // Convert numeric column index to Excel column letters (e.g., 1 -> A)
+            $startLetter = Coordinate::stringFromColumnIndex($startColumnIndex);
+            $endLetter = Coordinate::stringFromColumnIndex($endColumnIndex);
+
+            // Insert 3 new columns before the start column to accommodate forecast years
+            $sheet->insertNewColumnBefore($startLetter, 3);
+
+            // Merge the top row cells for the country header
+            $mergeRange = "$startLetter" . '1:' . $endLetter . '1';
+            $sheet->mergeCells($mergeRange);
+
+            // Set the country header text
+            $sheet->setCellValue([$startColumnIndex, 1], 'FORECAST ' . $country);
+
+            // Set the style for the country header
+            $forecastStyle = $sheet->getStyle($mergeRange);
+            $forecastStyle->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $forecastStyle->getFont()
+                ->setBold(true)
+                ->setSize(12)
+                ->setColor(new Color(Color::COLOR_WHITE));
+            $forecastStyle->getFill()
+                ->setFillType(Fill::FILL_SOLID)
+                ->getStartColor()->setARGB(Color::COLOR_DARKGREEN);
+
+            // Set the second row with YEAR 1, YEAR 2, YEAR 3 labels for forecast columns
+            $yearColumnIndex = $startColumnIndex;
+            $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 1');
+            $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 2');
+            $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 3');
+
+            // Loop through each forecast column to set width and style year cells
+            for ($i = $startColumnIndex; $i <= $endColumnIndex; $i++) {
+                $letter = Coordinate::stringFromColumnIndex($i);
+                $sheet->getColumnDimension($letter)->setWidth(10);
+
+                $yearStyle = $sheet->getStyle("$letter" . '2');
+                $yearStyle->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $yearStyle->getFont()->setColor(new Color(Color::COLOR_BLACK));
+                $yearStyle->getFill()
+                    ->setFillType(Fill::FILL_SOLID)
+                    ->getStartColor()->setARGB(Color::COLOR_YELLOW);
+            }
+
+            // Apply thin borders to the header and year rows for this country
+            $borderRange = "$startLetter" . "1:$endLetter" . '2';
+            $sheet->getStyle($borderRange)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+            // Move the starting index to the next set of forecast columns
+            $forecastStartIndex += 3;
+        }
+
+        return $allCountries;
+    }
+
+    private function fillSheetWithRecords($sheet, $records, $uniqueRecords, $additionalCountries)
     {
         // Join default and additional countries
         $allCountries = collect(self::DEFAULT_COUNTRIES)->merge($additionalCountries);
-
-        // Get forecast cell column start index
-        $firstForecastCellColumnIndex = $this->getFirstForecastCellColumnIndex($additionalCountries->count());
 
         // Start records insert
         $row = self::RECORDS_INSERT_START_ROW;
         $recordsCounter = 1;
 
         // Loop through records
-        foreach ($records as $record) {
+        foreach ($uniqueRecords as $record) {
             // Begin from 'A' column
             $columnIndex = 1;
 
@@ -241,19 +318,47 @@ class MADProductSelectionController extends Controller
                 $countryColumnIndexCounter++; // Move to the next country
             }
 
-            // Add forecasts only for Process model
-            if ($this->baseModel == 'Process') {
-                $sheet->setCellValue([$firstForecastCellColumnIndex, $row], $record->forecast_year_1);
-                $sheet->setCellValue([$firstForecastCellColumnIndex + 1, $row], $record->forecast_year_2);
-                $sheet->setCellValue([$firstForecastCellColumnIndex + 2, $row], $record->forecast_year_3);
-            }
-
             $row++; // Move to the next row
             $recordsCounter++; // Increment record counter
             $sheet->insertNewRowBefore($row, 1);  // Insert new rows to escape rewriting default countries list
         }
 
         self::removeRedundantRow($sheet, $records, $row);
+    }
+
+    private function fillSheetForecasts($sheet, $records, $uniqueRecords, $additionalCountries)
+    {
+        // Join default and additional countries
+        $allCountries = collect(self::DEFAULT_COUNTRIES)->merge($additionalCountries);
+
+        // Get forecast cell column start index
+        $firstForecastCellColumnIndex = $this->getFirstForecastCellColumnIndex($additionalCountries->count());
+
+        // Start records insert
+        $row = self::RECORDS_INSERT_START_ROW;
+
+        // Loop through records
+        foreach ($uniqueRecords as $record) {
+            $forecastColumnIndex = $firstForecastCellColumnIndex;
+            // Loop through all countries
+            foreach ($allCountries as $country) {
+
+                $matched = $records
+                    ->where('product_id', $record->product_id)
+                    ->where('searchCountry.code', $country)
+                    ->first();
+
+                if ($matched) {
+                    $sheet->setCellValue([$forecastColumnIndex++, $row], $matched->forecast_year_1);
+                    $sheet->setCellValue([$forecastColumnIndex++, $row], $matched->forecast_year_2);
+                    $sheet->setCellValue([$forecastColumnIndex++, $row], $matched->forecast_year_3);
+                } else {
+                    $forecastColumnIndex += 3;
+                }
+            }
+
+            $row++; // Move to the next row
+        }
     }
 
     private function getRecordColumnValues($record)
@@ -298,9 +403,9 @@ class MADProductSelectionController extends Controller
     {
         // Create a writer and generate a unique filename for the export
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $filename = date('Y-m-d H-i-s').'.xlsx';
+        $filename = date('Y-m-d H-i-s') . '.xlsx';
         $filename = FileHelper::ensureUniqueFilename($filename, storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES));
-        $filePath = storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES.'/'.$filename);
+        $filePath = storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES . '/' . $filename);
 
         // Save the Excel file
         $writer->save($filePath);
