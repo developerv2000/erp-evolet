@@ -182,72 +182,91 @@ class MADProductSelectionController extends Controller
     }
 
     private function addForecastHeaders($additionalCountries, $sheet)
-    {
-        // Merge default countries with the additional countries provided
-        $allCountries = collect(self::DEFAULT_COUNTRIES)->merge($additionalCountries);
+{
+    // Merge default countries with the additional countries provided
+    $allCountries = collect(self::DEFAULT_COUNTRIES)->merge($additionalCountries);
 
-        // Determine the starting column index for the first forecast based on the number of additional countries
-        $forecastStartIndex = $this->getFirstForecastCellColumnIndex($additionalCountries->count());
+    // Determine the starting column index for the first forecast based on the number of additional countries
+    $forecastStartIndex = $this->getFirstForecastCellColumnIndex($additionalCountries->count());
 
-        // Loop through all countries to add forecast columns and headers
-        foreach ($allCountries as $country) {
-            $startColumnIndex = $forecastStartIndex;
-            $endColumnIndex = $forecastStartIndex + 2;
+    // Loop through all countries to add forecast columns and headers
+    foreach ($allCountries as $country) {
+        $startColumnIndex = $forecastStartIndex;
+        $endColumnIndex = $forecastStartIndex + 2;
 
-            // Convert numeric column index to Excel column letters (e.g., 1 -> A)
-            $startLetter = Coordinate::stringFromColumnIndex($startColumnIndex);
-            $endLetter = Coordinate::stringFromColumnIndex($endColumnIndex);
+        // Convert numeric column index to Excel column letters (e.g., 1 -> A)
+        $startLetter = Coordinate::stringFromColumnIndex($startColumnIndex);
+        $endLetter = Coordinate::stringFromColumnIndex($endColumnIndex);
 
-            // Insert 3 new columns before the start column to accommodate forecast years
-            $sheet->insertNewColumnBefore($startLetter, 3);
+        // Insert 3 new columns before the start column to accommodate forecast years
+        $sheet->insertNewColumnBefore($startLetter, 3);
 
-            // Merge the top row cells for the country header
-            $mergeRange = "$startLetter" . '1:' . $endLetter . '1';
-            $sheet->mergeCells($mergeRange);
+        // Merge the top row cells for the country header
+        $mergeRange = "$startLetter" . '1:' . $endLetter . '1';
+        $sheet->mergeCells($mergeRange);
 
-            // Set the country header text
-            $sheet->setCellValue([$startColumnIndex, 1], 'FORECAST ' . $country);
+        // Set the country header text
+        $sheet->setCellValue([$startColumnIndex, 1], 'FORECAST ' . $country);
 
-            // Set the style for the country header
-            $forecastStyle = $sheet->getStyle($mergeRange);
-            $forecastStyle->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-            $forecastStyle->getFont()
-                ->setBold(true)
-                ->setSize(12)
-                ->setColor(new Color(Color::COLOR_WHITE));
-            $forecastStyle->getFill()
-                ->setFillType(Fill::FILL_SOLID)
-                ->getStartColor()->setARGB(Color::COLOR_DARKGREEN);
+        // Define the full range (both rows: FORECAST + YEAR rows)
+        $range = "$startLetter" . '1:' . $endLetter . '2';
 
-            // Set the second row with YEAR 1, YEAR 2, YEAR 3 labels for forecast columns
-            $yearColumnIndex = $startColumnIndex;
-            $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 1');
-            $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 2');
-            $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 3');
+        // 🎨 Determine background color based on country code group
+        $country = strtoupper($country); // ensure uppercase consistency
+        $fillColor = 'FFFFFFFF';
+        $fontColor = Color::COLOR_BLACK; 
 
-            // Loop through each forecast column to set width and style year cells
-            for ($i = $startColumnIndex; $i <= $endColumnIndex; $i++) {
-                $letter = Coordinate::stringFromColumnIndex($i);
-                $sheet->getColumnDimension($letter)->setWidth(10);
-
-                $yearStyle = $sheet->getStyle("$letter" . '2');
-                $yearStyle->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $yearStyle->getFont()->setColor(new Color(Color::COLOR_BLACK));
-                $yearStyle->getFill()
-                    ->setFillType(Fill::FILL_SOLID)
-                    ->getStartColor()->setARGB(Color::COLOR_YELLOW);
-            }
-
-            // Apply thin borders to the header and year rows for this country
-            $borderRange = "$startLetter" . "1:$endLetter" . '2';
-            $sheet->getStyle($borderRange)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
-
-            // Move the starting index to the next set of forecast columns
-            $forecastStartIndex += 3;
+        // Blue group: KZ to AM
+        if (in_array($country, ['KZ', 'TM', 'KG', 'AM'])) {
+            $fillColor = 'FF3366FF';
+            $fontColor = Color::COLOR_WHITE;
+        }
+        // Yellow group: after AM and before KH
+        elseif (in_array($country, ['TJ', 'UZ', 'GE', 'MN', 'RU', 'AZ', 'AL', 'KE', 'DO'])) {
+            $fillColor = 'FFFFFF00';
+            $fontColor = Color::COLOR_BLACK;
+        }
+        // Purple group: KH to MM
+        elseif (in_array($country, ['KH', 'MM'])) {
+            $fillColor = 'FF660066'; // Purple
+            $fontColor = Color::COLOR_WHITE;
+        }
+        // Default (if not in any group)
+        else {
+            $fillColor = 'FF00FFFF'; // Cyan
         }
 
-        return $allCountries;
+        // Apply styles for both rows (Forecast + Years)
+        $style = $sheet->getStyle($range);
+        $style->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $style->getFont()->setBold(true)->setSize(12)->getColor()->setARGB($fontColor);
+        $style->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB($fillColor);
+
+        // Set the second row with YEAR 1, YEAR 2, YEAR 3 labels for forecast columns
+        $yearColumnIndex = $startColumnIndex;
+        $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 1');
+        $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 2');
+        $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 3');
+
+        // Loop through each forecast column to set width and alignment for YEAR cells
+        for ($i = $startColumnIndex; $i <= $endColumnIndex; $i++) {
+            $letter = Coordinate::stringFromColumnIndex($i);
+            $sheet->getColumnDimension($letter)->setWidth(10);
+
+            $yearStyle = $sheet->getStyle("$letter" . '2');
+            $yearStyle->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        }
+
+        // Apply thin borders to both rows (Forecast + Years)
+        $sheet->getStyle($range)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+        // Move the starting index to the next set of forecast columns
+        $forecastStartIndex += 3;
     }
+
+    return $allCountries;
+}
+
 
     private function fillSheetWithRecords($sheet, $records, $uniqueRecords, $additionalCountries)
     {
