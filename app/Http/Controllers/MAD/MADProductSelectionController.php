@@ -429,9 +429,6 @@ class MADProductSelectionController extends Controller
         $filename = $selectedManufacturers[0] . ' - ' . date('Y-m-d') . '.xlsx';
     } else {
         $names = implode(', ', $selectedManufacturers);
-        if (strlen($names) > 50) {
-            $names = 'Производители';
-        }
         $filename = $names . ' - ' . date('Y-m-d') . '.xlsx';
     }
 
