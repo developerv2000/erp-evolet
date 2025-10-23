@@ -73,14 +73,17 @@ class MADProductSelectionController extends Controller
 
         $finalizedQuery = $this->model::finalizeQueryForRequest($filteredQuery, $request, 'query');
 
+        $selectedManufacturerIds = $request->input('manufacturer_id', []);
+        $selectedManufacturers = \App\Models\Manufacturer::getNamesByIds($selectedManufacturerIds);
+
         // Generate excel file
-        $filepath = $this->generateExcelFileFromQuery($finalizedQuery);
+        $filepath = $this->generateExcelFileFromQuery($finalizedQuery, $selectedManufacturers);
 
         // Return download response
         return response()->download($filepath);
     }
 
-    private function generateExcelFileFromQuery($query)
+    private function generateExcelFileFromQuery($query, array $selectedManufacturers = [])
     {
         // Load Excel template
         $templatePath = storage_path(self::STORAGE_PATH_OF_EXCEL_TEMPLATE_FILE_FOR_EXPORT);
@@ -119,7 +122,7 @@ class MADProductSelectionController extends Controller
         }
 
         // Save modified spreadsheet
-        $filepath = self::saveSpreadsheet($spreadsheet);
+        $filepath = self::saveSpreadsheet($spreadsheet, $selectedManufacturers);
 
         return $filepath;
     }
@@ -214,7 +217,7 @@ class MADProductSelectionController extends Controller
         // 🎨 Determine background color based on country code group
         $country = strtoupper($country); // ensure uppercase consistency
         $fillColor = 'FFFFFFFF';
-        $fontColor = Color::COLOR_BLACK; 
+        $fontColor = Color::COLOR_BLACK;
 
         // Blue group: KZ to AM
         if (in_array($country, ['KZ', 'TM', 'KG', 'AM'])) {
@@ -418,19 +421,29 @@ class MADProductSelectionController extends Controller
         }
     }
 
-    private static function saveSpreadsheet($spreadsheet)
-    {
-        // Create a writer and generate a unique filename for the export
-        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $filename = date('Y-m-d H-i-s') . '.xlsx';
-        $filename = FileHelper::ensureUniqueFilename($filename, storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES));
-        $filePath = storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES . '/' . $filename);
+    private static function saveSpreadsheet($spreadsheet, array $selectedManufacturers = [])
+{
+    $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 
-        // Save the Excel file
-        $writer->save($filePath);
-
-        return $filePath;
+    if (count($selectedManufacturers) === 1) {
+        $filename = $selectedManufacturers[0] . ' - ' . date('Y-m-d') . '.xlsx';
+    } else {
+        $names = implode(', ', $selectedManufacturers);
+        if (strlen($names) > 50) {
+            $names = 'Производители';
+        }
+        $filename = $names . ' - ' . date('Y-m-d') . '.xlsx';
     }
+
+    $filename = preg_replace('/[\/\\\:\*\?"<>\|]/', '', $filename);
+    $filename = FileHelper::ensureUniqueFilename($filename, storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES));
+
+    $filePath = storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES . '/' . $filename);
+    $writer->save($filePath);
+
+    return $filePath;
+}
+
 
     private static function getFirstForecastCellColumnIndex($additionalCountriesCount): int
     {

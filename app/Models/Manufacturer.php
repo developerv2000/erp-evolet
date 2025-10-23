@@ -542,4 +542,11 @@ class Manufacturer extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
         return $columns;
     }
+
+    public static function getNamesByIds(array $ids): array
+    {
+        return self::whereIn('id', $ids)
+            ->pluck('name')
+            ->toArray();
+    }
 }
