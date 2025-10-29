@@ -120,6 +120,9 @@ export function toggleOrdersProductionIsStartedAttribute(evt) {
             if (response.data.productionIsStarted) {
                 const td = target.closest('td');
                 td.innerHTML = response.data.productionStartDate;
+
+                // Update order status
+                updateOrderStatus(td, response.data.statusHTML);
             }
         })
         .finally(function () {
@@ -146,6 +149,9 @@ export function toggleOrdersProductsProductionIsFinishedAttribute(evt) {
             if (response.data.productionIsFinished) {
                 const td = target.closest('td');
                 td.innerHTML = response.data.productionEndDate;
+
+                // Update order status
+                updateOrderStatus(td, response.data.statusHTML);
             }
         })
         .finally(function () {
@@ -172,6 +178,9 @@ export function toggleOrdersProductsIsReadyForShipmentAttribute(evt) {
             if (response.data.isReadyForShipment) {
                 const td = target.closest('td');
                 td.innerHTML = response.data.readinessForShipmentDate;
+
+                // Update order status
+                updateOrderStatus(td, response.data.statusHTML);
             }
         })
         .finally(function () {

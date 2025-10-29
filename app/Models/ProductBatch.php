@@ -151,6 +151,23 @@ class ProductBatch extends BaseModel implements HasTitle
         return [
             'whereEqual' => [],
             'whereIn' => ['id', 'order_product_id'],
+
+            'relationIn' => [
+                [
+                    'name' => 'product.process.product',
+                    'attribute' => 'manufacturer_id',
+                ],
+
+                [
+                    'name' => 'product.process',
+                    'attribute' => 'country_id',
+                ],
+
+                [
+                    'name' => 'product.process',
+                    'attribute' => 'trademark_en',
+                ],
+            ],
         ];
     }
 

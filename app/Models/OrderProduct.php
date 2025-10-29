@@ -289,9 +289,8 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     public function getCanBeMarkedAsReadyForShipmentFromManufacturerAttribute(): bool
     {
-        return $this->packing_list_file
-            && $this->coa_file
-            && $this->coo_file;
+        return $this->production_is_finished
+            && !is_null($this->packing_list_file);
     }
 
     public function getShipmentFromManufacturerStartedAttribute(): bool

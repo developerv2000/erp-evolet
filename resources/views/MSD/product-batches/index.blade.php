@@ -49,6 +49,6 @@
         :columns="$allTableColumns" />
 @endsection
 
-{{-- @section('rightbar')
-    @include('msd.product-batches.partials.filter')
-@endsection --}}
+@section('rightbar')
+    @include('MSD.product-batches.partials.filter')
+@endsection

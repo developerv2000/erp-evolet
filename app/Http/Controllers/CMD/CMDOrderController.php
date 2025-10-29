@@ -93,6 +93,7 @@ class CMDOrderController extends Controller
         return response()->json([
             'productionIsStarted' => $record->production_is_started,
             'productionStartDate' => $record->production_start_date?->isoFormat('DD MMM Y'),
+            'statusHTML' => view('components.tables.partials.td.order-status-badge', ['status' => $record->status])->render(),
         ]);
     }
 }

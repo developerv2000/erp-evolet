@@ -42,7 +42,7 @@
     @break
 
     @case('Factual quantity')
-        <x-tables.partials.td.formatted-price :price="$record->product->factual_quantity" />
+        <x-tables.partials.td.formatted-price :price="$record->quantity" />
     @break
 
     @case('PO date')

@@ -22,7 +22,10 @@ class MSDViewComposersDefiner
 
     private static function defineOrderProductsComposers()
     {
-        View::composer('MSD.order-products.serialized-by-manufacturer.partials.filter', function ($view) {
+        View::composer([
+            'MSD.order-products.serialized-by-manufacturer.partials.filter',
+            'MSD.product-batches.partials.filter'
+        ], function ($view) {
             $view->with([
                 'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),

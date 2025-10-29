@@ -53,6 +53,7 @@ class CMDOrderProductController extends Controller
         return response()->json([
             'productionIsFinished' => $record->production_is_finished,
             'productionEndDate' => $record->production_end_date?->isoFormat('DD MMM Y'),
+            'statusHTML' => view('components.tables.partials.td.order-status-badge', ['status' => $record->status])->render(),
         ]);
     }
 
@@ -67,6 +68,7 @@ class CMDOrderProductController extends Controller
         return response()->json([
             'isReadyForShipment' => $record->is_ready_for_shipment_from_manufacturer,
             'readinessForShipmentDate' => $record->readiness_for_shipment_from_manufacturer_date?->isoFormat('DD MMM Y'),
+            'statusHTML' => view('components.tables.partials.td.order-status-badge', ['status' => $record->status])->render(),
         ]);
     }
 }
