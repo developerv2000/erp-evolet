@@ -221,8 +221,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     {
         // Determine the manufacturer's final offered price:
         // Use the followed price if it exists; otherwise, use the first price.
-        $finalPrice = $this->manufacturer_followed_offered_price
-            ?: $this->manufacturer_first_offered_price;
+        $finalPrice = $this->agreed_price;
 
         return $finalPrice
             ? Currency::convertPriceToUSD($finalPrice, $this->currency)
@@ -238,11 +237,14 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
     {
         // Retrieve the increased price and agreed price
         $increasedPrice = $this->increased_price;
-        $agreedPrice = $this->agreed_price;
+        $followedOfferedPrice = $this->followed_offered_price;
+        $firstOfferedPrice = $this->our_first_offered_price;
+
+        $basePrice = $followedOfferedPrice ?? $firstOfferedPrice;
 
         // Calculate the percentage increase if both values are available
-        return ($increasedPrice && $agreedPrice)
-            ? round(GeneralHelper::calculatePercentageOfTotal($agreedPrice, $increasedPrice), 2)
+        return ($increasedPrice && $firstOfferedPrice)
+            ? round(GeneralHelper::calculatePercentageOfTotal($basePrice, $increasedPrice) - 100, 2)
             : null;
     }
 
