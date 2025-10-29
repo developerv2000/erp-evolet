@@ -224,7 +224,7 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
         $finalPrice = $this->agreed_price;
 
         return $finalPrice
-            ? Currency::convertPriceToUSD($finalPrice, $this->currency)
+            ? round(Currency::convertPriceToUSD($finalPrice, $this->currency), 2)
             : null;
     }
 
