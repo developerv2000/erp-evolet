@@ -234,19 +234,20 @@ class Process extends BaseModel implements HasTitle, CanExportRecordsAsExcel, Pr
      * @return float|null The percentage increase, rounded to two decimal places, or null if calculation is not possible.
      */
     public function getIncreasedPricePercentageAttribute()
-    {
-        // Retrieve the increased price and agreed price
-        $increasedPrice = $this->increased_price;
-        $followedOfferedPrice = $this->followed_offered_price;
-        $firstOfferedPrice = $this->our_first_offered_price;
+{
+    $increasedPrice = $this->increased_price;
+    $firstOfferedPrice = $this->our_first_offered_price;
+    $followedOfferedPrice = $this->followed_offered_price;
 
-        $basePrice = $followedOfferedPrice ?? $firstOfferedPrice;
+    $basePrice = $followedOfferedPrice ?: $firstOfferedPrice;
 
-        // Calculate the percentage increase if both values are available
-        return ($increasedPrice && $firstOfferedPrice)
-            ? round(GeneralHelper::calculatePercentageOfTotal($basePrice, $increasedPrice) - 100, 2)
-            : null;
+    // Если нет данных или базовая цена = 0 → вернуть null
+    if (!$increasedPrice || !$basePrice || $basePrice == 0) {
+        return null;
     }
+
+    return round(GeneralHelper::calculatePercentageOfTotal($basePrice, $increasedPrice) - 100, 2);
+}
 
     public function getIsReadyForOrderAttribute()
     {
