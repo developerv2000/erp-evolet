@@ -31,6 +31,16 @@
         :options="$countriesOrderedByProcessesCount"
         optionCaptionField="code" />
 
+    <x-form.selects.selectize.multiple-select.request-based-select
+        labelText="TM Eng"
+        inputName="trademark_en[]"
+        :options="$enTrademarks" />
+
+    <x-form.selects.selectize.multiple-select.request-based-select
+        labelText="TM Rus"
+        inputName="trademark_ru[]"
+        :options="$ruTrademarks" />
+
     <x-form.inputs.request-based-input
         labelText="Sent to BDM"
         inputName="sent_to_bdm_date"

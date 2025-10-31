@@ -12,6 +12,7 @@
             @php
                 $crumbs = [
                     ['link' => null, 'text' => __('Warehouse')],
+                    ['link' => route('warehouse.products.index'), 'text' => __('Products')],
                     ['link' => url()->current(), 'text' => __('Batches')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
@@ -66,6 +67,6 @@
     @endcan
 @endsection
 
-{{-- @section('rightbar')
+@section('rightbar')
     @include('warehouse.product-batches.partials.filter')
-@endsection --}}
+@endsection

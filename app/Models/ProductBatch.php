@@ -121,6 +121,7 @@ class ProductBatch extends BaseModel implements HasTitle
     {
         return [
             ['link' => null, 'text' => __('Warehouse')],
+            ['link' => route('warehouse.products.index'), 'text' => __('Products')],
             ['link' => route('warehouse.product-batches.index'), 'text' => __('Batches')],
             ['link' => null, 'text' => $this->title],
         ];

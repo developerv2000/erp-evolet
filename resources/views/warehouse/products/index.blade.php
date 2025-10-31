@@ -51,5 +51,5 @@
 @endsection
 
 @section('rightbar')
-    {{-- @include('warehouse.order-products.partials.filter') --}}
+    @include('warehouse.products.partials.filter')
 @endsection
