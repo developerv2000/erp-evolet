@@ -12,17 +12,9 @@ use Illuminate\Http\Request;
 
 class MarketingAuthorizationHolder extends Model implements TracksUsageCount
 {
+    use ScopesOrderingByName;
     use CalculatesMADASPQuarterAndYearCounts;
     use PreventsDeletionIfInUse;
-    use ScopesOrderingByName;
-
-    /*
-    |--------------------------------------------------------------------------
-    | Constants
-    |--------------------------------------------------------------------------
-    */
-
-    const UNDER_DISCUSSION_SHORT_NAME = 'Обс.'; // used in MAD ASP show page
 
     /*
     |--------------------------------------------------------------------------
@@ -31,7 +23,6 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
     */
 
     public $timestamps = false;
-
     protected $guarded = ['id'];
 
     /*
@@ -67,7 +58,7 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
     |--------------------------------------------------------------------------
     */
 
-    // Implement method declared in 'TracksUsageCount' interface.
+    //Implement method declared in 'TracksUsageCount' interface.
     public function scopeWithRelatedUsageCounts($query)
     {
         return $query->withCount([
@@ -77,12 +68,12 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
         ]);
     }
 
-    // Implement method declared in 'TracksUsageCount' interface.
+    //Implement method declared in 'TracksUsageCount' interface.
     public function getUsageCountAttribute()
     {
         return $this->processes_count +
             $this->product_searches_count;
-        $this->mad_asps_count;
+            $this->mad_asps_count;
     }
 
     /*
@@ -93,7 +84,7 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
 
     public static function getDefaultSelectedIDValue()
     {
-        return self::where('name', 'Обсуждается')->value('id');
+        return self::where('name', 'TBC')->value('id');
     }
 
     /**
@@ -101,10 +92,7 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
      */
     public static function getUnderDiscussionNamedRecord()
     {
-        return self::firstOrCreate(
-            ['name' => 'Обсуждается'],
-            ['short_name' => self::UNDER_DISCUSSION_SHORT_NAME]
-        );
+        return self::where('name', 'TBC')->first();
     }
 
     /*
@@ -116,8 +104,8 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
     /**
      * Perform all necessary MAD ASP calculations.
      *
-     * @param  MadAsp  $asp  The $asp model associated with the MAH
-     * @param  \Illuminate\Http\Request  $request  The request object containing user inputs
+     * @param MadAsp $asp The $asp model associated with the MAH
+     * @param \Illuminate\Http\Request $request The request object containing user inputs
      */
     public function makeAllMadAspCalculations($asp, $request)
     {
@@ -147,7 +135,7 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
      * Adds below properties to the current MAH, For each month of the year:
      * $month['name'] . '_contract_plan'
      *
-     * @param  Request  $request  The request object
+     * @param Request $request The request object
      */
     public function prepareForMadAspCalculations($request)
     {
@@ -161,8 +149,8 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
                 // Sum both Europe and India contract plans for each month
                 foreach ($months as $month) {
                     $monthName = $month['name'];
-                    $this->{$monthName.'_contract_plan'} = $this->pivot->{$monthName.'_europe_contract_plan'}
-                        + $this->pivot->{$monthName.'_india_contract_plan'};
+                    $this->{$monthName . '_contract_plan'} = $this->pivot->{$monthName . '_europe_contract_plan'}
+                        + $this->pivot->{$monthName . '_india_contract_plan'};
                 }
                 break;
 
@@ -171,7 +159,7 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
                 // Set only the Europe contract plans for each month
                 foreach ($months as $month) {
                     $monthName = $month['name'];
-                    $this->{$monthName.'_contract_plan'} = $this->pivot->{$monthName.'_europe_contract_plan'};
+                    $this->{$monthName . '_contract_plan'} = $this->pivot->{$monthName . '_europe_contract_plan'};
                 }
                 break;
 
@@ -180,7 +168,7 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
                 // Set only the India contract plans for each month
                 foreach ($months as $month) {
                     $monthName = $month['name'];
-                    $this->{$monthName.'_contract_plan'} = $this->pivot->{$monthName.'_india_contract_plan'};
+                    $this->{$monthName . '_contract_plan'} = $this->pivot->{$monthName . '_india_contract_plan'};
                 }
                 break;
         }
@@ -223,7 +211,7 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
             $contractedRequest = new Request([
                 ...$baseContractedRequestParams,
                 'contracted_on_year' => $asp->year,
-                'contracted_on_month' => $month['number'],
+                'contracted_on_month' => $month['number']
             ]);
 
             // 2. Register Fact
@@ -231,15 +219,15 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
             $registeredRequest = new Request([
                 ...$baseRegisteredRequestParams,
                 'registered_on_year' => $asp->year,
-                'registered_on_month' => $month['number'],
+                'registered_on_month' => $month['number']
             ]);
 
             // Apply filtering and count
             $contractedQuery = Process::filterQueryForRequest(Process::query(), $contractedRequest, applyPermissionsFilter: false);
-            $this->{$month['name'].'_contract_fact'} = $contractedQuery->count();
+            $this->{$month['name'] . '_contract_fact'} = $contractedQuery->count();
 
-            $registeredQuery = Process::filterQueryForRequest(Process::query(), $registeredRequest, applyPermissionsFilter: false);
-            $this->{$month['name'].'_register_fact'} = $registeredQuery->count();
+            $registeredQuery = Process::filterQueryForRequest(Process::query(), $registeredRequest, applyPermissionsFilter: false);;
+            $this->{$month['name'] . '_register_fact'} = $registeredQuery->count();
         }
     }
 
@@ -250,8 +238,8 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
      * - 'month_contract_fact_link'
      * - 'month_register_fact_link'
      *
-     * @param  MadAsp  $asp  The plan object
-     * @param  \Illuminate\Http\Request  $request  The request object
+     * @param MadAsp $asp The plan object
+     * @param \Illuminate\Http\Request $request The request object
      * @return void
      */
     public function addMadAspMonthlyProcessCountLinks($asp, $request)
@@ -277,7 +265,7 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
                 'contracted_on_month' => $monthNumber,
             ]);
             $contractedProcessesLink = route('mad.processes.index', $contractedParams);
-            $this->{$month['name'].'_contract_fact_link'} = $contractedProcessesLink;
+            $this->{$month['name'] . '_contract_fact_link'} = $contractedProcessesLink;
 
             // Generate registered processes link and assign it to the model
             $registeredParams = array_merge($baseQueryParams, [
@@ -287,7 +275,7 @@ class MarketingAuthorizationHolder extends Model implements TracksUsageCount
                 'registered_on_month' => $monthNumber,
             ]);
             $registeredProcessesLink = route('mad.processes.index', $registeredParams);
-            $this->{$month['name'].'_register_fact_link'} = $registeredProcessesLink;
+            $this->{$month['name'] . '_register_fact_link'} = $registeredProcessesLink;
         }
     }
 }

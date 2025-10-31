@@ -452,7 +452,6 @@ class MadAsp extends BaseModel implements HasTitle
     private function getUnderDiscussionMAHForCalculations()
     {
         $mah = MarketingAuthorizationHolder::getUnderDiscussionNamedRecord();
-        $mah->name = MarketingAuthorizationHolder::UNDER_DISCUSSION_SHORT_NAME;
 
         $pivotData = [
             'marketing_authorization_holder_id' => $mah->id,

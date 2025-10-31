@@ -13,7 +13,7 @@ class MarketingAuthorizationHolderSeeder extends Seeder
      */
     public function run(): void
     {
-        $name = ['S', 'B', 'V', 'T', 'L', 'BO', 'G', 'N', 'Обсуждается'];
+        $name = ['S', 'B', 'V', 'T', 'L', 'BO', 'G', 'N', 'TBC'];
 
         for ($i = 0; $i < count($name); $i++) {
             $record = new MarketingAuthorizationHolder();
