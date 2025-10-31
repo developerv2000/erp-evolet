@@ -50,3 +50,7 @@
             :columns="$allTableColumns" />
     @endcan
 @endsection
+
+@section('rightbar')
+    @include('ELD.invoices.partials.filter')
+@endsection

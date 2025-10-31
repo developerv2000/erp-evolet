@@ -69,6 +69,7 @@ class ELDOrderProductController extends Controller
         return response()->json([
             'shipmentFromManufacturerEnded' => $record->shipment_from_manufacturer_ended,
             'shipmentFromManufacturerEndDate' => $record->shipment_from_manufacturer_end_date?->isoFormat('DD MMM Y'),
+            'statusHTML' => view('components.tables.partials.td.order-status-badge', ['status' => $record->status])->render(),
         ]);
     }
 
@@ -83,6 +84,7 @@ class ELDOrderProductController extends Controller
         return response()->json([
             'arrivedAtWarehouse' => $record->arrived_at_warehouse,
             'warehouseArrivalDate' => $record->warehouse_arrival_date?->isoFormat('DD MMM Y'),
+            'statusHTML' => view('components.tables.partials.td.order-status-badge', ['status' => $record->status])->render(),
         ]);
     }
 }

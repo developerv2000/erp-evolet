@@ -417,6 +417,9 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             self::STATUS_PRODUCTION_IS_STARTED_NAME,
             OrderProduct::STATUS_PRODUCTION_IS_FINISHED_NAME,
             OrderProduct::STATUS_IS_READY_FOR_SHIPMENT_FROM_MANUFACTURER_NAME,
+            OrderProduct::STATUS_SHIPMENT_FROM_MANUFACTURER_STARTED_NAME,
+            OrderProduct::STATUS_SHIPMENT_FROM_MANUFACTURER_FINISHED_NAME,
+            OrderProduct::STATUS_ARRIVED_AT_WAREHOUSE_NAME,
         ];
     }
 

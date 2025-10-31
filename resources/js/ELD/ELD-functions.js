@@ -5,6 +5,7 @@
 */
 
 import { hideSpinner, showSpinner } from "../../custom-components/script";
+import { updateOrderStatus } from "../shared";
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,9 @@ export function endShipmentFromManufacturerOfOrdersProducts(evt) {
             if (response.data.shipmentFromManufacturerEnded) {
                 const td = target.closest('td');
                 td.innerHTML = response.data.shipmentFromManufacturerEndDate;
+
+                // Update order status
+                updateOrderStatus(td, response.data.statusHTML);
             }
         })
         .finally(function () {
@@ -71,6 +75,9 @@ export function markAsArrivedAtWarehouseOrdersProducts(evt) {
             if (response.data.arrivedAtWarehouse) {
                 const td = target.closest('td');
                 td.innerHTML = response.data.warehouseArrivalDate;
+
+                // Update order status
+                updateOrderStatus(td, response.data.statusHTML);
             }
         })
         .finally(function () {

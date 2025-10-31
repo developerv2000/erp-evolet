@@ -5,11 +5,6 @@
         class="date-range-picker-input"
         autocomplete="off" />
 
-    <x-form.selects.selectize.id-based-single-select.request-based-select
-        labelText="Payment type"
-        inputName="payment_type_id"
-        :options="$paymentTypes" />
-
     <x-form.inputs.request-based-input
         labelText="Sent for payment date"
         inputName="sent_for_payment_date"

@@ -17,7 +17,7 @@ class WarehouseProductController extends Controller
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
-        $query = OrderProduct::onlyReadyForShipmentFromManufacturer()->withBasicRelations()->withBasicRelationCounts();
+        $query = OrderProduct::onlyArrivedAtWarehouse()->withBasicRelations()->withBasicRelationCounts();
         $filteredQuery = OrderProduct::filterQueryForRequest($query, $request);
         $joinedQuery = OrderProduct::addJoinsForOrdering($filteredQuery, $request); // add joins if joined ordering requested
         $records = OrderProduct::finalizeQueryForRequest($joinedQuery, $request, 'paginate');

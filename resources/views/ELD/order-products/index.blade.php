@@ -50,5 +50,5 @@
 @endsection
 
 @section('rightbar')
-    {{-- @include('ELD.order-products.partials.filter') --}}
+    @include('ELD.order-products.partials.filter')
 @endsection

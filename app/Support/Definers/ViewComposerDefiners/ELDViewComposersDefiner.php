@@ -2,7 +2,10 @@
 
 namespace App\Support\Definers\ViewComposerDefiners;
 
+use App\Models\Country;
 use App\Models\Currency;
+use App\Models\Manufacturer;
+use App\Models\Order;
 use App\Models\Process;
 use App\Models\ShipmentDestination;
 use App\Models\ShipmentType;
@@ -24,6 +27,17 @@ class ELDViewComposersDefiner
 
     private static function defineOrderProductsComposers()
     {
+        View::composer('ELD.order-products.partials.filter', function ($view) {
+            $view->with([
+                'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
+                'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+                'statusOptions' => Order::getFilterStatusOptions(),
+                'enTrademarks' => Process::pluckAllEnTrademarks(),
+                'ruTrademarks' => Process::pluckAllRuTrademarks(),
+                'orderNames' => Order::onlyWithName()->orderByName()->pluck('name'),
+            ]);
+        });
+
         View::composer('ELD.order-products.partials.edit-form', function ($view) {
             $view->with([
                 'shipmentTypes' => ShipmentType::all(),
@@ -37,7 +51,9 @@ class ELDViewComposersDefiner
     {
         View::composer('ELD.invoices.partials.filter', function ($view) {
             $view->with([
-
+                'ordersWithName' => Order::onlyWithName()->orderByName()->get(),
+                'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
+                'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
             ]);
         });
     }
