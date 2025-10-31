@@ -562,13 +562,13 @@ class Invoice extends BaseModel implements HasTitle
             ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
             ['name' => 'Receive date', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Payment type', 'order' => $order++, 'width' => 110, 'visible' => 1],
-            ['name' => 'Products', 'order' => $order++, 'width' => 82, 'visible' => 1],
             ['name' => 'Sent for payment date', 'order' => $order++, 'width' => 198, 'visible' => 1],
             ['name' => 'Payment completed', 'order' => $order++, 'width' => 158, 'visible' => 1],
             ['name' => 'PDF', 'order' => $order++, 'width' => 144, 'visible' => 100],
 
             ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Products', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
 
             ['name' => 'Accepted date', 'order' => $order++, 'width' => 132, 'visible' => 1],
@@ -730,6 +730,7 @@ class Invoice extends BaseModel implements HasTitle
 
             ['name' => 'Order', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Products', 'order' => $order++, 'width' => 180, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
 
             ['name' => 'Accepted date', 'order' => $order++, 'width' => 132, 'visible' => 1],

@@ -35,6 +35,15 @@
         {{ $record->order->manufacturer->name }}
     @break
 
+    @case('Products')
+        <div class="td__max-lines-limited-text" data-on-click="toggle-td-text-max-lines">
+            @foreach ($record->orderProducts as $orderProduct)
+                {{ $loop->iteration }}.
+                {{ $orderProduct->process->full_trademark_en }}<br>
+            @endforeach
+        </div>
+    @break
+
     @case('Country')
         {{ $record->order->country->code }}
     @break

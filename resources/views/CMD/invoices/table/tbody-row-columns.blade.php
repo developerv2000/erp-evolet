@@ -15,10 +15,6 @@
         {{ $record->paymentType->name }}
     @break
 
-    @case('Products')
-        {{ $record->order_products_count }}
-    @break
-
     @case('Payment completed')
         {{ $record->payment_completed_date?->isoformat('DD MMM Y') }}
     @break
@@ -53,6 +49,15 @@
 
     @case('Manufacturer')
         {{ $record->order->manufacturer->name }}
+    @break
+
+    @case('Products')
+        <div class="td__max-lines-limited-text" data-on-click="toggle-td-text-max-lines">
+            @foreach ($record->orderProducts as $orderProduct)
+                {{ $loop->iteration }}.
+                {{ $orderProduct->process->full_trademark_en }}<br>
+            @endforeach
+        </div>
     @break
 
     @case('Country')

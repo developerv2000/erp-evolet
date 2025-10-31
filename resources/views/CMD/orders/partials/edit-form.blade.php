@@ -42,6 +42,12 @@
                     :initial-value="$product->process->MAH->name"
                     readonly />
 
+                <x-form.inputs.default-input
+                    labelText="Last comment"
+                    inputName="readonly_comment"
+                    :initial-value="$product->lastComment?->plain_text"
+                    readonly />
+
                 @if (!$record->production_is_started)
                     <x-form.inputs.default-input
                         labelText="Quantity"

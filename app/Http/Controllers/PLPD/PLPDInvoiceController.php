@@ -17,7 +17,7 @@ class PLPDInvoiceController extends Controller
         UrlHelper::addUrlWithReversedOrderTypeToRequest($request);
 
         // Get finalized records paginated
-        $query = Invoice::onlyProductionType()->onlySentForPayment()->withBasicRelations();
+        $query = Invoice::onlyProductionType()->onlySentForPayment()->withBasicRelations()->with('orderProducts');
         $filteredQuery = Invoice::filterQueryForRequest($query, $request);
         $records = Invoice::finalizeQueryForRequest($filteredQuery, $request, 'paginate');
 
