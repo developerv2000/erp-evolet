@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Default password
-        $password = '12345';
+        $password = 'evolet';
 
         /*
         |--------------------------------------------------------------------------
