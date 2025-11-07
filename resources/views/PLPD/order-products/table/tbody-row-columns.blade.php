@@ -71,8 +71,8 @@
         {{ $record->layout_approved_date?->isoformat('DD MMM Y') }}
     @break
 
-    @case('Prepayment payment date')
-        {{ $record->production_prepayment_invoice?->payment_date?->isoformat('DD MMM Y') }}
+    @case('Prepayment completion date')
+        {{ $record->production_prepayment_invoice?->payment_completed_date?->isoformat('DD MMM Y') }}
     @break
 
     @case('Production end date')
@@ -83,8 +83,8 @@
         {{ $record->production_final_or_full_payment_invoice?->sent_for_payment_date?->isoformat('DD MMM Y') }}
     @break
 
-    @case('Final payment due date')
-        {{ $record->production_final_or_full_payment_invoice?->payment_date?->isoformat('DD MMM Y') }}
+    @case('Final payment completion date')
+        {{ $record->production_final_or_full_payment_invoice?->payment_completed_date?->isoformat('DD MMM Y') }}
     @break
 
     @case('Ready for shipment')

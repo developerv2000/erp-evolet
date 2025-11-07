@@ -1084,17 +1084,17 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
             ['name' => 'Price', 'order' => $order++, 'width' => 70, 'visible' => 1],
             ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
-            ['name' => 'Total price', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Total price', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Status', 'order' => $order++, 'width' => 120, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Serialization type', 'order' => $order++, 'width' => 156, 'visible' => 1],
             ['name' => 'Production status', 'order' => $order++, 'width' => 160, 'visible' => 1],
             ['name' => 'Layout approved date', 'order' => $order++, 'width' => 170, 'visible' => 1],
-            ['name' => 'Prepayment payment date', 'order' => $order++, 'width' => 182, 'visible' => 1],
-            ['name' => 'Production end date', 'order' => $order++, 'width' => 216, 'visible' => 1],
-            ['name' => 'Final payment request date', 'order' => $order++, 'width' => 234, 'visible' => 1], // sent_for_payment_date (by BDM)
-            ['name' => 'Final payment due date', 'order' => $order++, 'width' => 260, 'visible' => 1],
+            ['name' => 'Prepayment completion date', 'order' => $order++, 'width' => 216, 'visible' => 1],
+            ['name' => 'Production end date', 'order' => $order++, 'width' => 218, 'visible' => 1],
+            ['name' => 'Final payment request date', 'order' => $order++, 'width' => 236, 'visible' => 1], // sent_for_payment_date (by BDM)
+            ['name' => 'Final payment completion date', 'order' => $order++, 'width' => 264, 'visible' => 1],
             ['name' => 'Ready for shipment', 'order' => $order++, 'width' => 160, 'visible' => 1],
         );
 

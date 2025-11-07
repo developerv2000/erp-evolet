@@ -96,7 +96,7 @@
             style="transparent"
             class="button--arrowed-link button--margined-bottom text-lowercase"
             icon="arrow_forward"
-            :link="route('warehouse.product-batches.index', ['order_product_id[]' => $record->id])">
+            :link="route('warehouse.product-batches.index', ['order_product_id' => $record->id])">
             {{ $record->batches_count }} {{ __('Batches') }}<br>
         </x-misc.buttoned-link>
 

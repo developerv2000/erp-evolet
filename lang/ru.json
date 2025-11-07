@@ -314,8 +314,9 @@
     "No products found for the given manufacturer and country": "Для указанного производителя и страны не найдено ни одного продукта",
     "There are no available products for given order": "Нет доступных продуктов для данного заказа",
     "Prepayment payment date": "Дата оплаты предоплаты",
+    "Prepayment completion date": "Дата завершения предоплаты",
     "Final payment request date": "Дата запроса финальной оплаты",
-    "Final payment due date": "Дата завершения финальной оплаты",
+    "Final payment completion date": "Дата завершения финальной оплаты",
 
     "PO №": "Номер заявки",
     "PO date": "Дата заявки",

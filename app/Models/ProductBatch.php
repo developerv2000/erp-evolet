@@ -150,8 +150,8 @@ class ProductBatch extends BaseModel implements HasTitle
     private static function getFilterConfig(): array
     {
         return [
-            'whereEqual' => [],
-            'whereIn' => ['id', 'order_product_id'],
+            'whereEqual' => ['order_product_id'],
+            'whereIn' => ['id'],
 
             'relationIn' => [
                 [
