@@ -37,13 +37,24 @@ class WarehouseProductBatchController extends Controller
 
     public function create(Request $request)
     {
+        $multipleBatches = $request->input('multiple_batches', false);
         $product = OrderProduct::findOrFail($request->input('order_product_id'));
 
         if (!$product->can_create_batch) {
             abort(404);
         }
 
-        return view('warehouse.product-batches.create', compact('product'));
+        return view('warehouse.product-batches.create', compact('product', 'multipleBatches'));
+    }
+
+    /**
+     * Used on AJAX requests to retrieve form row inputs on create form.
+     */
+    public function getDynamicRowsListItemInputs(Request $request)
+    {
+        $inputsIndex = $request->input('inputs_index');
+
+        return view('warehouse.product-batches.partials.create-form-dynamic-rows-list-item', compact('inputsIndex'));
     }
 
     public function store(Request $request)
@@ -54,9 +65,9 @@ class WarehouseProductBatchController extends Controller
             abort(404);
         }
 
-        ProductBatch::createFromWarehouseRequest($request);
+        ProductBatch::createFromWarehouseRequest($request, $product);
 
-        return to_route('warehouse.product-batches.index', ['order_product_id[]' => $request->input('order_product_id')]);
+        return to_route('warehouse.product-batches.index', ['order_product_id' => $request->input('order_product_id')]);
     }
 
     public function edit(Request $request, ProductBatch $record)

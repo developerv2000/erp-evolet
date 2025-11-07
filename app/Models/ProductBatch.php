@@ -178,9 +178,31 @@ class ProductBatch extends BaseModel implements HasTitle
     |--------------------------------------------------------------------------
     */
 
-    public static function createFromWarehouseRequest($request)
+    /**
+     * By ELD or PLPD
+     *
+     * Can be called to create single batch or multiple batches at once.
+     */
+    public static function createFromWarehouseRequest($request, $product)
     {
-        self::create($request->all());
+        $batchesData = array();
+
+        if ($request->input('multiple_batches')) {
+            $batchesData = $request->input('batches', array());
+        } else {
+            // Single batch
+            $batchesData[] = $request->merge(['quantity' => $product->remaining_quantity_for_batches])->all();
+        }
+
+        foreach ($batchesData as $batchData) {
+            // Refresh product to get latest data
+            $product->refresh();
+
+            if ($product->can_create_batch) {
+                $batchData['order_product_id'] = $product->id;
+                self::create($batchData);
+            }
+        }
     }
 
     /**
@@ -266,7 +288,7 @@ class ProductBatch extends BaseModel implements HasTitle
             ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Brand Rus', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
-            ['name' => 'Factual quantity', 'order' => $order++, 'width' => 182, 'visible' => 1],
+            ['name' => 'Factual product quantity', 'order' => $order++, 'width' => 246, 'visible' => 1],
             ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
             ['name' => 'Arrived at warehouse', 'order' => $order++, 'width' => 124, 'visible' => 1],

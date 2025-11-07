@@ -26,5 +26,6 @@ Route::prefix('/warehouse')->middleware('auth', 'auth.session')->name('warehouse
         );
 
         Route::post('/request-serialization/{record}', 'requestSerialization')->name('request-serialization');
+        Route::post('/get-dynamic-rows-list-item-inputs', 'getDynamicRowsListItemInputs');  // AJAX request on create form for multiple store
     });
 });

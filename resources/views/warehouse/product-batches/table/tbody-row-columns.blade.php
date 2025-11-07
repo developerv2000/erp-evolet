@@ -41,8 +41,10 @@
         {{ $record->product->process->MAH->name }}
     @break
 
-    @case('Factual quantity')
-        <x-tables.partials.td.formatted-price :price="$record->quantity" />
+    @case('Factual product quantity')
+        <a class="main-link" href="{{ route('warehouse.products.index', ['id[]' => $record->order_product_id]) }}">
+            <x-tables.partials.td.formatted-price :price="$record->product->factual_quantity" />
+        </a>
     @break
 
     @case('PO date')
@@ -66,19 +68,23 @@
     @break
 
     @case('Serialization request date')
-        @if ($record->serialization_requested)
-            {{ $record->serialization_request_date->isoformat('DD MMM Y') }}
-        @else
-            <form action="{{ route('warehouse.product-batches.request-serialization', $record->id) }}" method="POST">
-                @csrf
+        @if ($record->product->serializationType->name == 'Рига')
+            @if ($record->serialization_requested)
+                {{ $record->serialization_request_date->isoformat('DD MMM Y') }}
+            @else
+                <form action="{{ route('warehouse.product-batches.request-serialization', $record->id) }}" method="POST">
+                    @csrf
 
-                <x-misc.button
-                    style="transparent"
-                    class="button--arrowed-link button--margined-bottom"
-                    icon="line_end_arrow_notch">
-                    {{ __('Request') }}
-                </x-misc.button>
-            </form>
+                    <x-misc.button
+                        style="transparent"
+                        class="button--arrowed-link button--margined-bottom"
+                        icon="line_end_arrow_notch">
+                        {{ __('Request') }}
+                    </x-misc.button>
+                </form>
+            @endif
+        @else
+            {{ __('Not serialized in Riga') }}
         @endif
     @break
 

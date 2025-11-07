@@ -102,8 +102,13 @@
 
         @if ($record->can_create_batch)
             <a class="main-link"
-                href="{{ route('warehouse.product-batches.create', ['order_product_id' => $record->id]) }}">
-                {{ __('Add batch') }}
+                href="{{ route('warehouse.product-batches.create', ['multiple_batches' => false, 'order_product_id' => $record->id]) }}">
+                {{ __('Close with single batch') }}
+            </a>
+
+            <a class="main-link"
+                href="{{ route('warehouse.product-batches.create', ['multiple_batches' => true, 'order_product_id' => $record->id]) }}">
+                {{ __('Add multiple batches') }}
             </a>
         @endif
     @break

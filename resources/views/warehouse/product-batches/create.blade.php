@@ -12,6 +12,7 @@
             @php
                 $crumbs = [
                     ['link' => null, 'text' => __('Warehouse')],
+                    ['link' => route('warehouse.products.index'), 'text' => __('Products')],
                     ['link' => route('warehouse.product-batches.index'), 'text' => __('Batches')],
                     ['link' => null, 'text' => __('Create new record')],
                 ];
