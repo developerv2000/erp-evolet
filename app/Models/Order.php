@@ -39,14 +39,16 @@ class Order extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     // CMD
     const SETTINGS_CMD_TABLE_COLUMNS_KEY = 'CMD_orders_table_columns';
-    const DEFAULT_CMD_ORDER_BY = 'sent_to_bdm_date';
-    const DEFAULT_CMD_ORDER_TYPE = 'desc';
+    // const DEFAULT_CMD_ORDER_BY = 'sent_to_bdm_date';
+    const DEFAULT_CMD_ORDER_BY = 'id';
+    const DEFAULT_CMD_ORDER_TYPE = 'asc';
     const DEFAULT_CMD_PAGINATION_LIMIT = 50;
 
     // PRD
     const SETTINGS_PRD_TABLE_COLUMNS_KEY = 'PRD_orders_table_columns';
-    const DEFAULT_PRD_ORDER_BY = 'sent_to_bdm_date';
-    const DEFAULT_PRD_ORDER_TYPE = 'desc';
+    // const DEFAULT_PRD_ORDER_BY = 'sent_to_bdm_date';
+    const DEFAULT_PRD_ORDER_BY = 'id';
+    const DEFAULT_PRD_ORDER_TYPE = 'asc';
     const DEFAULT_PRD_PAGINATION_LIMIT = 50;
 
     // Statuses

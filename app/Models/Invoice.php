@@ -32,28 +32,32 @@ class Invoice extends BaseModel implements HasTitle
 
     // CMD
     const SETTINGS_CMD_TABLE_COLUMNS_KEY = 'CMD_invoices_table_columns';
-    const DEFAULT_CMD_ORDER_BY = 'updated_at';
-    const DEFAULT_CMD_ORDER_TYPE = 'desc';
+    // const DEFAULT_CMD_ORDER_BY = 'updated_at';
+    const DEFAULT_CMD_ORDER_BY = 'id';
+    const DEFAULT_CMD_ORDER_TYPE = 'asc';
     const DEFAULT_CMD_PAGINATION_LIMIT = 50;
 
     // PRD
     const SETTINGS_PRD_PRODUCTION_TABLE_COLUMNS_KEY = 'PRD_production_invoices_table_columns';
     const SETTINGS_PRD_DELIVERY_TO_WAREHOUSE_TABLE_COLUMNS_KEY = 'PRD_delivery_to_warehouse_invoices_table_columns';
     const SETTINGS_PRD_EXPORT_TABLE_COLUMNS_KEY = 'PRD_export_invoices_table_columns';
-    const DEFAULT_PRD_ORDER_BY = 'updated_at';
-    const DEFAULT_PRD_ORDER_TYPE = 'desc';
+    // const DEFAULT_PRD_ORDER_BY = 'updated_at';
+    const DEFAULT_PRD_ORDER_BY = 'id';
+    const DEFAULT_PRD_ORDER_TYPE = 'asc';
     const DEFAULT_PRD_PAGINATION_LIMIT = 50;
 
     // PLPD
     const SETTINGS_PLPD_TABLE_COLUMNS_KEY = 'PLPD_invoices_table_columns';
-    const DEFAULT_PLPD_ORDER_BY = 'updated_at';
-    const DEFAULT_PLPD_ORDER_TYPE = 'desc';
+    // const DEFAULT_PLPD_ORDER_BY = 'updated_at';
+    const DEFAULT_PLPD_ORDER_BY = 'id';
+    const DEFAULT_PLPD_ORDER_TYPE = 'asc';
     const DEFAULT_PLPD_PAGINATION_LIMIT = 50;
 
     // ELD
     const SETTINGS_ELD_TABLE_COLUMNS_KEY = 'ELD_invoices_table_columns';
-    const DEFAULT_ELD_ORDER_BY = 'updated_at';
-    const DEFAULT_ELD_ORDER_TYPE = 'desc';
+    // const DEFAULT_ELD_ORDER_BY = 'updated_at';
+    const DEFAULT_ELD_ORDER_BY = 'id';
+    const DEFAULT_ELD_ORDER_TYPE = 'asc';
     const DEFAULT_ELD_PAGINATION_LIMIT = 50;
 
     /*

@@ -43,20 +43,23 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     // CMD
     const SETTINGS_CMD_TABLE_COLUMNS_KEY = 'CMD_order_products_table_columns';
-    const DEFAULT_CMD_ORDER_BY = 'order_sent_to_bdm_date';
-    const DEFAULT_CMD_ORDER_TYPE = 'desc';
+    // const DEFAULT_CMD_ORDER_BY = 'order_sent_to_bdm_date';
+    const DEFAULT_CMD_ORDER_BY = 'order_id';
+    const DEFAULT_CMD_ORDER_TYPE = 'asc';
     const DEFAULT_CMD_PAGINATION_LIMIT = 50;
 
     // DD
     const SETTINGS_DD_TABLE_COLUMNS_KEY = 'DD_order_products_table_columns';
-    const DEFAULT_DD_ORDER_BY = 'order_sent_to_manufacturer_date';
-    const DEFAULT_DD_ORDER_TYPE = 'desc';
+    // const DEFAULT_DD_ORDER_BY = 'order_sent_to_manufacturer_date';
+    const DEFAULT_DD_ORDER_BY = 'order_id';
+    const DEFAULT_DD_ORDER_TYPE = 'asc';
     const DEFAULT_DD_PAGINATION_LIMIT = 50;
 
     // PRD
     const SETTINGS_PRD_TABLE_COLUMNS_KEY = 'PRD_order_products_table_columns';
-    const DEFAULT_PRD_ORDER_BY = 'order_sent_to_manufacturer_date';
-    const DEFAULT_PRD_ORDER_TYPE = 'desc';
+    // const DEFAULT_PRD_ORDER_BY = 'order_sent_to_manufacturer_date';
+    const DEFAULT_PRD_ORDER_BY = 'order_id';
+    const DEFAULT_PRD_ORDER_TYPE = 'asc';
     const DEFAULT_PRD_PAGINATION_LIMIT = 50;
 
     // MSD

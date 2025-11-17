@@ -23,14 +23,16 @@ class ProductBatch extends BaseModel implements HasTitle
 
     // Warehouse
     const SETTINGS_WAREHOUSE_TABLE_COLUMNS_KEY = 'warehouse_product_batches_table_columns';
-    const DEFAULT_ORDER_BY = 'updated_at';
-    const DEFAULT_ORDER_TYPE = 'desc';
+    // const DEFAULT_ORDER_BY = 'updated_at';
+    const DEFAULT_ORDER_BY = 'id';
+    const DEFAULT_ORDER_TYPE = 'asc';
     const DEFAULT_PAGINATION_LIMIT = 50;
 
     // MSD
     const SETTINGS_MSD_TABLE_COLUMNS_KEY = 'MSD_product_batches_table_columns';
-    const DEFAULT_MSD_ORDER_BY = 'updated_at';
-    const DEFAULT_MSD_ORDER_TYPE = 'desc';
+    // const DEFAULT_MSD_ORDER_BY = 'updated_at';
+    const DEFAULT_MSD_ORDER_BY = 'id';
+    const DEFAULT_MSD_ORDER_TYPE = 'asc';
     const DEFAULT_MSD_PAGINATION_LIMIT = 50;
 
     /*
