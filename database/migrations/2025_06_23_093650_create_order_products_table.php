@@ -113,8 +113,8 @@ return new class extends Migration
             $table->unsignedTinyInteger('payer_company_id')->nullable();
             $table->string('customs_code')->nullable();
             $table->unsignedMediumInteger('factual_quantity')->nullable();
-            $table->unsignedMediumInteger('full_packs_in_boxes')->nullable();
-            $table->unsignedMediumInteger('part_packs_in_box')->nullable();
+            $table->unsignedMediumInteger('number_of_full_boxes')->nullable();
+            $table->unsignedMediumInteger('number_of_packages_in_full_box')->nullable();
             $table->unsignedMediumInteger('defects_quantity')->nullable();
 
             // Timestamps

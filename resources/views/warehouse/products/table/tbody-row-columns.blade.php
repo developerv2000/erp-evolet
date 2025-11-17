@@ -79,12 +79,12 @@
         {{ __('Defects') }}: {{ $record->total_defects_quantity_of_all_batches ?: 0 }}
     @break
 
-    @case('Packs in boxes')
-        {{ $record->full_packs_in_boxes }}
+    @case('Number of boxes (full)')
+        {{ $record->number_of_full_boxes }}
     @break
 
-    @case('Packs in box')
-        {{ $record->part_packs_in_box }}
+    @case('Number of packages in box (full)')
+        {{ $record->number_of_packages_in_full_box }}
     @break
 
     @case('Defects quantity')

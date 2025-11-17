@@ -9,27 +9,6 @@
                 :initial-value="$record->serialization_start_date?->format('Y-m-d')" />
 
             <x-form.inputs.record-field-input
-                labelText="Factual quantity"
-                field="factual_quantity"
-                :model="$record"
-                type="number" />
-
-            <x-form.inputs.record-field-input
-                labelText="Defects quantity"
-                field="defects_quantity"
-                :model="$record"
-                type="number" />
-
-            <x-form.inputs.record-field-input
-                labelText="End date of work"
-                field="serialization_end_date"
-                :model="$record"
-                type="date"
-                :initial-value="$record->serialization_end_date?->format('Y-m-d')" />
-        </div>
-
-        <div class="form__row">
-            <x-form.inputs.record-field-input
                 labelText="Serialization codes request date"
                 field="serialization_codes_request_date"
                 :model="$record"
@@ -49,6 +28,27 @@
                 :model="$record"
                 type="datetime-local"
                 :initial-value="$record->formatForDateTimeInput('serialization_report_recieved_date')" />
+        </div>
+
+        <div class="form__row">
+            <x-form.inputs.record-field-input
+                labelText="Factual quantity"
+                field="factual_quantity"
+                :model="$record"
+                type="number" />
+
+            <x-form.inputs.record-field-input
+                labelText="Defects quantity"
+                field="defects_quantity"
+                :model="$record"
+                type="number" />
+
+            <x-form.inputs.record-field-input
+                labelText="End date of work"
+                field="serialization_end_date"
+                :model="$record"
+                type="date"
+                :initial-value="$record->serialization_end_date?->format('Y-m-d')" />
 
             <x-form.inputs.record-field-input
                 labelText="Report sent to hub"
