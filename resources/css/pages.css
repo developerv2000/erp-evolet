@@ -309,6 +309,16 @@
 
 /* ------------ /end MAD DH pages ------------ */
 
+/* ------------ MAD OSS pages ------------ */
+.mad-oss-index .main-table tr:hover {
+    background-color: initial;
+}
+
+.mad-oss-index .main-table tr.tr--even {
+    background-color: var(--theme-table-tr-hover-background-color);
+}
+/* ------------ /end MAD OSS pages ------------ */
+
 
 /*
 |--------------------------------------------------------------------------

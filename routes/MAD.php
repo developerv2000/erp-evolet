@@ -5,6 +5,7 @@ use App\Http\Controllers\MAD\MADDecisionHubController;
 use App\Http\Controllers\MAD\MADKPIController;
 use App\Http\Controllers\MAD\MADManufacturerController;
 use App\Http\Controllers\MAD\MADMeetingController;
+use App\Http\Controllers\MAD\MADOSSController;
 use App\Http\Controllers\MAD\MADProcessController;
 use App\Http\Controllers\MAD\MADProcessStatusHistoryController;
 use App\Http\Controllers\MAD\MADProductController;
@@ -76,6 +77,10 @@ Route::middleware('auth', 'auth.session')->prefix('mad')->name('mad.')->group(fu
     // VP
     Route::prefix('/product-selection')->controller(MADProductSelectionController::class)->name('product-selection.')->group(function () {
         Route::post('/export-as-excel', 'exportAsExcel')->name('export-as-excel')->middleware('can:export-records-as-excel');
+    });
+
+    Route::prefix('/oss')->controller(MADOSSController::class)->name('oss.')->group(function () {
+        CRUDRouteGenerator::defineDefaultRoutesOnly(['index'], 'id', 'can:view-MAD-VPS');
     });
 
     // Meetings
