@@ -59,6 +59,20 @@
                 </a>
             @endcan
 
+            {{-- OSS --}}
+            @can('view-MAD-VPS')
+                <a
+                    @class([
+                        'leftbar__nav-link',
+                        'leftbar__nav-link--active' => request()->routeIs('mad.oss.*'),
+                    ])
+                    href="{{ route('mad.oss.index') }}">
+
+                    <x-misc.material-symbol class="leftbar__nav-link-icon" icon="stacks" />
+                    <span class="leftbar__nav-link-text">{{ __('OSS') }}</span>
+                </a>
+            @endcan
+
             {{-- Meetings --}}
             @can('view-MAD-Meetings')
                 <a
