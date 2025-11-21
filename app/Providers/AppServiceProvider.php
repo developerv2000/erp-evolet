@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Support\Definers\GateDefiners\CMDGatesDefiner;
 use App\Support\Definers\GateDefiners\DDGatesDefiner;
 use App\Support\Definers\GateDefiners\ELDGatesDefiner;
+use App\Support\Definers\GateDefiners\ExportGatesDefiner;
 use App\Support\Definers\GateDefiners\GlobalGatesDefiner;
 use App\Support\Definers\GateDefiners\MADGatesDefiner;
 use App\Support\Definers\GateDefiners\MSDGatesDefiner;
@@ -14,6 +15,7 @@ use App\Support\Definers\GateDefiners\SharedGatesDefiner;
 use App\Support\Definers\ViewComposerDefiners\CMDViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\DDViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\ELDViewComposersDefiner;
+use App\Support\Definers\ViewComposerDefiners\ExportViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\GlobalViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\MADViewComposersDefiner;
 use App\Support\Definers\ViewComposerDefiners\MGMTViewComposersDefiner;
@@ -48,6 +50,7 @@ class AppServiceProvider extends ServiceProvider
         MSDGatesDefiner::defineAll();
         SharedGatesDefiner::defineAll();
         ELDGatesDefiner::defineAll();
+        ExportGatesDefiner::defineAll();
 
         // View composer definers
         GlobalViewComposersDefiner::defineAll();
@@ -60,5 +63,6 @@ class AppServiceProvider extends ServiceProvider
         MSDViewComposersDefiner::defineAll();
         ELDViewComposersDefiner::defineAll();
         WarehouseViewComposersDefiner::defineAll();
+        ExportViewComposersDefiner::defineAll();
     }
 }

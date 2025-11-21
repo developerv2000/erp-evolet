@@ -289,5 +289,28 @@ class PermissionSeeder extends Seeder
                 'global' => true,
             ]);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Export permissions (global)
+        |--------------------------------------------------------------------------
+        */
+
+        $exportPerms = [
+            Permission::CAN_VIEW_EXPORT_ASSEMBLAGES_NAME,
+            Permission::CAN_VIEW_EXPORT_PRODUCTS_NAME,
+            Permission::CAN_VIEW_EXPORT_INVOICES_NAME,
+            
+            Permission::CAN_EDIT_EXPORT_ASSEMBLAGES_NAME,
+            Permission::CAN_EDIT_EXPORT_PRODUCTS_NAME,
+            Permission::CAN_EDIT_EXPORT_INVOICES_NAME,
+        ];
+
+        foreach ($exportPerms as $export) {
+            Permission::create([
+                'name' => $export,
+                'global' => true,
+            ]);
+        }
     }
 }

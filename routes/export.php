@@ -20,7 +20,7 @@ Route::middleware('auth', 'auth.session')->prefix('export')->name('export.')->gr
     // Products
     Route::prefix('/products')->controller(ExportProductController::class)->name('products.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesOnly(
-            ['index', 'create', 'store', 'edit', 'update'],
+            ['index', 'create', 'store', 'edit', 'update', 'destroy'],
             'id',
             'can:view-export-products',
             'can:edit-export-products'
@@ -30,7 +30,7 @@ Route::middleware('auth', 'auth.session')->prefix('export')->name('export.')->gr
     // Invoices
     Route::prefix('/invoices')->controller(ExportInvoiceController::class)->name('invoices.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesOnly(
-            ['index', 'create', 'store', 'edit', 'update'],
+            ['index', 'create', 'store', 'edit', 'update', 'destroy'],
             'id',
             'can:view-export-invoices',
             'can:edit-export-invoices'

@@ -23,11 +23,12 @@ return new class extends Migration
             $table->timestamp('receive_date')->nullable();
             $table->string('pdf');
 
-            $table->unsignedMediumInteger('order_id')
+            $table->unsignedMediumInteger('order_id') // only for invoices of 'Production' type
                 ->index()
                 ->foreign()
                 ->references('id')
-                ->on('orders');
+                ->on('orders')
+                ->nullable();
 
             $table->unsignedTinyInteger('payment_type_id') // 'Prepayment', 'Final payment' or 'Full payment'.
                 ->index()
@@ -40,11 +41,18 @@ return new class extends Migration
             // Only ELD part
             $table->string('payment_company')->nullable(); // only for invoices of 'Delivery to warehouse' and 'Export' types
 
-            $table->unsignedMediumInteger('order_product_id') // only for invoices of 'Delivery to warehouse' and 'Export' types
+            $table->unsignedMediumInteger('order_product_id') // only for invoices of 'Delivery to warehouse' type
                 ->index()
                 ->foreign()
                 ->references('id')
                 ->on('order_products')
+                ->nullable();
+
+            $table->unsignedMediumInteger('assemblage_id') // only for invoices of 'Export' type
+                ->index()
+                ->foreign()
+                ->references('id')
+                ->on('assemblages')
                 ->nullable();
 
             // PRD part

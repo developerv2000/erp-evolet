@@ -3,3 +3,9 @@ IMPORTANT, WHAT SHOULD BE DONE!
 1) Must check security/permission of all new added departments: PLPD, CMD, DD etc...
 2) Add specific permission for actions like 'confirming order', 'sending order to BDM' etc
 3) Protect AJAX routes with gates
+
+---
+order_products:
+    number_of_full_boxes -> remove
+    order_id -> make nullable
+    assemblage_id -> add

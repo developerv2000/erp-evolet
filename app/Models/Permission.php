@@ -68,6 +68,22 @@ class Permission extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | Export permissions (global)
+    |--------------------------------------------------------------------------
+    */
+
+    // PLPD and ELD permissions
+    const CAN_VIEW_EXPORT_ASSEMBLAGES_NAME = 'can view export assemblages';
+    const CAN_EDIT_EXPORT_ASSEMBLAGES_NAME = 'can edit export assemblages';
+
+    const CAN_VIEW_EXPORT_PRODUCTS_NAME = 'can view export products';
+    const CAN_EDIT_EXPORT_PRODUCTS_NAME = 'can edit export products';
+
+    const CAN_VIEW_EXPORT_INVOICES_NAME = 'can view export invoices';
+    const CAN_EDIT_EXPORT_INVOICES_NAME = 'can edit export invoices';
+
+    /*
+    |--------------------------------------------------------------------------
     | MAD permissions
     |--------------------------------------------------------------------------
     */
@@ -420,6 +436,13 @@ class Permission extends Model
             self::CAN_VIEW_WAREHOUSE_PRODUCT_BATCHES_NAME,
             self::CAN_EDIT_WAREHOUSE_PRODUCT_BATCHES_NAME,
             self::CAN_REQUEST_SERIALIZATION_FOR_PRODUCT_BATCHES,
+
+            // Export
+            self::CAN_VIEW_EXPORT_ASSEMBLAGES_NAME,
+            self::CAN_EDIT_EXPORT_ASSEMBLAGES_NAME,
+            self::CAN_VIEW_EXPORT_PRODUCTS_NAME,
+            self::CAN_EDIT_EXPORT_PRODUCTS_NAME,
+            self::CAN_VIEW_EXPORT_INVOICES_NAME,
         ];
     }
 
@@ -492,6 +515,14 @@ class Permission extends Model
             self::CAN_EDIT_WAREHOUSE_PRODUCTS_NAME,
             self::CAN_VIEW_WAREHOUSE_PRODUCT_BATCHES_NAME,
             self::CAN_EDIT_WAREHOUSE_PRODUCT_BATCHES_NAME,
+
+            // Export
+            self::CAN_VIEW_EXPORT_ASSEMBLAGES_NAME,
+            self::CAN_EDIT_EXPORT_ASSEMBLAGES_NAME,
+            self::CAN_VIEW_EXPORT_PRODUCTS_NAME,
+            self::CAN_EDIT_EXPORT_PRODUCTS_NAME,
+            self::CAN_VIEW_EXPORT_INVOICES_NAME,
+            self::CAN_EDIT_EXPORT_INVOICES_NAME,
         ];
     }
 }
