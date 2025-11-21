@@ -88,19 +88,19 @@
         @endif
     @break
 
-    @case('Number of boxes (full)')
+    @case('Number of full boxes')
         {{ $record->number_of_full_boxes }}
     @break
 
-    @case('Number of packages in box (full)')
+    @case('Number of packages in full box')
         {{ $record->number_of_packages_in_full_box }}
     @break
 
-    @case('Number of boxes (incomplete)')
+    @case('Number of incomplete boxes')
         {{ $record->number_of_incomplete_boxes }}
     @break
 
-    @case('Number of packages in box (incomplete)')
+    @case('Number of packages in incomplete box')
         {{ $record->number_of_packages_in_incomplete_box }}
     @break
 

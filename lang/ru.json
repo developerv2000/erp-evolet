@@ -18,6 +18,7 @@
     "MSD": "ОМС",
     "DD": "ОД",
     "Warehouse": "Склад",
+    "Import": "Импорт",
 
     "EPP": "ЕПП",
     "IVP": "ИВП",
@@ -30,6 +31,7 @@
     "Ready for order": "Готовые к заказу",
     "Orders": "Заказы",
     "Batches": "Партии",
+    "Assemblages": "Сборки",
 
     "Departments": "Отделы",
     "Department": "Отдел",
@@ -429,10 +431,10 @@
     "Available quantity": "Доступное количество",
 
     "Serialization request date": "Дата запроса сериализации",
-    "Number of boxes (full)": "Количество коробок (полное)",
-    "Number of packages in box (full)": "Кол-во упаковок в коробке (полное)",
-    "Number of boxes (incomplete)": "Количество коробок (неполное)",
-    "Number of packages in box (incomplete)": "Кол-во упаковок в коробке (неполное)",
+    "Number of full boxes": "Количество полных коробок",
+    "Number of packages in full box": "Кол-во упаковок в полной коробке",
+    "Number of incomplete boxes": "Количество неполных коробок",
+    "Number of packages in incomplete box": "Кол-во упаковок в неполной коробке",
     "Request": "Запросить",
     "Serialization request": "Запрос на сериализацию",
     "Start date of work": "Дата начало работ",

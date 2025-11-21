@@ -47,14 +47,14 @@
 
                 <div class="form__row">
                     <x-form.inputs.record-field-input
-                        labelText="Number of packages in box (full)"
+                        labelText="Number of packages in full box"
                         field="number_of_packages_in_full_box"
                         :model="$record"
                         :isRequired="true"
                         type="number" />
 
                     <x-form.inputs.record-field-input
-                        labelText="Number of boxes (full)"
+                        labelText="Number of full boxes"
                         field="number_of_full_boxes"
                         :model="$record"
                         :isRequired="true"

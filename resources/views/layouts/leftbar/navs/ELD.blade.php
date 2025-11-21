@@ -1,6 +1,6 @@
 @canany(['view-ELD-order-products', 'view-ELD-invoices'])
     <div class="leftbar__section leftbar__section--ELD">
-        <p class="leftbar__section-title">{{ __('ELD') }}</p>
+        <p class="leftbar__section-title">{{ __('Import') }}</p>
 
         <nav class="leftbar__nav">
             {{-- Order products --}}
