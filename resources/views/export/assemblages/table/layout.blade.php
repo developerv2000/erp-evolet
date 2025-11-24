@@ -1,4 +1,4 @@
-<x-tables.template.main-template class="plpd-orders-table" :th-text-nowrap="false" :records="$records">
+<x-tables.template.main-template class="export-assemblages-table" :records="$records">
     {{-- thead titles --}}
     <x-slot:thead-rows>
         <tr>
@@ -11,7 +11,7 @@
 
             @foreach ($visibleTableColumns as $column)
                 <th width="{{ $column['width'] }}">
-                    @include('PLPD.orders.table.thead-columns')
+                    @include('export.assemblages.table.thead-columns')
                 </th>
             @endforeach
         </tr>
@@ -25,12 +25,12 @@
 
                 @if ($trashedRecords)
                     <td>{{ $record->deleted_at->isoFormat('DD MMM Y') }}</td>
-                    <td><x-tables.partials.td.restore :form-action="route('plpd.orders.restore')" :record-id="$record->id" /></td>
+                    <td><x-tables.partials.td.restore :form-action="route('export.assemblages.restore')" :record-id="$record->id" /></td>
                 @endif
 
                 @foreach ($visibleTableColumns as $column)
                     <td>
-                        @include('PLPD.orders.table.tbody-row-columns')
+                        @include('export.assemblages.table.tbody-row-columns')
                     </td>
                 @endforeach
             </tr>

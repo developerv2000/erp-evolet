@@ -17,7 +17,7 @@ return new class extends Migration
             // Step 1:
             // PLPD part
             $table->string('number');
-            $table->date('application_date');
+            $table->date('assemblage_date');
 
             $table->unsignedTinyInteger('shipment_type_id') // 'Auto', 'Air' or 'Sea'
                 ->index()
@@ -27,16 +27,15 @@ return new class extends Migration
 
             $table->unsignedSmallInteger('country_id') // market
                 ->index()
-                ->foreign() 
+                ->foreign()
                 ->references('id')
                 ->on('countries');
 
-            $table->timestamps('request_sent_date')->nullable(); // action
+            $table->timestamp('request_sent_date')->nullable(); // action
 
             // Step 2:
             // ELD part
-            $table->timestamps('request_accepted_date')->nullable(); // action
-
+            $table->timestamp('request_accepted_date')->nullable(); // action
             $table->date('inital_assembly_acceptance_date')->nullable();
             $table->string('inital_assembly_file')->nullable();
             $table->date('final_assembly_acceptance_date')->nullable();

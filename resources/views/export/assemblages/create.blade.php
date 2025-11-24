@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => __('Create new') . ' — ' . __('Orders'),
-    'pageName' => 'plpd-orders-create',
+    'pageTitle' => __('Create new') . ' — ' . __('Assemblages'),
+    'pageName' => 'export-assemblages-create',
     'mainAutoOverflowed' => false,
 ])
 
@@ -11,7 +11,8 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('plpd.orders.index'), 'text' => __('Orders')],
+                    ['link' => null, 'text' => __('Export')],
+                    ['link' => route('export.assemblages.index'), 'text' => __('Assemblages')],
                     ['link' => null, 'text' => __('Create new record')]
                 ];
             @endphp
@@ -32,7 +33,6 @@
         </div>
 
         {{-- Create form --}}
-        @include('PLPD.orders.partials.create-form')
+        @include('export.assemblages.partials.create-form')
     </div>
-
 @endsection

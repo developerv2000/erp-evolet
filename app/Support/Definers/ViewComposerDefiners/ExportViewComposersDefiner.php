@@ -2,6 +2,8 @@
 
 namespace App\Support\Definers\ViewComposerDefiners;
 
+use App\Models\Country;
+use App\Models\ShipmentType;
 use Illuminate\Support\Facades\View;
 
 class ExportViewComposersDefiner
@@ -23,6 +25,13 @@ class ExportViewComposersDefiner
     {
         View::composer('export.assemblages.partials.filter', function ($view) {
             $view->with([]);
+        });
+
+        View::composer('export.assemblages.partials.create-form', function ($view) {
+            $view->with([
+                'shipmentTypes' => ShipmentType::all(),
+                'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+            ]);
         });
 
         View::composer('export.assemblages.partials.edit-form', function ($view) {

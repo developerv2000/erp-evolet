@@ -187,9 +187,6 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         // Apply base filters using helper
         $query = QueryFilterHelper::applyFilters($query, $request, self::getFilterConfig());
 
-        // Apply 'status' filter
-        self::applyStatusFilter($query, $request);
-
         return $query;
     }
 
@@ -318,21 +315,36 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
         $order = 1;
         $columns = array();
 
+        if (Gate::forUser($user)->allows('edit-export-assemblages')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
         array_push(
             $columns,
-            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
-            ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
-            ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
-            ['name' => 'Invoices', 'order' => $order++, 'width' => 120, 'visible' => 1],
-
-            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Assemblage №', 'order' => $order++, 'width' => 114, 'visible' => 1],
+            ['name' => 'Assemblage date', 'order' => $order++, 'width' => 110, 'visible' => 1],
+            ['name' => 'Method of shipment', 'order' => $order++, 'width' => 124, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
-            ['name' => 'Products', 'order' => $order++, 'width' => 126, 'visible' => 1],
+            // ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            // ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            // ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            // ['name' => 'Series', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            // ['name' => 'Manufacturing date', 'order' => $order++, 'width' => 144, 'visible' => 1],
+            // ['name' => 'Expiration date', 'order' => $order++, 'width' => 122, 'visible' => 1],
+            // ['name' => 'Batch quantity', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            // ['name' => 'Quantity for assembly', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Products', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Assemblage request date', 'order' => $order++, 'width' => 160, 'visible' => 1],
 
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
 
-            ['name' => 'Currency', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'ID', 'order' => $order++, 'width' => 62, 'visible' => 1],
         );
 
         return $columns;

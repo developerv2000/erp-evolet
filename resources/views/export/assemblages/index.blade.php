@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => __('Trash') . ' — ' . __('Orders'),
-    'pageName' => 'PLPD-orders-trash',
+    'pageTitle' => __('Assemblages'),
+    'pageName' => 'export-assemblages-index',
     'mainAutoOverflowed' => true,
 ])
 
@@ -11,8 +11,8 @@
             {{-- blade-formatter-disable --}}
             @php
                 $crumbs = [
-                    ['link' => route('plpd.orders.index'), 'text' => __('Orders')],
-                    ['link' => route('plpd.orders.trash'), 'text' => __('Trash')],
+                    ['link' => null, 'text' => __('Export')],
+                    ['link' => route('export.assemblages.index'), 'text' => __('Assemblages')],
                     ['link' => null, 'text' => __('Filtered records') . ' — ' . $records->total()]
                 ];
             @endphp
@@ -22,25 +22,30 @@
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
-                @can('delete-from-trash')
+                @can('edit-export-assemblages')
+                    <x-misc.buttoned-link
+                        class="toolbar__button"
+                        style="shadowed"
+                        link="{{ route('export.assemblages.create') }}"
+                        icon="add">{{ __('New') }}
+                    </x-misc.buttoned-link>
+
                     <x-misc.button
                         class="toolbar__button"
                         style="shadowed"
                         icon="close"
                         data-click-action="show-modal"
-                        data-modal-selector=".multiple-delete-modal">{{ __('Permanently delete selected') }}
+                        data-modal-selector=".multiple-delete-modal">{{ __('Delete selected') }}
                     </x-misc.button>
                 @endcan
 
-                @can('edit-PLPD-orders')
-                    <x-misc.button
-                        class="toolbar__button"
-                        style="shadowed"
-                        icon="history"
-                        data-click-action="show-modal"
-                        data-modal-selector=".multiple-restore-modal">{{ __('Restore selected') }}
-                    </x-misc.button>
-                @endcan
+                <x-misc.button
+                    class="toolbar__button"
+                    style="shadowed"
+                    icon="settings"
+                    data-click-action="show-modal"
+                    data-modal-selector=".edit-table-columns-modal">{{ __('Columns') }}
+                </x-misc.button>
 
                 <x-misc.button
                     class="toolbar__button"
@@ -53,24 +58,21 @@
         </div>
 
         {{-- Table --}}
-        @include('PLPD.orders.table.layout', ['trashedRecords' => true])
+        @include('export.assemblages.table.layout', ['trashedRecords' => false])
     </div>
 
     {{-- Modals --}}
-    @can('delete-from-trash')
+    <x-modals.edit-table-columns
+        form-action="{{ route('settings.update-table-columns', 'export_assemblages_table_columns') }}"
+        :columns="$allTableColumns" />
+
+    @can('edit-export-assemblages')
         <x-modals.multiple-delete
-            form-action="{{ route('plpd.orders.destroy') }}"
-            :forceDelete="true" />
-    @endcan
-
-    @can('edit-PLPD-orders')
-        <x-modals.multiple-restore
-            form-action="{{ route('plpd.orders.restore') }}" />
-
-        <x-modals.target-restore />
+            form-action="{{ route('export.assemblages.destroy') }}"
+            :forceDelete="false" />
     @endcan
 @endsection
 
 @section('rightbar')
-    @include('PLPD.orders.partials.filter')
+    {{-- @include('export.assemblages.partials.filter') --}}
 @endsection

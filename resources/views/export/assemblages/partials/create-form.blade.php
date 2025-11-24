@@ -1,12 +1,23 @@
-<x-form-templates.create-template class="plpd-orders-create-form" :action="route('plpd.orders.store')">
+<x-form-templates.create-template class="export-assemblages-create-form" :action="route('export.assemblages.store')">
     <div class="form__block">
-        <h2 class="main-title main-title--marginless">{{ __('Order') }}</h2>
+        <h2 class="main-title main-title--marginless">{{ __('Assemblage') }}</h2>
 
         <div class="form__row">
+            <x-form.inputs.default-input
+                labelText="Assemblage №"
+                inputName="number"
+                :isRequired="true" />
+
+            <x-form.inputs.default-input
+                labelText="Assemblage date"
+                inputName="assemblage_date"
+                type="date"
+                :isRequired="true" />
+
             <x-form.selects.selectize.id-based-single-select.default-select
-                labelText="Manufacturer"
-                inputName="manufacturer_id"
-                :options="$manufacturers"
+                labelText="Method of shipment"
+                inputName="shipment_type_id"
+                :options="$shipmentTypes"
                 :isRequired="true" />
 
             <x-form.selects.selectize.id-based-single-select.default-select
@@ -14,12 +25,6 @@
                 inputName="country_id"
                 :options="$countriesOrderedByProcessesCount"
                 optionCaptionField="code"
-                :isRequired="true" />
-
-            <x-form.inputs.default-input
-                labelText="Receive date"
-                inputName="receive_date"
-                type="date"
                 :isRequired="true" />
         </div>
     </div>

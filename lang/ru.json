@@ -444,5 +444,10 @@
     "Defects": "Браки",
     "Additional comment": "Дополнительный комментарий",
 
+    "Assemblage": "Сборка",
+    "Assemblage №": "Номер сборки",
+    "Assemblage date": "Дата сборки",
+    "Assemblage request date": "Дата запроса сборки",
+
     "AAAAAAAA": "BBBBBBBB"
 }

@@ -426,8 +426,8 @@ class User extends Authenticatable
         $this->resetPRDTablesColumnSettings();
         $this->resetMSDTablesColumnSettings();
         $this->resetELDTablesColumnSettings();
-
         $this->resetWarehouseTablesColumnSettings();
+        $this->resetExportTablesColumnSettings();
     }
 
     /**
@@ -554,6 +554,19 @@ class User extends Authenticatable
     }
 
     /**
+     * Reset users warehouse tables column settings
+     */
+    public function resetExportTablesColumnSettings()
+    {
+        $this->refresh();
+        $settings = $this->settings;
+        $settings[Assemblage::SETTINGS_EXPORT_TABLE_COLUMNS_KEY] = Assemblage::getDefaultExportTableColumnsForUser($this);
+
+        $this->settings = $settings;
+        $this->save();
+    }
+
+    /**
      * Reset all settings to default for all users
      *
      * Used via artisan command line
@@ -608,6 +621,8 @@ class User extends Authenticatable
 
             'warehouse_products_table_columns' => OrderProduct::getDefaultWarehouseTableColumnsForUser($this),
             'warehouse_product_batches_table_columns' => ProductBatch::getDefaultWarehouseTableColumnsForUser($this),
+
+            'export_assemblages_table_columns' => Assemblage::getDefaultExportTableColumnsForUser($this),
 
             default => throw new InvalidArgumentExceptio("Unknown key: $key"),
         };
