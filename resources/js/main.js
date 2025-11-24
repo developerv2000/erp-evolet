@@ -12,6 +12,7 @@ import './DD/DD-main'; // initialize DD part
 import './PRD/PRD-main'; // initialize PRD part
 import './ELD/ELD-main'; // initialize ELD part
 import './warehouse/warehouse-main'; // initialize warehouse part
+import './export/export-main'; // initialize export part
 import { showSpinner } from '../custom-components/script';
 import * as functions from './main-functions';
 

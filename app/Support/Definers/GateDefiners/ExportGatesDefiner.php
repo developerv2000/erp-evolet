@@ -17,9 +17,9 @@ class ExportGatesDefiner
         );
 
         Gate::define(
-            'view-export-products',
+            'view-export-batches',
             fn($user) =>
-            $user->hasPermission(Permission::CAN_VIEW_EXPORT_PRODUCTS_NAME)
+            $user->hasPermission(Permission::CAN_VIEW_EXPORT_BATCHES_NAME)
         );
 
         Gate::define(
@@ -36,9 +36,9 @@ class ExportGatesDefiner
         );
 
         Gate::define(
-            'edit-export-products',
+            'edit-export-batches',
             fn($user) =>
-            $user->hasPermission(Permission::CAN_EDIT_EXPORT_PRODUCTS_NAME)
+            $user->hasPermission(Permission::CAN_EDIT_EXPORT_BATCHES_NAME)
         );
 
         Gate::define(

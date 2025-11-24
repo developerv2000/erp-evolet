@@ -29,9 +29,9 @@
         </div>
     </div>
 
-    {{-- Multiple dynamic products holder --}}
+    {{-- Multiple dynamic batches holder --}}
     <div class="form__block">
-        <x-form.misc.dynamic-rows title="{{ __('Products') }}" />
+        <x-form.misc.dynamic-rows title="{{ __('Batches') }}" />
     </div>
 
     <div class="form__block">

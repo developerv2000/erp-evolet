@@ -55,9 +55,9 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     |--------------------------------------------------------------------------
     */
 
-    public function products()
+    public function batches()
     {
-        return $this->belongsToMany(OrderProduct::class)
+        return $this->belongsToMany(ProductBatch::class)
             ->withPivot('quantity_for_assembly');
     }
 
@@ -106,7 +106,7 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
                 $invoice->delete();
             }
 
-            $record->products()->detach();
+            $record->batches()->detach();
         });
     }
 

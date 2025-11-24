@@ -202,11 +202,6 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
         return $this->hasMany(ProductBatch::class);
     }
 
-    public function assemblage()
-    {
-        return $this->belongsToMany(Assemblage::class);
-    }
-
     /*
     |--------------------------------------------------------------------------
     | Additional attributes

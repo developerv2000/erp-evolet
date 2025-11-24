@@ -1,4 +1,4 @@
-@canany(['view-export-assemblages', 'view-export-products'])
+@canany(['view-export-assemblages', 'view-export-batches'])
     <div class="leftbar__section leftbar__section--export">
         <p class="leftbar__section-title">{{ __('Export') }}</p>
 
@@ -17,17 +17,17 @@
                 </a>
             @endcan
 
-            {{-- Products --}}
-            @can('view-export-products')
+            {{-- Batches --}}
+            @can('view-export-batches')
                 <a
                     @class([
                         'leftbar__nav-link',
-                        'leftbar__nav-link--active' => request()->routeIs('export.products.*'),
+                        'leftbar__nav-link--active' => request()->routeIs('export.batches.*'),
                     ])
-                    href="{{ route('export.products.index') }}">
+                    href="{{ route('export.batches.index') }}">
 
                     <x-misc.material-symbol class="leftbar__nav-link-icon" icon="medication" />
-                    <span class="leftbar__nav-link-text">{{ __('Products') }}</span>
+                    <span class="leftbar__nav-link-text">{{ __('Batches') }}</span>
                 </a>
             @endcan
 

@@ -76,8 +76,8 @@ class Permission extends Model
     const CAN_VIEW_EXPORT_ASSEMBLAGES_NAME = 'can view export assemblages';
     const CAN_EDIT_EXPORT_ASSEMBLAGES_NAME = 'can edit export assemblages';
 
-    const CAN_VIEW_EXPORT_PRODUCTS_NAME = 'can view export products';
-    const CAN_EDIT_EXPORT_PRODUCTS_NAME = 'can edit export products';
+    const CAN_VIEW_EXPORT_BATCHES_NAME = 'can view export batches';
+    const CAN_EDIT_EXPORT_BATCHES_NAME = 'can edit export batches';
 
     const CAN_VIEW_EXPORT_INVOICES_NAME = 'can view export invoices';
     const CAN_EDIT_EXPORT_INVOICES_NAME = 'can edit export invoices';
@@ -440,8 +440,8 @@ class Permission extends Model
             // Export
             self::CAN_VIEW_EXPORT_ASSEMBLAGES_NAME,
             self::CAN_EDIT_EXPORT_ASSEMBLAGES_NAME,
-            self::CAN_VIEW_EXPORT_PRODUCTS_NAME,
-            self::CAN_EDIT_EXPORT_PRODUCTS_NAME,
+            self::CAN_VIEW_EXPORT_BATCHES_NAME,
+            self::CAN_EDIT_EXPORT_BATCHES_NAME,
             self::CAN_VIEW_EXPORT_INVOICES_NAME,
         ];
     }
@@ -519,8 +519,8 @@ class Permission extends Model
             // Export
             self::CAN_VIEW_EXPORT_ASSEMBLAGES_NAME,
             self::CAN_EDIT_EXPORT_ASSEMBLAGES_NAME,
-            self::CAN_VIEW_EXPORT_PRODUCTS_NAME,
-            self::CAN_EDIT_EXPORT_PRODUCTS_NAME,
+            self::CAN_VIEW_EXPORT_BATCHES_NAME,
+            self::CAN_EDIT_EXPORT_BATCHES_NAME,
             self::CAN_VIEW_EXPORT_INVOICES_NAME,
             self::CAN_EDIT_EXPORT_INVOICES_NAME,
         ];

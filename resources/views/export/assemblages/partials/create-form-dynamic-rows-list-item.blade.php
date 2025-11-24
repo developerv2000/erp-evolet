@@ -1,34 +1,32 @@
 <div class="form__row">
     <x-form.selects.selectize.id-based-single-select.default-select
-        labelText="TM Eng"
-        :input-name="'products[' . $inputsIndex . '][temporary_process_id]'"
-        :options="$readyForOrderProcesses"
-        optionCaptionField="full_trademark_en_with_id"
+        labelText="Manufacturer"
+        :input-name="'batches[' . $inputsIndex . '][manufacturer_id]'"
+        :options="$manufacturers"
         :is-required="true" />
 
     <x-form.selects.selectize.id-based-single-select.default-select
         labelText="MAH"
-        :input-name="'products[' . $inputsIndex . '][process_id]'"
+        :input-name="'batches[' . $inputsIndex . '][marketing_authorization_holder_id]'"
+        :options="$MAHs"
+        :is-required="true" />
+
+    <x-form.selects.selectize.id-based-single-select.default-select
+        labelText="Batch"
+        :input-name="'batches[' . $inputsIndex . '][batch_id]'"
         :options="[]"
-        optionCaptionField="mah_name_with_id"
         :is-required="true" />
 
     <x-form.inputs.default-input
-        labelText="Quantity"
-        :input-name="'products[' . $inputsIndex . '][quantity]'"
+        labelText="Quantity for assembly"
+        :input-name="'batches[' . $inputsIndex . '][quantity_for_assembly]'"
         type="number"
         min="0"
         :is-required="true" />
 
     <x-form.inputs.default-input
         labelText="Comment"
-        :input-name="'products[' . $inputsIndex . '][comment]'" />
-
-    <x-form.selects.selectize.id-based-single-select.default-select
-        labelText="Serialization type"
-        :input-name="'products[' . $inputsIndex . '][serialization_type_id]'"
-        :options="$serializationTypes"
-        :is-required="true" />
+        :input-name="'batches[' . $inputsIndex . '][comment]'" />
 
     <x-form.misc.remove-row-button />
 </div>

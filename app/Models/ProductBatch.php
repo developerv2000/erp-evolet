@@ -66,6 +66,12 @@ class ProductBatch extends BaseModel implements HasTitle
         return $this->belongsTo(OrderProduct::class, 'order_product_id')->withTrashed();
     }
 
+    public function assemblages()
+    {
+        return $this->belongsToMany(Assemblage::class)
+            ->withPivot('quantity_for_assembly');;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Additional attributes
@@ -77,11 +83,23 @@ class ProductBatch extends BaseModel implements HasTitle
         return !is_null($this->serialization_request_date);
     }
 
+    public function getSeriesWithFullTrademarkEnAttribute()
+    {
+        return $this->series . ' —— ' . $this->product->process->full_trademark_en;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Events
     |--------------------------------------------------------------------------
     */
+
+    protected static function booted()
+    {
+        static::deleting(function ($record) {
+            $record->assemblages()->detach();
+        });
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -242,6 +260,31 @@ class ProductBatch extends BaseModel implements HasTitle
     | Misc
     |--------------------------------------------------------------------------
     */
+
+    /**
+     * Used on Export Assemblage create form to get available batches for attaching.
+     *
+     * AJAX request.
+     */
+    public static function getUnfinishedRecordsForAssemblageAttach($manufacturerId, $mahId)
+    {
+        $batches = self::whereHas('product.order', function ($orderQuery) use ($manufacturerId) {
+            $orderQuery->where('manufacturer_id', $manufacturerId);
+        })
+            ->whereHas('product.process', function ($processQuery) use ($mahId) {
+                $processQuery->where('marketing_authorization_holder_id', $mahId);
+            })
+            ->whereNotNull('factual_quantity')
+            ->get();
+
+        // Filter out batches that are already fully used in assemblages
+        $unfinishedBatches = $batches->filter(function ($batch) {
+            $totalQuantityInAssemblages = $batch->assemblages()->sum('quantity_for_assembly');
+            return $totalQuantityInAssemblages < $batch->quantity;
+        });
+
+        return $unfinishedBatches->append('series_with_full_trademark_en');
+    }
 
     /**
      * Used while updating 'number_of_full_boxes' and 'number_of_packages_in_full_boxes' by PLPD

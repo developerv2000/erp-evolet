@@ -73,21 +73,21 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('assemblage_order_product', function (Blueprint $table) {
+        Schema::create('assemblage_product_batch', function (Blueprint $table) {
             $table->unsignedMediumInteger('assemblage_id')
                 ->foreign()
                 ->references('id')
                 ->on('assemblages');
 
-            $table->unsignedMediumInteger('order_product_id')
+            $table->unsignedMediumInteger('product_batch_id')
                 ->foreign()
                 ->references('id')
-                ->on('products');
+                ->on('product_batches');
+
+            $table->primary(['assemblage_id', 'product_batch_id']);
 
             // Pivot data
             $table->unsignedInteger('quantity_for_assembly');
-
-            $table->primary(['assemblage_id', 'order_product_id']);
         });
     }
 
@@ -97,6 +97,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('assemblages');
-        Schema::dropIfExists('assemblage_order_product');
+        Schema::dropIfExists('assemblage_product_batch');
     }
 };

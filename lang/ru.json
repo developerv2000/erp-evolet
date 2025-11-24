@@ -445,9 +445,12 @@
     "Additional comment": "Дополнительный комментарий",
 
     "Assemblage": "Сборка",
+    "Batch": "Партия",
     "Assemblage №": "Номер сборки",
     "Assemblage date": "Дата сборки",
     "Assemblage request date": "Дата запроса сборки",
+    "Quantity for assembly": "Количество для сборки",
+    "No available batches found for the selected Manufacturer and MAH.": "Для выбранного производителя и ДРУ не найдено доступных партий.",
 
     "AAAAAAAA": "BBBBBBBB"
 }

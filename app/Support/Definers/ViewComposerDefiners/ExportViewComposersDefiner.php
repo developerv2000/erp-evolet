@@ -3,6 +3,8 @@
 namespace App\Support\Definers\ViewComposerDefiners;
 
 use App\Models\Country;
+use App\Models\Manufacturer;
+use App\Models\MarketingAuthorizationHolder;
 use App\Models\ShipmentType;
 use Illuminate\Support\Facades\View;
 
@@ -31,6 +33,13 @@ class ExportViewComposersDefiner
             $view->with([
                 'shipmentTypes' => ShipmentType::all(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+            ]);
+        });
+
+        View::composer('export.assemblages.partials.create-form-dynamic-rows-list-item', function ($view) {
+            $view->with([
+                'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
+                'MAHs' => MarketingAuthorizationHolder::all(),
             ]);
         });
 

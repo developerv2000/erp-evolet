@@ -4,6 +4,7 @@ namespace App\Http\Controllers\export;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assemblage;
+use App\Models\ProductBatch;
 use App\Models\User;
 use App\Support\Helpers\UrlHelper;
 use App\Support\Traits\Controller\DestroysModelRecords;
@@ -46,18 +47,29 @@ class ExportAssemblageController extends Controller
     {
         $inputsIndex = $request->input('inputs_index');
 
-        return view('warehouse.product-batches.partials.create-form-dynamic-rows-list-item', compact('inputsIndex'));
+        return view('export.assemblages.partials.create-form-dynamic-rows-list-item', compact('inputsIndex'));
+    }
+
+    /**
+     * Used on AJAX requests to retrieve matched batches for given manufacturer and MAH.
+     */
+    public function getMatchedBatchesOnCreate(Request $request)
+    {
+        $manufacturerId = $request->input('manufacturer_id');
+        $mahId = $request->input('marketing_authorization_holder_id');
+
+        $matchedBatches = ProductBatch::getUnfinishedRecordsForAssemblageAttach($manufacturerId, $mahId);
+
+        return response()->json([
+            'matchedBatches' => $matchedBatches,
+            'emptyMessage' => __('No available batches found for the selected Manufacturer and MAH.'),
+        ]);
     }
 
     public function store(Request $request)
     {
-        $product = OrderProduct::findOrFail($request->input('order_product_id'));
-
-        if (!$product->can_create_batch) {
-            abort(404);
-        }
-
-        Assemblage::createFromWarehouseRequest($request, $product);
+        dd($request);
+        Assemblage::createFromExportRequest($request);
 
         return to_route('warehouse.product-batches.index', ['order_product_id' => $request->input('order_product_id')]);
     }

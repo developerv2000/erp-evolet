@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\export\ExportAssemblageController;
 use App\Http\Controllers\export\ExportInvoiceController;
-use App\Http\Controllers\export\ExportProductController;
+use App\Http\Controllers\export\ExportBatchController;
 use App\Support\Generators\CRUDRouteGenerator;
 use Illuminate\Support\Facades\Route;
 
@@ -15,15 +15,18 @@ Route::middleware('auth', 'auth.session')->prefix('export')->name('export.')->gr
             'can:view-export-assemblages',
             'can:edit-export-assemblages'
         );
+
+        Route::post('/get-dynamic-rows-list-item-inputs', 'getDynamicRowsListItemInputs');  // AJAX request on create
+        Route::post('/get-matched-batches-on-create', 'getMatchedBatchesOnCreate');  // AJAX request on create
     });
 
-    // Products
-    Route::prefix('/products')->controller(ExportProductController::class)->name('products.')->group(function () {
+    // Batches
+    Route::prefix('/batches')->controller(ExportBatchController::class)->name('batches.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesOnly(
             ['index', 'create', 'store', 'edit', 'update', 'destroy'],
             'id',
-            'can:view-export-products',
-            'can:edit-export-products'
+            'can:view-export-batches',
+            'can:edit-export-batches'
         );
     });
 
