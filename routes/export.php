@@ -28,7 +28,7 @@ Route::middleware('auth', 'auth.session')->prefix('export')->name('export.')->gr
     // Batches
     Route::prefix('/batches')->controller(ExportBatchController::class)->name('batches.')->group(function () {
         CRUDRouteGenerator::defineDefaultRoutesOnly(
-            ['index', 'create', 'store', 'edit', 'update', 'destroy'],
+            ['index', 'edit', 'update'],
             'id',
             'can:view-export-batches',
             'can:edit-export-batches'

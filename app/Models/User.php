@@ -561,6 +561,7 @@ class User extends Authenticatable
         $this->refresh();
         $settings = $this->settings;
         $settings[Assemblage::SETTINGS_EXPORT_TABLE_COLUMNS_KEY] = Assemblage::getDefaultExportTableColumnsForUser($this);
+        $settings[ProductBatch::SETTINGS_EXPORT_TABLE_COLUMNS_KEY] = ProductBatch::getDefaultExportTableColumnsForUser($this);
 
         $this->settings = $settings;
         $this->save();
@@ -623,6 +624,7 @@ class User extends Authenticatable
             'warehouse_product_batches_table_columns' => ProductBatch::getDefaultWarehouseTableColumnsForUser($this),
 
             'export_assemblages_table_columns' => Assemblage::getDefaultExportTableColumnsForUser($this),
+            'export_batches_table_columns' => ProductBatch::getDefaultExportTableColumnsForUser($this),
 
             default => throw new InvalidArgumentExceptio("Unknown key: $key"),
         };

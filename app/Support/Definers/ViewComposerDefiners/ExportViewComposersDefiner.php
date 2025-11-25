@@ -6,6 +6,8 @@ use App\Models\Country;
 use App\Models\Currency;
 use App\Models\Manufacturer;
 use App\Models\MarketingAuthorizationHolder;
+use App\Models\Order;
+use App\Models\Process;
 use App\Models\ShipmentType;
 use Illuminate\Support\Facades\View;
 
@@ -14,7 +16,7 @@ class ExportViewComposersDefiner
     public static function defineAll()
     {
         self::defineAssemblagesComposers();
-        self::defineProductsComposers();
+        self::defineBatchesComposers();
         self::defineInvoicesComposers();
     }
 
@@ -55,7 +57,18 @@ class ExportViewComposersDefiner
         });
     }
 
-    private static function defineProductsComposers() {}
+    private static function defineBatchesComposers()
+    {
+        View::composer('export.batches.partials.filter', function ($view) {
+            $view->with([
+                'manufacturers' => Manufacturer::getMinifiedRecordsWithProcessesReadyForOrder(),
+                'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+                'orderNames' => Order::onlyWithName()->orderByName()->pluck('name'),
+                'enTrademarks' => Process::pluckAllEnTrademarks(),
+            ]);
+        });
+    }
+
     private static function defineInvoicesComposers() {}
 
     /*

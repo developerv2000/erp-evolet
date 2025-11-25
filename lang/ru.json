@@ -463,6 +463,8 @@
     "GMP or ISO": "GMP или ISO",
     "Shipment from warehouse end date": "Дата окончания отгрузки со склада",
     "Request acceptance": "Принятие запроса",
+    "Batch quantity": "Количество в партии",
+    "Assembled": "Собрано",
 
     "AAAAAAAA": "BBBBBBBB"
 }

@@ -35,6 +35,12 @@ class ProductBatch extends BaseModel implements HasTitle
     const DEFAULT_MSD_ORDER_TYPE = 'asc';
     const DEFAULT_MSD_PAGINATION_LIMIT = 50;
 
+    // Export
+    const SETTINGS_EXPORT_TABLE_COLUMNS_KEY = 'export_batches_table_columns';
+    // const DEFAULT_EXPORT_ORDER_BY = 'updated_at';
+    const DEFAULT_EXPORT_ORDER_BY = 'id';
+    const DEFAULT_EXPORT_ORDER_TYPE = 'asc';
+    const DEFAULT_EXPORT_PAGINATION_LIMIT = 50;
     /*
     |--------------------------------------------------------------------------
     | Properties
@@ -69,7 +75,7 @@ class ProductBatch extends BaseModel implements HasTitle
     public function assemblages()
     {
         return $this->belongsToMany(Assemblage::class)
-            ->withPivot('quantity_for_assembly');;
+            ->withPivot(['quantity_for_assembly', 'additional_comment']);
     }
 
     /*
@@ -93,6 +99,16 @@ class ProductBatch extends BaseModel implements HasTitle
         $totalQuantityInAssemblages = $this->assemblages()->sum('quantity_for_assembly');
 
         return $totalQuantityInAssemblages < $this->factual_quantity;
+    }
+
+    public function getSumOfAssemblagesQuantityAttribute(): int
+    {
+        return $this->assemblages()->sum('quantity_for_assembly');
+    }
+
+    public function getRemainingQuantityAttribute(): int
+    {
+        return $this->factual_quantity - $this->sum_of_assemblages_quantity;
     }
 
     /*
@@ -262,6 +278,16 @@ class ProductBatch extends BaseModel implements HasTitle
         );
     }
 
+    public static function addDefaultExportQueryParamsToRequest(Request $request)
+    {
+        self::addDefaultQueryParamsToRequest(
+            $request,
+            'DEFAULT_EXPORT_ORDER_BY',
+            'DEFAULT_EXPORT_ORDER_TYPE',
+            'DEFAULT_EXPORT_PAGINATION_LIMIT',
+        );
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Misc
@@ -409,6 +435,46 @@ class ProductBatch extends BaseModel implements HasTitle
             ['name' => 'Serialization codes sent', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Serialization report received', 'order' => $order++, 'width' => 240, 'visible' => 1],
             ['name' => 'Report sent to hub', 'order' => $order++, 'width' => 184, 'visible' => 1],
+
+            ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
+            ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+        );
+
+        return $columns;
+    }
+
+    public static function getDefaultExportTableColumnsForUser($user)
+    {
+        if (Gate::forUser($user)->denies('view-export-batches')) {
+            return null;
+        }
+
+        $order = 1;
+        $columns = array();
+
+        if (Gate::forUser($user)->allows('edit-export-batches')) {
+            array_push(
+                $columns,
+                ['name' => 'Edit', 'order' => $order++, 'width' => 40, 'visible' => 1],
+            );
+        }
+
+        array_push(
+            $columns,
+            ['name' => 'Assemblage №', 'order' => $order++, 'width' => 114, 'visible' => 1],
+            ['name' => 'Assemblage date', 'order' => $order++, 'width' => 114, 'visible' => 1],
+            ['name' => 'Method of shipment', 'order' => $order++, 'width' => 124, 'visible' => 1],
+            ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
+
+            ['name' => 'Series', 'order' => $order++, 'width' => 100, 'visible' => 1],
+            ['name' => 'Quantity for assembly', 'order' => $order++, 'width' => 172, 'visible' => 1],
+            ['name' => 'Batch quantity', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'Additional comment', 'order' => $order++, 'width' => 220, 'visible' => 1],
+            ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
+            ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
+            ['name' => 'Manufacturing date', 'order' => $order++, 'width' => 144, 'visible' => 1],
+            ['name' => 'Expiration date', 'order' => $order++, 'width' => 122, 'visible' => 1],
 
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],

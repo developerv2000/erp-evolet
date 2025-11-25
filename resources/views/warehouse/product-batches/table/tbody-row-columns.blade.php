@@ -18,7 +18,9 @@
     @case('Quantity')
         {{ __('Total') }}: {{ $record->quantity }} <br>
         {{ __('Marked') }}: {{ $record->factual_quantity ?: 0 }} <br>
-        {{ __('Defects') }}: {{ $record->defects_quantity ?: 0 }}
+        {{ __('Defects') }}: {{ $record->defects_quantity ?: 0 }} <br>
+        {{ __('Assembled') }}: {{ $record->sum_of_assemblages_quantity ?: 0 }} <br>
+        {{ __('Remaining') }}: {{ $record->remaining_quantity ?: 0 }}
     @break
 
     @case('Manufacturer')

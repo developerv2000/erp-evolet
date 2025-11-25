@@ -67,7 +67,7 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     public function batches()
     {
         return $this->belongsToMany(ProductBatch::class)
-            ->withPivot('quantity_for_assembly');
+            ->withPivot(['quantity_for_assembly', 'additional_comment']);
     }
 
     public function invoices()
@@ -387,16 +387,8 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             ['name' => 'Assemblage date', 'order' => $order++, 'width' => 110, 'visible' => 1],
             ['name' => 'Method of shipment', 'order' => $order++, 'width' => 124, 'visible' => 1],
             ['name' => 'Country', 'order' => $order++, 'width' => 64, 'visible' => 1],
-            // ['name' => 'Manufacturer', 'order' => $order++, 'width' => 140, 'visible' => 1],
-            // ['name' => 'Brand Eng', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            // ['name' => 'MAH', 'order' => $order++, 'width' => 102, 'visible' => 1],
-            // ['name' => 'Series', 'order' => $order++, 'width' => 100, 'visible' => 1],
-            // ['name' => 'Manufacturing date', 'order' => $order++, 'width' => 144, 'visible' => 1],
-            // ['name' => 'Expiration date', 'order' => $order++, 'width' => 122, 'visible' => 1],
-            // ['name' => 'Batch quantity', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            // ['name' => 'Quantity for assembly', 'order' => $order++, 'width' => 150, 'visible' => 1],
             ['name' => 'Batches', 'order' => $order++, 'width' => 84, 'visible' => 1],
-            ['name' => 'Assembly request date', 'order' => $order++, 'width' => 154, 'visible' => 1],
+            ['name' => 'Assembly request date', 'order' => $order++, 'width' => 164, 'visible' => 1],
 
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
