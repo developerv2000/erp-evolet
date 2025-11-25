@@ -96,10 +96,17 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     |--------------------------------------------------------------------------
     */
 
-    public function getIsReadyForShipmentFromWarehouseAttribute(): bool
+    public function getCanRequestDeliveryToDestinationCountryAttribute(): bool
     {
         return !is_null($this->initial_assembly_acceptance_date)
             && !is_null($this->final_assembly_acceptance_date);
+    }
+
+    public function getCanEndShipmentFromWarehouseAttribute(): bool
+    {
+        return !$this->shipment_from_warehouse_end_date
+            && $this->delivery_to_destination_country_request_date
+            && !is_null($this->delivery_to_destination_country_loading_confirmed_date);
     }
 
     public function getInitialAssemblyAssetUrlAttribute(): string

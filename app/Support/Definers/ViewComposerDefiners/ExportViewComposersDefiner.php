@@ -3,6 +3,7 @@
 namespace App\Support\Definers\ViewComposerDefiners;
 
 use App\Models\Country;
+use App\Models\Currency;
 use App\Models\Manufacturer;
 use App\Models\MarketingAuthorizationHolder;
 use App\Models\ShipmentType;
@@ -49,6 +50,7 @@ class ExportViewComposersDefiner
             $view->with([
                 'shipmentTypes' => ShipmentType::all(),
                 'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+                'currencies' => Currency::all(),
             ]);
         });
     }

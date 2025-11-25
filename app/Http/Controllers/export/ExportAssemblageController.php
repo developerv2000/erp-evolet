@@ -108,4 +108,26 @@ class ExportAssemblageController extends Controller
 
         return redirect()->route('export.assemblages.edit', $record->id);
     }
+
+    public function requestDeliveryToDestinationCountry(Assemblage $record)
+    {
+        $record->delivery_to_destination_country_request_date = now();
+        $record->save();
+
+        return redirect()->route('export.assemblages.edit', $record->id);
+    }
+
+    /**
+     * Ajax request
+     */
+    public function endShipmentFromWarehouse(Request $request, Assemblage $record)
+    {
+        $record->shipment_from_warehouse_end_date = now();
+        $record->save();
+
+        return response()->json([
+            'shipmentFromWarehouseEnded' => true,
+            'shipmentFromWarehouseEndDate' => $record->shipment_from_warehouse_end_date?->isoFormat('DD MMM Y'),
+        ]);
+    }
 }

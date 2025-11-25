@@ -18,6 +18,7 @@ import { initializeSelectizes } from "../plugins";
 // Assemblages
 const GET_ASSEMBLAGES_DYNAMIC_ROWS_LIST_ITEM_INPUTS_POST_URL = '/export/assemblages/get-dynamic-rows-list-item-inputs';
 const GET_ASSEMBLAGES_MATCHED_BACHES_POST_URL = '/export/assemblages/get-matched-batches-on-create';
+const END_SHIPMENT_FROM_WAREHOUSE_POST_URL = '/export/assemblages/end-shipment-from-warehouse';
 
 /*
 |--------------------------------------------------------------------------
@@ -76,6 +77,27 @@ export function addDynamicRowsListItemOnAssemblagesCreate() {
 
             // Increment array index
             formDynamicInputsArrayIndex++;
+        })
+        .finally(function () {
+            hideSpinner();
+        });
+}
+
+export function endShipmentFromWarehouseOfAssemblages(evt) {
+    showSpinner();
+
+    const target = evt.currentTarget;
+
+    axios.post(END_SHIPMENT_FROM_WAREHOUSE_POST_URL + '/' + target.dataset.recordId, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            if (response.data.shipmentFromWarehouseEnded) {
+                const td = target.closest('td');
+                td.innerHTML = response.data.shipmentFromWarehouseEndDate;
+            }
         })
         .finally(function () {
             hideSpinner();

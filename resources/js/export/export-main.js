@@ -13,14 +13,23 @@ import { debounce } from '../utilities';
 |--------------------------------------------------------------------------
 */
 
-// Order forms
+// Assemblages forms
 const assemblagesCreateForm = document.querySelector('.export-assemblages-create-form');
+
+// Assemblages tables
+const assemblagesTable = document.querySelector('.export-assemblages-table');
 
 /*
 |--------------------------------------------------------------------------
 | Event Listeners
 |--------------------------------------------------------------------------
 */
+
+assemblagesTable?.querySelectorAll('button[data-click-action="end-shipment-from-warehouse"]').forEach(button => {
+    button.addEventListener('click', (evt) => {
+        functions.endShipmentFromWarehouseOfAssemblages(evt);
+    });
+});
 
 /*
 |--------------------------------------------------------------------------

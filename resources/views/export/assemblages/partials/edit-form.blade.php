@@ -123,6 +123,52 @@
         </div>
     @endif
 
+    @if ($record->delivery_to_destination_country_request_date)
+        <div class="form__block">
+            <h2 class="main-title main-title--marginless">{{ __('Transportation request') }}</h2>
+
+            <div class="form__row">
+                <x-form.inputs.record-field-input
+                    labelText="Rate approved"
+                    field="delivery_to_destination_country_rate_approved_date"
+                    :model="$record"
+                    type="date"
+                    :initial-value="$record->delivery_to_destination_country_rate_approved_date?->format('Y-m-d')" />
+
+                <x-form.inputs.record-field-input
+                    labelText="Forwarder"
+                    field="delivery_to_destination_country_forwarder"
+                    :model="$record" />
+
+                <x-form.inputs.record-field-input
+                    labelText="Rate"
+                    field="delivery_to_destination_country_price"
+                    type="number"
+                    :model="$record"
+                    min="1" />
+
+                <x-form.selects.selectize.id-based-single-select.record-field-select
+                    labelText="Currency"
+                    field="delivery_to_destination_country_currency_id"
+                    :model="$record"
+                    :options="$currencies" />
+            </div>
+
+            <div class="form__row">
+                <x-form.inputs.record-field-input
+                    labelText="Loading confirmed"
+                    field="delivery_to_destination_country_loading_confirmed_date"
+                    :model="$record"
+                    type="date"
+                    :initial-value="$record->delivery_to_destination_country_loading_confirmed_date?->format('Y-m-d')" />
+
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+                <div class="form-group"></div>
+            </div>
+        </div>
+    @endif
+
     <div class="form__block">
         <x-form.misc.comment-inputs-on-model-edit :record="$record" />
     </div>

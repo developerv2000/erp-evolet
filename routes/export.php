@@ -18,9 +18,11 @@ Route::middleware('auth', 'auth.session')->prefix('export')->name('export.')->gr
 
         Route::post('/request-assembly/{record}', 'requestAssembly')->name('request-assembly');
         Route::post('/accept-assembly-request/{record}', 'acceptAssemblyRequest')->name('accept-assembly-request');
-        
+        Route::post('/request-delivery-to-destination-country/{record}', 'requestDeliveryToDestinationCountry')->name('request-delivery-to-destination-country');
+
         Route::post('/get-dynamic-rows-list-item-inputs', 'getDynamicRowsListItemInputs');  // AJAX request on create
         Route::post('/get-matched-batches-on-create', 'getMatchedBatchesOnCreate');  // AJAX request on create
+        Route::post('/end-shipment-from-warehouse/{record}', 'endShipmentFromWarehouse')->name('end-shipment-from-warehouse'); // AJAX request
     });
 
     // Batches
