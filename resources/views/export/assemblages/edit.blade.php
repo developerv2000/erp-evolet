@@ -1,6 +1,6 @@
 @extends('layouts.app', [
-    'pageTitle' => $record->title . ' — ' . __('Orders'),
-    'pageName' => 'plpd-orders-edit',
+    'pageTitle' => $record->title . ' — ' . __('Assemblages'),
+    'pageName' => 'export-assemblages-edit',
     'mainAutoOverflowed' => false,
 ])
 
@@ -8,7 +8,7 @@
     <div class="main-box">
         {{-- Toolbar --}}
         <div class="toolbar">
-            <x-layouts.breadcrumbs :crumbs="$record->generateBreadcrumbs('PLPD')" />
+            <x-layouts.breadcrumbs :crumbs="$record->generateBreadcrumbs('export')" />
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
@@ -23,7 +23,7 @@
         </div>
 
         {{-- Edit form --}}
-        @include('PLPD.orders.partials.edit-form')
+        @include('export.assemblages.partials.edit-form')
     </div>
 
 @endsection

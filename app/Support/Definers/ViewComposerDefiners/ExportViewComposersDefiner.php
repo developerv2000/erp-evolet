@@ -26,7 +26,9 @@ class ExportViewComposersDefiner
     private static function defineAssemblagesComposers()
     {
         View::composer('export.assemblages.partials.filter', function ($view) {
-            $view->with([]);
+            $view->with([
+                'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+            ]);
         });
 
         View::composer('export.assemblages.partials.create-form', function ($view) {
@@ -44,7 +46,10 @@ class ExportViewComposersDefiner
         });
 
         View::composer('export.assemblages.partials.edit-form', function ($view) {
-            $view->with([]);
+            $view->with([
+                'shipmentTypes' => ShipmentType::all(),
+                'countriesOrderedByProcessesCount' => Country::orderByProcessesCount()->get(),
+            ]);
         });
     }
 

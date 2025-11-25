@@ -22,7 +22,7 @@
 
             {{-- Toolbar buttons --}}
             <div class="toolbar__buttons-wrapper">
-                @can('edit-export-assemblages')
+                @can('moderate-export-assemblages')
                     <x-misc.buttoned-link
                         class="toolbar__button"
                         style="shadowed"
@@ -66,7 +66,7 @@
         form-action="{{ route('settings.update-table-columns', 'export_assemblages_table_columns') }}"
         :columns="$allTableColumns" />
 
-    @can('edit-export-assemblages')
+    @can('moderate-export-assemblages')
         <x-modals.multiple-delete
             form-action="{{ route('export.assemblages.destroy') }}"
             :forceDelete="false" />
@@ -74,5 +74,5 @@
 @endsection
 
 @section('rightbar')
-    {{-- @include('export.assemblages.partials.filter') --}}
+    @include('export.assemblages.partials.filter')
 @endsection

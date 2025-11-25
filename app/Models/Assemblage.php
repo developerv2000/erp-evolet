@@ -7,12 +7,14 @@ use App\Support\Contracts\Model\CanExportRecordsAsExcel;
 use App\Support\Contracts\Model\HasTitle;
 use App\Support\Helpers\QueryFilterHelper;
 use App\Support\Traits\Model\Commentable;
+use App\Support\Traits\Model\UploadsFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 {
     use Commentable;
+    use UploadsFile;
 
     /*
     |--------------------------------------------------------------------------
@@ -26,6 +28,13 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     const DEFAULT_EXPORT_ORDER_TYPE = 'asc';
     const DEFAULT_EXPORT_PAGINATION_LIMIT = 50;
 
+    // Files
+    const INITIAL_ASSEMBLY_FILE_PATH = 'private/assemblages/initial-assemblies';
+    const FINAL_ASSEMBLY_FILE_PATH = 'private/assemblages/final-assemblies';
+    const COO_FILE_PATH = 'private/assemblages/COOs';
+    const EURO_1_FILE_PATH = 'private/assemblages/euro-1';
+    const GMP_OR_ISO_FILE_PATH = 'private/assemblages/gmp-or-iso';
+
     /*
     |--------------------------------------------------------------------------
     | Properties
@@ -35,10 +44,10 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     protected $guarded = ['id'];
 
     protected $casts = [
-        'application_date' => 'date',
-        'request_sent_date' => 'datetime',
-        'request_accepted_date' => 'datetime',
-        'inital_assembly_acceptance_date' => 'date',
+        'assemblage_date' => 'date',
+        'assembly_request_date' => 'datetime',
+        'assembly_request_accepted_date' => 'datetime',
+        'initial_assembly_acceptance_date' => 'date',
         'final_assembly_acceptance_date' => 'date',
         'documents_provision_date_to_warehouse' => 'date',
         'coo_file_date' => 'date',
@@ -89,8 +98,58 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
 
     public function getIsReadyForShipmentFromWarehouseAttribute(): bool
     {
-        return !is_null($this->inital_assembly_acceptance_date)
+        return !is_null($this->initial_assembly_acceptance_date)
             && !is_null($this->final_assembly_acceptance_date);
+    }
+
+    public function getInitialAssemblyAssetUrlAttribute(): string
+    {
+        return asset(self::INITIAL_ASSEMBLY_FILE_PATH . '/' . $this->initial_assembly_file);
+    }
+
+    public function getInitialAssemblyFilePathAttribute()
+    {
+        return public_path(self::INITIAL_ASSEMBLY_FILE_PATH . '/' . $this->initial_assembly_file);
+    }
+
+    public function getFinalAssemblyAssetUrlAttribute(): string
+    {
+        return asset(self::FINAL_ASSEMBLY_FILE_PATH . '/' . $this->final_assembly_file);
+    }
+
+    public function getFinalAssemblyFilePathAttribute()
+    {
+        return public_path(self::FINAL_ASSEMBLY_FILE_PATH . '/' . $this->final_assembly_file);
+    }
+
+    public function getCooAssetUrlAttribute(): string
+    {
+        return asset(self::COO_FILE_PATH . '/' . $this->coo_file);
+    }
+
+    public function getCooFilePathAttribute()
+    {
+        return public_path(self::COO_FILE_PATH . '/' . $this->coo_file);
+    }
+
+    public function getDeclarationForEuropeAssetUrlAttribute(): string
+    {
+        return asset(self::EURO_1_FILE_PATH . '/' . $this->euro_1_file);
+    }
+
+    public function getDeclarationForEuropeFilePathAttribute()
+    {
+        return public_path(self::EURO_1_FILE_PATH . '/' . $this->euro_1_file);
+    }
+
+    public function getGmpOrIsoAssetUrlAttribute(): string
+    {
+        return asset(self::GMP_OR_ISO_FILE_PATH . '/' . $this->gmp_or_iso_file);
+    }
+
+    public function getGmpOrIsoFilePathAttribute()
+    {
+        return public_path(self::GMP_OR_ISO_FILE_PATH . '/' . $this->gmp_or_iso_file);
     }
 
     /*
@@ -130,7 +189,7 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     {
         return $query->withCount([
             'comments',
-            'products',
+            'batches',
             'invoices',
         ]);
     }
@@ -193,7 +252,8 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     private static function getFilterConfig(): array
     {
         return [
-            'whereIn' => ['id', 'number', 'country_id', 'shipment_type_id'],
+            'whereEqual' => ['number'],
+            'whereIn' => ['id', 'country_id', 'shipment_type_id'],
 
             'dateRange' => [
                 'created_at',
@@ -225,61 +285,53 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     */
 
     // PLPD part
-
-    public static function createByPLPDFromRequest($request)
+    public static function createMultipleFromExportRequest($request)
     {
         $record = self::create($request->only([
-            'manufacturer_id',
+            'number',
+            'assemblage_date',
+            'shipment_type_id',
             'country_id',
-            'receive_date',
         ]));
 
         // HasMany relations
         $record->storeCommentFromRequest($request);
 
-        // Store products
-        $products = $request->input('products', []);
+        // Store batches
+        $batches = $request->input('batches', []);
 
-        foreach ($products as $product) {
-            $newProduct = $record->products()->create([
-                'process_id' => $product['process_id'],
-                'quantity' => $product['quantity'],
-                'serialization_type_id' => $product['serialization_type_id'],
-            ]);
-
-            // Store product comments
-            if (isset($product['comment']) && $product['comment']) {
-                $newProduct->comments()->create([
-                    'body' => '<p>' . $product['comment'] . '</p>',
-                    'user_id' => auth()->user()->id,
-                ]);
+        foreach ($batches as $batch) {
+            // Skip if batch is finished
+            $productBatch = ProductBatch::find($batch['batch_id']);
+            if (!$productBatch || !$productBatch->is_unfinished) {
+                continue;
             }
+
+            // Attach batch
+            $record->batches()->attach(
+                $batch['batch_id'],
+                [
+                    'quantity_for_assembly' => $batch['quantity_for_assembly'],
+                    'additional_comment' => isset($batch['additional_comment']) ? $batch['additional_comment'] : null,
+                ]
+            );
         }
     }
 
-    public function updateByPLPDFromRequest($request)
+    // PLPD or ELD
+    public function updateFromExportRequest($request)
     {
         $this->update($request->all());
 
         // HasMany relations
         $this->storeCommentFromRequest($request);
-    }
 
-    // ELD part
-
-    public function updateByELDFromRequest($request)
-    {
-        $this->update($request->all());
-
-        // Update 'purchase_date'
-        if (is_null($this->purchase_date)) {
-            $this->update([
-                'purchase_date' => now(),
-            ]);
-        }
-
-        // HasMany relations
-        $this->storeCommentFromRequest($request);
+        // Upload files
+        $this->uploadFile('initial_assembly_file', public_path(self::INITIAL_ASSEMBLY_FILE_PATH));
+        $this->uploadFile('final_assembly_file', public_path(self::FINAL_ASSEMBLY_FILE_PATH));
+        $this->uploadFile('coo_file', public_path(self::COO_FILE_PATH));
+        $this->uploadFile('euro_1_file', public_path(self::EURO_1_FILE_PATH));
+        $this->uploadFile('gmp_or_iso_file', public_path(self::GMP_OR_ISO_FILE_PATH));
     }
 
     /*
@@ -336,11 +388,33 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
             // ['name' => 'Expiration date', 'order' => $order++, 'width' => 122, 'visible' => 1],
             // ['name' => 'Batch quantity', 'order' => $order++, 'width' => 150, 'visible' => 1],
             // ['name' => 'Quantity for assembly', 'order' => $order++, 'width' => 150, 'visible' => 1],
-            ['name' => 'Products', 'order' => $order++, 'width' => 100, 'visible' => 1],
-            ['name' => 'Assemblage request date', 'order' => $order++, 'width' => 160, 'visible' => 1],
+            ['name' => 'Batches', 'order' => $order++, 'width' => 84, 'visible' => 1],
+            ['name' => 'Assembly request date', 'order' => $order++, 'width' => 154, 'visible' => 1],
 
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
+
+            ['name' => 'Request accept date', 'order' => $order++, 'width' => 168, 'visible' => 1],
+            ['name' => 'Initial assembly date', 'order' => $order++, 'width' => 172, 'visible' => 1],
+            ['name' => 'Initial assembly', 'order' => $order++, 'width' => 136, 'visible' => 1],
+            ['name' => 'Final assembly date', 'order' => $order++, 'width' => 176, 'visible' => 1],
+            ['name' => 'Final assembly', 'order' => $order++, 'width' => 140, 'visible' => 1],
+            ['name' => 'Documents provision date', 'order' => $order++, 'width' => 240, 'visible' => 1],
+            ['name' => 'COO date', 'order' => $order++, 'width' => 96, 'visible' => 1],
+            ['name' => 'COO', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'EURO 1 date', 'order' => $order++, 'width' => 96, 'visible' => 1],
+            ['name' => 'EURO 1', 'order' => $order++, 'width' => 120, 'visible' => 1],
+            ['name' => 'GMP or ISO', 'order' => $order++, 'width' => 96, 'visible' => 1],
+            ['name' => 'Volume', 'order' => $order++, 'width' => 80, 'visible' => 1],
+            ['name' => 'Packs', 'order' => $order++, 'width' => 90, 'visible' => 1],
+
+            ['name' => 'Transportation request', 'order' => $order++, 'width' => 204, 'visible' => 1],
+            ['name' => 'Rate approved', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Forwarder', 'order' => $order++, 'width' => 130, 'visible' => 1],
+            ['name' => 'Rate', 'order' => $order++, 'width' => 90, 'visible' => 1],
+            ['name' => 'Currency', 'order' => $order++, 'width' => 84, 'visible' => 1],
+            ['name' => 'Loading confirmed', 'order' => $order++, 'width' => 180, 'visible' => 1],
+            ['name' => 'Shipment from warehouse end date', 'order' => $order++, 'width' => 250, 'visible' => 1],
 
             ['name' => 'Date of creation', 'order' => $order++, 'width' => 130, 'visible' => 1],
             ['name' => 'Update date', 'order' => $order++, 'width' => 150, 'visible' => 1],

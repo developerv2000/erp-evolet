@@ -46,5 +46,12 @@ class ExportGatesDefiner
             fn($user) =>
             $user->hasPermission(Permission::CAN_EDIT_EXPORT_INVOICES_NAME)
         );
+
+        Gate::define(
+            'moderate-export-assemblages',
+            fn($user) =>
+            $user->hasPermission(Permission::CAN_EDIT_EXPORT_ASSEMBLAGES_NAME)
+                && ($user->isGlobalAdministrator() || $user->hasRole('PLPD logistician'))
+        );
     }
 }

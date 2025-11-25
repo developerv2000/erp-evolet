@@ -26,7 +26,7 @@
 
     <x-form.inputs.default-input
         labelText="Comment"
-        :input-name="'batches[' . $inputsIndex . '][comment]'" />
+        :input-name="'batches[' . $inputsIndex . '][additional_comment]'" />
 
     <x-form.misc.remove-row-button />
 </div>

@@ -8,4 +8,6 @@ IMPORTANT, WHAT SHOULD BE DONE!
 order_products:
     number_of_full_boxes -> remove
     order_id -> make nullable
+
+invoices:
     assemblage_id -> add

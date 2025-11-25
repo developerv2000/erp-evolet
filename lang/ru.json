@@ -448,9 +448,21 @@
     "Batch": "Партия",
     "Assemblage №": "Номер сборки",
     "Assemblage date": "Дата сборки",
-    "Assemblage request date": "Дата запроса сборки",
+    "Assembly request date": "Дата запроса сборки",
     "Quantity for assembly": "Количество для сборки",
     "No available batches found for the selected Manufacturer and MAH.": "Для выбранного производителя и ДРУ не найдено доступных партий.",
+    "Send request": "Отправить запрос",
+    "Request accept date": "Дата принятия запроса",
+    "Initial assembly date": "Дата начальной сборки",
+    "Initial assembly": "Начальная сборка",
+    "Final assembly date": "Дата финальной сборки",
+    "Final assembly": "Финальная сборка",
+    "Documents provision date": "Дата предоставления документов",
+    "COO date": "Дата COO",
+    "EURO 1 date": "Дата EURO 1",
+    "GMP or ISO": "GMP или ISO",
+    "Shipment from warehouse end date": "Дата окончания отгрузки со склада",
+    "Request acceptance": "Принятие запроса",
 
     "AAAAAAAA": "BBBBBBBB"
 }

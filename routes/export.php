@@ -16,6 +16,9 @@ Route::middleware('auth', 'auth.session')->prefix('export')->name('export.')->gr
             'can:edit-export-assemblages'
         );
 
+        Route::post('/request-assembly/{record}', 'requestAssembly')->name('request-assembly');
+        Route::post('/accept-assembly-request/{record}', 'acceptAssemblyRequest')->name('accept-assembly-request');
+        
         Route::post('/get-dynamic-rows-list-item-inputs', 'getDynamicRowsListItemInputs');  // AJAX request on create
         Route::post('/get-matched-batches-on-create', 'getMatchedBatchesOnCreate');  // AJAX request on create
     });

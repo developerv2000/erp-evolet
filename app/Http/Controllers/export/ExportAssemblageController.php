@@ -68,20 +68,35 @@ class ExportAssemblageController extends Controller
 
     public function store(Request $request)
     {
-        dd($request);
-        Assemblage::createFromExportRequest($request);
+        Assemblage::createMultipleFromExportRequest($request);
 
-        return to_route('warehouse.product-batches.index', ['order_product_id' => $request->input('order_product_id')]);
+        return to_route('export.assemblages.index');
+    }
+
+    public function requestAssembly(Assemblage $record)
+    {
+        $record->assembly_request_date = now();
+        $record->save();
+
+        return redirect()->back();
+    }
+
+    public function acceptAssemblyRequest(Assemblage $record)
+    {
+        $record->assembly_request_accepted_date = now();
+        $record->save();
+
+        return to_route('export.assemblages.edit', $record->id);
     }
 
     public function edit(Request $request, Assemblage $record)
     {
-        return view('warehouse.product-batches.edit', compact('record'));
+        return view('export.assemblages.edit', compact('record'));
     }
 
     public function update(Request $request, Assemblage $record)
     {
-        $record->updateFromWarehouseRequest($request);
+        $record->updateFromExportRequest($request);
 
         return redirect($request->input('previous_url'));
     }
@@ -91,6 +106,6 @@ class ExportAssemblageController extends Controller
         $record->serialization_request_date = now();
         $record->save();
 
-        return redirect()->route('warehouse.product-batches.edit', $record->id);
+        return redirect()->route('export.assemblages.edit', $record->id);
     }
 }

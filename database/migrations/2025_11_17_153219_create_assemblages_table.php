@@ -31,13 +31,13 @@ return new class extends Migration
                 ->references('id')
                 ->on('countries');
 
-            $table->timestamp('request_sent_date')->nullable(); // action
+            $table->timestamp('assembly_request_date')->nullable(); // action
 
             // Step 2:
             // ELD part
-            $table->timestamp('request_accepted_date')->nullable(); // action
-            $table->date('inital_assembly_acceptance_date')->nullable();
-            $table->string('inital_assembly_file')->nullable();
+            $table->timestamp('assembly_request_accepted_date')->nullable(); // action
+            $table->date('initial_assembly_acceptance_date')->nullable();
+            $table->string('initial_assembly_file')->nullable();
             $table->date('final_assembly_acceptance_date')->nullable();
             $table->string('final_assembly_file')->nullable();
 
@@ -88,6 +88,7 @@ return new class extends Migration
 
             // Pivot data
             $table->unsignedInteger('quantity_for_assembly');
+            $table->string('additional_comment')->nullable();
         });
     }
 

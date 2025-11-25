@@ -298,11 +298,11 @@ class PermissionSeeder extends Seeder
 
         $exportPerms = [
             Permission::CAN_VIEW_EXPORT_ASSEMBLAGES_NAME,
-            Permission::CAN_VIEW_EXPORT_PRODUCTS_NAME,
+            Permission::CAN_VIEW_EXPORT_BATCHES_NAME,
             Permission::CAN_VIEW_EXPORT_INVOICES_NAME,
-            
+
             Permission::CAN_EDIT_EXPORT_ASSEMBLAGES_NAME,
-            Permission::CAN_EDIT_EXPORT_PRODUCTS_NAME,
+            Permission::CAN_EDIT_EXPORT_BATCHES_NAME,
             Permission::CAN_EDIT_EXPORT_INVOICES_NAME,
         ];
 

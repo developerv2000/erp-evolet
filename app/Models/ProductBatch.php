@@ -88,6 +88,13 @@ class ProductBatch extends BaseModel implements HasTitle
         return $this->series . ' —— ' . $this->product->process->full_trademark_en;
     }
 
+    public function getIsUnfinishedAttribute(): bool
+    {
+        $totalQuantityInAssemblages = $this->assemblages()->sum('quantity_for_assembly');
+
+        return $totalQuantityInAssemblages < $this->factual_quantity;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Events
@@ -278,10 +285,7 @@ class ProductBatch extends BaseModel implements HasTitle
             ->get();
 
         // Filter out batches that are already fully used in assemblages
-        $unfinishedBatches = $batches->filter(function ($batch) {
-            $totalQuantityInAssemblages = $batch->assemblages()->sum('quantity_for_assembly');
-            return $totalQuantityInAssemblages < $batch->quantity;
-        });
+        $unfinishedBatches = $batches->filter(fn($batch) => $batch->is_unfinished);
 
         return $unfinishedBatches->append('series_with_full_trademark_en');
     }
