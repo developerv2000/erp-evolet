@@ -623,7 +623,7 @@ class User extends Authenticatable
             'warehouse_products_table_columns' => OrderProduct::getDefaultWarehouseTableColumnsForUser($this),
             'warehouse_product_batches_table_columns' => ProductBatch::getDefaultWarehouseTableColumnsForUser($this),
 
-            'export_assemblages_table_columns' => Assemblage::getDefaultExportTableColumnsForUser($this),
+            'export_assamblages_table_columns' => Assemblage::getDefaultExportTableColumnsForUser($this),
             'export_batches_table_columns' => ProductBatch::getDefaultExportTableColumnsForUser($this),
 
             default => throw new InvalidArgumentExceptio("Unknown key: $key"),

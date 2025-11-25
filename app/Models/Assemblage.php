@@ -23,7 +23,7 @@ class Assemblage extends BaseModel implements HasTitle, CanExportRecordsAsExcel
     */
 
     // Export
-    const SETTINGS_EXPORT_TABLE_COLUMNS_KEY = 'export_table_columns';
+    const SETTINGS_EXPORT_TABLE_COLUMNS_KEY = 'export_assamblages_table_columns';
     const DEFAULT_EXPORT_ORDER_BY = 'id';
     const DEFAULT_EXPORT_ORDER_TYPE = 'asc';
     const DEFAULT_EXPORT_PAGINATION_LIMIT = 50;
