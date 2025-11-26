@@ -330,7 +330,7 @@ thead {
 .sub-col {
     width: 140px;
     max-width: 140px;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     overflow: hidden;
 }
 
