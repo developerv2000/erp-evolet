@@ -342,7 +342,6 @@ thead {
 
 .sub-col-inner {
     white-space: nowrap;
-    opacity: 1;
     transition: all 0.3s ease;
 }
 
