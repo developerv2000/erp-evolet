@@ -8,6 +8,7 @@ import * as functions from './MAD-functions';
 import { debounce } from '../utilities';
 import initializeSmartFilters from './MAD-smart-filters';
 import './MAD-charts'; // initialize echarts
+import './OSS-main';
 
 /*
 |--------------------------------------------------------------------------

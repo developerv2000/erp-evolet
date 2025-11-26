@@ -317,6 +317,40 @@
 .mad-oss-index .main-table tr.tr--even {
     background-color: var(--theme-table-tr-hover-background-color);
 }
+
+thead {
+    z-index: 1;
+}
+
+.group-toggle {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sub-col {
+    width: 140px;
+    max-width: 140px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.sub-col.hidden {
+    width: 0;
+    max-width: 0;
+    padding: 0;
+    opacity: 0;
+}
+
+.sub-col-inner {
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+.sub-col.hidden .sub-col-inner {
+    opacity: 0;
+}
+
 /* ------------ /end MAD OSS pages ------------ */
 
 
