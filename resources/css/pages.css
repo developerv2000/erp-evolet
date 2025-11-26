@@ -329,7 +329,7 @@ thead {
 
 .sub-col {
     max-width: 140px;
-    transition: all 0.1s ease;
+    transition: all 0.3s ease;
     overflow: hidden;
 }
 
@@ -343,7 +343,7 @@ thead {
 .sub-col-inner {
     white-space: nowrap;
     opacity: 1;
-    transition: all 0.1s ease;
+    transition: all 0.3s ease;
 }
 
 .sub-col.hidden .sub-col-inner {

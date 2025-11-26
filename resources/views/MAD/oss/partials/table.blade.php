@@ -27,7 +27,6 @@
         @foreach ($records as $record)
             @php
                 $processes = $record->processes;
-                $manufacturers = $processes->pluck('manufacturer.name')->filter()->unique();
             @endphp
 
             <tr @class(['tr--even' => $loop->even])>

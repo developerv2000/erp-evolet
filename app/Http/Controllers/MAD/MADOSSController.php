@@ -12,16 +12,24 @@ class MADOSSController extends Controller
     public function index(Request $request)
     {
         $records = Product::with([
-            'processes',
-            'processes.status',
-            'processes.MAH',
+            'atx',
+            'class',
+            'inn',
+            'form',
+            'shelfLife',
+            'manufacturer',
+            'processes' => function ($processesQuery) {
+                $processesQuery->with([
+                    'status',
+                    'MAH',
+                ]);
+            },
         ])
             ->latest()
             ->paginate(50);
 
         $countries = Country::has('processes')
-            ->withCount('processes')
-            ->orderBy('processes_count', 'desc')
+            ->orderBy('database_processes_count', 'desc')
             ->get();
 
         return view('MAD.oss.index', compact('records', 'countries'));
