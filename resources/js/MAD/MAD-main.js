@@ -8,7 +8,6 @@ import * as functions from './MAD-functions';
 import { debounce } from '../utilities';
 import initializeSmartFilters from './MAD-smart-filters';
 import './MAD-charts'; // initialize echarts
-import './OSS-main';
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +34,7 @@ const toggleProcessReadyForOrderStatusChbs = document.querySelectorAll('[data-on
 
 // ASP table
 const ASPTableCountryMAHsToggler = document.querySelectorAll('.mad-asp-table__tbody-country-mahs-toggler');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -176,6 +176,9 @@ function init() {
 
     // Smart filters
     initializeSmartFilters();
+
+    // Table accordion
+    functions.initializeTableAccordion();
 }
 
 init();
