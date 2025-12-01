@@ -418,6 +418,7 @@ export function initializeTableAccordion() {
             .forEach(col => col.classList.add('hidden'));
     });
 
+    // Individual column header toggle functionality
     document.querySelectorAll('.group-toggle').forEach(toggle => {
         toggle.addEventListener('click', function () {
             const groupId = this.dataset.group;
@@ -437,6 +438,74 @@ export function initializeTableAccordion() {
             }
 
             sessionStorage.setItem('hiddenGroups', JSON.stringify(state));
+
+            // Update toggle all button text
+            updateToggleAllButton();
         });
     });
+
+    // Toggle All button functionality
+    const toggleAllButton = document.getElementById('toggle-all-columns-btn');
+
+    if (toggleAllButton) {
+        // Set initial button text and icon
+        updateToggleAllButton();
+
+        toggleAllButton.addEventListener('click', function () {
+            // Get all unique group IDs
+            const allGroupIds = Array.from(document.querySelectorAll('.group-toggle'))
+                .map(toggle => toggle.dataset.group)
+                .filter(Boolean);
+
+            // Check if any columns are visible
+            const anyVisible = allGroupIds.some(groupId => {
+                const firstCol = document.querySelector('.group-' + groupId);
+                return firstCol && !firstCol.classList.contains('hidden');
+            });
+
+            // If any are visible, hide all. Otherwise, show all.
+            if (anyVisible) {
+                // Hide all
+                allGroupIds.forEach(groupId => {
+                    document.querySelectorAll('.group-' + groupId)
+                        .forEach(col => col.classList.add('hidden'));
+                });
+                sessionStorage.setItem('hiddenGroups', JSON.stringify(allGroupIds));
+            } else {
+                // Show all
+                allGroupIds.forEach(groupId => {
+                    document.querySelectorAll('.group-' + groupId)
+                        .forEach(col => col.classList.remove('hidden'));
+                });
+                sessionStorage.setItem('hiddenGroups', JSON.stringify([]));
+            }
+
+            // Update button text and icon
+            updateToggleAllButton();
+        });
+    }
+
+    // Helper function to update toggle all button text and icon
+    function updateToggleAllButton() {
+        const toggleAllButton = document.getElementById('toggle-all-columns-btn');
+        if (!toggleAllButton) return;
+
+        const allGroupIds = Array.from(document.querySelectorAll('.group-toggle'))
+            .map(toggle => toggle.dataset.group)
+            .filter(Boolean);
+
+        const anyVisible = allGroupIds.some(groupId => {
+            const firstCol = document.querySelector('.group-' + groupId);
+            return firstCol && !firstCol.classList.contains('hidden');
+        });
+
+        // Update button icon
+        const buttonIcon = toggleAllButton.querySelector('.material-symbols-outlined');
+
+        if (anyVisible) {
+            if (buttonIcon) buttonIcon.textContent = 'visibility_off';
+        } else {
+            if (buttonIcon) buttonIcon.textContent = 'visibility';
+        }
+    }
 }

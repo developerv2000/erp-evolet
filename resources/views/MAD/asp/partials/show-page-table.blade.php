@@ -168,9 +168,9 @@
                                 $monthClass = $monthClasses[$monthIndex % 3]; // Cycle through colors
                             @endphp
 
-                            <td class="sub-col group-quarter-{{ $quarter }} {{ $monthClass }}"><div class="sub-col-inner">{{ $country->{$months[$monthIndex]['name'] . '_contract_plan'} }}</div></td>
-                            <td class="sub-col group-quarter-{{ $quarter }} {{ $monthClass }}"><div class="sub-col-inner">{{ $country->{$months[$monthIndex]['name'] . '_contract_fact'} }}</div></td>
-                            <td class="sub-col group-quarter-{{ $quarter }} {{ $monthClass }}"><div class="sub-col-inner">{{ $country->{$months[$monthIndex]['name'] . '_register_fact'} }}</div></td>
+                            <td class="sub-col group-quarter-{{ $quarter }} {{ $monthClass }}"><div class="sub-col-inner text-center">{{ $country->{$months[$monthIndex]['name'] . '_contract_plan'} }}</div></td>
+                            <td class="sub-col group-quarter-{{ $quarter }} {{ $monthClass }}"><div class="sub-col-inner text-center">{{ $country->{$months[$monthIndex]['name'] . '_contract_fact'} }}</div></td>
+                            <td class="sub-col group-quarter-{{ $quarter }} {{ $monthClass }}"><div class="sub-col-inner text-center">{{ $country->{$months[$monthIndex]['name'] . '_register_fact'} }}</div></td>
                         @endfor
                     @endif
                 @endfor

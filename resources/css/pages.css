@@ -322,26 +322,42 @@ thead {
     z-index: 1;
 }
 
+/* Toggle Header */
 .group-toggle {
     cursor: pointer;
     user-select: none;
+    transition: background-color 0.3s ease;
 }
 
+.group-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Collapsible Columns */
 .sub-col {
-    transition: all 0.3s ease;
+    width: 140px;
+    max-width: 140px;
     overflow: hidden;
-}
-
-.sub-col.hidden {
-    width: 0;
-    max-width: 0;
-    padding: 0;
-    opacity: 0;
+    transition: all 0.3s ease;
 }
 
 .sub-col-inner {
     white-space: nowrap;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease;
+}
+
+/* Center text for month columns only */
+.sub-col.text-center,
+.sub-col.text-center .sub-col-inner {
+    text-align: center;
+}
+
+/* Hidden State */
+.sub-col.hidden {
+    width: 0;
+    max-width: 0;
+    padding-inline: 0;
+    opacity: 0;
 }
 
 .sub-col.hidden .sub-col-inner {

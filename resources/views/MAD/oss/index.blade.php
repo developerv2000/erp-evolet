@@ -23,6 +23,13 @@
             <div class="toolbar__buttons-wrapper">
                 <x-misc.button
                     class="toolbar__button"
+                    id="toggle-all-columns-btn"
+                    style="shadowed"
+                    icon="visibility_off">
+                </x-misc.button>
+
+                <x-misc.button
+                    class="toolbar__button"
                     style="shadowed"
                     icon="fullscreen"
                     data-click-action="request-fullscreen"
