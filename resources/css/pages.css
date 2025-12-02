@@ -245,6 +245,7 @@
 .mad-asp-table td {
     vertical-align: middle;
     text-align: center;
+    justify-items: center;
 }
 
 .mad-asp-table tbody a {
@@ -282,6 +283,21 @@
     left: var(--th-country-name-width);
     text-align: center;
     background-color: var(--theme-box-background-color);
+}
+
+.sub-col-asp {
+    overflow: hidden;
+}
+
+.sub-col-asp-inner {
+    white-space: nowrap;
+}
+
+/* Hidden State */
+.sub-col-asp.hidden {
+    width: 0;
+    max-width: 0;
+    padding-inline: 0;
 }
 
 /* ------------ /end MAD ASP pages ------------ */
