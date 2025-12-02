@@ -412,35 +412,19 @@ export function initializeTableAccordion() {
     // Load state from sessionStorage
     const hiddenGroups = JSON.parse(sessionStorage.getItem('hiddenGroups') || '[]');
 
-    // Apply hidden state to saved groups
-    hiddenGroups.forEach(groupId => {
-        document.querySelectorAll('.group-' + groupId)
-            .forEach(col => col.classList.add('hidden'));
+    // Apply hidden state to saved groups (batched)
+    requestAnimationFrame(() => {
+        hiddenGroups.forEach(groupId => {
+            const elements = document.querySelectorAll('.group-' + groupId);
+            elements.forEach(col => col.classList.add('hidden'));
+        });
     });
 
     // Individual column header toggle functionality
     document.querySelectorAll('.group-toggle').forEach(toggle => {
         toggle.addEventListener('click', function () {
             const groupId = this.dataset.group;
-
-            document.querySelectorAll('.group-' + groupId)
-                .forEach(col => col.classList.toggle('hidden'));
-
-            // Update state in sessionStorage
-            const isHidden = document.querySelector('.group-' + groupId).classList.contains('hidden');
-
-            let state = JSON.parse(sessionStorage.getItem('hiddenGroups') || '[]');
-
-            if (isHidden) {
-                if (!state.includes(groupId)) state.push(groupId);
-            } else {
-                state = state.filter(id => id !== groupId);
-            }
-
-            sessionStorage.setItem('hiddenGroups', JSON.stringify(state));
-
-            // Update toggle all button text
-            updateToggleAllButton();
+            toggleGroup(groupId);
         });
     });
 
@@ -448,44 +432,61 @@ export function initializeTableAccordion() {
     const toggleAllButton = document.getElementById('toggle-all-columns-btn');
 
     if (toggleAllButton) {
-        // Set initial button text and icon
         updateToggleAllButton();
 
         toggleAllButton.addEventListener('click', function () {
-            // Get all unique group IDs
             const allGroupIds = Array.from(document.querySelectorAll('.group-toggle'))
                 .map(toggle => toggle.dataset.group)
                 .filter(Boolean);
 
-            // Check if any columns are visible
             const anyVisible = allGroupIds.some(groupId => {
                 const firstCol = document.querySelector('.group-' + groupId);
                 return firstCol && !firstCol.classList.contains('hidden');
             });
 
-            // If any are visible, hide all. Otherwise, show all.
-            if (anyVisible) {
-                // Hide all
-                allGroupIds.forEach(groupId => {
-                    document.querySelectorAll('.group-' + groupId)
-                        .forEach(col => col.classList.add('hidden'));
-                });
-                sessionStorage.setItem('hiddenGroups', JSON.stringify(allGroupIds));
+            // Batch toggle all groups
+            requestAnimationFrame(() => {
+                if (anyVisible) {
+                    allGroupIds.forEach(groupId => {
+                        const elements = document.querySelectorAll('.group-' + groupId);
+                        elements.forEach(col => col.classList.add('hidden'));
+                    });
+                    sessionStorage.setItem('hiddenGroups', JSON.stringify(allGroupIds));
+                } else {
+                    allGroupIds.forEach(groupId => {
+                        const elements = document.querySelectorAll('.group-' + groupId);
+                        elements.forEach(col => col.classList.remove('hidden'));
+                    });
+                    sessionStorage.setItem('hiddenGroups', JSON.stringify([]));
+                }
+                updateToggleAllButton();
+            });
+        });
+    }
+
+    // Optimized toggle function
+    function toggleGroup(groupId) {
+        requestAnimationFrame(() => {
+            const columns = document.querySelectorAll('.group-' + groupId);
+            const isHidden = columns[0]?.classList.contains('hidden');
+
+            // Batch DOM updates
+            columns.forEach(col => col.classList.toggle('hidden'));
+
+            // Update state
+            let state = JSON.parse(sessionStorage.getItem('hiddenGroups') || '[]');
+
+            if (!isHidden) {
+                if (!state.includes(groupId)) state.push(groupId);
             } else {
-                // Show all
-                allGroupIds.forEach(groupId => {
-                    document.querySelectorAll('.group-' + groupId)
-                        .forEach(col => col.classList.remove('hidden'));
-                });
-                sessionStorage.setItem('hiddenGroups', JSON.stringify([]));
+                state = state.filter(id => id !== groupId);
             }
 
-            // Update button text and icon
+            sessionStorage.setItem('hiddenGroups', JSON.stringify(state));
             updateToggleAllButton();
         });
     }
 
-    // Helper function to update toggle all button text and icon
     function updateToggleAllButton() {
         const toggleAllButton = document.getElementById('toggle-all-columns-btn');
         if (!toggleAllButton) return;
@@ -499,7 +500,6 @@ export function initializeTableAccordion() {
             return firstCol && !firstCol.classList.contains('hidden');
         });
 
-        // Update button icon
         const buttonIcon = toggleAllButton.querySelector('.material-symbols-outlined');
 
         if (anyVisible) {

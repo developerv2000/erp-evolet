@@ -11,7 +11,7 @@
             <th width="100">{{ __('Pack') }}</th>
             <th class="group-toggle" data-group="manufacturer" width="200">{{ __('Manufacturer') }}</th>
             <th class="sub-col group-manufacturer" width="130"><div class="sub-col-inner">{{ __('Shelf life') }}</div></th>
-            <th class="sub-col group-manufacturer" width="150"><div class="sub-col-inner">{{ __('MOQ') }}</div></th>
+            <th class="sub-col group-manufacturer" width="160"><div class="sub-col-inner">{{ __('MOQ') }}</div></th>
 
             @foreach ($countries as $country)
                 <th class="group-toggle" data-group="{{ $country->id }}" width="100">{{ $country->code }}</th>
