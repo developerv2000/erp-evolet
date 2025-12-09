@@ -75,8 +75,9 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
 
     // ELD
     const SETTINGS_ELD_TABLE_COLUMNS_KEY = 'ELD_order_products_table_columns';
-    const DEFAULT_ELD_ORDER_BY = 'readiness_for_shipment_from_manufacturer_date';
-    const DEFAULT_ELD_ORDER_TYPE = 'desc';
+    // const DEFAULT_ELD_ORDER_BY = 'readiness_for_shipment_from_manufacturer_date';
+    const DEFAULT_ELD_ORDER_BY = 'id';
+    const DEFAULT_ELD_ORDER_TYPE = 'asc';
     const DEFAULT_ELD_PAGINATION_LIMIT = 50;
 
     // Warehouse
@@ -1411,6 +1412,7 @@ class OrderProduct extends BaseModel implements HasTitle, CanExportRecordsAsExce
             ['name' => 'Quantity', 'order' => $order++, 'width' => 112, 'visible' => 1],
             ['name' => 'PO date', 'order' => $order++, 'width' => 116, 'visible' => 1],
             ['name' => 'PO №', 'order' => $order++, 'width' => 128, 'visible' => 1],
+            ['name' => 'Serialization type', 'order' => $order++, 'width' => 138, 'visible' => 1],
             ['name' => 'Comments', 'order' => $order++, 'width' => 132, 'visible' => 1],
             ['name' => 'Last comment', 'order' => $order++, 'width' => 240, 'visible' => 1],
 

@@ -49,6 +49,10 @@
         <x-tables.partials.td.max-lines-limited-text :text="$record->lastComment?->plain_text" />
     @break
 
+    @case('Serialization type')
+        {{ $record->serializationType->name }}
+    @break
+
     @case('ID')
         {{ $record->id }}
     @break
