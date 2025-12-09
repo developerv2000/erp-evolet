@@ -407,3 +407,105 @@ export function toggleASPTableCountryMAHs(event) {
         mahRow.style.display = isOpened ? 'none' : 'table-row';
     });
 }
+
+export function initializeTableAccordion() {
+    // Load state from sessionStorage
+    const hiddenGroups = JSON.parse(sessionStorage.getItem('hiddenGroups') || '[]');
+
+    // Apply hidden state to saved groups (batched)
+    requestAnimationFrame(() => {
+        hiddenGroups.forEach(groupId => {
+            const elements = document.querySelectorAll('.group-' + groupId);
+            elements.forEach(col => col.classList.add('hidden'));
+        });
+    });
+
+    // Individual column header toggle functionality
+    document.querySelectorAll('.group-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function () {
+            const groupId = this.dataset.group;
+            toggleGroup(groupId);
+        });
+    });
+
+    // Toggle All button functionality
+    const toggleAllButton = document.getElementById('toggle-all-columns-btn');
+
+    if (toggleAllButton) {
+        updateToggleAllButton();
+
+        toggleAllButton.addEventListener('click', function () {
+            const allGroupIds = Array.from(document.querySelectorAll('.group-toggle'))
+                .map(toggle => toggle.dataset.group)
+                .filter(Boolean);
+
+            const anyVisible = allGroupIds.some(groupId => {
+                const firstCol = document.querySelector('.group-' + groupId);
+                return firstCol && !firstCol.classList.contains('hidden');
+            });
+
+            // Batch toggle all groups
+            requestAnimationFrame(() => {
+                if (anyVisible) {
+                    allGroupIds.forEach(groupId => {
+                        const elements = document.querySelectorAll('.group-' + groupId);
+                        elements.forEach(col => col.classList.add('hidden'));
+                    });
+                    sessionStorage.setItem('hiddenGroups', JSON.stringify(allGroupIds));
+                } else {
+                    allGroupIds.forEach(groupId => {
+                        const elements = document.querySelectorAll('.group-' + groupId);
+                        elements.forEach(col => col.classList.remove('hidden'));
+                    });
+                    sessionStorage.setItem('hiddenGroups', JSON.stringify([]));
+                }
+                updateToggleAllButton();
+            });
+        });
+    }
+
+    // Optimized toggle function
+    function toggleGroup(groupId) {
+        requestAnimationFrame(() => {
+            const columns = document.querySelectorAll('.group-' + groupId);
+            const isHidden = columns[0]?.classList.contains('hidden');
+
+            // Batch DOM updates
+            columns.forEach(col => col.classList.toggle('hidden'));
+
+            // Update state
+            let state = JSON.parse(sessionStorage.getItem('hiddenGroups') || '[]');
+
+            if (!isHidden) {
+                if (!state.includes(groupId)) state.push(groupId);
+            } else {
+                state = state.filter(id => id !== groupId);
+            }
+
+            sessionStorage.setItem('hiddenGroups', JSON.stringify(state));
+            updateToggleAllButton();
+        });
+    }
+
+    function updateToggleAllButton() {
+        const toggleAllButton = document.getElementById('toggle-all-columns-btn');
+        if (!toggleAllButton) return;
+
+        const allGroupIds = Array.from(document.querySelectorAll('.group-toggle'))
+            .map(toggle => toggle.dataset.group)
+            .filter(Boolean);
+
+        const anyVisible = allGroupIds.some(groupId => {
+            const firstCol = document.querySelector('.group-' + groupId);
+            return firstCol && !firstCol.classList.contains('hidden');
+        });
+
+        const buttonIcon = toggleAllButton.querySelector('.material-symbols-outlined');
+
+        if (anyVisible) {
+            if (buttonIcon) buttonIcon.textContent = 'visibility_off';
+        } else {
+            if (buttonIcon) buttonIcon.textContent = 'visibility';
+        }
+    }
+}

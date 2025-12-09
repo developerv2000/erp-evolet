@@ -9,25 +9,27 @@
             <th width="100">{{ __('Form') }}</th>
             <th width="100">{{ __('Dosage') }}</th>
             <th width="100">{{ __('Pack') }}</th>
-            <th width="200">{{ __('Manufacturer') }}</th>
-            <th width="130">{{ __('Shelf life') }}</th>
-            <th width="100">{{ __('Moq') }}</th>
-            <th width="120">{{ __('MAH') }}</th>
+            <th class="group-toggle" data-group="manufacturer" width="200">{{ __('Manufacturer') }}</th>
+            <th class="sub-col group-manufacturer" width="130"><div class="sub-col-inner">{{ __('Shelf life') }}</div></th>
+            <th class="sub-col group-manufacturer" width="160"><div class="sub-col-inner">{{ __('MOQ') }}</div></th>
 
             @foreach ($countries as $country)
-                <th width="100">{{ $country->code }}</th>
-                <th width="140">{{ __('TM Eng') }}</th>
-                <th width="140">{{ __('TM Rus') }}</th>
+                <th class="group-toggle" data-group="{{ $country->id }}" width="100">{{ $country->code }}</th>
+                <th class="sub-col group-{{ $country->id }}" width="140"><div class="sub-col-inner">{{ __('TM Eng') }}</div></th>
+                <th class="sub-col group-{{ $country->id }}" width="140"><div class="sub-col-inner">{{ __('TM Rus') }}</div></th>
+                <th class="sub-col group-{{ $country->id }}" width="120"><div class="sub-col-inner">{{ __('MAH') }}</div></th>
             @endforeach
-
         </tr>
     </x-slot:thead-rows>
 
     {{-- tbody --}}
     <x-slot:tbody-rows>
-    @foreach ($records as $record)
-        @foreach ($record->grouped_processes as $groupedProcesses)
-            <tr @class(['tr--even' => $loop->parent->even])>
+        @foreach ($records as $record)
+            @php
+                $processes = $record->processes;
+            @endphp
+
+            <tr @class(['tr--even' => $loop->even])>
                 <td>{{ $record->id }}</td>
                 <td>{{ $record->atx?->short_name }}</td>
                 <td>{{ $record->class->name }}</td>
@@ -36,23 +38,39 @@
                 <td>{{ $record->dosage }}</td>
                 <td>{{ $record->pack }}</td>
                 <td>{{ $record->manufacturer->name }}</td>
-                <td>{{ $record->shelfLife->name }}</td>
-                <td>{{ $record->moq }}</td>
-
-                <td>{{ $groupedProcesses->first()->MAH?->name }}</td>
+                <td class="sub-col group-manufacturer"><div class="sub-col-inner">{{ $record->shelfLife->name }}</div></td>
+                <td class="sub-col group-manufacturer"><div class="sub-col-inner">{{ $record->moq }}</div></td>
 
                 @foreach ($countries as $country)
                     @php
-                        $match = $groupedProcesses->firstWhere('country_id', $country->id);
+                        $countryProcesses = $processes->where('country_id', $country->id);
+                        $mahList = $countryProcesses->pluck('MAH.name')->filter()->unique();
+
+                        $renderList = function ($items) {
+                            $items = collect($items)->filter();
+
+                            if ($items->count() <= 1) {
+                                return e($items->first() ?? '');
+                            }
+
+                            return $items->values()->map(fn($item, $i) => $i + 1 . '. ' . e($item))->implode('<br>');
+                        };
                     @endphp
 
-                    <td>{{ $match?->status->name }}</td>
-                    <td>{{ $match?->trademark_en }}</td>
-                    <td>{{ $match?->trademark_ru }}</td>
+                    {{-- Status --}}
+                    <td class="sub-col group-{{ $country->id }}"><div class="sub-col-inner">{!! $renderList($countryProcesses->pluck('status.name')) !!}</div></td>
+
+                    {{-- TM Eng --}}
+                    <td class="sub-col group-{{ $country->id }}"><div class="sub-col-inner">{!! $renderList($countryProcesses->pluck('trademark_en')) !!}</div></td>
+
+                    {{-- TM Rus --}}
+                    <td class="sub-col group-{{ $country->id }}"><div class="sub-col-inner">{!! $renderList($countryProcesses->pluck('trademark_ru')) !!}</div></td>
+
+                    {{-- MAH --}}
+                    <td class="sub-col group-{{ $country->id }}"><div class="sub-col-inner">{!! $renderList($mahList) !!}</div></td>
+
                 @endforeach
             </tr>
         @endforeach
-    @endforeach
-
     </x-slot:tbody-rows>
 </x-tables.template.main-template>

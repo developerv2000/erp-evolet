@@ -35,6 +35,7 @@ const toggleProcessReadyForOrderStatusChbs = document.querySelectorAll('[data-on
 // ASP table
 const ASPTableCountryMAHsToggler = document.querySelectorAll('.mad-asp-table__tbody-country-mahs-toggler');
 
+
 /*
 |--------------------------------------------------------------------------
 | Event Listeners
@@ -175,6 +176,9 @@ function init() {
 
     // Smart filters
     initializeSmartFilters();
+
+    // Table accordion
+    functions.initializeTableAccordion();
 }
 
 init();

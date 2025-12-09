@@ -92,7 +92,7 @@ class MADProductSelectionController extends Controller
 
         // Collect all records
         $records = collect();
-        $query->chunk(400, function ($chunked) use (&$records) {
+        $query->chunk(1000, function ($chunked) use (&$records) {
             $records = $records->merge($chunked);
         });
 
@@ -136,7 +136,7 @@ class MADProductSelectionController extends Controller
         $records->each(function ($record) use ($canceledStatusID) {
             $matchedRecords = $record->matched_product_searches;
 
-            $activeMatchedRecords = $matchedRecords->filter(fn($record) => $record->status_id != $canceledStatusID);
+            $activeMatchedRecords = $matchedRecords->filter(fn ($record) => $record->status_id != $canceledStatusID);
 
             $record->loaded_matched_product_searches = $activeMatchedRecords;
         });
@@ -185,91 +185,90 @@ class MADProductSelectionController extends Controller
     }
 
     private function addForecastHeaders($additionalCountries, $sheet)
-{
-    // Merge default countries with the additional countries provided
-    $allCountries = collect(self::DEFAULT_COUNTRIES)->merge($additionalCountries);
+    {
+        // Merge default countries with the additional countries provided
+        $allCountries = collect(self::DEFAULT_COUNTRIES)->merge($additionalCountries);
 
-    // Determine the starting column index for the first forecast based on the number of additional countries
-    $forecastStartIndex = $this->getFirstForecastCellColumnIndex($additionalCountries->count());
+        // Determine the starting column index for the first forecast based on the number of additional countries
+        $forecastStartIndex = $this->getFirstForecastCellColumnIndex($additionalCountries->count());
 
-    // Loop through all countries to add forecast columns and headers
-    foreach ($allCountries as $country) {
-        $startColumnIndex = $forecastStartIndex;
-        $endColumnIndex = $forecastStartIndex + 2;
+        // Loop through all countries to add forecast columns and headers
+        foreach ($allCountries as $country) {
+            $startColumnIndex = $forecastStartIndex;
+            $endColumnIndex = $forecastStartIndex + 2;
 
-        // Convert numeric column index to Excel column letters (e.g., 1 -> A)
-        $startLetter = Coordinate::stringFromColumnIndex($startColumnIndex);
-        $endLetter = Coordinate::stringFromColumnIndex($endColumnIndex);
+            // Convert numeric column index to Excel column letters (e.g., 1 -> A)
+            $startLetter = Coordinate::stringFromColumnIndex($startColumnIndex);
+            $endLetter = Coordinate::stringFromColumnIndex($endColumnIndex);
 
-        // Insert 3 new columns before the start column to accommodate forecast years
-        $sheet->insertNewColumnBefore($startLetter, 3);
+            // Insert 3 new columns before the start column to accommodate forecast years
+            $sheet->insertNewColumnBefore($startLetter, 3);
 
-        // Merge the top row cells for the country header
-        $mergeRange = "$startLetter" . '1:' . $endLetter . '1';
-        $sheet->mergeCells($mergeRange);
+            // Merge the top row cells for the country header
+            $mergeRange = "$startLetter".'1:'.$endLetter.'1';
+            $sheet->mergeCells($mergeRange);
 
-        // Set the country header text
-        $sheet->setCellValue([$startColumnIndex, 1], 'FORECAST ' . $country);
+            // Set the country header text
+            $sheet->setCellValue([$startColumnIndex, 1], 'FORECAST '.$country);
 
-        // Define the full range (both rows: FORECAST + YEAR rows)
-        $range = "$startLetter" . '1:' . $endLetter . '2';
+            // Define the full range (both rows: FORECAST + YEAR rows)
+            $range = "$startLetter".'1:'.$endLetter.'2';
 
-        // 🎨 Determine background color based on country code group
-        $country = strtoupper($country); // ensure uppercase consistency
-        $fillColor = 'FFFFFFFF';
-        $fontColor = Color::COLOR_BLACK;
-
-        // Blue group: KZ to AM
-        if (in_array($country, ['KZ', 'TM', 'KG', 'AM'])) {
-            $fillColor = 'FF3366FF';
-            $fontColor = Color::COLOR_WHITE;
-        }
-        // Yellow group: after AM and before KH
-        elseif (in_array($country, ['TJ', 'UZ', 'GE', 'MN', 'RU', 'AZ', 'AL', 'KE', 'DO'])) {
-            $fillColor = 'FFFFFF00';
+            // 🎨 Determine background color based on country code group
+            $country = strtoupper($country); // ensure uppercase consistency
+            $fillColor = 'FFFFFFFF';
             $fontColor = Color::COLOR_BLACK;
+
+            // Blue group: KZ to AM
+            if (in_array($country, ['KZ', 'TM', 'KG', 'AM'])) {
+                $fillColor = 'FF3366FF';
+                $fontColor = Color::COLOR_WHITE;
+            }
+            // Yellow group: after AM and before KH
+            elseif (in_array($country, ['TJ', 'UZ', 'GE', 'MN', 'RU', 'AZ', 'AL', 'KE', 'DO'])) {
+                $fillColor = 'FFFFFF00';
+                $fontColor = Color::COLOR_BLACK;
+            }
+            // Purple group: KH to MM
+            elseif (in_array($country, ['KH', 'MM'])) {
+                $fillColor = 'FF660066'; // Purple
+                $fontColor = Color::COLOR_WHITE;
+            }
+            // Default (if not in any group)
+            else {
+                $fillColor = 'FF00FFFF'; // Cyan
+            }
+
+            // Apply styles for both rows (Forecast + Years)
+            $style = $sheet->getStyle($range);
+            $style->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            $style->getFont()->setBold(true)->setSize(12)->getColor()->setARGB($fontColor);
+            $style->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB($fillColor);
+
+            // Set the second row with YEAR 1, YEAR 2, YEAR 3 labels for forecast columns
+            $yearColumnIndex = $startColumnIndex;
+            $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 1');
+            $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 2');
+            $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 3');
+
+            // Loop through each forecast column to set width and alignment for YEAR cells
+            for ($i = $startColumnIndex; $i <= $endColumnIndex; $i++) {
+                $letter = Coordinate::stringFromColumnIndex($i);
+                $sheet->getColumnDimension($letter)->setWidth(10);
+
+                $yearStyle = $sheet->getStyle("$letter".'2');
+                $yearStyle->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+            }
+
+            // Apply thin borders to both rows (Forecast + Years)
+            $sheet->getStyle($range)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+            // Move the starting index to the next set of forecast columns
+            $forecastStartIndex += 3;
         }
-        // Purple group: KH to MM
-        elseif (in_array($country, ['KH', 'MM'])) {
-            $fillColor = 'FF660066'; // Purple
-            $fontColor = Color::COLOR_WHITE;
-        }
-        // Default (if not in any group)
-        else {
-            $fillColor = 'FF00FFFF'; // Cyan
-        }
 
-        // Apply styles for both rows (Forecast + Years)
-        $style = $sheet->getStyle($range);
-        $style->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $style->getFont()->setBold(true)->setSize(12)->getColor()->setARGB($fontColor);
-        $style->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB($fillColor);
-
-        // Set the second row with YEAR 1, YEAR 2, YEAR 3 labels for forecast columns
-        $yearColumnIndex = $startColumnIndex;
-        $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 1');
-        $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 2');
-        $sheet->setCellValue([$yearColumnIndex++, 2], 'YEAR 3');
-
-        // Loop through each forecast column to set width and alignment for YEAR cells
-        for ($i = $startColumnIndex; $i <= $endColumnIndex; $i++) {
-            $letter = Coordinate::stringFromColumnIndex($i);
-            $sheet->getColumnDimension($letter)->setWidth(10);
-
-            $yearStyle = $sheet->getStyle("$letter" . '2');
-            $yearStyle->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        }
-
-        // Apply thin borders to both rows (Forecast + Years)
-        $sheet->getStyle($range)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
-
-        // Move the starting index to the next set of forecast columns
-        $forecastStartIndex += 3;
+        return $allCountries;
     }
-
-    return $allCountries;
-}
-
 
     private function fillSheetWithRecords($sheet, $records, $uniqueRecords, $additionalCountries)
     {
@@ -422,25 +421,24 @@ class MADProductSelectionController extends Controller
     }
 
     private static function saveSpreadsheet($spreadsheet, array $selectedManufacturers = [])
-{
-    $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+    {
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 
-    if (count($selectedManufacturers) === 1) {
-        $filename = $selectedManufacturers[0] . ' - ' . date('Y-m-d') . '.xlsx';
-    } else {
-        $names = implode(', ', $selectedManufacturers);
-        $filename = $names . ' - ' . date('Y-m-d') . '.xlsx';
+        if (count($selectedManufacturers) === 1) {
+            $filename = $selectedManufacturers[0].' - '.date('Y-m-d').'.xlsx';
+        } else {
+            $names = implode(', ', $selectedManufacturers);
+            $filename = $names.' - '.date('Y-m-d').'.xlsx';
+        }
+
+        $filename = preg_replace('/[\/\\\:\*\?"<>\|]/', '', $filename);
+        $filename = FileHelper::ensureUniqueFilename($filename, storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES));
+
+        $filePath = storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES.'/'.$filename);
+        $writer->save($filePath);
+
+        return $filePath;
     }
-
-    $filename = preg_replace('/[\/\\\:\*\?"<>\|]/', '', $filename);
-    $filename = FileHelper::ensureUniqueFilename($filename, storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES));
-
-    $filePath = storage_path(self::STORAGE_PATH_FOR_EXPORTING_EXCEL_FILES . '/' . $filename);
-    $writer->save($filePath);
-
-    return $filePath;
-}
-
 
     private static function getFirstForecastCellColumnIndex($additionalCountriesCount): int
     {

@@ -245,6 +245,7 @@
 .mad-asp-table td {
     vertical-align: middle;
     text-align: center;
+    justify-items: center;
 }
 
 .mad-asp-table tbody a {
@@ -284,6 +285,22 @@
     background-color: var(--theme-box-background-color);
 }
 
+.sub-col-asp {
+    overflow: hidden;
+}
+
+.sub-col-asp-inner {
+    white-space: nowrap;
+}
+
+/* Hidden State */
+.sub-col-asp.hidden {
+    width: 0;
+    max-width: 0;
+    padding-inline: 0;
+    padding: 0 !important;
+}
+
 /* ------------ /end MAD ASP pages ------------ */
 
 
@@ -317,6 +334,35 @@
 .mad-oss-index .main-table tr.tr--even {
     background-color: var(--theme-table-tr-hover-background-color);
 }
+
+thead {
+    z-index: 1;
+}
+
+/* Toggle Header */
+.group-toggle {
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Collapsible Columns */
+.sub-col {
+    overflow: hidden;
+}
+
+.sub-col-inner {
+    white-space: nowrap;
+}
+
+/* Hidden State */
+.sub-col.hidden {
+    width: 0;
+    max-width: 0;
+    padding-inline: 0;
+    padding-right: 0 !important;
+    padding-left: 8px;
+}
+
 /* ------------ /end MAD OSS pages ------------ */
 
 

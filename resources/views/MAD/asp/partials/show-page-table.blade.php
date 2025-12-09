@@ -10,13 +10,17 @@
             @for ($quarter = 1, $monthIndex = 0; $quarter <= 4; $quarter++)
                 {{-- Quarters 1-4 --}}
                 @if ($displayQuarters)
-                    <th width="270" colspan="3">{{ __('Quarter') }} {{ $quarter }}</th>
+                    <th width="270" colspan="3" class="group-toggle" data-group="quarter-{{ $quarter }}">
+                        {{ __('Quarter') }} {{ $quarter }}
+                    </th>
                 @endif
 
                 {{-- Monthes 1-12 --}}
                 @if ($displayMonths)
                     @for ($quarterMonths = 1; $quarterMonths <= 3; $quarterMonths++)
-                        <th width="246" colspan="3">{{ __($months[$monthIndex++]['name']) }}</th>
+                        <th width="246" colspan="3" class="sub-col-asp group-quarter-{{ $quarter }}">
+                            <div class="sub-col-asp-inner">{{ __($months[$monthIndex++]['name']) }}</div>
+                        </th>
                     @endfor
                 @endif
             @endfor
@@ -45,10 +49,9 @@
                 {{-- Monthes 1 - 12 --}}
                 @if ($displayMonths)
                     @for ($quarterMonths = 1; $quarterMonths <= 3; $quarterMonths++)
-                        {{-- January --}}
-                        <th>Кк {{ __('plan') }}</th>
-                        <th>Кк {{ __('fact') }}</th>
-                        <th>НПР {{ __('fact') }}</th>
+                        <th class="sub-col-asp group-quarter-{{ $quarter }}"><div class="sub-col-asp-inner">Кк {{ __('plan') }}</div></th>
+                        <th class="sub-col-asp group-quarter-{{ $quarter }}"><div class="sub-col-asp-inner">Кк {{ __('fact') }}</div></th>
+                        <th class="sub-col-asp group-quarter-{{ $quarter }}"><div class="sub-col-asp-inner">НПР {{ __('fact') }}</div></th>
                     @endfor
                 @endif
             @endfor
@@ -112,9 +115,9 @@
                             $monthClass = $monthClasses[$monthIndex % 3]; // Cycle through colors
                         @endphp
 
-                        <td class="{{ $monthClass }}">{{ $record->{$months[$monthIndex]['name'] . '_contract_plan'} }}</td>
-                        <td class="{{ $monthClass }}">{{ $record->{$months[$monthIndex]['name'] . '_contract_fact'} }}</td>
-                        <td class="{{ $monthClass }}">{{ $record->{$months[$monthIndex]['name'] . '_register_fact'} }}</td>
+                        <td class="sub-col-asp group-quarter-{{ $quarter }} {{ $monthClass }}"><div class="sub-col-asp-inner">{{ $record->{$months[$monthIndex]['name'] . '_contract_plan'} }}</div></td>
+                        <td class="sub-col-asp group-quarter-{{ $quarter }} {{ $monthClass }}"><div class="sub-col-asp-inner">{{ $record->{$months[$monthIndex]['name'] . '_contract_fact'} }}</div></td>
+                        <td class="sub-col-asp group-quarter-{{ $quarter }} {{ $monthClass }}"><div class="sub-col-asp-inner">{{ $record->{$months[$monthIndex]['name'] . '_register_fact'} }}</div></td>
                     @endfor
                 @endif
             @endfor
@@ -165,9 +168,9 @@
                                 $monthClass = $monthClasses[$monthIndex % 3]; // Cycle through colors
                             @endphp
 
-                            <td class="{{ $monthClass }}">{{ $country->{$months[$monthIndex]['name'] . '_contract_plan'} }}</td>
-                            <td class="{{ $monthClass }}">{{ $country->{$months[$monthIndex]['name'] . '_contract_fact'} }}</td>
-                            <td class="{{ $monthClass }}">{{ $country->{$months[$monthIndex]['name'] . '_register_fact'} }}</td>
+                            <td class="sub-col-asp group-quarter-{{ $quarter }} {{ $monthClass }}"><div class="sub-col-asp-inner">{{ $country->{$months[$monthIndex]['name'] . '_contract_plan'} }}</div></td>
+                            <td class="sub-col-asp group-quarter-{{ $quarter }} {{ $monthClass }}"><div class="sub-col-asp-inner">{{ $country->{$months[$monthIndex]['name'] . '_contract_fact'} }}</div></td>
+                            <td class="sub-col-asp group-quarter-{{ $quarter }} {{ $monthClass }}"><div class="sub-col-asp-inner">{{ $country->{$months[$monthIndex]['name'] . '_register_fact'} }}</div></td>
                         @endfor
                     @endif
                 @endfor
@@ -197,18 +200,24 @@
                         {{-- MAH Monthes 1 - 12 --}}
                         @if ($displayMonths)
                             @for ($quarterMonths = 1; $quarterMonths <= 3; $quarterMonths++, $monthIndex++)
-                                <td>{{ $mah->{$months[$monthIndex]['name'] . '_contract_plan'} }}</td>
-
-                                <td>
-                                    <a class="main-link" href="{{ $mah->{$months[$monthIndex]['name'] . '_contract_fact_link'} }}">
-                                        {{ $mah->{$months[$monthIndex]['name'] . '_contract_fact'} }}
-                                    </a>
+                                <td class="sub-col-asp group-quarter-{{ $quarter }}">
+                                    <div class="sub-col-asp-inner">{{ $mah->{$months[$monthIndex]['name'] . '_contract_plan'} }}</div>
                                 </td>
 
-                                <td>
-                                    <a class="main-link" href="{{ $mah->{$months[$monthIndex]['name'] . '_register_fact_link'} }}">
-                                        {{ $mah->{$months[$monthIndex]['name'] . '_register_fact'} }}
-                                    </a>
+                                <td class="sub-col-asp group-quarter-{{ $quarter }}">
+                                    <div class="sub-col-asp-inner">
+                                        <a class="main-link" href="{{ $mah->{$months[$monthIndex]['name'] . '_contract_fact_link'} }}">
+                                            {{ $mah->{$months[$monthIndex]['name'] . '_contract_fact'} }}
+                                        </a>
+                                    </div>
+                                </td>
+
+                                <td class="sub-col-asp group-quarter-{{ $quarter }}">
+                                    <div class="sub-col-asp-inner">
+                                        <a class="main-link" href="{{ $mah->{$months[$monthIndex]['name'] . '_register_fact_link'} }}">
+                                            {{ $mah->{$months[$monthIndex]['name'] . '_register_fact'} }}
+                                        </a>
+                                    </div>
                                 </td>
                             @endfor
                         @endif
